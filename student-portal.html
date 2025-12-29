@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .student-hero { background: linear-gradient(135deg, #f97316 0%, #fb923c 100%); }
+        .doc-card { transition: all 0.3s ease; }
+        .doc-card:hover { border-color: #f97316; background: #fff7ed; }
+    </style>
+</head>
+<body class="bg-orange-50/30 pb-20">
+
+    <div class="student-hero p-8 rounded-b-[3rem] text-white shadow-lg">
+        <div class="flex justify-between items-start mb-6">
+            <i class="fa-solid fa-graduation-cap text-3xl opacity-50"></i>
+            <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold">Session 2025</span>
+        </div>
+        <h1 class="text-2xl font-black italic">My School App</h1>
+        <p class="text-sm opacity-90 mt-1">Govt. Primary School Pethgam</p>
+    </div>
+
+    <main class="p-4 -mt-6 space-y-6 max-w-lg mx-auto">
+        
+        <div class="bg-white p-6 rounded-3xl shadow-xl shadow-orange-100 border border-orange-100">
+            <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest">Check Results</h3>
+            <div class="flex gap-2">
+                <input type="text" placeholder="Enter Roll Number" class="flex-1 bg-slate-50 border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                <button class="bg-orange-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <section>
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">E-Resources</h3>
+            <div class="space-y-3">
+                <div class="doc-card bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-700">Annual Syllabus</p>
+                            <p class="text-[9px] text-slate-400">PDF • 1.2 MB</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-slate-300"></i>
+                </div>
+                
+                <div class="doc-card bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-700">Today's Homework</p>
+                            <p class="text-[9px] text-slate-400">Updated: Just now</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-[2rem] border border-slate-100">
+            <h3 class="font-black text-xs text-slate-800 uppercase mb-4">Students' Corner</h3>
+            <div class="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                <div class="min-w-[120px] h-32 bg-slate-100 rounded-2xl flex items-center justify-center text-[10px] text-slate-400 italic">Art Gallery</div>
+                <div class="min-w-[120px] h-32 bg-slate-100 rounded-2xl flex items-center justify-center text-[10px] text-slate-400 italic">Winners List</div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t p-4 flex justify-around items-center z-50">
+        <i class="fa-solid fa-home text-orange-500 text-xl"></i>
+        <i class="fa-solid fa-chart-simple text-slate-300 text-xl"></i>
+        <i class="fa-solid fa-bell text-slate-300 text-xl"></i>
+        <i class="fa-solid fa-user-circle text-slate-300 text-xl"></i>
+    </nav>
+
+</body>
+</html>
