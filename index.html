@@ -3,105 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Pethgam Wagoora | School ERP 2025</title>
+    <title>GPS Pethgam | Official School ERP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --pethgam-blue: #0ea5e9; --pethgam-orange: #f97316; }
-        body { background: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
-        .hero-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%); }
-        .module-card { transition: all 0.3s ease; border-radius: 24px; }
-        .module-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .ticker-wrap { background: #fee2e2; padding: 8px 0; overflow: hidden; }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker 25s linear infinite; font-weight: bold; color: #dc2626; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap');
+        body { font-family: 'Readex Pro', sans-serif; background-color: #f0f9ff; }
+        .school-gradient { background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%); }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .card-pop { transition: transform 0.2s; border-radius: 1.5rem; }
+        .card-pop:active { transform: scale(0.95); }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .ticker-text { animation: scroll 20s linear infinite; }
     </style>
 </head>
-<body>
+<body class="pb-20">
 
-    <nav class="glass-nav sticky top-0 z-50 p-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <header class="glass sticky top-0 z-50 p-4 shadow-sm border-b border-orange-100">
+        <div class="flex items-center justify-between max-w-lg mx-auto">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-white rounded-xl shadow-inner p-1">
-                    <img src="assets/logo.png" alt="GPS" class="w-full h-full object-contain">
-                </div>
+                <div class="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white font-bold shadow-lg">GPS</div>
                 <div>
-                    <h1 class="text-lg font-black text-slate-800 leading-none">GPS PETHGAM</h1>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Wagoora, Baramulla</p>
+                    <h1 class="text-sm font-bold text-gray-800 leading-none">GPS PETHGAM</h1>
+                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Wagoora • Baramulla</p>
                 </div>
             </div>
-            <a href="login.html" class="bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg shadow-slate-200">PORTAL LOGIN</a>
+            <button onclick="toggleLogin()" class="bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md">LOGIN</button>
         </div>
-    </nav>
+    </header>
 
-    <div class="ticker-wrap">
-        <div class="ticker-content">
-            📢 Session 2025-26 Online Admissions are now OPEN! &nbsp; | &nbsp; 🍲 Today's MDM Menu: Dal & Rice with Seasonal Veg &nbsp; | &nbsp; 📅 PTM Meeting scheduled for Saturday 10:00 AM.
+    <div class="bg-yellow-100 py-2 overflow-hidden border-b border-yellow-200">
+        <div class="ticker-text whitespace-nowrap text-xs font-bold text-red-600">
+            📢 Admission Open 2025-26 | Mid-Day Meal Menu: Rajma & Rice (Today) | Winter Vacations announcement inside...
         </div>
     </div>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-8">
-        <div class="hero-gradient p-8 rounded-[2.5rem] text-white mb-8 shadow-2xl shadow-blue-200 relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-3xl font-black mb-2">Primary Education, <br>Global Vision.</h2>
-                <p class="text-blue-100 text-sm mb-6 max-w-xs opacity-90">Building the foundation for the future leaders of Jammu & Kashmir.</p>
-                <div class="flex gap-4">
-                    <a href="admission.html" class="bg-white text-blue-600 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider shadow-xl">Apply Online</a>
-                    <button class="bg-blue-400/30 backdrop-blur-md px-6 py-3 rounded-2xl text-xs font-bold border border-white/20">Our Gallery</button>
+    <main class="p-4 max-w-lg mx-auto space-y-6">
+        
+        <div class="bg-white p-6 rounded-[2rem] shadow-xl shadow-blue-100 border border-blue-50">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-gray-700 italic">Today's Overview</h3>
+                <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">LIVE 2025</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-blue-50 p-4 rounded-2xl">
+                    <p class="text-[10px] text-blue-600 font-bold uppercase">Attendance</p>
+                    <p class="text-2xl font-black text-blue-800">94%</p>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-2xl">
+                    <p class="text-[10px] text-orange-600 font-bold uppercase">MDM Served</p>
+                    <p class="text-2xl font-black text-orange-800">142</p>
                 </div>
             </div>
-            <i class="fa-solid fa-graduation-cap absolute -bottom-10 -right-10 text-[12rem] opacity-10 rotate-12"></i>
         </div>
 
-        <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-2">Administration Modules</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            
-            <a href="students.html" class="module-card bg-white p-6 border border-slate-100 flex flex-col items-center text-center group">
-                <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-500 transition-colors">
-                    <i class="fa-solid fa-user-graduate text-orange-500 group-hover:text-white text-xl"></i>
+        <h2 class="text-lg font-bold text-gray-800 px-2">School Modules</h2>
+        <div class="grid grid-cols-3 gap-4">
+            <button onclick="alert('Admission System Loading...')" class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-user-plus text-purple-600"></i>
                 </div>
-                <span class="text-sm font-bold text-slate-700">Students</span>
-                <span class="text-[10px] text-slate-400 mt-1 uppercase">Database & TC</span>
-            </a>
-
-            <a href="mdm.html" class="module-card bg-white p-6 border border-slate-100 flex flex-col items-center text-center group">
-                <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
-                    <i class="fa-solid fa-utensils text-green-500 group-hover:text-white text-xl"></i>
+                <span class="text-[10px] font-bold text-gray-600">Admission</span>
+            </button>
+            <button class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-bowl-food text-green-600"></i>
                 </div>
-                <span class="text-sm font-bold text-slate-700">MDM Diary</span>
-                <span class="text-[10px] text-slate-400 mt-1 uppercase">Meal Reporting</span>
-            </a>
-
-            <a href="results.html" class="module-card bg-white p-6 border border-slate-100 flex flex-col items-center text-center group">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                    <i class="fa-solid fa-chart-line text-blue-500 group-hover:text-white text-xl"></i>
+                <span class="text-[10px] font-bold text-gray-600">MDM Logic</span>
+            </button>
+            <button class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-file-invoice text-blue-600"></i>
                 </div>
-                <span class="text-sm font-bold text-slate-700">Results</span>
-                <span class="text-[10px] text-slate-400 mt-1 uppercase">Marksheets</span>
-            </a>
-
-            <a href="staff.html" class="module-card bg-white p-6 border border-slate-100 flex flex-col items-center text-center group">
-                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors">
-                    <i class="fa-solid fa-chalkboard-user text-purple-500 group-hover:text-white text-xl"></i>
+                <span class="text-[10px] font-bold text-gray-600">Results</span>
+            </button>
+            <button class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-book text-red-600"></i>
                 </div>
-                <span class="text-sm font-bold text-slate-700">Staff</span>
-                <span class="text-[10px] text-slate-400 mt-1 uppercase">Duty & Attendance</span>
-            </a>
-
+                <span class="text-[10px] font-bold text-gray-600">Syllabus</span>
+            </button>
+            <button class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-images text-yellow-600"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-600">Gallery</span>
+            </button>
+            <button class="card-pop flex flex-col items-center bg-white p-4 shadow-sm border border-gray-100">
+                <div class="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mb-2">
+                    <i class="fa-solid fa-id-card text-cyan-600"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-600">Staff</span>
+            </button>
         </div>
     </main>
 
-    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-100 flex justify-around items-center p-3 z-50">
-        <div class="flex flex-col items-center text-blue-600"><i class="fa-solid fa-home text-lg"></i><span class="text-[8px] font-bold mt-1">Home</span></div>
-        <div class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-calendar-check text-lg"></i><span class="text-[8px] font-bold mt-1">Attend</span></div>
-        <div class="bg-blue-600 w-14 h-14 rounded-full -mt-10 border-4 border-slate-50 flex items-center justify-center shadow-lg shadow-blue-200">
-            <i class="fa-solid fa-qrcode text-white text-xl"></i>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex justify-around items-center z-50">
+        <i class="fa-solid fa-house text-orange-500 text-xl"></i>
+        <i class="fa-solid fa-calendar-check text-gray-300 text-xl"></i>
+        <div class="bg-orange-500 w-12 h-12 rounded-full -mt-10 border-4 border-white flex items-center justify-center shadow-lg">
+            <i class="fa-solid fa-qrcode text-white"></i>
         </div>
-        <div class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-book text-lg"></i><span class="text-[8px] font-bold mt-1">E-Library</span></div>
-        <div class="flex flex-col items-center text-slate-400"><i class="fa-solid fa-circle-user text-lg"></i><span class="text-[8px] font-bold mt-1">Profile</span></div>
-    </div>
+        <i class="fa-solid fa-message text-gray-300 text-xl"></i>
+        <i class="fa-solid fa-user text-gray-300 text-xl"></i>
+    </nav>
 
+    <script>
+        function toggleLogin() {
+            alert("Admin, Teacher, and Student login forms are ready for Firebase integration.");
+        }
+    </script>
+</body>
+</html>
 </body>
 </html>
 
