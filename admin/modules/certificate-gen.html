@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; border: none !important; }
+            .no-print { display: none; }
+        }
+        .cert-border { border: 10px double #1e293b; padding: 40px; background: white; }
+    </style>
+</head>
+<body class="bg-slate-100 pb-20">
+
+    <nav class="bg-white p-4 shadow-sm flex justify-between items-center no-print">
+        <a href="../dashboard.html" class="text-slate-600"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <h1 class="font-black text-xs uppercase tracking-widest">Document Center</h1>
+        <div></div>
+    </nav>
+
+    <main class="p-6 max-w-4xl mx-auto space-y-8">
+        
+        <section class="bg-white p-6 rounded-3xl shadow-sm no-print">
+            <h3 class="font-bold mb-4">Certificate Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <select id="certType" class="bg-slate-50 p-4 rounded-2xl border-none outline-none text-sm font-bold">
+                    <option value="bonafide">Bonafide Certificate</option>
+                    <option value="transfer">Transfer Certificate (TC)</option>
+                    <option value="duty">Duty Certificate (Staff)</option>
+                </select>
+                <input type="text" id="studentName" placeholder="Full Name" class="bg-slate-50 p-4 rounded-2xl border-none outline-none text-sm">
+                <input type="text" id="parentName" placeholder="Parent/Guardian Name" class="bg-slate-50 p-4 rounded-2xl border-none outline-none text-sm">
+                <input type="text" id="studentClass" placeholder="Class/Designation" class="bg-slate-50 p-4 rounded-2xl border-none outline-none text-sm">
+            </div>
+            <button onclick="updatePreview()" class="w-full mt-6 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest">Update Preview</button>
+        </section>
+
+        <section id="printArea" class="cert-border shadow-2xl mx-auto">
+            <div class="text-center mb-8">
+                <img src="../../assets/img/logo.png" alt="School Logo" class="w-20 h-20 mx-auto mb-2">
+                <h2 class="text-2xl font-black text-slate-800">GOVT. PRIMARY SCHOOL PETHGAM</h2>
+                <p class="text-[10px] font-bold text-slate-500 uppercase">Zone: Wagoora | District: Baramulla | J&K</p>
+                <div class="w-full h-1 bg-slate-800 my-4"></div>
+            </div>
+
+            <div class="py-10 text-center">
+                <h4 id="certTitle" class="text-3xl font-serif italic border-b-2 border-slate-200 inline-block mb-10">Bonafide Certificate</h4>
+                
+                <p class="text-lg leading-loose text-slate-700 text-justify">
+                    This is to certify that <b><span id="viewName">[Name]</span></b> 
+                    S/o / D/o <b><span id="viewParent">[Parent Name]</span></b> 
+                    is/was a bonafide student of this institution in Class 
+                    <b><span id="viewClass">[Class]</span></b> under Admission No: 
+                    <b><span id="viewAdm">GPS/2025/102</span></b>.
+                </p>
+
+                <p class="mt-10 text-slate-700 text-justify">
+                    His/Her conduct and character has remained <b>Satisfactory</b> during his/her stay in this school. I wish him/her all the best for future endeavors.
+                </p>
+            </div>
+
+            <div class="mt-20 flex justify-between items-end">
+                <div class="text-center">
+                    <p class="text-[10px] font-bold border-t border-slate-400 pt-2">DATED: <span id="currentDate"></span></p>
+                </div>
+                <div class="text-center">
+                    <div class="w-32 h-16 border-b border-dashed border-slate-300 mx-auto"></div>
+                    <p class="text-[10px] font-bold uppercase mt-2">Headmaster Signature</p>
+                    <p class="text-[8px] text-slate-400 font-bold">GPS PETHGAM</p>
+                </div>
+            </div>
+        </section>
+
+        <button onclick="window.print()" class="fixed bottom-6 right-6 bg-slate-900 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center no-print">
+            <i class="fa-solid fa-print"></i>
+        </button>
+    </main>
+
+    <script>
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString();
+
+        function updatePreview() {
+            const type = document.getElementById('certType').value;
+            document.getElementById('viewName').innerText = document.getElementById('studentName').value || "[Name]";
+            document.getElementById('viewParent').innerText = document.getElementById('parentName').value || "[Parent Name]";
+            document.getElementById('viewClass').innerText = document.getElementById('studentClass').value || "[Class]";
+            
+            if(type === 'duty') {
+                document.getElementById('certTitle').innerText = "Duty Certificate";
+            } else if (type === 'transfer') {
+                document.getElementById('certTitle').innerText = "Transfer Certificate";
+            } else {
+                document.getElementById('certTitle').innerText = "Bonafide Certificate";
+            }
+        }
+    </script>
+</body>
+</html>
