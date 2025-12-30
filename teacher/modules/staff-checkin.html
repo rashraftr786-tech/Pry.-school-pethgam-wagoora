@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Attendance | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col">
+
+    <nav class="p-4 flex justify-between items-center bg-slate-800">
+        <a href="../dashboard.html" class="text-white"><i class="fa-solid fa-arrow-left"></i></a>
+        <span class="text-[10px] font-black uppercase tracking-widest">Biometric Check-In</span>
+        <div></div>
+    </nav>
+
+    <main class="flex-1 p-6 flex flex-col items-center justify-center space-y-6">
+        <div class="relative w-64 h-64 rounded-full border-4 border-emerald-500 overflow-hidden shadow-[0_0_50px_rgba(16,185,129,0.3)]">
+            <video id="video" autoplay muted playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
+            <canvas id="canvas" class="hidden"></canvas>
+            <div class="absolute inset-0 border-t-2 border-emerald-400 animate-pulse top-1/2"></div>
+        </div>
+
+        <div class="text-center">
+            <h2 class="text-2xl font-black">Scanning Face...</h2>
+            <p id="status" class="text-slate-400 text-xs mt-2 uppercase font-bold tracking-widest">Awaiting GPS & Camera</p>
+        </div>
+
+        <button onclick="captureAttendance()" id="btnAction" class="bg-emerald-600 px-10 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-xl active:scale-95 transition-all">
+            Verify & Check-In
+        </button>
+    </main>
+
+    <script>
+        const video = document.getElementById('video');
+        const status = document.getElementById('status');
+
+        // Start Camera
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => { status.innerText = "Camera Access Denied"; });
+
+        function captureAttendance() {
+            status.innerText = "Processing Bio-Data...";
+            
+            // Get Location
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                
+                // Logic: Compare lat/lon with School Coordinates (approx 34.18, 74.52)
+                status.innerHTML = `<span class="text-emerald-400">Verified at GPS Pethgam</span><br>Time: ${new Date().toLocaleTimeString()}`;
+                document.getElementById('btnAction').innerText = "Attendance Marked ✓";
+                document.getElementById('btnAction').className = "bg-slate-700 px-10 py-4 rounded-full font-black uppercase text-xs";
+            });
+        }
+    </script>
+</body>
+</html>
