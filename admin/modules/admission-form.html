@@ -3,83 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Portal | GPS Pethgam</title>
+    <title>Official Admission Form | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
-        body { background-color: #f1f5f9; font-family: 'Outfit', sans-serif; }
+        body { background-color: #f1f5f9; font-family: 'Arial', sans-serif; }
         .form-page { width: 850px; background: white; margin: 20px auto; padding: 40px; border: 1px solid #000; position: relative; }
-        .box-grid { display: flex; gap: 0; margin-top: 1px; }
-        .char-box { width: 22px; height: 24px; border: 1px solid #000; text-align: center; line-height: 24px; font-size: 13px; font-weight: bold; }
-        .field-label { font-size: 13px; font-weight: 800; text-decoration: underline; margin-top: 8px; display: block; }
-        .category-box { border: 1px solid #000; padding: 1px 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
-        .active-cat { background: #000; color: #fff; }
+        .box-grid { display: flex; gap: 0; margin-top: 2px; }
+        .char-box { width: 22px; height: 24px; border: 1px solid #000; text-align: center; line-height: 24px; font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        .field-label { font-size: 12px; font-weight: 800; text-decoration: underline; margin-top: 10px; display: block; }
+        .category-box { border: 1px solid #000; padding: 1px 8px; font-size: 10px; font-weight: bold; }
         @media print { .no-print { display: none; } body { background: white; padding: 0; } .form-page { border: none; margin: 0; width: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="no-print max-w-4xl mx-auto mt-6 bg-white p-8 rounded-3xl shadow-2xl border-2 border-emerald-600">
-        <h2 class="font-black text-emerald-800 uppercase mb-6 text-center text-xl tracking-tighter">Student Information System</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="space-y-3">
-                <p class="text-[10px] font-black text-emerald-600 uppercase">Basic Details</p>
-                <select id="classSelect" onchange="generateFormID()" class="w-full p-2 border-2 rounded-xl text-sm font-bold">
+    <div class="no-print max-w-4xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow-xl border-2 border-blue-600">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+                <label class="text-[10px] font-bold">Select Class</label>
+                <select id="classSelect" onchange="generateFormID()" class="w-full p-2 border-2 rounded-lg text-sm">
                     <option value="01">Pre-Primary 3</option>
                     <option value="02">Pre-Primary 2</option>
                     <option value="03">Balvatika</option>
                     <option value="04" selected>1st Primary</option>
                 </select>
-                <input type="text" placeholder="Full Name" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Aadhaar Name" oninput="fill('aadhaarNameBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Aadhaar Number" maxlength="12" oninput="fill('aadhaarNumBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
             </div>
-
-            <div class="space-y-3">
-                <p class="text-[10px] font-black text-emerald-600 uppercase">Family & Residence</p>
-                <input type="text" placeholder="Father's Name" oninput="fill('fatherBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Mother's Name" oninput="fill('motherBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Residence/Village" oninput="fill('resBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Contact Number" oninput="fill('fContactBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-            </div>
-
-            <div class="space-y-3">
-                <p class="text-[10px] font-black text-emerald-600 uppercase">Finance & PEN</p>
-                <input type="text" placeholder="Bank Account No" oninput="fill('bankAccBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="IFSC Code" oninput="fill('ifscBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="Ration Card No" oninput="fill('rationBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-                <input type="text" placeholder="PEN Number (If any)" oninput="fill('penBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
-            </div>
+            <div><label class="text-[10px] font-bold">Student Name</label><input type="text" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border-2 rounded-lg text-sm"></div>
+            <div><label class="text-[10px] font-bold">Aadhaar Name</label><input type="text" oninput="fill('aadhaarNameBoxes', this.value)" class="w-full p-2 border-2 rounded-lg text-sm"></div>
         </div>
-
-        <button onclick="submitAndPrint()" id="btnSubmit" class="mt-8 w-full bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase shadow-xl hover:bg-emerald-700 transition-all">
-            Save Record & Generate Form
-        </button>
+        <button onclick="window.print()" class="w-full bg-blue-700 text-white font-black py-3 rounded-xl uppercase shadow-lg">Print Official Form</button>
     </div>
 
-    <div class="form-page" id="admissionForm">
+    <div class="form-page" id="captureArea">
+        
         <div class="absolute top-10 right-10 flex flex-col items-end gap-2">
-            <div class="border-2 border-black px-4 py-1">
-                <p class="text-[8px] font-bold uppercase leading-none">Form No</p>
-                <span id="formIdDisplay" class="text-lg font-black tracking-widest">250401</span>
+            <div class="border-2 border-black p-2 text-right">
+                <p class="text-[9px] font-bold leading-none uppercase">Form No:</p>
+                <h3 id="formIdDisplay" class="text-2xl font-black tracking-tighter">250401</h3>
             </div>
-            <div class="w-24 h-32 border-2 border-black flex items-center justify-center text-[9px] text-center p-2">Photo</div>
+            <div class="w-24 h-32 border-2 border-black flex items-center justify-center text-[10px] text-center p-2">Paste Photograph</div>
         </div>
 
-        <div class="flex items-center border-b-2 border-black pb-2 mb-4 pr-32">
-            <img src="../../assets/logo.png" class="w-16 h-16" alt="Logo">
+        <div class="flex items-center border-b-2 border-black pb-2 mb-6 pr-40">
+            <img src="../../assets/logo.png" class="w-20 h-20" alt="Logo">
             <div class="flex-1 text-center">
-                <h1 class="text-xl font-black uppercase">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-                <p class="text-[10px] font-bold italic">Babareshi Road Near Zonal Education Office Wagoora</p>
-                <p class="text-[9px]">UDISE Code: 01022202207 | Email: pspethgam@gmail.com</p>
-                <h2 class="text-lg font-black underline mt-1 tracking-tighter">ADMISSION FORM</h2>
+                <h1 class="text-2xl font-black uppercase leading-none">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <p class="text-[11px] font-bold mt-1">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
+                <p class="text-[10px] tracking-wide">Email ID: pspethgam@gmail.com . UDISE Code: 01022202207</p>
+                <h2 class="text-xl font-bold underline mt-3 tracking-widest">ADMISSION FORM</h2>
             </div>
         </div>
 
-        <div class="space-y-1">
+        <div class="space-y-2">
             <label class="field-label">Students Name:</label>
             <div class="box-grid" id="nameBoxes"></div>
 
@@ -95,57 +71,69 @@
             <div class="box-grid" id="resBoxes"></div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div><label class="field-label">Father's Contact:</label><div class="box-grid" id="fContactBoxes"></div></div>
-                <div>
-                    <label class="field-label">Date of Birth (In figures):</label>
-                    <div class="box-grid" id="dobBoxes"></div>
-                </div>
+                <div><label class="field-label">Tehsil:</label><div class="box-grid" id="tehsilBoxes"></div></div>
+                <div><label class="field-label">District:</label><div class="box-grid" id="distBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Father's Contact Number:</label><div class="box-grid" id="fContactBoxes"></div></div>
+                <div><label class="field-label">Mother's Contact Number:</label><div class="box-grid" id="mContactBoxes"></div></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="field-label">Aadhaar Number:</label><div class="box-grid" id="aadhaarNumBoxes"></div></div>
-                <div><label class="field-label">Blood Group:</label><div class="w-full border-b border-black h-5"></div></div>
+                <div>
+                    <label class="field-label">Date of Birth (in figures):</label>
+                    <div class="box-grid" id="dobBoxes"></div>
+                    <div class="flex text-[9px] gap-4 mt-1"><span>D D</span><span>M M</span><span>Y Y Y Y</span></div>
+                </div>
             </div>
+
+            <label class="field-label">Date of Birth in Words:</label>
+            <div class="w-full border-b border-black h-6"></div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="field-label">Bank Account Number:</label><div class="box-grid" id="bankAccBoxes"></div></div>
-                <div><label class="field-label">IFSC Code:</label><div class="box-grid" id="ifscBoxes"></div></div>
+                <div><label class="field-label">Bank Name:</label><div class="box-grid" id="bankNameBoxes"></div></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div><label class="field-label">Ration Card Number:</label><div class="box-grid" id="rationBoxes"></div></div>
-                <div>
-                    <label class="field-label">Category:</label>
-                    <div class="flex gap-2 mt-1">
-                        <span class="category-box">SC</span><span class="category-box">ST</span>
-                        <span class="category-box">OBC</span><span class="category-box">GEN</span>
-                    </div>
+                <div><label class="field-label">Bank Branch:</label><div class="box-grid" id="branchBoxes"></div></div>
+                <div><label class="field-label">IFSC Code:</label><div class="box-grid" id="ifscBoxes"></div></div>
+            </div>
+
+            <div class="flex items-center gap-6 mt-4">
+                <label class="field-label mt-0">Category:</label>
+                <div class="flex gap-2">
+                    <span class="category-box">S C</span> <span class="category-box">S T</span>
+                    <span class="category-box">O B C</span> <span class="category-box">GENERAL</span>
                 </div>
+                <label class="field-label mt-0 ml-10">Blood Group:</label>
+                <div class="w-32 border-b border-black"></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="field-label">Class Joining:</label><div class="box-grid" id="joiningBoxes"></div></div>
-                <div><label class="field-label">PEN Number:</label><div class="box-grid" id="penBoxes"></div></div>
+                <div><label class="field-label">PEN Number (Transferring Students):</label><div class="box-grid" id="penBoxes"></div></div>
             </div>
 
-            <div class="mt-6 border-t-2 border-black pt-2">
-                <p class="text-[9px] leading-tight text-justify italic">I do hereby declare that the information provided is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations...</p>
-                <div class="flex justify-between mt-12 font-bold text-[10px] uppercase">
-                    <span class="border-t border-black px-4">Parent Sig.</span>
-                    <span class="border-t border-black px-4">Adm. Incharge</span>
-                    <span class="border-t border-black px-4">Headmaster</span>
+            <div class="mt-8 border-t border-black pt-4">
+                <p class="text-[10px] leading-tight italic mb-10">I do hereby declare that the information provided is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations...</p>
+                <div class="flex justify-between font-bold text-[11px]">
+                    <span class="border-t border-black px-4 pt-1">Signature of Parent</span>
+                    <span class="border-t border-black px-4 pt-1">Sig. Of Adm. Incharge</span>
+                    <span class="border-t border-black px-4 pt-1">Sig. Of Headmaster</span>
                 </div>
             </div>
-            
-            <div class="mt-4 border-2 border-black p-2 bg-slate-50 text-[9px]">
-                <p class="font-black underline mb-1">FOR OFFICE USE ONLY</p>
-                <p>Admitted to Class __________ under Admission No. __________ Dated ___/___/2025.</p>
+
+            <div class="mt-4 border-2 border-black p-2 text-[10px] bg-slate-50">
+                <p class="font-black underline mb-1">For Office Use Only</p>
+                <p>The Student is admitted to Class [__________] under Admission No. [__________] Dated: ___/___/2025.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // GRID GENERATOR
         function createGrid(id, count) {
             const container = document.getElementById(id);
             for(let i=0; i<count; i++) {
@@ -155,36 +143,32 @@
             }
         }
 
+        function generateFormID() {
+            const year = "25";
+            const classCode = document.getElementById('classSelect').value;
+            const sequence = "01"; 
+            document.getElementById('formIdDisplay').innerText = year + classCode + sequence;
+        }
+
         function fill(gridId, value) {
             const boxes = document.getElementById(gridId).getElementsByClassName('char-box');
             const chars = value.toUpperCase().split('');
             for(let i=0; i<boxes.length; i++) { boxes[i].innerText = chars[i] || ''; }
         }
 
-        async function generateFormID() {
-            const year = "25";
-            const classCode = document.getElementById('classSelect').value;
-            // Simulated sequence (Replace with Firebase call)
-            const seq = "01"; 
-            document.getElementById('formIdDisplay').innerText = year + classCode + seq;
-            fill('joiningBoxes', document.getElementById('classSelect').selectedOptions[0].text);
-        }
-
-        function submitAndPrint() {
-            window.print();
-        }
-
-        // INITIALIZE ALL GRIDS FROM IMAGE
+        // Init Grids
         createGrid('nameBoxes', 32); createGrid('aadhaarNameBoxes', 32);
-        createGrid('fatherBoxes', 24); createGrid('motherBoxes', 24);
-        createGrid('resBoxes', 32); createGrid('fContactBoxes', 10);
+        createGrid('fatherBoxes', 32); createGrid('motherBoxes', 32);
+        createGrid('resBoxes', 32); createGrid('tehsilBoxes', 16); createGrid('distBoxes', 16);
+        createGrid('fContactBoxes', 10); createGrid('mContactBoxes', 10);
         createGrid('aadhaarNumBoxes', 12); createGrid('dobBoxes', 8);
-        createGrid('bankAccBoxes', 16); createGrid('ifscBoxes', 11);
-        createGrid('rationBoxes', 15); createGrid('joiningBoxes', 12);
-        createGrid('penBoxes', 11);
+        createGrid('bankAccBoxes', 16); createGrid('bankNameBoxes', 12);
+        createGrid('branchBoxes', 16); createGrid('ifscBoxes', 11);
+        createGrid('joiningBoxes', 16); createGrid('penBoxes', 12);
 
         generateFormID();
     </script>
 </body>
 </html>
-            
+
+                    
