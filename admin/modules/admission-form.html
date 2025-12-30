@@ -3,104 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission Form | GPS Pethgam</title>
+    <title>Admission Portal | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
     <style>
-        body { background-color: #f1f5f9; font-family: 'Arial', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+        body { background-color: #f1f5f9; font-family: 'Outfit', sans-serif; }
         .form-page { width: 850px; background: white; margin: 20px auto; padding: 40px; border: 1px solid #000; position: relative; }
-        .box-grid { display: flex; gap: 0; margin-top: 2px; }
+        .box-grid { display: flex; gap: 0; margin-top: 1px; }
         .char-box { width: 22px; height: 24px; border: 1px solid #000; text-align: center; line-height: 24px; font-size: 13px; font-weight: bold; }
         .field-label { font-size: 13px; font-weight: 800; text-decoration: underline; margin-top: 8px; display: block; }
-        .category-box { border: 1px solid #000; padding: 2px 8px; font-size: 10px; font-weight: bold; }
+        .category-box { border: 1px solid #000; padding: 1px 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .active-cat { background: #000; color: #fff; }
         @media print { .no-print { display: none; } body { background: white; padding: 0; } .form-page { border: none; margin: 0; width: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="no-print max-w-3xl mx-auto mt-6 bg-white p-6 rounded-xl shadow-lg border-2 border-emerald-600">
-        <h2 class="font-black text-emerald-800 uppercase mb-4 text-center">Secure Online Admission</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="text-[10px] font-bold">Select Class</label>
-                <select id="classSelect" onchange="generateFormID()" class="w-full p-2 border rounded">
+    <div class="no-print max-w-4xl mx-auto mt-6 bg-white p-8 rounded-3xl shadow-2xl border-2 border-emerald-600">
+        <h2 class="font-black text-emerald-800 uppercase mb-6 text-center text-xl tracking-tighter">Student Information System</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-3">
+                <p class="text-[10px] font-black text-emerald-600 uppercase">Basic Details</p>
+                <select id="classSelect" onchange="generateFormID()" class="w-full p-2 border-2 rounded-xl text-sm font-bold">
                     <option value="01">Pre-Primary 3</option>
                     <option value="02">Pre-Primary 2</option>
                     <option value="03">Balvatika</option>
                     <option value="04" selected>1st Primary</option>
                 </select>
+                <input type="text" placeholder="Full Name" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Aadhaar Name" oninput="fill('aadhaarNameBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Aadhaar Number" maxlength="12" oninput="fill('aadhaarNumBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
             </div>
-            <div>
-                <label class="text-[10px] font-bold">Student Name</label>
-                <input type="text" id="stuName" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border rounded">
+
+            <div class="space-y-3">
+                <p class="text-[10px] font-black text-emerald-600 uppercase">Family & Residence</p>
+                <input type="text" placeholder="Father's Name" oninput="fill('fatherBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Mother's Name" oninput="fill('motherBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Residence/Village" oninput="fill('resBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Contact Number" oninput="fill('fContactBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
             </div>
-            <button onclick="submitToFirebase()" id="btnSubmit" class="bg-emerald-600 text-white font-black py-3 rounded col-span-full uppercase shadow-lg">Submit & Print Form</button>
+
+            <div class="space-y-3">
+                <p class="text-[10px] font-black text-emerald-600 uppercase">Finance & PEN</p>
+                <input type="text" placeholder="Bank Account No" oninput="fill('bankAccBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="IFSC Code" oninput="fill('ifscBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="Ration Card No" oninput="fill('rationBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+                <input type="text" placeholder="PEN Number (If any)" oninput="fill('penBoxes', this.value)" class="w-full p-2 border-2 rounded-xl text-sm">
+            </div>
         </div>
+
+        <button onclick="submitAndPrint()" id="btnSubmit" class="mt-8 w-full bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase shadow-xl hover:bg-emerald-700 transition-all">
+            Save Record & Generate Form
+        </button>
     </div>
 
     <div class="form-page" id="admissionForm">
-        <div class="absolute top-10 right-10 text-right">
-            <p class="text-[10px] font-bold uppercase">Form No:</p>
-            <div id="formIdDisplay" class="text-xl font-black tracking-widest border-2 border-black px-4 py-1">250401</div>
-        </div>
-        <div class="flex items-center border-b-2 border-black pb-2 mb-4">
-            <img src="../../assets/logo.png" class="w-20 h-20" alt="Logo">
-            <div class="flex-1 text-center">
-                <h1 class="text-2xl font-black uppercase">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-                <p class="text-[11px] font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
-                <h2 class="text-xl font-black underline mt-2">ADMISSION FORM</h2>
+        <div class="absolute top-10 right-10 flex flex-col items-end gap-2">
+            <div class="border-2 border-black px-4 py-1">
+                <p class="text-[8px] font-bold uppercase leading-none">Form No</p>
+                <span id="formIdDisplay" class="text-lg font-black tracking-widest">250401</span>
             </div>
-            <div class="w-24 h-32 border-2 border-black flex items-center justify-center text-[10px]">Photo</div>
+            <div class="w-24 h-32 border-2 border-black flex items-center justify-center text-[9px] text-center p-2">Photo</div>
         </div>
 
-        <div class="space-y-2">
+        <div class="flex items-center border-b-2 border-black pb-2 mb-4 pr-32">
+            <img src="../../assets/logo.png" class="w-16 h-16" alt="Logo">
+            <div class="flex-1 text-center">
+                <h1 class="text-xl font-black uppercase">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <p class="text-[10px] font-bold italic">Babareshi Road Near Zonal Education Office Wagoora</p>
+                <p class="text-[9px]">UDISE Code: 01022202207 | Email: pspethgam@gmail.com</p>
+                <h2 class="text-lg font-black underline mt-1 tracking-tighter">ADMISSION FORM</h2>
+            </div>
+        </div>
+
+        <div class="space-y-1">
             <label class="field-label">Students Name:</label>
             <div class="box-grid" id="nameBoxes"></div>
+
+            <label class="field-label">Name As Per Aadhaar:</label>
+            <div class="box-grid" id="aadhaarNameBoxes"></div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Father's Name:</label><div class="box-grid" id="fatherBoxes"></div></div>
+                <div><label class="field-label">Mother's Name:</label><div class="box-grid" id="motherBoxes"></div></div>
             </div>
+
+            <label class="field-label">Residence:</label>
+            <div class="box-grid" id="resBoxes"></div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Father's Contact:</label><div class="box-grid" id="fContactBoxes"></div></div>
+                <div>
+                    <label class="field-label">Date of Birth (In figures):</label>
+                    <div class="box-grid" id="dobBoxes"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Aadhaar Number:</label><div class="box-grid" id="aadhaarNumBoxes"></div></div>
+                <div><label class="field-label">Blood Group:</label><div class="w-full border-b border-black h-5"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Bank Account Number:</label><div class="box-grid" id="bankAccBoxes"></div></div>
+                <div><label class="field-label">IFSC Code:</label><div class="box-grid" id="ifscBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Ration Card Number:</label><div class="box-grid" id="rationBoxes"></div></div>
+                <div>
+                    <label class="field-label">Category:</label>
+                    <div class="flex gap-2 mt-1">
+                        <span class="category-box">SC</span><span class="category-box">ST</span>
+                        <span class="category-box">OBC</span><span class="category-box">GEN</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Class Joining:</label><div class="box-grid" id="joiningBoxes"></div></div>
+                <div><label class="field-label">PEN Number:</label><div class="box-grid" id="penBoxes"></div></div>
+            </div>
+
+            <div class="mt-6 border-t-2 border-black pt-2">
+                <p class="text-[9px] leading-tight text-justify italic">I do hereby declare that the information provided is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations...</p>
+                <div class="flex justify-between mt-12 font-bold text-[10px] uppercase">
+                    <span class="border-t border-black px-4">Parent Sig.</span>
+                    <span class="border-t border-black px-4">Adm. Incharge</span>
+                    <span class="border-t border-black px-4">Headmaster</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 border-2 border-black p-2 bg-slate-50 text-[9px]">
+                <p class="font-black underline mb-1">FOR OFFICE USE ONLY</p>
+                <p>Admitted to Class __________ under Admission No. __________ Dated ___/___/2025.</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // REPLACE WITH YOUR FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-            projectId: "YOUR_PROJECT",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        async function generateFormID() {
-            const classCode = document.getElementById('classSelect').value;
-            const year = "25";
-            
-            // Fetch last sequence from Firebase
-            const snapshot = await db.ref('admission_meta/' + classCode).once('value');
-            let sequence = (snapshot.val() || 0) + 1;
-            let seqString = sequence.toString().padStart(2, '0');
-            
-            document.getElementById('formIdDisplay').innerText = year + classCode + seqString;
-            return { fullId: year + classCode + seqString, nextSeq: sequence };
+        // GRID GENERATOR
+        function createGrid(id, count) {
+            const container = document.getElementById(id);
+            for(let i=0; i<count; i++) {
+                const box = document.createElement('div');
+                box.className = 'char-box';
+                container.appendChild(box);
+            }
         }
 
-        async function submitToFirebase() {
-            const btn = document.getElementById('btnSubmit');
-            btn.innerText = "Saving to Cloud...";
-            btn.disabled = true;
+        function fill(gridId, value) {
+            const boxes = document.getElementById(gridId).getElementsByClassName('char-box');
+            const chars = value.toUpperCase().split('');
+            for(let i=0; i<boxes.length; i++) { boxes[i].innerText = chars[i] || ''; }
+        }
 
-            const { fullId, nextSeq } = await generateFormID();
+        async function generateFormID() {
+            const year = "25";
             const classCode = document.getElementById('classSelect').value;
+            // Simulated sequence (Replace with Firebase call)
+            const seq = "01"; 
+            document.getElementById('formIdDisplay').innerText = year + classCode + seq;
+            fill('joiningBoxes', document.getElementById('classSelect').selectedOptions[0].text);
+        }
 
-            const studentData = {
-                form_id: fullId,
-                name: document.getElementById('stuName').value,
-                timestamp: Date.now()
+        function submitAndPrint() {
+            window.print();
+        }
+
+        // INITIALIZE ALL GRIDS FROM IMAGE
+        createGrid('nameBoxes', 32); createGrid('aadhaarNameBoxes', 32);
+        createGrid('fatherBoxes', 24); createGrid('motherBoxes', 24);
+        createGrid('resBoxes', 32); createGrid('fContactBoxes', 10);
+        createGrid('aadhaarNumBoxes', 12); createGrid('dobBoxes', 8);
+        createGrid('bankAccBoxes', 16); createGrid('ifscBoxes', 11);
+        createGrid('rationBoxes', 15); createGrid('joiningBoxes', 12);
+        createGrid('penBoxes', 11);
+
+        generateFormID();
+    </script>
+</body>
+</html>
             };
 
             await db.ref('admissions/' + fullId).set(studentData);
