@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDM Expenditure Statement | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; }
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        th, td { border: 1px solid black; padding: 4px; text-align: center; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
+    </style>
+</head>
+<body class="bg-slate-100 p-4">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
+        <h2 class="text-xl font-black text-emerald-700 mb-4 uppercase tracking-tighter">MDM Report Generator</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <input type="month" id="reportMonth" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" onchange="updateReport()">
+            <input type="number" id="workingDays" placeholder="Working Days" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" oninput="updateReport()">
+            <input type="number" id="mdmServedDays" placeholder="Days MDM Served" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" oninput="updateReport()">
+            <button onclick="window.print()" class="bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">Print Statement</button>
+        </div>
+        <p class="text-[10px] text-slate-400 font-bold uppercase italic">Enter data above to auto-fill the official table below.</p>
+    </div>
+
+    <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
+        <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
+            <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
+            <div class="text-center flex-1">
+                <p class="italic text-sm font-serif">Office of the Headmaster</p>
+                <h1 class="text-2xl font-bold tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <h3 class="text-md font-bold uppercase tracking-widest mt-1">Month Wise/Department Wise Expenditure Statement under MDM Scheme</h3>
+            </div>
+            <div class="w-16"></div>
+        </div>
+
+        <table>
+            <thead class="bg-slate-50">
+                <tr>
+                    <th>Month</th>
+                    <th>Scheme</th>
+                    <th>Total Roll</th>
+                    <th>No. of Working Days</th>
+                    <th>No. of days MDM Served</th>
+                    <th>No of Students Covered</th>
+                    <th>No. of Meals Served</th>
+                    <th>Opening Balance of Rice</th>
+                    <th>Food Grains Lifted</th>
+                    <th>Food Grains Utilized</th>
+                    <th>Closing Balance of Food Grains</th>
+                    <th>Opening Balance of Funds</th>
+                    <th>Funds Utilized on a/c of cooking cost</th>
+                    <th>Funds Received on a/c of cooking cost</th>
+                    <th>Closing Balance of Funds</th>
+                    <th>No. of Cooks working</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3" class="vertical-text" id="displayMonth">SEPTEMBER 2025</td>
+                    <td class="font-bold">Pre-Primary (Bal Vatika)</td>
+                    <td>21</td>
+                    <td class="wDays">20</td>
+                    <td class="sDays">9</td>
+                    <td>136</td>
+                    <td>136</td>
+                    <td>173.570</td>
+                    <td>0.000</td>
+                    <td>13.600</td>
+                    <td>159.97</td>
+                    <td></td>
+                    <td>922.08</td>
+                    <td></td>
+                    <td></td>
+                    <td rowspan="3" class="font-bold">1</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Primary</td>
+                    <td>47</td>
+                    <td class="wDays">20</td>
+                    <td class="sDays">9</td>
+                    <td>344</td>
+                    <td>344</td>
+                    <td>252.300</td>
+                    <td>0.000</td>
+                    <td>34.400</td>
+                    <td>217.9</td>
+                    <td></td>
+                    <td>2332.32</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="bg-slate-100 font-black">
+                    <td>Total</td>
+                    <td>68</td>
+                    <td class="wDays">20</td>
+                    <td class="sDays">9</td>
+                    <td>480</td>
+                    <td>480</td>
+                    <td>425.870</td>
+                    <td>0.000</td>
+                    <td>48.000</td>
+                    <td>377.87</td>
+                    <td></td>
+                    <td>3254.4</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-6 grid grid-cols-2 gap-8 text-xs">
+            <div class="space-y-2">
+                <p><strong>MDM A/C of School (16 digits):</strong> 0486040500000273</p>
+                <table class="w-full text-center">
+                    <tr>
+                        <th colspan="3">Account Number of Cooks</th>
+                    </tr>
+                    <tr>
+                        <td>S No</td>
+                        <td>Name of the Cook</td>
+                        <td>A/C No (16 digits)</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>SHAHEENA BANO</td>
+                        <td>0486040100006054</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="flex flex-col justify-between items-end pt-10">
+                <div class="text-left w-48 space-y-2">
+                    <p><strong>MDM I/C</strong></p>
+                    <p>Name: _________________</p>
+                    <p>Contact No: ____________</p>
+                    <p>Sig. ___________________</p>
+                </div>
+                <p class="font-black mt-10">Headmaster</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateReport() {
+            const monthInput = document.getElementById('reportMonth').value;
+            const wDays = document.getElementById('workingDays').value || "20";
+            const sDays = document.getElementById('mdmServedDays').value || "9";
+
+            if(monthInput) {
+                const date = new Date(monthInput);
+                const monthName = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+                document.getElementById('displayMonth').innerText = monthName + " " + date.getFullYear();
+            }
+
+            document.querySelectorAll('.wDays').forEach(el => el.innerText = wDays);
+            document.querySelectorAll('.sDays').forEach(el => el.innerText = sDays);
+        }
+    </script>
+</body>
+</html>
