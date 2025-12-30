@@ -3,139 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Admission | GPS Pethgam</title>
+    <title>Official Admission Form | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
-        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
-        .page-break { page-break-before: always; }
-        .box-char {
-            width: 24px; height: 28px; border: 1px solid #000;
-            text-align: center; font-size: 14px; font-weight: bold;
-            text-transform: uppercase; line-height: 28px; background: white;
-            display: inline-block; margin-right: 1px;
+        body { background-color: #f1f5f9; font-family: 'Arial', sans-serif; }
+        .form-page {
+            width: 850px; background: white; margin: 20px auto; padding: 40px;
+            border: 1px solid #ccc; position: relative;
+        }
+        .box-grid { display: flex; gap: 0; margin-top: 2px; flex-wrap: wrap; }
+        .char-box {
+            width: 22px; height: 24px; border: 1px solid #000;
+            text-align: center; line-height: 24px; font-size: 13px;
+            font-weight: bold; text-transform: uppercase; background: #fff;
+        }
+        .field-label { font-size: 13px; font-weight: 800; text-decoration: underline; margin-top: 10px; display: block; }
+        .sub-label { font-size: 10px; font-weight: normal; margin-right: 15px; }
+        
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+            .form-page { border: none; margin: 0; width: 100%; }
         }
     </style>
 </head>
-<body class="p-4 pb-20">
+<body>
 
-    <nav class="max-w-4xl mx-auto mb-6 flex justify-between items-center no-print bg-white p-4 rounded-2xl shadow-sm">
-        <h2 class="font-black text-blue-600">ADMISSION PORTAL 2025</h2>
-        <button onclick="generateFullPDF()" class="bg-emerald-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-emerald-700">
-            <i class="fa-solid fa-file-pdf mr-2"></i> Submit & Download PDF
-        </button>
-    </nav>
+    <div class="no-print max-w-2xl mx-auto mt-6 bg-white p-4 rounded-xl shadow-lg border-2 border-blue-500">
+        <h2 class="font-black text-center text-blue-800 uppercase mb-2">Digital Admission Entry</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <input type="text" id="inputName" oninput="fill('nameBoxes', this.value)" placeholder="Student Name" class="p-2 border-2 rounded">
+            <input type="text" id="inputAadhaarName" oninput="fill('aadhaarNameBoxes', this.value)" placeholder="Name as per Aadhaar" class="p-2 border-2 rounded">
+            <input type="text" id="inputFather" oninput="fill('fatherBoxes', this.value)" placeholder="Father's Name" class="p-2 border-2 rounded">
+            <input type="text" id="inputMother" oninput="fill('motherBoxes', this.value)" placeholder="Mother's Name" class="p-2 border-2 rounded">
+            <input type="file" id="photoFile" onchange="preview(this)" class="text-xs">
+            <button onclick="window.print()" class="bg-blue-600 text-white font-black py-2 rounded">PRINT FORM</button>
+        </div>
+    </div>
 
-    <div id="pdfContent" class="max-w-[900px] mx-auto space-y-8">
-        
-        <div id="formPage" class="bg-white p-10 border border-slate-200">
-            <div class="flex items-center gap-4 border-b-2 border-black pb-4 mb-6">
-                <img src="../../assets/logo.png" class="w-20 h-20" alt="Logo">
-                <div class="flex-1 text-center">
-                    <h1 class="text-xl font-black uppercase">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-                    <p class="text-[10px] font-bold">UDISE: 01022202207 | Session 2025-26</p>
-                    <h2 class="inline-block border-2 border-black px-6 py-1 mt-2 font-black text-lg uppercase">Admission Form</h2>
-                </div>
-                <div id="studentPhotoPreview" class="w-24 h-28 border-2 border-black flex items-center justify-center text-[10px]">Photo</div>
+    <div id="captureArea" class="form-page">
+        <div class="flex items-center border-b-2 border-black pb-2 mb-4">
+            <img src="../../assets/logo.png" class="w-20 h-20" alt="Logo">
+            <div class="flex-1 text-center">
+                <h1 class="text-2xl font-black uppercase">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <p class="text-[12px] font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
+                <p class="text-[11px]">Email ID: pspethgam@gmail.com . UDISE Code: 01022202207</p>
+                <h2 class="text-xl font-bold underline mt-2">ADMISSION FORM</h2>
             </div>
-
-            <div class="grid grid-cols-1 gap-6 no-print bg-slate-50 p-6 rounded-xl mb-10">
-                <p class="text-[10px] font-black text-blue-500 uppercase">Input Information Below</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="inName" oninput="syncForm()" placeholder="Student Name" class="p-2 border rounded">
-                    <input type="text" id="inFather" oninput="syncForm()" placeholder="Father's Name" class="p-2 border rounded">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="file" id="photoUpload" accept="image/*" onchange="previewImage(this, 'studentPhotoPreview')" class="text-xs">
-                    <input type="file" id="docUpload" accept="image/*" multiple onchange="handleDocs(this)" class="text-xs">
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <div>
-                    <label class="font-bold text-xs uppercase">Student Name:</label>
-                    <div id="boxRowName" class="mt-1"></div>
-                </div>
-                <div>
-                    <label class="font-bold text-xs uppercase">Father's Name:</label>
-                    <div id="boxRowFather" class="mt-1"></div>
-                </div>
-                <div class="mt-20">
-                    <p class="text-[10px] italic">I hereby declare that the info provided is correct...</p>
-                    <div class="mt-10 flex justify-between border-t border-black pt-2">
-                        <span class="text-xs font-bold">Parent Signature</span>
-                        <span class="text-xs font-bold">Headmaster</span>
-                    </div>
-                </div>
+            <div id="photoPreview" class="w-24 h-32 border-2 border-black rounded-lg flex items-center justify-center text-[10px] text-center p-2">
+                Paste Photograph
             </div>
         </div>
 
-        <div id="docsPage" class="page-break bg-white p-10 border border-slate-200 min-h-[1000px]">
-            <h2 class="text-center font-black border-b-2 border-black pb-2 mb-6 uppercase">Attached Documents</h2>
-            <div id="docsGallery" class="grid grid-cols-1 gap-10">
-                <p class="text-slate-400 text-center text-xs italic">No documents uploaded yet.</p>
+        <div class="space-y-3">
+            <label class="field-label">Students Name:</label>
+            <div class="flex text-[10px] space-x-20 mb-1 italic">
+                <span>First Name</span><span>Middle Name</span><span>Last Name</span>
+            </div>
+            <div class="box-grid" id="nameBoxes"></div>
+
+            <label class="field-label">Name As Per Aadhaar:</label>
+            <div class="flex text-[10px] space-x-20 mb-1 italic">
+                <span>First Name</span><span>Middle Name</span><span>Last Name</span>
+            </div>
+            <div class="box-grid" id="aadhaarNameBoxes"></div>
+
+            <label class="field-label">Father's Name:</label>
+            <div class="box-grid" id="fatherBoxes"></div>
+
+            <label class="field-label">Mother's Name:</label>
+            <div class="box-grid" id="motherBoxes"></div>
+
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="field-label">Residence:</label>
+                    <div class="box-grid" id="resBoxes"></div>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="field-label">Tehsil:</label>
+                    <div class="box-grid" id="tehsilBoxes"></div>
+                </div>
+                <div class="w-1/2">
+                    <label class="field-label">District:</label>
+                    <div class="box-grid" id="distBoxes"></div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="field-label">Father's Contact Number:</label>
+                    <div class="box-grid" id="fContactBoxes"></div>
+                </div>
+                <div class="w-1/2">
+                    <label class="field-label">Mother's Contact Number:</label>
+                    <div class="box-grid" id="mContactBoxes"></div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="field-label">Aadhaar Number:</label>
+                    <div class="box-grid" id="aadhaarNumBoxes"></div>
+                </div>
+                <div>
+                    <label class="field-label">Date of Birth (in figures):</label>
+                    <div class="box-grid" id="dobBoxes"></div>
+                    <div class="flex text-[9px] gap-4 mt-1"><span>D D</span><span>M M</span><span>Y Y Y Y</span></div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="field-label">Bank Account Number:</label>
+                    <div class="box-grid" id="bankAccBoxes"></div>
+                </div>
+                <div class="w-1/3">
+                    <label class="field-label">Bank Name:</label>
+                    <div class="box-grid" id="bankNameBoxes"></div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-2 border-t border-black">
+                <h3 class="font-black text-sm underline">Parents Declaration:</h3>
+                <p class="text-[10px] leading-tight text-justify">
+                    I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations... I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+                </p>
+                <div class="flex justify-between mt-6 italic font-bold text-[11px]">
+                    <span>Signature of Parent</span>
+                    <span>Sig. Of Adm. Incharge</span>
+                    <span>Sig. Of Headmaster</span>
+                </div>
+            </div>
+
+            <div class="mt-4 p-2 border-2 border-black bg-slate-50 text-[9px]">
+                <p class="font-black underline mb-1">For Office Use Only</p>
+                <p>The Student is admitted to Class [__________] under Admission No. [__________]</p>
+                <p>Today on ___/___/20__ All required documents, including Birth Certificate, Residence Proof, and Transfer Certificate (if applicable) have been duly verified.</p>
             </div>
         </div>
     </div>
 
     <script>
-        function createBoxes(text, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            const paddedText = text.toUpperCase().padEnd(25, ' ');
-            for(let char of paddedText.substring(0, 25)) {
+        function createGrid(id, count) {
+            const container = document.getElementById(id);
+            for(let i=0; i<count; i++) {
                 const box = document.createElement('div');
-                box.className = 'box-char';
-                box.innerText = char !== ' ' ? char : '';
+                box.className = 'char-box';
                 container.appendChild(box);
             }
         }
 
-        function syncForm() {
-            createBoxes(document.getElementById('inName').value, 'boxRowName');
-            createBoxes(document.getElementById('inFather').value, 'boxRowFather');
+        function fill(gridId, value) {
+            const boxes = document.getElementById(gridId).getElementsByClassName('char-box');
+            const chars = value.toUpperCase().split('');
+            for(let i=0; i<boxes.length; i++) {
+                boxes[i].innerText = chars[i] || '';
+            }
         }
 
-        function previewImage(input, targetId) {
+        function preview(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById(targetId).innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
-                };
+                reader.onload = e => document.getElementById('photoPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function handleDocs(input) {
-            const gallery = document.getElementById('docsGallery');
-            gallery.innerHTML = '';
-            Array.from(input.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = "w-full border-2 border-slate-200 shadow-sm";
-                    gallery.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function generateFullPDF() {
-            const element = document.getElementById('pdfContent');
-            const opt = {
-                margin: 0,
-                filename: 'GPS_Pethgam_Admission_2025.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        syncForm(); // Initialize boxes
+        // Initialize Grids to match image layout
+        createGrid('nameBoxes', 32);
+        createGrid('aadhaarNameBoxes', 32);
+        createGrid('fatherBoxes', 32);
+        createGrid('motherBoxes', 32);
+        createGrid('resBoxes', 32);
+        createGrid('tehsilBoxes', 16);
+        createGrid('distBoxes', 16);
+        createGrid('fContactBoxes', 12);
+        createGrid('mContactBoxes', 12);
+        createGrid('aadhaarNumBoxes', 12);
+        createGrid('dobBoxes', 8);
+        createGrid('bankAccBoxes', 18);
+        createGrid('bankNameBoxes', 12);
     </script>
 </body>
 </html>
+                
