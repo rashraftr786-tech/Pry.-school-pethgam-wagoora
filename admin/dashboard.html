@@ -28,8 +28,8 @@
                 <h3 class="text-3xl font-black">154</h3>
             </div>
             <div class="bg-white/10 border border-white/10 p-5 rounded-3xl">
-                <p class="text-[9px] font-black text-slate-400 uppercase">Staff Active</p>
-                <h3 class="text-3xl font-black">08</h3>
+                <p class="text-[9px] font-black text-slate-400 uppercase">Staff Today</p>
+                <h3 class="text-3xl font-black">07/08</h3>
             </div>
         </div>
     </header>
@@ -37,7 +37,7 @@
     <main class="p-6 max-w-6xl mx-auto space-y-8">
         
         <section>
-            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">Core Operations</h3>
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">Main Management</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 
                 <a href="modules/certificate-gen.html" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-purple-500 transition-all">
@@ -54,54 +54,48 @@
                     <span class="text-[10px] font-black uppercase text-slate-600">MDM Reports</span>
                 </a>
 
-                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-blue-500 transition-all opacity-60">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                <a href="modules/staff-attendance.html" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-orange-500 transition-all border-2 border-orange-50">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-600">Staff Control</span>
+                </a>
+
+                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group opacity-50 cursor-not-allowed">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-3">
                         <i class="fa-solid fa-user-plus"></i>
                     </div>
                     <span class="text-[10px] font-black uppercase text-slate-600">Admission</span>
-                </a>
-
-                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-orange-500 transition-all opacity-60">
-                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-users-gear"></i>
-                    </div>
-                    <span class="text-[10px] font-black uppercase text-slate-600">Staff Control</span>
                 </a>
 
             </div>
         </section>
 
         <section class="bg-white p-8 rounded-[3rem] shadow-sm border border-slate-100">
-            <h3 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-6">Student Attendance Trends</h3>
+            <h3 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-6">Attendance Summary</h3>
             <canvas id="adminChart" height="250"></canvas>
         </section>
 
     </main>
 
-    <div class="fixed bottom-8 right-8 z-50">
-        <a href="modules/certificate-gen.html" class="w-16 h-16 bg-slate-900 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform border-4 border-white">
-            <i class="fa-solid fa-print text-xl"></i>
-        </a>
-    </div>
-
     <script>
         const ctx = document.getElementById('adminChart').getContext('2d');
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                labels: ['Staff', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5'],
                 datasets: [{
-                    label: 'Attendance %',
-                    data: [85, 88, 92, 84, 90, 87],
-                    borderColor: '#3b82f6',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                    label: 'Present Today',
+                    data: [7, 21, 18, 25, 20, 22],
+                    backgroundColor: ['#f97316', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6'],
+                    borderRadius: 12
                 }]
             },
-            options: { 
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, min: 70 } }
+            options: { plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
             }
         });
     </script>
