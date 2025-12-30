@@ -3,85 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Pethgam | Smart School 2025</title>
+    <title>GPS Pethgam | Official Smart ERP</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        :root { --primary: #0ea5e9; --secondary: #f97316; }
+        body { font-family: 'Outfit', sans-serif; background: #f8fafc; }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+        .bento-item { background: white; padding: 1.5rem; border-radius: 2rem; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        .bento-item:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .animate-marquee { display: inline-block; animation: marquee 25s linear infinite; }
+    </style>
 </head>
-<body class="bg-slate-50 pb-20">
+<body class="pb-24">
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 p-4 border-b-2 border-slate-100">
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b p-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="assets/logo.png" alt="Logo" class="w-10 h-10">
-                <h1 class="font-black text-blue-600 tracking-tight text-lg">GPS PETHGAM</h1>
+                <img src="assets/img/logo.png" alt="Logo" class="w-12 h-12 rounded-xl border-2 border-blue-500 p-1">
+                <h1 class="text-xl font-black text-slate-800">GPS <span class="text-blue-600">PETHGAM</span></h1>
             </div>
-            <a href="admin/login.html" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">STAFF LOGIN</a>
+            <div class="hidden md:flex gap-6 text-sm font-bold text-slate-600">
+                <a href="#about">About</a>
+                <a href="student/resources/library.html">E-Library</a>
+                <a href="student/login.html" class="text-orange-500">Result Search</a>
+            </div>
+            <button onclick="location.href='admin/login.html'" class="bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-bold">STAFF LOGIN</button>
         </div>
     </nav>
 
-    <div class="bg-yellow-300 py-2 overflow-hidden flex whitespace-nowrap">
-        <div class="animate-marquee px-4 text-[10px] font-black uppercase tracking-widest text-black">
-            📢 Online Admission 2025 Now Open! &nbsp;&nbsp; | &nbsp;&nbsp; 🥗 Today's MDM: Rice & Dal &nbsp;&nbsp; | &nbsp;&nbsp; 🏆 School Wins District Quiz
+    <div class="bg-blue-600 text-white py-2 overflow-hidden whitespace-nowrap border-y-2 border-blue-700">
+        <div class="animate-marquee px-4 text-xs font-bold uppercase tracking-widest">
+            📢 Admission Open for 2025-26 &nbsp; | &nbsp; 🍱 Today's MDM: Veg Pulao &nbsp; | &nbsp; 📅 PTM Meeting: Jan 5th
         </div>
     </div>
 
-    <main class="p-6 space-y-8 max-w-6xl mx-auto">
-        <div class="bg-blue-600 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-200">
-            <h2 class="text-3xl font-black mb-4 leading-none">Smart Education <br>for Pethgam.</h2>
-            <p class="text-blue-100 text-sm mb-6">Building a brighter future for the children of Wagoora, Baramulla.</p>
-            <div class="flex gap-4">
-                <button class="bg-white text-blue-600 px-6 py-3 rounded-2xl text-xs font-black shadow-lg">ADMISSIONS</button>
-                <button class="bg-blue-500/50 border border-white/20 px-6 py-3 rounded-2xl text-xs font-bold">GALLERY</button>
+    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-10">
+        
+        <header class="relative bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-10 text-white overflow-hidden">
+            <div class="relative z-10 max-w-lg">
+                <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Wagoora, Baramulla</span>
+                <h2 class="text-4xl md:text-5xl font-black mt-4 leading-tight">Digital Schooling <br>In Every Village.</h2>
+                <p class="mt-4 text-blue-100 text-sm">Access results, certificates, and daily MDM reports with one click.</p>
+                <div class="flex gap-4 mt-8">
+                    <button class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-black text-xs shadow-xl">APPLY ONLINE</button>
+                    <button class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black text-xs shadow-xl">DOWNLOADS</button>
+                </div>
             </div>
-        </div>
+            <i class="fa-solid fa-graduation-cap absolute -bottom-10 -right-10 text-[15rem] opacity-10 rotate-12"></i>
+        </header>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a href="admin/login.html" class="bg-purple-100 p-6 rounded-3xl border-2 border-purple-200 flex flex-col items-center group">
-                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm group-hover:bg-purple-600 group-hover:text-white transition-all">
-                    <i class="fa-solid fa-user-tie"></i>
+        <section>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 px-4">Portal Shortcuts</h3>
+            <div class="bento-grid">
+                <a href="admin/dashboard.html" class="bento-item flex flex-col items-center">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-user-shield"></i></div>
+                    <span class="text-xs font-black">Admin</span>
+                </a>
+                <a href="teacher/dashboard.html" class="bento-item flex flex-col items-center">
+                    <div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <span class="text-xs font-black">Teacher</span>
+                </a>
+                <a href="student/dashboard.html" class="bento-item flex flex-col items-center">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-user-graduate"></i></div>
+                    <span class="text-xs font-black">Student</span>
+                </a>
+                <div class="bento-item flex flex-col items-center cursor-pointer">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-bowl-rice"></i></div>
+                    <span class="text-xs font-black">MDM Menu</span>
                 </div>
-                <span class="text-xs font-black uppercase text-purple-800">Admin</span>
-            </a>
-            <a href="teacher/login.html" class="bg-emerald-100 p-6 rounded-3xl border-2 border-emerald-200 flex flex-col items-center group">
-                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                    <i class="fa-solid fa-chalkboard-user"></i>
-                </div>
-                <span class="text-xs font-black uppercase text-emerald-800">Teacher</span>
-            </a>
-            <a href="student/login.html" class="bg-orange-100 p-6 rounded-3xl border-2 border-orange-200 flex flex-col items-center group">
-                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm group-hover:bg-orange-600 group-hover:text-white transition-all">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <span class="text-xs font-black uppercase text-orange-800">Student</span>
-            </a>
-        </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-6 px-4">
+            <div class="text-center">
+                <h4 class="text-3xl font-black text-slate-800">150+</h4>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Students</p>
+            </div>
+            <div class="text-center">
+                <h4 class="text-3xl font-black text-slate-800">12</h4>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Teachers</p>
+            </div>
+            <div class="text-center">
+                <h4 class="text-3xl font-black text-slate-800">100%</h4>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">MDM Compliance</p>
+            </div>
+            <div class="text-center">
+                <h4 class="text-3xl font-black text-slate-800">A+</h4>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Grading</p>
+            </div>
+        </section>
     </main>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around md:hidden">
-        <i class="fa-solid fa-house text-blue-600"></i>
-        <i class="fa-solid fa-bullhorn text-slate-300"></i>
-        <i class="fa-solid fa-book text-slate-300"></i>
-        <i class="fa-solid fa-circle-user text-slate-300"></i>
-    </div>
-
-    <style>
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { animation: marquee 20s linear infinite; }
-    </style>
-</body>
-</html>
-            <i class="fa-solid fa-qrcode text-white"></i>
-        </div>
-        <i class="fa-solid fa-message text-gray-300 text-xl"></i>
-        <i class="fa-solid fa-user text-gray-300 text-xl"></i>
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-slate-900/90 backdrop-blur-xl rounded-full p-2 flex justify-around items-center border border-white/10 shadow-2xl z-[100]">
+        <a href="#" class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center"><i class="fa-solid fa-house"></i></a>
+        <a href="student/resources/downloads.html" class="text-slate-400 hover:text-white"><i class="fa-solid fa-download"></i></a>
+        <a href="student/login.html" class="text-slate-400 hover:text-white"><i class="fa-solid fa-magnifying-glass-chart"></i></a>
+        <a href="student/dashboard.html" class="text-slate-400 hover:text-white"><i class="fa-solid fa-circle-user"></i></a>
     </nav>
 
-    <script>
-        function toggleLogin() {
-            alert("Admin, Teacher, and Student login forms are ready for Firebase integration.");
-        }
-    </script>
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
 
