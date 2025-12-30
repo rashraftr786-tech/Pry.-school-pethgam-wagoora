@@ -187,35 +187,4 @@
     </script>
 </body>
 </html>
-            };
-
-            await db.ref('admissions/' + fullId).set(studentData);
-            await db.ref('admission_meta/' + classCode).set(nextSeq);
-
-            alert("Data Saved! Form No: " + fullId);
-            window.print();
-            btn.innerText = "Submit & Print Form";
-            btn.disabled = false;
-        }
-
-        function createGrid(id, count) {
-            const container = document.getElementById(id);
-            for(let i=0; i<count; i++) {
-                const box = document.createElement('div');
-                box.className = 'char-box';
-                container.appendChild(box);
-            }
-        }
-
-        function fill(gridId, value) {
-            const boxes = document.getElementById(gridId).getElementsByClassName('char-box');
-            const chars = value.toUpperCase().split('');
-            for(let i=0; i<boxes.length; i++) { boxes[i].innerText = chars[i] || ''; }
-        }
-
-        createGrid('nameBoxes', 32);
-        generateFormID();
-    </script>
-</body>
-</html>
             
