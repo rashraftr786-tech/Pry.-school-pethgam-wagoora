@@ -47,32 +47,32 @@
                     <span class="text-[10px] font-black uppercase text-slate-600">Certificates</span>
                 </a>
 
-                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-blue-500 transition-all">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </div>
-                    <span class="text-[10px] font-black uppercase text-slate-600">Admission</span>
-                </a>
-
-                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-orange-500 transition-all">
-                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <span class="text-[10px] font-black uppercase text-slate-600">Results</span>
-                </a>
-
-                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-emerald-500 transition-all">
+                <a href="modules/mdm-report.html" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-emerald-500 transition-all">
                     <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                     </div>
                     <span class="text-[10px] font-black uppercase text-slate-600">MDM Reports</span>
                 </a>
 
+                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-blue-500 transition-all opacity-60">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-600">Admission</span>
+                </a>
+
+                <a href="#" class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center group hover:border-orange-500 transition-all opacity-60">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-600">Staff Control</span>
+                </a>
+
             </div>
         </section>
 
         <section class="bg-white p-8 rounded-[3rem] shadow-sm border border-slate-100">
-            <h3 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-6">Attendance Overview (Monthly)</h3>
+            <h3 class="text-[10px] font-black text-slate-800 uppercase tracking-widest mb-6">Student Attendance Trends</h3>
             <canvas id="adminChart" height="250"></canvas>
         </section>
 
@@ -87,17 +87,22 @@
     <script>
         const ctx = document.getElementById('adminChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5'],
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                 datasets: [{
-                    label: 'Present Students',
-                    data: [28, 32, 25, 30, 29],
-                    backgroundColor: '#3b82f6',
-                    borderRadius: 10
+                    label: 'Attendance %',
+                    data: [85, 88, 92, 84, 90, 87],
+                    borderColor: '#3b82f6',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
                 }]
             },
-            options: { plugins: { legend: { display: false } } }
+            options: { 
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: false, min: 70 } }
+            }
         });
     </script>
 </body>
