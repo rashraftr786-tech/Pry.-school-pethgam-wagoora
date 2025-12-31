@@ -9,142 +9,124 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
         @page { size: A4; margin: 0; }
-        body { background-color: #f1f5f9; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f1f5f9; font-family: 'Times New Roman', serif; margin: 0; padding: 0; }
         .form-page { 
             width: 210mm; height: 297mm; background: white; margin: 10px auto; 
-            padding: 15mm 20mm; border: 1px solid #000; position: relative; box-sizing: border-box;
+            padding: 12mm 18mm; border: 1px solid #000; position: relative; box-sizing: border-box;
+            line-height: 1.5; color: #000;
         }
-        .box-grid { display: flex; gap: 0; margin-top: 2px; }
-        .char-box { width: 24px; height: 28px; border: 1px solid #000; text-align: center; line-height: 28px; font-size: 14px; font-weight: bold; }
+        .dotted-line { border-bottom: 1px dotted #000; display: inline-block; min-width: 120px; padding: 0 5px; font-weight: bold; }
         @media print { .no-print { display: none; } .form-page { margin: 0; border: none; } }
     </style>
 </head>
 <body class="pb-20">
 
-    <div class="no-print max-w-4xl mx-auto mt-6 bg-white p-4 rounded-2xl shadow-lg border-l-8 border-orange-500 flex justify-between items-center">
-        <div>
-            <h2 class="font-black text-slate-800 uppercase text-sm">APAAR Consent Generation</h2>
-            <p class="text-[10px] text-slate-500">Linked with Admission Form No: <span id="linkDisplay" class="font-bold text-orange-600">---</span></p>
+    <div class="no-print max-w-5xl mx-auto mt-6 bg-white p-6 rounded-3xl shadow-2xl border-2 border-blue-600 font-sans">
+        <h2 class="font-black text-blue-800 uppercase mb-4 text-center text-lg italic underline">APAAR Consent Data Entry</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+            <input type="text" id="inFormNo" placeholder="Admission Form No." oninput="sync('outFormNo', this.value)" class="p-2 border rounded-lg text-xs font-bold">
+            <input type="text" id="inParent" placeholder="Parent/Guardian Name" oninput="sync('outParent', this.value); sync('outParent2', this.value)" class="p-2 border rounded-lg text-xs font-bold">
+            <select id="inRelation" onchange="sync('outRelation', this.value); sync('outRelation2', this.value)" class="p-2 border rounded-lg text-xs">
+                <option value="Father">Father</option><option value="Mother">Mother</option><option value="Legal Guardian">Legal Guardian</option>
+            </select>
+            <input type="text" id="inStudent" placeholder="Student Name" oninput="sync('outStudent', this.value)" class="p-2 border rounded-lg text-xs font-bold">
+            <input type="text" id="inIDType" placeholder="Identity Proof (e.g. Aadhaar)" oninput="sync('outIDType', this.value)" class="p-2 border rounded-lg text-xs">
+            <input type="text" id="inIDNum" placeholder="Identity Proof Number" oninput="sync('outIDNum', this.value)" class="p-2 border rounded-lg text-xs">
+            <input type="text" id="inDate" placeholder="Date (DD/MM/2025)" oninput="sync('outDate', this.value); sync('outDate2', this.value)" class="p-2 border rounded-lg text-xs">
+            <input type="text" id="inPlace" placeholder="Place of Consent" oninput="sync('outPlace', this.value)" class="p-2 border rounded-lg text-xs">
+            <input type="text" id="inHoI" placeholder="Head of School Name" oninput="sync('outHoI', this.value)" class="p-2 border rounded-lg text-xs font-bold" value="Mohmad Ashraf Rather">
         </div>
-        <button onclick="saveApaarPDF()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-lg uppercase text-xs shadow-md transition-all">
-            Download APAAR Form
-        </button>
+
+        <div class="flex gap-4 mt-6">
+            <button onclick="window.print()" class="flex-1 bg-slate-900 text-white font-black py-3 rounded-xl uppercase text-xs shadow-lg">Print Form</button>
+            <button onclick="savePDF()" class="flex-1 bg-blue-700 text-white font-black py-3 rounded-xl uppercase text-xs shadow-lg hover:bg-blue-800 transition-all">Download PDF</button>
+        </div>
     </div>
 
     <div class="form-page" id="apaarTemplate">
-        <div class="absolute top-10 right-10 text-right">
-            <div class="border border-black p-1">
-                <p class="text-[9px] font-bold uppercase leading-none">Linked Admission Form No:</p>
-                <p id="apaar_linked_no" class="text-lg font-black tracking-tighter">250401</p>
+        
+        <div class="flex items-start gap-4 mb-2">
+            <img src="assets/logo.png" class="w-20 h-20" alt="Logo">
+            <div class="flex-1 text-center font-sans">
+                <h1 class="text-2xl font-black uppercase tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <p class="text-lg font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
+                <p class="text-lg font-bold">UDISE Code: 01022202207. &nbsp;&nbsp;&nbsp; Zone: Wagoora</p>
             </div>
         </div>
 
-        <div class="flex items-center border-b-2 border-black pb-4 mb-8">
-            <div class="flex-1 text-center">
-                <h1 class="text-3xl font-black uppercase leading-tight">Government Primary School</h1>
-                <p class="text-xl font-bold">Pethgam Wagoora 193109</p>
-                <div class="mt-4 inline-block bg-black text-white px-6 py-1 text-xl font-bold tracking-widest uppercase">
-                    APAAR CONSENT FORM
-                </div>
-            </div>
-        </div>
+        <h2 class="text-center font-bold underline text-[16px] mb-4 uppercase">Consent by Father/Mother/Legal Guardian of Student for APAAR ID Generation</h2>
 
-        <div class="space-y-8 text-[15px] leading-relaxed text-justify">
+        <div class="text-[14px] space-y-4 text-justify">
             <p>
-                I, <strong><span id="out_parent" class="border-b border-black px-4 italic">__________________________</span></strong>, 
-                parent/guardian of <strong><span id="out_student" class="border-b-2 border-black px-4 font-black">__________________________</span></strong>, 
-                bearing Admission Form No. <strong><span id="out_form_no" class="border-b border-black px-2">_________</span></strong>, 
-                studying in Class <strong><span id="out_class" class="border-b border-black px-2">__________</span></strong>, 
-                hereby give my voluntary consent for the following:
+                I <span class="dotted-line" id="outParent">____________________</span> as the <span class="dotted-line" id="outRelation">Father</span> (Father / Mother / Legal Guardian) of <span class="dotted-line" id="outStudent">____________________</span> bearing Admission Form No. <span class="dotted-line" id="outFormNo">__________</span> with my identity proof as <span class="dotted-line" id="outIDType">____________________</span> (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and identity Proof Number <span class="dotted-line" id="outIDNum">____________________</span> voluntarily give my consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the following intents and purposes.
             </p>
 
-            <div class="ml-4 space-y-4">
-                <div class="flex gap-4">
-                    <span class="font-bold">1.</span>
-                    <p>I agree to the creation of a unique <strong>APAAR ID</strong> (Automated Permanent Academic Account Registry) for my ward through the Academic Bank of Credits (ABC) platform.</p>
-                </div>
-                <div class="flex gap-4">
-                    <span class="font-bold">2.</span>
-                    <p>I authorize the school and the Ministry of Education to use my ward’s <strong>Aadhaar Number</strong> for identity verification and to capture educational records, achievements, and scholarships.</p>
-                </div>
-                <div class="flex gap-4">
-                    <span class="font-bold">3.</span>
-                    <p>I understand that the Aadhaar details will be used only for demographic authentication and official academic tracking purposes.</p>
-                </div>
-            </div>
-
-            <div class="mt-8">
-                <label class="text-sm font-bold uppercase underline">Student's Aadhaar Number:</label>
-                <div class="box-grid" id="apaar_grid"></div>
-            </div>
-
-            <p class="mt-8 italic text-sm">
-                I understand that this consent is voluntary and can be withdrawn at any time. I am providing this information of my own free will.
+            <p>
+                I understand that my APAAR ID may be used and shared for limited purposes as may be notified by Ministry of Education from time-to-time for educational and related activities. Further I am also aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to entities engaged in various educational activities such as UDISE+ database, scholarships, maintenance academic records, other stakeholders like Educational Institutions and recruitment agencies.
             </p>
 
-            <div class="flex justify-between mt-24">
-                <div class="text-center">
-                    <p class="w-48 border-t border-black pt-1 font-bold">Date: ____/____/2025</p>
-                    <p class="text-[10px] mt-1 uppercase text-slate-500">Place: Pethgam</p>
-                </div>
-                <div class="text-center">
-                    <p class="w-64 border-t border-black pt-1 font-bold uppercase">Signature of Parent/Guardian</p>
-                    <p class="text-[11px] mt-1 font-bold" id="out_mobile">Mobile: ________________</p>
+            <p>
+                I authorise Ministry of Education to use my Aadhaar number for performing Aadhaar based authentication with UIDAI as per provision of the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits, and Services) Act, 2016 for the aforesaid purpose. I understand that UIDAI will share my e-KYC details, or response of "Yes" with Ministry of Education upon successful authentication.
+            </p>
+
+            <p>
+                I understand that the information shared by me shall be kept Confidential and shall not be divulged to any third party except as may be required by law.
+            </p>
+
+            <p>
+                I understand that I can withdraw my consent for all or any of the purposes at any time by and on withdrawal of my consent, the processing of my shared information will stop, however, any personal data already been processed shall remain unaffected on withdrawal of consent.
+            </p>
+
+            <div class="pt-4 space-y-2">
+                <p>Place of Physical Consent: <span class="dotted-line" id="outPlace">____________________</span></p>
+                <div class="flex justify-between items-end">
+                    <p>Date of Physical Consent: <span class="dotted-line" id="outDate">____________________</span></p>
+                    <div class="text-center">
+                        <p class="font-bold">__________________________</p>
+                        <p>Signature or Parent Guardian</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="absolute bottom-20 left-20 right-20 text-center">
-            <div class="border-2 border-dotted border-slate-400 p-6 opacity-30">
-                <p class="text-sm font-bold text-slate-400 uppercase">Headmaster Verification & School Seal</p>
+            <p class="text-center font-bold py-2">********************Consent by Head of the School********************</p>
+
+            <p>
+                I <strong><span class="dotted-line" id="outHoI">Mohmad Ashraf Rather</span></strong> as Head of the School or any authorized teacher/staff hereby declare that the Father/Mother/Legal Guardian of <span class="dotted-line" id="outStudent2">____________________</span> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus Date:
+            </p>
+
+            <div class="flex justify-between items-end pt-10">
+                <p>Date: <span class="dotted-line" id="outDate2">____________________</span></p>
+                <div class="text-center">
+                    <p class="font-bold">__________________________</p>
+                    <p class="italic">Signature of HoI</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // GRID INITIALIZATION
-        function createGrid(id, count) {
-            const container = document.getElementById(id);
-            for(let i=0; i<count; i++) {
-                const box = document.createElement('div');
-                box.className = 'char-box';
-                container.appendChild(box);
+        function sync(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = val || "__________";
+            if (id === 'outStudent') {
+                document.getElementById('outStudent2').innerText = val || "____________________";
             }
         }
 
-        // SYNC LOGIC (To be called from your main form)
-        function syncFromMainForm(data) {
-            document.getElementById('out_student').innerText = data.studentName.toUpperCase();
-            document.getElementById('out_parent').innerText = data.parentName.toUpperCase();
-            document.getElementById('out_class').innerText = data.className;
-            document.getElementById('out_form_no').innerText = data.formNo;
-            document.getElementById('apaar_linked_no').innerText = data.formNo;
-            document.getElementById('linkDisplay').innerText = data.formNo;
-            document.getElementById('out_mobile').innerText = "Mobile: " + data.mobile;
-
-            // Fill Aadhaar Grid
-            const boxes = document.getElementById('apaar_grid').querySelectorAll('.char-box');
-            const chars = data.aadhaar.split('');
-            boxes.forEach((box, i) => box.innerText = chars[i] || '');
-        }
-
-        function saveApaarPDF() {
+        function savePDF() {
             const element = document.getElementById('apaarTemplate');
-            const name = document.getElementById('out_student').innerText || "Student";
-            html2pdf().set({
+            const student = document.getElementById('inStudent').value || "Student";
+            const opt = {
                 margin: 0,
-                filename: `APAAR_Consent_${name}.pdf`,
+                filename: `APAAR_Consent_${student}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 3, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
+            };
+            html2pdf().set(opt).from(element).save();
         }
-
-        // Initialize Aadhaar Grid (12 digits)
-        createGrid('apaar_grid', 12);
-
-        // Example: Listening to the main form (if in same window)
-        // You can trigger syncFromMainForm from your main admission panel
     </script>
 </body>
 </html>
+    
