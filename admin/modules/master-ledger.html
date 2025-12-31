@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Master Student Ledger | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // --- SECURITY GUARD ---
+        if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
+            window.location.href = '../login.html';
+        }
+    </script>
+</head>
+<body class="bg-slate-50">
+
+    <div class="p-6 max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-black uppercase italic">Student Master Database</h1>
+            <button onclick="openModal()" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-blue-700">
+                + Add New Student
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Total Enrolled</p>
+                <h3 class="text-3xl font-black">154</h3>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">MDM Today</p>
+                <h3 class="text-3xl font-black text-emerald-500">142</h3>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Uniforms Issued</p>
+                <h3 class="text-3xl font-black text-orange-500">80%</h3>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Health Checkup</p>
+                <h3 class="text-3xl font-black text-purple-500">Done</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-3xl shadow-sm mb-6 flex gap-4">
+            <input type="text" placeholder="Search by name, roll no, or Aadhaar..." class="flex-1 bg-slate-100 border-none rounded-xl px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+            <select class="bg-slate-100 rounded-xl px-4 text-xs font-bold uppercase">
+                <option>All Classes</option>
+                <option>Class 1st</option>
+                <option>Class 2nd</option>
+            </select>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900 text-white uppercase text-[10px] tracking-widest">
+                    <tr>
+                        <th class="p-5">Roll</th>
+                        <th class="p-5">Student Details</th>
+                        <th class="p-5">MDM & Attendance</th>
+                        <th class="p-5">Inventory (Books/Uniform)</th>
+                        <th class="p-5">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm font-medium">
+                    <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-all">
+                        <td class="p-5 font-black text-lg">01</td>
+                        <td class="p-5">
+                            <p class="font-black text-slate-800">AARAV AHMED</p>
+                            <p class="text-[10px] text-slate-400">ID: GPS/2025/104</p>
+                        </td>
+                        <td class="p-5">
+                            <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black">PRESENT</span>
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black ml-1">MDM TAKEN</span>
+                        </td>
+                        <td class="p-5">
+                            <div class="flex gap-2">
+                                <i class="fa-solid fa-shirt text-orange-400" title="Uniform Issued"></i>
+                                <i class="fa-solid fa-book text-blue-400" title="Books Issued"></i>
+                                <i class="fa-solid fa-stethoscope text-red-400" title="Health Record Updated"></i>
+                            </div>
+                        </td>
+                        <td class="p-5">
+                            <button class="bg-slate-100 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="bg-slate-100 p-2 rounded-lg hover:bg-purple-500 hover:text-white transition-all ml-1" title="Generate APAAR">
+                                <i class="fa-solid fa-id-card"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
