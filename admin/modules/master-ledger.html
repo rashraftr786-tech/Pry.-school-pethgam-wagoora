@@ -6,105 +6,100 @@
     <title>Master Ledger | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        if (sessionStorage.getItem('isAdmin') !== 'true') { window.location.href = 'login.html'; }
-    </script>
     <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .nav-btn.active { border-color: #3b82f6; background-color: #eff6ff; color: #1e40af; }
-        .data-label { font-size: 8px; text-transform: uppercase; color: #94a3b8; font-weight: 900; display: block; line-height: 1; margin-bottom: 2px; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .field-label { font-size: 9px; text-transform: uppercase; color: #94a3b8; font-weight: 800; display: block; margin-bottom: 2px; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans">
+<body class="bg-white font-sans p-4">
 
-    <aside class="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white p-6 hidden lg:block shadow-2xl z-50">
-        <div class="mb-10 text-center border-b border-slate-800 pb-6">
-            <h1 class="text-xl font-black italic tracking-tighter">GPS PETHGAM</h1>
-            <p class="text-[8px] text-blue-400 tracking-[0.3em] uppercase">ERP System 2025</p>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+            <h1 class="text-xl font-black text-slate-800 uppercase italic">Master Student Ledger</h1>
+            <p class="text-[10px] text-blue-500 font-bold tracking-widest uppercase">GPS Pethgam Wagoora</p>
         </div>
-        
-        <nav class="space-y-1">
-            <button onclick="switchTab('master')" class="nav-btn active w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
-                <i class="fa-solid fa-address-book"></i> <span class="text-xs font-black uppercase">Master Ledger</span>
-            </button>
-            <button onclick="switchTab('mdm')" class="nav-btn w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
-                <i class="fa-solid fa-bowl-rice"></i> <span class="text-xs font-black uppercase">MDM & Attendance</span>
-            </button>
-            <button onclick="switchTab('health')" class="nav-btn w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
-                <i class="fa-solid fa-stethoscope"></i> <span class="text-xs font-black uppercase">Health Records</span>
-            </button>
-            <hr class="border-slate-800 my-4">
-            <a href="modules/admission-form.html" class="flex items-center gap-3 p-4 text-slate-400 hover:text-white transition-colors">
-                <i class="fa-solid fa-user-plus"></i> <span class="text-xs font-black uppercase">Admission Form</span>
-            </a>
-            <button onclick="sessionStorage.clear(); location.href='login.html'" class="w-full flex items-center gap-3 p-4 text-red-400 hover:bg-red-500 hover:text-white rounded-2xl mt-8">
-                <i class="fa-solid fa-power-off"></i> <span class="text-xs font-black uppercase">Logout</span>
-            </button>
-        </nav>
-    </aside>
+        <div class="flex gap-2 w-full md:w-auto">
+            <input type="text" placeholder="Search by Aadhaar, PEN, or Name..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+            <button class="bg-slate-900 text-white p-2 px-4 rounded-xl text-xs font-bold uppercase hover:bg-blue-600 transition-all">Filter</button>
+        </div>
+    </div>
 
-    <main class="lg:ml-64 p-6 min-h-screen">
-        
-        <header class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="data-label">Total Enrollment</p>
-                <h3 class="text-2xl font-black text-slate-800" id="stat-total">--</h3>
-            </div>
-            <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="data-label">MDM Consumption</p>
-                <h3 class="text-2xl font-black text-emerald-600" id="stat-mdm">--</h3>
-            </div>
-        </header>
+    <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-3xl shadow-sm">
+        <table class="w-full text-left min-w-[1800px]">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr class="text-[10px] font-black uppercase text-slate-400 tracking-tighter">
+                    <th class="p-4">Photo</th>
+                    <th class="p-4">1. Identity (Name/Aadhaar)</th>
+                    <th class="p-4">2. Family (Father/Mother)</th>
+                    <th class="p-4">3. Location (DOB/Residence)</th>
+                    <th class="p-4">4. Official (PEN/Apaar/Bank)</th>
+                    <th class="p-4">5. Status</th>
+                    <th class="p-4 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-[11px] font-bold text-slate-600">
+                <tr class="border-b border-slate-50 hover:bg-slate-50/80 transition-all">
+                    <td class="p-4">
+                        <div class="w-12 h-12 bg-slate-100 rounded-2xl border-2 border-white shadow-sm overflow-hidden">
+                            <img src="https://via.placeholder.com/150" alt="Student" class="w-full h-full object-cover">
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <span class="field-label">Full Name / Class</span>
+                        <p class="text-slate-900 uppercase font-black text-sm">Zaid Bashir</p>
+                        <p class="text-blue-600 mb-1">5th Primary</p>
+                        <span class="field-label">Aadhaar / Blood / Category</span>
+                        <p class="text-[10px]"># 1234-5678-9012 | <span class="text-red-500">B+</span> | ST</p>
+                    </td>
+                    <td class="p-4">
+                        <span class="field-label">Father's Name</span>
+                        <p class="uppercase">Bashir Ahmad Rather</p>
+                        <span class="field-label mt-2">Mother's Name</span>
+                        <p class="uppercase">Haseena Begum</p>
+                    </td>
+                    <td class="p-4">
+                        <span class="field-label">DOB (Date / Words)</span>
+                        <p>22/06/2019</p>
+                        <p class="text-[9px] text-slate-400 uppercase">Twenty Second June Two Thousand Nineteen</p>
+                        <span class="field-label mt-2">Residence / Tehsil / Dist</span>
+                        <p class="uppercase tracking-tighter">Pethgam / Wagoora / Baramulla</p>
+                    </td>
+                    <td class="p-4">
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <div>
+                                <span class="field-label">Bank / Account</span>
+                                <p class="uppercase text-[9px]">J&K Bank</p>
+                                <p>0123040100012345</p>
+                            </div>
+                            <div>
+                                <span class="field-label">PEN / APAAR ID</span>
+                                <p>PEN: 10023456</p>
+                                <p>APAAR: 9988-7766</p>
+                            </div>
+                        </div>
+                        <span class="field-label mt-1">IFSC Code</span>
+                        <p class="uppercase text-slate-400 text-[9px]">JAKB0WAGOO</p>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="flex flex-col gap-1">
+                            <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg text-[8px] uppercase font-black">Present</span>
+                            <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded-lg text-[8px] uppercase font-black">MDM: Consumed</span>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex flex-col gap-2">
+                            <button class="bg-slate-100 p-2 rounded-xl hover:bg-blue-600 hover:text-white transition-all"><i class="fa-solid fa-user-pen"></i> Edit</button>
+                            <button class="bg-slate-100 p-2 rounded-xl hover:bg-emerald-600 hover:text-white transition-all"><i class="fa-solid fa-print"></i> Card</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <section id="tab-master" class="tab-content active bg-white rounded-[2.5rem] shadow-xl p-8 border border-slate-200">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
-                <h2 class="text-xl font-black uppercase italic tracking-tighter text-slate-800">Student Database</h2>
-                <div class="flex gap-2">
-                    <input type="text" id="dbSearch" placeholder="Search by Name/Aadhar/PEN..." class="bg-slate-100 px-5 py-3 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 w-64">
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[1200px]">
-                    <thead class="bg-slate-50 border-b-2 border-slate-100">
-                        <tr class="text-[9px] font-black uppercase text-slate-500 tracking-widest">
-                            <th class="p-4">Photo</th>
-                            <th class="p-4">Admission Details</th>
-                            <th class="p-4">Identity (PEN/APAAR)</th>
-                            <th class="p-4">Financial (Bank)</th>
-                            <th class="p-4">Personal (Blood/Cat)</th>
-                            <th class="p-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTable" class="text-[11px] font-bold text-slate-700">
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <script type="module">
-        // Import your Firebase configuration
-        import { db } from '../assets/js/firebase.js'; 
-        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        async function fetchStudents() {
-            const table = document.getElementById('studentTable');
-            table.innerHTML = `<tr><td colspan="6" class="p-10 text-center italic text-slate-400">Loading Database...</td></tr>`;
-            
-            try {
-                const querySnapshot = await getDocs(collection(db, "students"));
-                table.innerHTML = ""; // Clear loader
-                let count = 0;
-
-                querySnapshot.forEach((doc) => {
-                    const s = doc.data();
-                    count++;
-                    
-                    const row = `
-                        <tr class="border-b border-slate-50 hover:bg-blue-50/30 transition-all">
+</body>
+</html>
                             <td class="p-4 text-center">
                                 <img src="${s.photo || '../../assets/default-student.png'}" class="w-10 h-10 rounded-xl object-cover border-2 border-slate-200 shadow-sm mx-auto">
                             </td>
