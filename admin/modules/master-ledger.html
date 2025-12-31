@@ -2,95 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Master Student Ledger | GPS Pethgam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Ledger | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
-        // --- SECURITY GUARD ---
-        if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
-            window.location.href = '../login.html';
-        }
+        if (sessionStorage.getItem('isAdmin') !== 'true') { window.location.href = 'login.html'; }
     </script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .nav-btn.active { border-color: #3b82f6; background-color: #eff6ff; color: #1e40af; }
+        .data-label { font-size: 8px; text-transform: uppercase; color: #94a3b8; font-weight: 900; display: block; line-height: 1; margin-bottom: 2px; }
+    </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-slate-100 font-sans">
 
-    <div class="p-6 max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-black uppercase italic">Student Master Database</h1>
-            <button onclick="openModal()" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-blue-700">
-                + Add New Student
+    <aside class="fixed left-0 top-0 h-full w-64 bg-slate-900 text-white p-6 hidden lg:block shadow-2xl z-50">
+        <div class="mb-10 text-center border-b border-slate-800 pb-6">
+            <h1 class="text-xl font-black italic tracking-tighter">GPS PETHGAM</h1>
+            <p class="text-[8px] text-blue-400 tracking-[0.3em] uppercase">ERP System 2025</p>
+        </div>
+        
+        <nav class="space-y-1">
+            <button onclick="switchTab('master')" class="nav-btn active w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
+                <i class="fa-solid fa-address-book"></i> <span class="text-xs font-black uppercase">Master Ledger</span>
             </button>
+            <button onclick="switchTab('mdm')" class="nav-btn w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
+                <i class="fa-solid fa-bowl-rice"></i> <span class="text-xs font-black uppercase">MDM & Attendance</span>
+            </button>
+            <button onclick="switchTab('health')" class="nav-btn w-full flex items-center gap-3 p-4 rounded-2xl transition-all">
+                <i class="fa-solid fa-stethoscope"></i> <span class="text-xs font-black uppercase">Health Records</span>
+            </button>
+            <hr class="border-slate-800 my-4">
+            <a href="modules/admission-form.html" class="flex items-center gap-3 p-4 text-slate-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-user-plus"></i> <span class="text-xs font-black uppercase">Admission Form</span>
+            </a>
+            <button onclick="sessionStorage.clear(); location.href='login.html'" class="w-full flex items-center gap-3 p-4 text-red-400 hover:bg-red-500 hover:text-white rounded-2xl mt-8">
+                <i class="fa-solid fa-power-off"></i> <span class="text-xs font-black uppercase">Logout</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="lg:ml-64 p-6 min-h-screen">
+        
+        <header class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="data-label">Total Enrollment</p>
+                <h3 class="text-2xl font-black text-slate-800" id="stat-total">--</h3>
+            </div>
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200">
+                <p class="data-label">MDM Consumption</p>
+                <h3 class="text-2xl font-black text-emerald-600" id="stat-mdm">--</h3>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="text-[10px] font-black text-slate-400 uppercase">Total Enrolled</p>
-                <h3 class="text-3xl font-black">154</h3>
+        <section id="tab-master" class="tab-content active bg-white rounded-[2.5rem] shadow-xl p-8 border border-slate-200">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                <h2 class="text-xl font-black uppercase italic tracking-tighter text-slate-800">Student Database</h2>
+                <div class="flex gap-2">
+                    <input type="text" id="dbSearch" placeholder="Search by Name/Aadhar/PEN..." class="bg-slate-100 px-5 py-3 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="text-[10px] font-black text-slate-400 uppercase">MDM Today</p>
-                <h3 class="text-3xl font-black text-emerald-500">142</h3>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="text-[10px] font-black text-slate-400 uppercase">Uniforms Issued</p>
-                <h3 class="text-3xl font-black text-orange-500">80%</h3>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
-                <p class="text-[10px] font-black text-slate-400 uppercase">Health Checkup</p>
-                <h3 class="text-3xl font-black text-purple-500">Done</h3>
-            </div>
-        </div>
 
-        <div class="bg-white p-4 rounded-3xl shadow-sm mb-6 flex gap-4">
-            <input type="text" placeholder="Search by name, roll no, or Aadhaar..." class="flex-1 bg-slate-100 border-none rounded-xl px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-            <select class="bg-slate-100 rounded-xl px-4 text-xs font-bold uppercase">
-                <option>All Classes</option>
-                <option>Class 1st</option>
-                <option>Class 2nd</option>
-            </select>
-        </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[1200px]">
+                    <thead class="bg-slate-50 border-b-2 border-slate-100">
+                        <tr class="text-[9px] font-black uppercase text-slate-500 tracking-widest">
+                            <th class="p-4">Photo</th>
+                            <th class="p-4">Admission Details</th>
+                            <th class="p-4">Identity (PEN/APAAR)</th>
+                            <th class="p-4">Financial (Bank)</th>
+                            <th class="p-4">Personal (Blood/Cat)</th>
+                            <th class="p-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable" class="text-[11px] font-bold text-slate-700">
+                        </tbody>
+                </table>
+            </div>
+        </section>
 
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-900 text-white uppercase text-[10px] tracking-widest">
-                    <tr>
-                        <th class="p-5">Roll</th>
-                        <th class="p-5">Student Details</th>
-                        <th class="p-5">MDM & Attendance</th>
-                        <th class="p-5">Inventory (Books/Uniform)</th>
-                        <th class="p-5">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm font-medium">
-                    <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-all">
-                        <td class="p-5 font-black text-lg">01</td>
-                        <td class="p-5">
-                            <p class="font-black text-slate-800">AARAV AHMED</p>
-                            <p class="text-[10px] text-slate-400">ID: GPS/2025/104</p>
-                        </td>
-                        <td class="p-5">
-                            <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black">PRESENT</span>
-                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black ml-1">MDM TAKEN</span>
-                        </td>
-                        <td class="p-5">
-                            <div class="flex gap-2">
-                                <i class="fa-solid fa-shirt text-orange-400" title="Uniform Issued"></i>
-                                <i class="fa-solid fa-book text-blue-400" title="Books Issued"></i>
-                                <i class="fa-solid fa-stethoscope text-red-400" title="Health Record Updated"></i>
-                            </div>
-                        </td>
-                        <td class="p-5">
-                            <button class="bg-slate-100 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="bg-slate-100 p-2 rounded-lg hover:bg-purple-500 hover:text-white transition-all ml-1" title="Generate APAAR">
-                                <i class="fa-solid fa-id-card"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </main>
+
+    <script type="module">
+        // Import your Firebase configuration
+        import { db } from '../assets/js/firebase.js'; 
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        async function fetchStudents() {
+            const table = document.getElementById('studentTable');
+            table.innerHTML = `<tr><td colspan="6" class="p-10 text-center italic text-slate-400">Loading Database...</td></tr>`;
+            
+            try {
+                const querySnapshot = await getDocs(collection(db, "students"));
+                table.innerHTML = ""; // Clear loader
+                let count = 0;
+
+                querySnapshot.forEach((doc) => {
+                    const s = doc.data();
+                    count++;
+                    
+                    const row = `
+                        <tr class="border-b border-slate-50 hover:bg-blue-50/30 transition-all">
+                            <td class="p-4 text-center">
+                                <img src="${s.photo || '../../assets/default-student.png'}" class="w-10 h-10 rounded-xl object-cover border-2 border-slate-200 shadow-sm mx-auto">
+                            </td>
+                            <td class="p-4">
+                                <span class="data-label">Adm No: ${s.admissionNo}</span>
+                                <p class="text-sm font-black text-slate-900 uppercase">${s.name}</p>
+                                <p class="text-slate-400 italic">Class: ${s.class} | Parent: ${s.parentName}</p>
+                                <p class="text-[9px] text-slate-500">${s.address}</p>
+                            </td>
+                            <td class="p-4">
+                                <div class="space-y-1">
+                                    <p><span class="text-slate-400">PEN:</span> ${s.penNo || 'N/A'}</p>
+                                    <p><span class="text-slate-400">APAAR:</span> ${s.apaarId || 'N/A'}</p>
+                                    <p><span class="text-slate-400">AADHAR:</span> ${s.aadharNo}</p>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="data-label">Bank Details</span>
+                                <p class="text-slate-800">${s.bankAccountNo}</p>
+                                <p class="text-[9px] text-slate-400 uppercase">${s.ifscCode}</p>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex gap-2">
+                                    <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[9px]">BLOOD: ${s.bloodGroup}</span>
+                                    <span class="bg-slate-100 text-slate-700 px-2 py-1 rounded text-[9px]">CAT: ${s.category}</span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex gap-2 text-slate-400">
+                                    <button onclick="editStudent('${doc.id}')" class="p-2 hover:text-blue-600 bg-slate-100 rounded-lg"><i class="fa-solid fa-user-pen"></i></button>
+                                    <a href="modules/apaar-consent.html?id=${doc.id}" class="p-2 hover:text-orange-600 bg-slate-100 rounded-lg"><i class="fa-solid fa-id-card"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    table.innerHTML += row;
+                });
+                
+                document.getElementById('stat-total').innerText = count;
+                document.getElementById('stat-mdm').innerText = Math.round(count * 0.9) + " Students";
+
+            } catch (error) {
+                console.error("Database Error:", error);
+                table.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-red-500 font-bold uppercase">Error Loading Data</td></tr>`;
+            }
+        }
+
+        // Initialize Fetch
+        fetchStudents();
+        
+        // Tab Switcher
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
+
