@@ -12,27 +12,63 @@
     <div class="w-full max-w-sm bg-white rounded-[2.5rem] p-8 shadow-2xl">
         <div class="text-center mb-8">
             <div class="w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-lock text-slate-800 text-2xl"></i>
+                <i class="fa-solid fa-user-shield text-slate-800 text-2xl"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-800">Admin Login</h2>
             <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Authorized Personnel Only</p>
         </div>
 
-        <form class="space-y-4">
+        <form id="loginForm" class="space-y-4">
             <div>
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Username</label>
-                <input type="text" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="headmaster_gps">
+                <input type="text" id="username" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold" placeholder="headmaster_gps" required>
             </div>
             <div>
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Password</label>
-                <input type="password" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••">
+                <input type="password" id="password" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="••••••••" required>
             </div>
-            <button type="button" onclick="location.href='dashboard.html'" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-200 mt-4">Enter Dashboard</button>
+            
+            <p id="errorMsg" class="text-red-500 text-[10px] font-bold uppercase text-center hidden">Invalid Username or Password</p>
+
+            <button type="button" onclick="handleLogin()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-200 mt-4 hover:bg-blue-600 transition-all">
+                Enter Dashboard
+            </button>
         </form>
 
         <a href="../index.html" class="block text-center mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-tighter hover:text-slate-800">← Back to Homepage</a>
     </div>
 
+    <script>
+        function handleLogin() {
+            const userField = document.getElementById('username').value;
+            const passField = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Set your desired credentials here
+            const validUser = "admin";
+            const validPass = "GPS2025";
+
+            if (userField === validUser && passField === validPass) {
+                // Set Session Security Flag
+                sessionStorage.setItem('isAdmin', 'true');
+                // Redirect to Dashboard
+                window.location.href = 'dashboard.html';
+            } else {
+                // Show Error
+                errorMsg.classList.remove('hidden');
+                // Clear password field
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // Allow "Enter" key to submit
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+
 </body>
 </html>
-  
+
