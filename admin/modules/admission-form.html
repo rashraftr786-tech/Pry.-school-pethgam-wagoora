@@ -26,32 +26,48 @@
         <h2 class="font-black text-blue-800 uppercase mb-4 text-center text-lg tracking-tighter">Admission Data Capture</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="space-y-2">
+                <p class="text-[9px] font-black text-blue-500 uppercase">1. Identity</p>
                 <input type="text" id="inputName" placeholder="Full Student Name" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Aadhaar Name" oninput="fill('aadhaarNameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <input type="text" placeholder="Apaar ID" maxlength="12" oninput="fill('apaarBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <select onchange="fill('catBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs bg-orange-50 font-bold">
+                    <option value="">Select Category</option>
+                    <option value="GENERAL">GENERAL</option><option value="OBC">OBC</option>
+                    <option value="SC">SC</option><option value="ST">ST</option>
+                    <option value="RBA">RBA</option><option value="EWS">EWS</option>
+                </select>
                 <select id="classSelect" onchange="updateClassAndID()" class="w-full p-2 border-2 rounded-lg text-xs font-bold bg-blue-50">
                     <option value="01">Pre-Primary 3</option><option value="02">Pre-Primary 2</option><option value="03">Balvatika</option><option value="04" selected>1st Primary</option>
                 </select>
             </div>
             <div class="space-y-2">
+                <p class="text-[9px] font-black text-blue-500 uppercase">2. Parentage</p>
                 <input type="text" placeholder="Father's Name" oninput="fill('fatherBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Mother's Name" oninput="fill('motherBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Father Contact" maxlength="10" oninput="fill('fContactBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Mother Contact" maxlength="10" oninput="fill('mContactBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
             </div>
             <div class="space-y-2">
-                <input type="text" placeholder="DOB (DDMMYYYY)" maxlength="8" oninput="fill('dobBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <p class="text-[9px] font-black text-blue-500 uppercase">3. DOB & Location</p>
+                <input type="text" placeholder="DOB (e.g. 22/06/2019)" oninput="fillDOB(this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Residence" oninput="fill('resBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Tehsil" oninput="fill('tehsilBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="District" oninput="fill('distBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Pincode" maxlength="6" oninput="fill('pinBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
             </div>
             <div class="space-y-2">
-                <input type="text" placeholder="Aadhaar No" maxlength="12" oninput="fill('aadhaarNumBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <input type="text" placeholder="Bank Name" oninput="fill('banknBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <p class="text-[9px] font-black text-blue-500 uppercase">4. Bank & IDs</p>
+                <input type="text" placeholder="Bank Name" oninput="fill('bankNameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Bank Account No" oninput="fill('bankAccBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="PEN Number" oninput="fill('penBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <select onchange="fill('bloodBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs bg-red-50 font-bold">
+                    <option value="">Blood Group</option>
+                    <option value="A+">A+</option><option value="A-">A-</option>
+                    <option value="B+">B+</option><option value="B-">B-</option>
+                    <option value="O+">O+</option><option value="O-">O-</option>
+                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                </select>
                 <input type="text" placeholder="IFSC Code" oninput="fill('ifscBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <input type="text" placeholder="DOB in Words" oninput="document.getElementById('dobWords').innerText = this.value" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="Apaar ID" maxlength="12" oninput="fill('apaarBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="file" accept="image/*" onchange="previewPhoto(this)" class="w-full text-[10px]">
             </div>
         </div>
@@ -107,7 +123,7 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div><label class="field-label">Date of Birth (DD/MM/YYYY):</label><div class="box-grid" id="dobBoxes"></div></div>
+                <div><label class="field-label">Date of Birth:</label><div class="box-grid" id="dobBoxes"></div></div>
                 <div><label class="field-label">Aadhaar Number:</label><div class="box-grid" id="aadhaarNumBoxes"></div></div>
             </div>
 
@@ -159,7 +175,22 @@
             for(let i=0; i<count; i++) {
                 const box = document.createElement('div');
                 box.className = 'char-box';
+                // Add pre-filled slashes for DOB grid
+                if(id === 'dobBoxes' && (i === 2 || i === 5)) {
+                    box.innerText = '/';
+                    box.style.border = 'none';
+                    box.classList.add('slash-box');
+                }
                 container.appendChild(box);
+            }
+        }
+
+        function fillDOB(value) {
+            // Remove slashes if typed by user, take first 8 digits
+            const digits = value.replace(/\//g, '').split('');
+            const boxes = document.getElementById('dobBoxes').querySelectorAll('.char-box:not(.slash-box)');
+            for(let i=0; i<boxes.length; i++) {
+                boxes[i].innerText = digits[i] || '';
             }
         }
 
@@ -170,7 +201,7 @@
         }
 
         function fill(gridId, value) {
-            const boxes = document.getElementById(gridId).getElementsByClassName('char-box');
+            const boxes = document.getElementById(gridId).querySelectorAll('.char-box');
             const chars = value.toUpperCase().replace(/\//g, '').split('');
             for(let i=0; i<boxes.length; i++) { if(boxes[i]) boxes[i].innerText = chars[i] || ''; }
         }
@@ -189,10 +220,8 @@
             const element = document.getElementById('admissionForm');
             const studentName = document.getElementById('inputName').value || "Student";
             const formID = document.getElementById('formIdDisplay').innerText;
-            
             const opt = {
-                margin: 0,
-                filename: `Admission_Form_${studentName}_${formID}.pdf`,
+                margin: 0, filename: `Admission_Form_${studentName}_${formID}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -205,7 +234,7 @@
         createGrid('resBoxes', 23); createGrid('tehsilBoxes', 10); 
         createGrid('distBoxes', 10); createGrid('pinBoxes', 6);
         createGrid('fContactBoxes', 10); createGrid('mContactBoxes', 10);
-        createGrid('aadhaarNumBoxes', 12); createGrid('dobBoxes', 10);
+        createGrid('dobBoxes', 10); createGrid('aadhaarNumBoxes', 12); 
         createGrid('bankAccBoxes', 16); createGrid('bankNameBoxes', 12); 
         createGrid('ifscBoxes', 11); createGrid('apaarBoxes', 12);
         createGrid('joiningBoxes', 13); createGrid('penBoxes', 12);
@@ -215,4 +244,4 @@
     </script>
 </body>
 </html>
-                        
+                            
