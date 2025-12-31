@@ -12,11 +12,11 @@
         body { background-color: #f1f5f9; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
         .form-page { 
             width: 210mm; height: 297mm; background: white; margin: 10px auto; 
-            padding: 12mm 18mm; border: 1px solid #000; position: relative; box-sizing: border-box;
+            padding: 10mm 18mm; border: 1px solid #000; position: relative; box-sizing: border-box;
         }
         .box-grid { display: flex; gap: 0; margin-top: 1px; }
         .char-box { width: 22px; height: 24px; border: 1px solid #000; text-align: center; line-height: 24px; font-size: 13px; font-weight: bold; text-transform: uppercase; }
-        .field-label { font-size: 10px; font-weight: 800; text-decoration: underline; margin-top: 6px; display: block; }
+        .field-label { font-size: 10px; font-weight: 800; text-decoration: underline; margin-top: 5px; display: block; }
         @media print { .no-print { display: none; } body { background: white; } .form-page { margin: 0; border: none; } }
     </style>
 </head>
@@ -29,14 +29,10 @@
                 <p class="text-[9px] font-black text-blue-500 uppercase">1. Identity</p>
                 <input type="text" id="inputName" placeholder="Full Student Name" oninput="fill('nameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Aadhaar Name" oninput="fill('aadhaarNameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="Aadhaar No" maxlength="12" oninput="fill('aadhaarNumBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <select onchange="fill('catBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs bg-orange-50 font-bold">
                     <option value="">Select Category</option>
-                    <option value="GENERAL">GENERAL</option><option value="OBC">OBC</option>
-                    <option value="SC">SC</option><option value="ST">ST</option>
-                    <option value="RBA">RBA</option><option value="EWS">EWS</option>
-                </select>
-                <select id="classSelect" onchange="updateClassAndID()" class="w-full p-2 border-2 rounded-lg text-xs font-bold bg-blue-50">
-                    <option value="01">Pre-Primary 3</option><option value="02">Pre-Primary 2</option><option value="03">Balvatika</option><option value="04" selected>1st Primary</option>
+                    <option value="GENERAL">GENERAL</option><option value="OBC">OBC</option><option value="SC">SC</option><option value="ST">ST</option><option value="RBA">RBA</option>
                 </select>
             </div>
             <div class="space-y-2">
@@ -48,32 +44,25 @@
             </div>
             <div class="space-y-2">
                 <p class="text-[9px] font-black text-blue-500 uppercase">3. DOB & Location</p>
-                <input type="text" placeholder="DOB (e.g. 22/06/2019)" oninput="fillDOB(this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="DOB (22/06/2019)" oninput="fillDOB(this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="DOB in Words" oninput="document.getElementById('dobWords').innerText = this.value.toUpperCase()" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Residence" oninput="fill('resBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Tehsil" oninput="fill('tehsilBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="District" oninput="fill('distBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <input type="text" placeholder="Pincode" maxlength="6" oninput="fill('pinBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
             </div>
             <div class="space-y-2">
                 <p class="text-[9px] font-black text-blue-500 uppercase">4. Bank & IDs</p>
                 <input type="text" placeholder="Bank Name" oninput="fill('bankNameBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Bank Account No" oninput="fill('bankAccBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <input type="text" placeholder="PEN Number" oninput="fill('penBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
-                <select onchange="fill('bloodBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs bg-red-50 font-bold">
-                    <option value="">Blood Group</option>
-                    <option value="A+">A+</option><option value="A-">A-</option>
-                    <option value="B+">B+</option><option value="B-">B-</option>
-                    <option value="O+">O+</option><option value="O-">O-</option>
-                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                </select>
                 <input type="text" placeholder="IFSC Code" oninput="fill('ifscBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="text" placeholder="Apaar ID" maxlength="12" oninput="fill('apaarBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
+                <input type="text" placeholder="PEN Number" oninput="fill('penBoxes', this.value)" class="w-full p-2 border rounded-lg text-xs">
                 <input type="file" accept="image/*" onchange="previewPhoto(this)" class="w-full text-[10px]">
             </div>
         </div>
         <div class="flex gap-4 mt-6">
             <button onclick="window.print()" class="flex-1 bg-slate-800 text-white font-black py-3 rounded-xl uppercase">Print Paper</button>
-            <button onclick="saveAsPDF()" class="flex-1 bg-blue-700 text-white font-black py-3 rounded-xl uppercase hover:bg-blue-800 transition-all">Save as PDF</button>
+            <button onclick="saveAsPDF()" class="flex-1 bg-blue-700 text-white font-black py-3 rounded-xl uppercase hover:bg-blue-800">Save as PDF</button>
         </div>
     </div>
 
@@ -108,6 +97,119 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Residence:</label><div class="box-grid" id="resBoxes"></div></div>
+                <div><label class="field-label">Tehsil:</label><div class="box-grid" id="tehsilBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">District:</label><div class="box-grid" id="distBoxes"></div></div>
+                <div><label class="field-label">Pincode:</label><div class="box-grid" id="pinBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Father's Contact:</label><div class="box-grid" id="fContactBoxes"></div></div>
+                <div><label class="field-label">Mother's Contact:</label><div class="box-grid" id="mContactBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Date of Birth:</label><div class="box-grid" id="dobBoxes"></div></div>
+                <div><label class="field-label">Aadhaar Number:</label><div class="box-grid" id="aadhaarNumBoxes"></div></div>
+            </div>
+
+            <label class="field-label">Date of Birth in Words:</label>
+            <div class="w-full border-b border-black h-5 font-bold text-[10px] pt-1 uppercase" id="dobWords"></div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Category:</label><div class="box-grid" id="catBoxes"></div></div>
+                <div><label class="field-label">Blood Group:</label><div class="box-grid" id="bloodBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Bank Account Number:</label><div class="box-grid" id="bankAccBoxes"></div></div>
+                <div><label class="field-label">Bank Name:</label><div class="box-grid" id="bankNameBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">IFSC Code:</label><div class="box-grid" id="ifscBoxes"></div></div>
+                <div><label class="field-label">Apaar ID:</label><div class="box-grid" id="apaarBoxes"></div></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="field-label">Class Joining:</label><div class="box-grid" id="joiningBoxes"></div></div>
+                <div><label class="field-label">PEN Number:</label><div class="box-grid" id="penBoxes"></div></div>
+            </div>
+
+            <div class="mt-4 border-t-2 border-black pt-2">
+                <p class="text-[9px] leading-tight text-justify font-medium">
+                    <strong>DECLARATION:</strong> I do hereby declare that the information provided above is true and correct to the best of my knowledge and belief... [Full Text Maintained]
+                </p>
+                <div class="flex justify-between font-bold text-[9px] uppercase mt-10">
+                    <span class="border-t border-black px-4 pt-1">Signature of Parent</span>
+                    <span class="border-t border-black px-4 pt-1">Adm. Incharge</span>
+                    <span class="border-t border-black px-4 pt-1">Headmaster</span>
+                </div>
+            </div>
+
+            <div class="mt-4 border-2 border-black p-2 text-[9px] bg-slate-50">
+                <p class="font-black underline mb-1">FOR OFFICE USE ONLY</p>
+                <p>The Student is admitted to Class [_______________] under Admission No. [_______________] on Dated: ____/____/2025.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createGrid(id, count) {
+            const container = document.getElementById(id);
+            if(!container) return;
+            for(let i=0; i<count; i++) {
+                const box = document.createElement('div');
+                box.className = 'char-box';
+                if(id === 'dobBoxes' && (i === 2 || i === 5)) {
+                    box.innerText = '/'; box.style.border = 'none'; box.classList.add('slash-box');
+                }
+                container.appendChild(box);
+            }
+        }
+
+        function fillDOB(value) {
+            const digits = value.replace(/\//g, '').split('');
+            const boxes = document.getElementById('dobBoxes').querySelectorAll('.char-box:not(.slash-box)');
+            for(let i=0; i<boxes.length; i++) { boxes[i].innerText = digits[i] || ''; }
+        }
+
+        function fill(gridId, value) {
+            const boxes = document.getElementById(gridId).querySelectorAll('.char-box');
+            const chars = value.toUpperCase().replace(/\//g, '').split('');
+            for(let i=0; i<boxes.length; i++) { if(boxes[i]) boxes[i].innerText = chars[i] || ''; }
+        }
+
+        function saveAsPDF() {
+            const element = document.getElementById('admissionForm');
+            const studentName = document.getElementById('inputName').value || "Student";
+            const formID = document.getElementById('formIdDisplay').innerText;
+            html2pdf().set({
+                margin: 0, filename: `Admission_Form_${studentName}_${formID}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(element).save();
+        }
+
+        // Initialize with EXACT counts
+        createGrid('nameBoxes', 28); createGrid('aadhaarNameBoxes', 28);
+        createGrid('fatherBoxes', 24); createGrid('motherBoxes', 16);
+        createGrid('resBoxes', 23); createGrid('tehsilBoxes', 10); 
+        createGrid('distBoxes', 10); createGrid('pinBoxes', 6);
+        createGrid('fContactBoxes', 10); createGrid('mContactBoxes', 10);
+        createGrid('dobBoxes', 10); createGrid('aadhaarNumBoxes', 12); 
+        createGrid('bankAccBoxes', 16); 
+        createGrid('bankNameBoxes', 19); // INCREASED BY 7 (12 + 7)
+        createGrid('ifscBoxes', 11); createGrid('apaarBoxes', 12);
+        createGrid('joiningBoxes', 13); createGrid('penBoxes', 12);
+        createGrid('catBoxes', 7); createGrid('bloodBoxes', 4);
+    </script>
+</body>
+</html>
                 <div><label class="field-label">Residence:</label><div class="box-grid" id="resBoxes"></div></div>
                 <div><label class="field-label">Tehsil:</label><div class="box-grid" id="tehsilBoxes"></div></div>
             </div>
