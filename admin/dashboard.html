@@ -6,121 +6,50 @@
     <title>Admin ERP | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script>
-        // --- SECURITY GUARD ---
-        if (sessionStorage.getItem('isAdmin') !== 'true') {
-            window.location.href = 'login.html';
-        }
+        if (sessionStorage.getItem('isAdmin') !== 'true') { window.location.href = 'login.html'; }
     </script>
-
     <style>
-        .module-frame { 
-            width: 100%; 
-            height: calc(100vh - 80px); 
-            border: none; 
-            border-radius: 1.5rem; 
-            background: white;
-        }
-        /* Sidebar Toggle Logic */
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        .sidebar-closed { transform: translateX(-100%); }
-        .main-expanded { margin-left: 0 !important; }
-        .nav-link.active { background-color: #1e293b; border-left: 4px solid #3b82f6; color: #3b82f6; }
+        #sidebar { transition: transform 0.3s ease-in-out; z-index: 100; }
+        .sidebar-hide { transform: translateX(-100%); }
+        .content-full { margin-left: 0 !important; }
     </style>
 </head>
-<body class="bg-slate-100 flex min-h-screen font-sans overflow-hidden">
+<body class="bg-slate-100 flex min-h-screen overflow-hidden">
 
-    <button onclick="toggleSidebar()" class="fixed top-4 left-4 z-[60] bg-slate-900 text-white p-3 rounded-xl shadow-lg lg:hidden">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-
-    <aside id="sidebar" class="w-72 bg-slate-900 text-white flex flex-col fixed h-full z-50 shadow-2xl overflow-y-auto">
-        <div class="p-8 text-center border-b border-slate-800 flex justify-between items-center">
-            <h1 class="text-lg font-black italic tracking-tighter uppercase leading-tight text-left">
-                GPS PETHGAM<br><span class="text-blue-400 text-[8px] tracking-[0.3em]">ADMIN ERP</span>
-            </h1>
-            <button onclick="toggleSidebar()" class="lg:hidden text-slate-500"><i class="fa-solid fa-xmark"></i></button>
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white fixed h-full shadow-2xl">
+        <div class="p-6 text-center border-b border-slate-800 flex justify-between items-center">
+            <h1 class="text-lg font-black italic">GPS PETHGAM</h1>
+            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400"><i class="fa-solid fa-xmark"></i></button>
         </div>
-
-        <nav class="flex-1 mt-6 px-4 space-y-1">
-            <button onclick="openModule('master-ledger.html', 'master')" id="btn-master" class="nav-link active w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase">
-                <i class="fa-solid fa-database w-5"></i> Master Ledger
-            </button>
-            <button onclick="openModule('admission-form.html', 'admission')" id="btn-admission" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-user-plus w-5"></i> Admission Form
-            </button>
-            <button onclick="openModule('apaar-consent.html', 'apaar')" id="btn-apaar" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-id-card-clip w-5"></i> APAAR Consent
-            </button>
-            <button onclick="openModule('mdm-report.html', 'mdm')" id="btn-mdm" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-bowl-rice w-5"></i> MDM Report
-            </button>
-            <button onclick="openModule('staff-attendance.html', 'attendance')" id="btn-attendance" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-clipboard-user w-5"></i> Staff Attendance
-            </button>
-            <button onclick="openModule('staff-manager.html', 'staff')" id="btn-staff" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-users-gear w-5"></i> Staff Manager
-            </button>
-            <button onclick="openModule('certificate-gen.html', 'certificate')" id="btn-certificate" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl text-[11px] font-bold uppercase text-slate-400">
-                <i class="fa-solid fa-file-signature w-5"></i> Certificate Gen
-            </button>
+        <nav class="p-4 space-y-2">
+            <button onclick="load('master-ledger.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-database"></i> Master Ledger</button>
+            <button onclick="load('admission-form.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-user-plus"></i> Admission Form</button>
+            <button onclick="load('mdm-report.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-bowl-rice"></i> MDM Daily Entry</button>
+            <button onclick="load('staff-attendance.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-calendar-check"></i> Staff Attendance</button>
+            <button onclick="load('staff-manager.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-users-gear"></i> Staff Manager</button>
+            <button onclick="load('certificate-gen.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-file-contract"></i> Certificate Gen</button>
         </nav>
-
-        <div class="p-6 border-t border-slate-800">
-            <button onclick="adminLogout()" class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-600 hover:text-white transition-all text-xs font-black uppercase">
-                <i class="fa-solid fa-power-off"></i> Logout
-            </button>
-        </div>
     </aside>
 
-    <main id="main-content" class="ml-72 flex-1 p-5 transition-all duration-300">
-        <div class="flex items-center mb-4">
-            <button onclick="toggleSidebar()" class="hidden lg:block bg-white p-3 rounded-xl shadow-sm mr-4 text-slate-600 hover:bg-blue-600 hover:text-white transition-all">
-                <i class="fa-solid fa-bars-staggered"></i>
-            </button>
-            <h2 id="current-tab-title" class="text-xs font-black uppercase tracking-widest text-slate-400">Master Ledger</h2>
-        </div>
-        
-        <iframe id="main-frame" src="modules/master-ledger.html" class="module-frame shadow-2xl border border-slate-200"></iframe>
+    <main id="main-area" class="flex-1 lg:ml-64 p-4 transition-all duration-300">
+        <header class="flex items-center gap-4 mb-4">
+            <button onclick="toggleSidebar()" class="bg-white p-3 rounded-xl shadow-sm"><i class="fa-solid fa-bars"></i></button>
+            <h2 class="font-black text-slate-400 uppercase text-xs tracking-widest">School Management Console</h2>
+        </header>
+        <iframe id="viewport" src="modules/master-ledger.html" class="w-full h-[85vh] rounded-[2rem] shadow-2xl bg-white border-none"></iframe>
     </main>
 
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const main = document.getElementById('main-content');
-            sidebar.classList.toggle('sidebar-closed');
-            main.classList.toggle('main-expanded');
+            document.getElementById('sidebar').classList.toggle('sidebar-hide');
+            document.getElementById('main-area').classList.toggle('content-full');
         }
-
-        function openModule(file, id) {
-            document.getElementById('main-frame').src = 'modules/' + file;
-            
-            // Update Title
-            const titleMap = {
-                'master': 'Master Ledger', 'admission': 'Admission Form', 'apaar': 'APAAR Consent',
-                'mdm': 'MDM Report', 'attendance': 'Staff Attendance', 'staff': 'Staff Manager', 'certificate': 'Certificate Gen'
-            };
-            document.getElementById('current-tab-title').innerText = titleMap[id];
-
-            // Update Nav Styles
-            document.querySelectorAll('.nav-link').forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('text-slate-400');
-            });
-            const activeBtn = document.getElementById('btn-' + id);
-            activeBtn.classList.add('active');
-            activeBtn.classList.remove('text-slate-400');
-
-            // Auto-close sidebar on mobile after clicking
-            if (window.innerWidth < 1024) toggleSidebar();
-        }
-
-        function adminLogout() {
-            sessionStorage.removeItem('isAdmin');
-            window.location.href = 'login.html';
+        function load(file) {
+            document.getElementById('viewport').src = 'modules/' + file;
+            if(window.innerWidth < 1024) toggleSidebar();
         }
     </script>
 </body>
 </html>
-
+            
