@@ -1,156 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-    // SECURITY GATE: Prevents unauthorized access
-    if (sessionStorage.getItem('isAdmin') !== 'true') {
-        window.location.href = 'login.html';
-    }
-    </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | GPS Pethgam</title>
+    <title>Admin ERP | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .active-tab-btn { border-color: #3b82f6 !important; background-color: #eff6ff !important; }
-    </style>
-</head>
-<body class="bg-slate-50 pb-20 font-sans">
-
-    <header class="bg-slate-900 text-white p-8 rounded-b-[3rem] shadow-2xl">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-xl font-black italic tracking-tighter uppercase">Admin Panel</h1>
-                <p class="text-[8px] text-blue-400 font-black tracking-[0.3em]">GPS Pethgam Wagoora ERP</p>
-            </div>
-            <button onclick="logout()" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-red-500 transition-all">
-                <i class="fa-solid fa-power-off"></i>
-            </button>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4">
-            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <p class="text-[8px] font-black text-slate-400 uppercase">Enrolled Students</p>
-                <h3 class="text-2xl font-black" id="totalStudentsCount">154</h3>
-            </div>
-            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                <p class="text-[8px] font-black text-slate-400 uppercase">Staff Present</p>
-                <h3 class="text-2xl font-black text-emerald-400">07/08</h3>
-            </div>
-        </div>
-    </header>
-
-    <nav class="p-6 overflow-x-auto">
-        <div class="flex gap-4 min-w-max">
-            <button onclick="switchTab('overview')" id="btn-overview" class="bg-white px-6 py-4 rounded-2xl shadow-sm border-2 border-transparent flex flex-col items-center min-w-[100px] transition-all active-tab-btn">
-                <i class="fa-solid fa-grid-2 text-blue-600 mb-1"></i>
-                <span class="text-[9px] font-black uppercase">Home</span>
-            </button>
-            <button onclick="switchTab('ledger')" id="btn-ledger" class="bg-white px-6 py-4 rounded-2xl shadow-sm border-2 border-transparent flex flex-col items-center min-w-[100px] transition-all">
-                <i class="fa-solid fa-database text-purple-600 mb-1"></i>
-                <span class="text-[9px] font-black uppercase">Ledger</span>
-            </button>
-            <button onclick="switchTab('mdm')" id="btn-mdm" class="bg-white px-6 py-4 rounded-2xl shadow-sm border-2 border-transparent flex flex-col items-center min-w-[100px] transition-all">
-                <i class="fa-solid fa-utensils text-emerald-600 mb-1"></i>
-                <span class="text-[9px] font-black uppercase">MDM</span>
-            </button>
-        </div>
-    </nav>
-
-    <main class="px-6 space-y-6">
-        
-        <section id="tab-overview" class="tab-content active animate-fade-in">
-            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-4">Quick Access Modules</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <a href="modules/admission-form.html" class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md transition-all">
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg mb-2">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </div>
-                    <span class="text-[9px] font-black uppercase text-slate-600">Admission</span>
-                </a>
-                <a href="modules/apaar-consent.html" class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md transition-all">
-                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-lg mb-2">
-                        <i class="fa-solid fa-id-card-clip"></i>
-                    </div>
-                    <span class="text-[9px] font-black uppercase text-slate-600">APAAR ID</span>
-                </a>
-            </div>
-        </section>
-
-        <section id="tab-ledger" class="tab-content">
-            <div class="bg-white rounded-[2rem] shadow-xl p-6 border border-slate-200">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-black uppercase italic">Student Master Database</h2>
-                    <input type="text" placeholder="Search..." class="bg-slate-100 border-none rounded-xl px-4 py-2 text-xs">
-                </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
-                            <tr>
-                                <th class="p-4">Roll/Name</th>
-                                <th class="p-4">Attendance</th>
-                                <th class="p-4">Inventory</th>
-                                <th class="p-4">Health</th>
-                                <th class="p-4">Results</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody" class="text-[11px] font-bold">
-                            <tr class="border-b border-slate-50">
-                                <td class="p-4">01. <span class="uppercase">Zaid Bashir</span></td>
-                                <td class="p-4 text-emerald-600">PRESENT</td>
-                                <td class="p-4"><i class="fa-solid fa-shirt mr-1"></i> <i class="fa-solid fa-book opacity-20"></i></td>
-                                <td class="p-4 text-blue-500 font-black">FIT</td>
-                                <td class="p-4">GRADE A</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="tab-mdm" class="tab-content">
-            <div class="bg-white rounded-[2rem] shadow-xl p-6 text-center border-2 border-emerald-500 border-dashed">
-                <i class="fa-solid fa-bowl-rice text-4xl text-emerald-500 mb-4"></i>
-                <h2 class="text-xl font-black uppercase">Mid-Day Meal Logger</h2>
-                <p class="text-slate-500 text-xs mb-6">Calculate daily rice consumption based on attendance.</p>
-                <div class="bg-slate-50 p-6 rounded-2xl mb-4">
-                    <p class="text-[10px] font-black text-slate-400 uppercase">Today's Rice Allocation (100g/student)</p>
-                    <h4 class="text-3xl font-black text-slate-800">14.2 KG</h4>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
+    
     <script>
-        // Tab Switching Logic
-        function switchTab(tabName) {
-            // Hide all contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Show target content
-            document.getElementById('tab-' + tabName).classList.add('active');
-            
-            // Update button styles
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('active-tab-btn');
-            });
-            document.getElementById('btn-' + tabName).classList.add('active-tab-btn');
-        }
-
-        // Security Logout
-        function logout() {
-            sessionStorage.removeItem('isAdmin');
+        // --- STEP 1: SECURITY GUARD ---
+        // Checks if both Password and OTP verification steps were completed
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
             window.location.href = 'login.html';
         }
     </script>
 
+    <style>
+        /* Modern UI Styles */
+        .module-frame { 
+            width: 100%; 
+            height: calc(100vh - 40px); 
+            border: none; 
+            border-radius: 2rem; 
+            background: white;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link.active { 
+            background-color: #1e293b; 
+            border-left: 4px solid #3b82f6; 
+            color: #3b82f6; 
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-100 flex min-h-screen font-sans overflow-hidden">
+
+    <aside class="w-72 bg-slate-900 text-white flex flex-col fixed h-full z-50 shadow-2xl">
+        <div class="p-8 text-center border-b border-slate-800">
+            <h1 class="text-xl font-black italic tracking-tighter uppercase leading-tight">
+                GPS PETHGAM<br>
+                <span class="text-blue-400 text-[9px] tracking-[0.3em]">ADMIN ERP 2026</span>
+            </h1>
+        </div>
+
+        <nav class="flex-1 mt-6 px-4 space-y-1 overflow-y-auto">
+            <button onclick="openModule('master-ledger.html', 'master')" id="btn-master" class="nav-link active w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase">
+                <i class="fa-solid fa-database w-5"></i> Master Ledger
+            </button>
+            
+            <button onclick="openModule('admission-form.html', 'admission')" id="btn-admission" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-user-plus w-5"></i> Admission Form
+            </button>
+
+            <button onclick="openModule('apaar-consent.html', 'apaar')" id="btn-apaar" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-id-card-clip w-5"></i> APAAR Consent
+            </button>
+
+            <button onclick="openModule('mdm-report.html', 'mdm')" id="btn-mdm" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-bowl-rice w-5"></i> MDM Report
+            </button>
+
+            <button onclick="openModule('staff-attendance.html', 'attendance')" id="btn-attendance" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-clipboard-user w-5"></i> Staff Attendance
+            </button>
+
+            <button onclick="openModule('staff-manager.html', 'staff')" id="btn-staff" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-users-gear w-5"></i> Staff Manager
+            </button>
+
+            <button onclick="openModule('certificate-gen.html', 'certificate')" id="btn-certificate" class="nav-link w-full flex items-center gap-3 p-4 rounded-xl transition-all text-[11px] font-bold uppercase text-slate-400 hover:text-white">
+                <i class="fa-solid fa-file-signature w-5"></i> Certificate Gen
+            </button>
+        </nav>
+
+        <div class="p-6 border-t border-slate-800">
+            <button onclick="adminLogout()" class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-600 hover:text-white transition-all text-xs font-black uppercase">
+                <i class="fa-solid fa-power-off"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="ml-72 flex-1 p-5">
+        <iframe id="main-frame" src="modules/master-ledger.html" class="module-frame"></iframe>
+    </main>
+
+    <script>
+        /**
+         * Switches the content of the main dashboard area
+         * @param {string} file - The HTML file to load from the modules folder
+         * @param {string} id - The shorthand ID for the button to style it as active
+         */
+        function openModule(file, id) {
+            // Update the iFrame Source
+            document.getElementById('main-frame').src = 'modules/' + file;
+
+            // Update Navigation Button Styles
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                btn.classList.remove('nav-active', 'active');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeBtn = document.getElementById('btn-' + id);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-slate-400');
+        }
+
+        /**
+         * Clears the security session and redirects to login
+         */
+        function adminLogout() {
+            sessionStorage.removeItem('isAdmin');
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>
-
+                                
