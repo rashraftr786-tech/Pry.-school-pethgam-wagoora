@@ -12,8 +12,8 @@
         body { background-color: #f1f5f9; font-family: 'Times New Roman', serif; margin: 0; padding: 0; }
         .form-page { 
             width: 210mm; height: 297mm; background: white; margin: 10px auto; 
-            padding: 12mm 18mm; border: 1px solid #000; position: relative; box-sizing: border-box;
-            line-height: 1.5; color: #000;
+            padding: 8mm 18mm; border: 1px solid #000; position: relative; box-sizing: border-box;
+            line-height: 1.4; color: #000;
         }
         .dotted-line { border-bottom: 1px dotted #000; display: inline-block; min-width: 120px; padding: 0 5px; font-weight: bold; }
         @media print { .no-print { display: none; } .form-page { margin: 0; border: none; } }
@@ -25,7 +25,7 @@
         <h2 class="font-black text-blue-800 uppercase mb-4 text-center text-lg italic underline">APAAR Consent Data Entry</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <input type="text" id="inFormNo" placeholder="Admission Form No." oninput="sync('outFormNo', this.value)" class="p-2 border rounded-lg text-xs font-bold">
+            <input type="text" id="inFormNo" placeholder="Admission Form No." oninput="sync('outFormNo', this.value); sync('outFormNoBox', this.value)" class="p-2 border rounded-lg text-xs font-bold">
             <input type="text" id="inParent" placeholder="Parent/Guardian Name" oninput="sync('outParent', this.value); sync('outParent2', this.value)" class="p-2 border rounded-lg text-xs font-bold">
             <select id="inRelation" onchange="sync('outRelation', this.value); sync('outRelation2', this.value)" class="p-2 border rounded-lg text-xs">
                 <option value="Father">Father</option><option value="Mother">Mother</option><option value="Legal Guardian">Legal Guardian</option>
@@ -46,18 +46,25 @@
 
     <div class="form-page" id="apaarTemplate">
         
-        <div class="flex items-start gap-4 mb-2">
-            <img src="assets/logo.png" class="w-20 h-20" alt="Logo">
-            <div class="flex-1 text-center font-sans">
-                <h1 class="text-2xl font-black uppercase tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-                <p class="text-lg font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
-                <p class="text-lg font-bold">UDISE Code: 01022202207. &nbsp;&nbsp;&nbsp; Zone: Wagoora</p>
+        <div class="absolute top-8 right-10 text-right">
+            <div class="border-2 border-black p-1 bg-white min-w-[80px]">
+                <p class="text-[9px] font-black leading-none uppercase font-sans">FORM NO:</p>
+                <h3 id="outFormNoBox" class="text-xl font-black tracking-tighter font-sans">250401</h3>
             </div>
         </div>
 
-        <h2 class="text-center font-bold underline text-[16px] mb-4 uppercase">Consent by Father/Mother/Legal Guardian of Student for APAAR ID Generation</h2>
+        <div class="flex items-start gap-4 mb-2 pr-32">
+            <img src="assets/logo.png" class="w-16 h-16" alt="Logo">
+            <div class="flex-1 text-center font-sans">
+                <h1 class="text-xl font-black uppercase tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <p class="text-[12px] font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
+                <p class="text-[12px] font-bold">UDISE Code: 01022202207. &nbsp;&nbsp;&nbsp; Zone: Wagoora</p>
+            </div>
+        </div>
 
-        <div class="text-[14px] space-y-4 text-justify">
+        <h2 class="text-center font-bold underline text-[15px] mb-2 uppercase">Consent by Father/Mother/Legal Guardian of Student for APAAR ID Generation</h2>
+
+        <div class="text-[13.5px] space-y-3 text-justify">
             <p>
                 I <span class="dotted-line" id="outParent">____________________</span> as the <span class="dotted-line" id="outRelation">Father</span> (Father / Mother / Legal Guardian) of <span class="dotted-line" id="outStudent">____________________</span> bearing Admission Form No. <span class="dotted-line" id="outFormNo">__________</span> with my identity proof as <span class="dotted-line" id="outIDType">____________________</span> (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and identity Proof Number <span class="dotted-line" id="outIDNum">____________________</span> voluntarily give my consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the following intents and purposes.
             </p>
@@ -78,28 +85,28 @@
                 I understand that I can withdraw my consent for all or any of the purposes at any time by and on withdrawal of my consent, the processing of my shared information will stop, however, any personal data already been processed shall remain unaffected on withdrawal of consent.
             </p>
 
-            <div class="pt-4 space-y-2">
+            <div class="pt-2 space-y-1">
                 <p>Place of Physical Consent: <span class="dotted-line" id="outPlace">____________________</span></p>
                 <div class="flex justify-between items-end">
                     <p>Date of Physical Consent: <span class="dotted-line" id="outDate">____________________</span></p>
                     <div class="text-center">
                         <p class="font-bold">__________________________</p>
-                        <p>Signature or Parent Guardian</p>
+                        <p class="text-[11px]">Signature or Parent Guardian</p>
                     </div>
                 </div>
             </div>
 
-            <p class="text-center font-bold py-2">********************Consent by Head of the School********************</p>
+            <p class="text-center font-bold py-1">********************Consent by Head of the School********************</p>
 
             <p>
                 I <strong><span class="dotted-line" id="outHoI">Mohmad Ashraf Rather</span></strong> as Head of the School or any authorized teacher/staff hereby declare that the Father/Mother/Legal Guardian of <span class="dotted-line" id="outStudent2">____________________</span> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus Date:
             </p>
 
-            <div class="flex justify-between items-end pt-10">
+            <div class="flex justify-between items-end pt-4">
                 <p>Date: <span class="dotted-line" id="outDate2">____________________</span></p>
                 <div class="text-center">
                     <p class="font-bold">__________________________</p>
-                    <p class="italic">Signature of HoI</p>
+                    <p class="italic text-[11px]">Signature of HoI</p>
                 </div>
             </div>
         </div>
@@ -129,4 +136,4 @@
     </script>
 </body>
 </html>
-    
+            
