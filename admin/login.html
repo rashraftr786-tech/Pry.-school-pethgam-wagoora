@@ -39,34 +39,20 @@
     </div>
 
     <script>
-        function handleLogin() {
-            const userField = document.getElementById('username').value;
-            const passField = document.getElementById('password').value;
-            const errorMsg = document.getElementById('errorMsg');
+      function handleLogin() {
+    const userField = document.getElementById('username').value;
+    const passField = document.getElementById('password').value;
 
-            // Set your desired credentials here
-            const validUser = "admin";
-            const validPass = "GPS2025";
+    // Set your desired credentials
+    if (userField === "admin" && passField === "GPS2025") {
+        // This is the key that unlocks the other pages
+        sessionStorage.setItem('isAdmin', 'true');
+        window.location.href = 'dashboard.html';
+    } else {
+        alert("Invalid Credentials");
+    }
+}
 
-            if (userField === validUser && passField === validPass) {
-                // Set Session Security Flag
-                sessionStorage.setItem('isAdmin', 'true');
-                // Redirect to Dashboard
-                window.location.href = 'dashboard.html';
-            } else {
-                // Show Error
-                errorMsg.classList.remove('hidden');
-                // Clear password field
-                document.getElementById('password').value = '';
-            }
-        }
-
-        // Allow "Enter" key to submit
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                handleLogin();
-            }
-        });
     </script>
 
 </body>
