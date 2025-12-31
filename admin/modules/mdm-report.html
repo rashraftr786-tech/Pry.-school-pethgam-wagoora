@@ -10,158 +10,184 @@
         @media print {
             .no-print { display: none !important; }
             body { background: white; padding: 0; }
-            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; }
+            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; margin: 0; }
         }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; font-size: 10px; }
         th, td { border: 1px solid black; padding: 4px; text-align: center; }
         .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
     </style>
 </head>
 <body class="bg-slate-100 p-4">
 
-    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
-        <h2 class="text-xl font-black text-emerald-700 mb-4 uppercase tracking-tighter">MDM Report Generator</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <input type="month" id="reportMonth" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" onchange="updateReport()">
-            <input type="number" id="workingDays" placeholder="Working Days" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" oninput="updateReport()">
-            <input type="number" id="mdmServedDays" placeholder="Days MDM Served" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm" oninput="updateReport()">
-            <button onclick="window.print()" class="bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700">Print Statement</button>
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-b-4 border-emerald-500 flex justify-between items-center">
+        <div>
+            <h2 class="text-xl font-black text-slate-800 uppercase italic">Monthly Statement Generator</h2>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">Data auto-fetched from MDM Daily Entry records</p>
         </div>
-        <p class="text-[10px] text-slate-400 font-bold uppercase italic">Enter data above to auto-fill the official table below.</p>
+        <div class="flex gap-3">
+            <input type="month" id="fetchMonth" class="p-3 bg-slate-50 rounded-xl border text-xs font-bold" onchange="fetchMonthlyData()">
+            <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-black text-xs hover:bg-emerald-600 transition-all uppercase">
+                <i class="fa-solid fa-print mr-2"></i> Print Official Report
+            </button>
+        </div>
     </div>
 
     <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
         <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
             <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
             <div class="text-center flex-1">
-                <p class="italic text-sm font-serif">Office of the Headmaster</p>
-                <h1 class="text-2xl font-bold tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-                <h3 class="text-md font-bold uppercase tracking-widest mt-1">Month Wise/Department Wise Expenditure Statement under MDM Scheme</h3>
+                <p class="italic text-xs font-serif">Office of the Headmaster</p>
+                <h1 class="text-xl font-bold tracking-tight">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+                <h3 class="text-[10px] font-bold uppercase tracking-widest mt-1">Month Wise Expenditure Statement under MDM Scheme</h3>
             </div>
-            <div class="w-16"></div>
+            <div class="w-16 text-right text-[8px] font-bold uppercase" id="reportGeneratedDate"></div>
         </div>
 
         <table>
             <thead class="bg-slate-50">
-                <tr>
+                <tr class="text-[9px]">
                     <th>Month</th>
                     <th>Scheme</th>
                     <th>Total Roll</th>
-                    <th>No. of Working Days</th>
-                    <th>No. of days MDM Served</th>
-                    <th>No of Students Covered</th>
-                    <th>No. of Meals Served</th>
-                    <th>Opening Balance of Rice</th>
-                    <th>Food Grains Lifted</th>
-                    <th>Food Grains Utilized</th>
-                    <th>Closing Balance of Food Grains</th>
-                    <th>Opening Balance of Funds</th>
-                    <th>Funds Utilized on a/c of cooking cost</th>
-                    <th>Funds Received on a/c of cooking cost</th>
-                    <th>Closing Balance of Funds</th>
-                    <th>No. of Cooks working</th>
+                    <th>Working Days</th>
+                    <th>Days Served</th>
+                    <th>Total Students Covered</th>
+                    <th>Total Meals Served</th>
+                    <th>OB of Rice</th>
+                    <th>Rice Received</th>
+                    <th>Rice Utilized</th>
+                    <th>CB of Rice</th>
+                    <th>OB of Funds</th>
+                    <th>Cooking Cost Utilized</th>
+                    <th>Funds Received</th>
+                    <th>CB of Funds</th>
+                    <th>Cooks</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="3" class="vertical-text" id="displayMonth">SEPTEMBER 2025</td>
-                    <td class="font-bold">Pre-Primary (Bal Vatika)</td>
-                    <td>21</td>
-                    <td class="wDays">20</td>
-                    <td class="sDays">9</td>
-                    <td>136</td>
-                    <td>136</td>
-                    <td>173.570</td>
-                    <td>0.000</td>
-                    <td>13.600</td>
-                    <td>159.97</td>
-                    <td></td>
-                    <td>922.08</td>
-                    <td></td>
-                    <td></td>
-                    <td rowspan="3" class="font-bold">1</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Primary</td>
-                    <td>47</td>
-                    <td class="wDays">20</td>
-                    <td class="sDays">9</td>
-                    <td>344</td>
-                    <td>344</td>
-                    <td>252.300</td>
-                    <td>0.000</td>
-                    <td>34.400</td>
-                    <td>217.9</td>
-                    <td></td>
-                    <td>2332.32</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="bg-slate-100 font-black">
-                    <td>Total</td>
-                    <td>68</td>
-                    <td class="wDays">20</td>
-                    <td class="sDays">9</td>
-                    <td>480</td>
-                    <td>480</td>
-                    <td>425.870</td>
-                    <td>0.000</td>
-                    <td>48.000</td>
-                    <td>377.87</td>
-                    <td></td>
-                    <td>3254.4</td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <tbody id="reportTableBody">
+                <tr><td colspan="16" class="p-10 text-slate-400 italic">Select a month above to generate report...</td></tr>
             </tbody>
         </table>
 
-        <div class="mt-6 grid grid-cols-2 gap-8 text-xs">
-            <div class="space-y-2">
+        <div class="mt-8 grid grid-cols-2 gap-8 text-[10px]">
+            <div class="space-y-4">
                 <p><strong>MDM A/C of School (16 digits):</strong> 0486040500000273</p>
-                <table class="w-full text-center">
-                    <tr>
-                        <th colspan="3">Account Number of Cooks</th>
+                <table class="w-full">
+                    <tr class="bg-slate-50 font-bold">
+                        <td class="p-1">S.No</td><td>Name of the Cook</td><td>A/C No (16 digits)</td>
                     </tr>
-                    <tr>
-                        <td>S No</td>
-                        <td>Name of the Cook</td>
-                        <td>A/C No (16 digits)</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>SHAHEENA BANO</td>
-                        <td>0486040100006054</td>
-                    </tr>
+                    <tr><td class="p-1">1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
                 </table>
             </div>
-            <div class="flex flex-col justify-between items-end pt-10">
-                <div class="text-left w-48 space-y-2">
-                    <p><strong>MDM I/C</strong></p>
+            <div class="flex flex-col justify-between items-end">
+                <div class="text-left w-48 space-y-4 pt-4">
+                    <p class="font-bold border-b border-black w-fit">MDM I/C Signature</p>
                     <p>Name: _________________</p>
-                    <p>Contact No: ____________</p>
-                    <p>Sig. ___________________</p>
                 </div>
-                <p class="font-black mt-10">Headmaster</p>
+                <div class="text-center mt-10">
+                    <p class="font-black text-sm uppercase">Headmaster</p>
+                    <p class="italic text-[9px]">GPS Pethgam Wagoora</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function updateReport() {
-            const monthInput = document.getElementById('reportMonth').value;
-            const wDays = document.getElementById('workingDays').value || "20";
-            const sDays = document.getElementById('mdmServedDays').value || "9";
+    <script type="module">
+        import { db } from '../assets/js/firebase.js'; 
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            if(monthInput) {
-                const date = new Date(monthInput);
-                const monthName = date.toLocaleString('default', { month: 'long' }).toUpperCase();
-                document.getElementById('displayMonth').innerText = monthName + " " + date.getFullYear();
+        window.fetchMonthlyData = async function() {
+            const selectedMonth = document.getElementById('fetchMonth').value; // e.g., "2025-09"
+            if (!selectedMonth) return;
+
+            const tableBody = document.getElementById('reportTableBody');
+            tableBody.innerHTML = `<tr><td colspan="16" class="p-10 text-center animate-pulse">Fetching records from MDM Entry database...</td></tr>`;
+
+            try {
+                // Querying all daily entries for the selected month
+                const q = query(collection(db, "mdm_entries"), where("monthYear", "==", selectedMonth));
+                const querySnapshot = await getDocs(q);
+
+                let data = {
+                    rollKG: 0, rollPri: 0, daysServed: 0, 
+                    totalCovered: 0, mealsServed: 0,
+                    riceOB: 0, riceRec: 0, riceUtil: 0,
+                    fundsOB: 0, fundsRec: 0, fundsUtil: 0
+                };
+
+                let entryCount = 0;
+                querySnapshot.forEach((doc) => {
+                    const d = doc.data();
+                    // Basic Accumulation Logic
+                    data.rollPri = d.rollPrimary; // Usually stays constant or take max
+                    data.daysServed++; 
+                    data.mealsServed += parseInt(d.presentPrimary || 0);
+                    data.riceUtil += parseFloat(d.riceConsumed || 0);
+                    data.fundsUtil += parseFloat(d.fundsLiability || 0);
+                    
+                    // Logic to capture Opening Balances (from the first entry of month)
+                    if(entryCount === 0) {
+                        data.riceOB = d.lastRiceBalance;
+                        data.fundsOB = d.lastFundBalance;
+                    }
+                    entryCount++;
+                });
+
+                renderTable(selectedMonth, data, entryCount);
+
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                tableBody.innerHTML = `<tr><td colspan="16" class="p-10 text-red-500 font-bold">Error connecting to MDM Database.</td></tr>`;
             }
+        }
 
-            document.querySelectorAll('.wDays').forEach(el => el.innerText = wDays);
-            document.querySelectorAll('.sDays').forEach(el => el.innerText = sDays);
+        function renderTable(monthStr, d, workingDays) {
+            const [year, month] = monthStr.split('-');
+            const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long' }).toUpperCase();
+            
+            // CB Calculations
+            const riceCB = (parseFloat(d.riceOB) + parseFloat(d.riceRec) - parseFloat(d.riceUtil)).toFixed(2);
+            const fundsCB = (parseFloat(d.fundsOB) + parseFloat(d.fundsRec) - parseFloat(d.fundsUtil)).toFixed(2);
+
+            document.getElementById('reportTableBody').innerHTML = `
+                <tr>
+                    <td rowspan="2" class="vertical-text font-black">${monthName} ${year}</td>
+                    <td class="font-bold">Primary</td>
+                    <td>${d.rollPri}</td>
+                    <td>${workingDays}</td>
+                    <td>${d.daysServed}</td>
+                    <td>${d.mealsServed}</td>
+                    <td>${d.mealsServed}</td>
+                    <td>${d.riceOB}</td>
+                    <td>${d.riceRec}</td>
+                    <td>${d.riceUtil.toFixed(2)}</td>
+                    <td>${riceCB}</td>
+                    <td>${d.fundsOB}</td>
+                    <td>${d.fundsUtil.toFixed(2)}</td>
+                    <td>${d.fundsRec}</td>
+                    <td>${fundsCB}</td>
+                    <td rowspan="2" class="font-black text-sm">1</td>
+                </tr>
+                <tr class="bg-slate-100 font-black">
+                    <td>TOTAL</td>
+                    <td>${d.rollPri}</td>
+                    <td>${workingDays}</td>
+                    <td>${d.daysServed}</td>
+                    <td>${d.mealsServed}</td>
+                    <td>${d.mealsServed}</td>
+                    <td>${d.riceOB}</td>
+                    <td>${d.riceRec}</td>
+                    <td>${d.riceUtil.toFixed(2)}</td>
+                    <td>${riceCB}</td>
+                    <td>${d.fundsOB}</td>
+                    <td>${d.fundsUtil.toFixed(2)}</td>
+                    <td>${d.fundsRec}</td>
+                    <td>${fundsCB}</td>
+                </tr>
+            `;
         }
     </script>
 </body>
 </html>
+            
+            
