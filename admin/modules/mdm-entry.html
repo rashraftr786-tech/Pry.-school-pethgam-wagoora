@@ -34,11 +34,13 @@
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
             margin-top: 0;
+            color: #2d3748;
+            font-size: 18px;
         }
 
         .form-grid {
             display: grid;
-            grid-template-cols: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -49,16 +51,26 @@
         }
 
         label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             margin-bottom: 5px;
             text-transform: uppercase;
+            color: #4a5568;
         }
 
         input, select {
             padding: 8px;
             border: 1px solid #cbd5e0;
             border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .config-box {
+            background-color: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3182ce;
         }
 
         .btn-group {
@@ -77,8 +89,8 @@
         }
 
         .btn-save { background: #38a169; color: white; }
-        .btn-generate { background: #3182ce; color: white; }
-        .btn-print { background: #2d3748; color: white; }
+        .btn-config { background: #3182ce; color: white; }
+        .btn-generate { background: #2d3748; color: white; }
         .btn-reset { background: #e53e3e; color: white; }
 
         /* A4 Page Styling */
@@ -101,6 +113,271 @@
 
         .header h1 { margin: 5px 0; font-size: 20px; text-transform: uppercase; }
         .header h3 { margin: 5px 0; font-size: 14px; font-weight: normal; font-style: italic; }
+        .header h2 { margin: 10px 0; font-size: 16px; text-decoration: underline; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: center;
+        }
+
+        th { background-color: #f2f2f2; }
+
+        .signature-space {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-box {
+            border-top: 1px solid #000;
+            width: 200px;
+            text-align: center;
+            padding-top: 5px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .no-print { display: none; }
+            .a4-page { margin: 0; box-shadow: none; width: 100%; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <div class="config-box">
+            <h2 class="section-title">⚙️ Monthly Settings (Fixed Values)</h2>
+            <p style="font-size: 12px; color: #718096; margin-bottom: 15px;">Set these once per month. They can be updated anytime before generating the statement.</p>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>PP Total Roll</label>
+                    <input type="number" id="ppRoll" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Primary Total Roll</label>
+                    <input type="number" id="pRoll" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>Rice Opening Bal (kg)</label>
+                    <input type="number" step="0.001" id="riceOpening" placeholder="0.000">
+                </div>
+                <div class="form-group">
+                    <label>Rice Lifted (kg)</label>
+                    <input type="number" step="0.001" id="riceLifted" placeholder="0.000">
+                </div>
+                <div class="form-group">
+                    <label>Funds Opening Bal (₹)</label>
+                    <input type="number" step="0.01" id="fundsOpening" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Funds Received (₹)</label>
+                    <input type="number" step="0.01" id="fundsReceived" placeholder="0.00">
+                </div>
+            </div>
+            <button class="btn-config" onclick="saveMonthlySettings()">Update Monthly Settings</button>
+        </div>
+
+        <h2 class="section-title">📅 Daily MDM Entry</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="dailyDate">
+            </div>
+            <div class="form-group">
+                <label>Scheme Type</label>
+                <select id="schemeType">
+                    <option value="Pre-Primary">Pre-Primary (Bal Vatika)</option>
+                    <option value="Primary">Primary</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>MDM Served Today?</label>
+                <select id="mdmServed">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Students Covered</label>
+                <input type="number" id="studentsCovered" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label>Cooks Working</label>
+                <input type="number" id="cooksWorking" value="1">
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-save" onclick="saveDailyEntry()">Save Daily Entry</button>
+            <button class="btn-generate" onclick="generateStatement()">Generate Monthly Statement</button>
+            <button class="btn-reset" onclick="resetData()">Clear All Data</button>
+        </div>
+
+        <h3 style="margin-top:30px; font-size: 14px;">Recent Daily Records</h3>
+        <table style="font-size: 12px; width: 100%; text-align: left;" id="dailyRecordsTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Scheme</th>
+                    <th>Served</th>
+                    <th>Covered</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="dailyRecordsBody"></tbody>
+        </table>
+    </div>
+
+    <div class="a4-page" id="printableArea">
+        <div class="header">
+            <h3>OFFICE OF THE HEADMASTER</h3>
+            <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+            <h2>Month Wise / Department Wise Expenditure Statement under MDM Scheme</h2>
+            <p style="font-size: 12px; font-weight: bold;">Month: <span id="monthNameDisplay">________</span></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Scheme</th>
+                    <th rowspan="2">Total Roll</th>
+                    <th rowspan="2">Working Days</th>
+                    <th rowspan="2">Served Days</th>
+                    <th rowspan="2">Students Covered</th>
+                    <th rowspan="2">Meals Served</th>
+                    <th colspan="4">Rice (Kgs)</th>
+                    <th colspan="4">Cooking Cost Funds (₹)</th>
+                </tr>
+                <tr>
+                    <th>Opening</th>
+                    <th>Lifted</th>
+                    <th>Utilized</th>
+                    <th>Closing</th>
+                    <th>Opening</th>
+                    <th>Utilized</th>
+                    <th>Received</th>
+                    <th>Closing</th>
+                </tr>
+            </thead>
+            <tbody id="statementTableBody"></tbody>
+        </table>
+
+        <div class="footer-section" style="margin-top: 30px; font-size: 12px;">
+            <p><strong>MDM A/C:</strong> 0486040500000273 | <strong>Cook:</strong> SHAHEENA BANO (0486040100006054)</p>
+            <div class="signature-space">
+                <div class="sig-box">MDM Incharge</div>
+                <div class="sig-box">Headmaster</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="no-print" style="text-align: center; margin-bottom: 50px;">
+        <button class="btn-print" onclick="window.print()">Print Statement (A4)</button>
+    </div>
+
+    <script>
+        // Set Today's Date
+        document.getElementById('dailyDate').valueAsDate = new Date();
+
+        // --- Data Handling ---
+        function getRecords() { return JSON.parse(localStorage.getItem('mdm_daily')) || []; }
+        function getSettings() { return JSON.parse(localStorage.getItem('mdm_settings')) || { ppRoll:0, pRoll:0, riceOpening:0, riceLifted:0, fundsOpening:0, fundsReceived:0 }; }
+
+        // Load Settings on start
+        window.onload = function() {
+            const s = getSettings();
+            document.getElementById('ppRoll').value = s.ppRoll;
+            document.getElementById('pRoll').value = s.pRoll;
+            document.getElementById('riceOpening').value = s.riceOpening;
+            document.getElementById('riceLifted').value = s.riceLifted;
+            document.getElementById('fundsOpening').value = s.fundsOpening;
+            document.getElementById('fundsReceived').value = s.fundsReceived;
+            updateDailyTable();
+        };
+
+        function saveMonthlySettings() {
+            const settings = {
+                ppRoll: parseInt(document.getElementById('ppRoll').value) || 0,
+                pRoll: parseInt(document.getElementById('pRoll').value) || 0,
+                riceOpening: parseFloat(document.getElementById('riceOpening').value) || 0,
+                riceLifted: parseFloat(document.getElementById('riceLifted').value) || 0,
+                fundsOpening: parseFloat(document.getElementById('fundsOpening').value) || 0,
+                fundsReceived: parseFloat(document.getElementById('fundsReceived').value) || 0
+            };
+            localStorage.setItem('mdm_settings', JSON.stringify(settings));
+            alert("Monthly Settings Updated!");
+        }
+
+        function saveDailyEntry() {
+            const date = document.getElementById('dailyDate').value;
+            const records = getRecords();
+            const entry = {
+                id: Date.now(),
+                date: date,
+                month: date.substring(0, 7),
+                scheme: document.getElementById('schemeType').value,
+                served: document.getElementById('mdmServed').value,
+                covered: parseInt(document.getElementById('studentsCovered').value) || 0,
+                cooks: parseInt(document.getElementById('cooksWorking').value) || 0
+            };
+            records.push(entry);
+            localStorage.setItem('mdm_daily', JSON.stringify(records));
+            updateDailyTable();
+            alert("Daily Entry Saved!");
+        }
+
+        function deleteEntry(id) {
+            let records = getRecords().filter(r => r.id !== id);
+            localStorage.setItem('mdm_daily', JSON.stringify(records));
+            updateDailyTable();
+        }
+
+        function updateDailyTable() {
+            const records = getRecords().sort((a,b) => b.date.localeCompare(a.date));
+            const body = document.getElementById('dailyRecordsBody');
+            body.innerHTML = '';
+            records.slice(0, 10).forEach(r => {
+                body.innerHTML += `<tr>
+                    <td>${r.date}</td><td>${r.scheme}</td><td>${r.served}</td><td>${r.covered}</td>
+                    <td><button onclick="deleteEntry(${r.id})" style="color:red; background:none; cursor:pointer;">[x]</button></td>
+                </tr>`;
+            });
+        }
+
+        function generateStatement() {
+            const targetMonth = document.getElementById('dailyDate').value.substring(0, 7);
+            const records = getRecords().filter(r => r.month === targetMonth);
+            const s = getSettings();
+            
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const d = new Date(targetMonth + "-01");
+            document.getElementById('monthNameDisplay').innerText = monthNames[d.getMonth()] + " " + d.getFullYear();
+
+            const body = document.getElementById('statementTableBody');
+            body.innerHTML = '';
+
+            const schemes = [
+                { name: 'Pre-Primary', roll: s.ppRoll, rate: 5.45 }, // Example rate per student
+                { name: 'Primary', roll: s.pRoll, rate: 8.17 }      // Example rate per student
+            ];
+
+            let totalUtilizedRice = 0;
+            let totalUtilizedFunds = 0;
+
+            schemes.forEach(sc => {
+                const sRecs = records.filter(r => r.scheme === sc.name);
+                const wDays = new Set(sRecs.map(r => r.date)).size;
+                const sDays = sRecs.filter(r => r.served === 'Yes').length;
+                const covered = sRecs.reduce((acc
         .header h2 { margin: 10px 0; font-size: 16px; text-decoration: underline; }
 
         table {
