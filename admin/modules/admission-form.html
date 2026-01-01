@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="flex flex-wrap gap-4 mt-6">
-            <button onclick="submitApplication()" class="flex-1 min-w-[200px] bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase shadow-lg hover:bg-emerald-700">Submit to Master Ledger</button>
+            <button id="submitBtn" onclick="submitApplication()" class="flex-1 min-w-[200px] bg-emerald-600 text-white font-black py-4 rounded-2xl uppercase shadow-lg hover:bg-emerald-700 transition-all">Submit Application</button>
             <button onclick="window.print()" class="bg-slate-900 text-white font-black py-4 px-8 rounded-2xl uppercase shadow-lg">Print Form</button>
             <button onclick="saveAsPDF()" class="bg-blue-700 text-white font-black py-4 px-8 rounded-2xl uppercase shadow-lg hover:bg-blue-800">Save PDF</button>
         </div>
@@ -136,20 +136,18 @@
             </div>
 
             <div class="mt-4 border-t border-black pt-2">
-                <p class="text-[9px] leading-tight text-justify font-medium">
-                    <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief...
-                </p>
+                <p class="text-[9px] leading-tight text-justify font-medium"><strong>Parents Declaration:</strong> I do hereby declare that the above information is true. I will abide by the rules of the institution.</p>
                 <div class="flex justify-end mt-4">
                     <span class="border-t border-black px-6 pt-1 font-bold text-[10px] uppercase">Signature of Parent</span>
                 </div>
             </div>
+
             <div class="mt-2 border-2 border-black p-3 bg-slate-50">
-                <p class="font-black underline mb-2 text-[10px]">FOR OFFICE USE ONLY</p>
-                <div class="grid grid-cols-2 gap-6 text-[10px]">
-                    <div class="space-y-3">
+                <p class="font-black underline mb-1 text-[10px]">FOR OFFICE USE ONLY</p>
+                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                    <div class="space-y-1">
                         <p>Admitted to Class: ________________________</p>
-                        <p>Admission No: <span id="autoIdPlaceholder" class="font-bold">___________________________</span></p>
-                        <p>Date of Admission: ____/____/2026</p>
+                        <p>Admission No: <span id="admissionNoText" class="font-bold">___________________________</span></p>
                     </div>
                 </div>
             </div>
@@ -157,19 +155,20 @@
     </div>
 
     <script type="module">
-        import { db } from '../../assets/js/firebase.js';
+        // Import your Firebase configuration
+        import { db } from '../../assets/js/firebase.js'; 
         import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         window.submitApplication = async function() {
             const name = document.getElementById('inputName').value;
-            if(!name) return alert("Student Name is required!");
+            if(!name) { alert("Please enter the student's name!"); return; }
 
-            const btn = event.target;
-            btn.disabled = true;
-            btn.innerText = "Submitting...";
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Processing...";
+            submitBtn.disabled = true;
 
             try {
-                const formData = {
+                const studentData = {
                     fullName: name,
                     aadhaarName: document.getElementById('inputAadhaarName').value,
                     aadhaar: document.getElementById('inputAadhaarNum').value,
@@ -178,8 +177,8 @@
                     bloodGroup: document.getElementById('inputBlood').value,
                     fatherName: document.getElementById('inputFather').value,
                     motherName: document.getElementById('inputMother').value,
-                    fatherContact: document.getElementById('inputFContact').value,
-                    motherContact: document.getElementById('inputMContact').value,
+                    fContact: document.getElementById('inputFContact').value,
+                    mContact: document.getElementById('inputMContact').value,
                     dob: document.getElementById('inputDOB').value,
                     dobWords: document.getElementById('dobWords').innerText,
                     residence: document.getElementById('inputRes').value,
@@ -195,19 +194,22 @@
                     submittedAt: serverTimestamp()
                 };
 
-                await addDoc(collection(db, "pending_admissions"), formData);
-                alert("Success! Form submitted for Admin approval.");
-                location.reload(); 
-            } catch (e) {
-                alert("Error: " + e.message);
-                btn.disabled = false;
-                btn.innerText = "Submit to Master Ledger";
+                await addDoc(collection(db, "pending_admissions"), studentData);
+                alert("Application Submitted Successfully to Master Ledger!");
+                submitBtn.innerText = "Submit Application";
+                submitBtn.disabled = false;
+                
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Submission Failed. Check console.");
+                submitBtn.innerText = "Submit Application";
+                submitBtn.disabled = false;
             }
         };
     </script>
 
     <script>
-        // Layout helper functions (Grid creation and filling)
+        // GRID AND FILLING LOGIC
         function createGrid(id, count) {
             const container = document.getElementById(id);
             if(!container) return;
@@ -260,7 +262,7 @@
             }).from(element).save();
         }
 
-        // Initialize Grids
+        // INIT GRIDS
         createGrid('nameBoxes', 28); createGrid('aadhaarNameBoxes', 28);
         createGrid('fatherBoxes', 28); createGrid('motherBoxes', 19); 
         createGrid('resBoxes', 28); createGrid('tehsilBoxes', 10); 
@@ -276,4 +278,5 @@
     </script>
 </body>
 </html>
-                        
+
+                    
