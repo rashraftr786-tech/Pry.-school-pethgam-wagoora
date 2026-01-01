@@ -3,164 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDM Daily Entry | GPS Pethgam</title>
+    <title>MDM Expenditure Statement | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
-        body { font-family: 'Outfit', sans-serif; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; }
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        th, td { border: 1px solid black; padding: 3px; text-align: center; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
     </style>
 </head>
-<body class="bg-slate-50 pb-20">
+<body class="bg-slate-100 p-4">
 
-    <div class="max-w-5xl mx-auto p-4 md:p-8">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
-                <p class="text-emerald-600 font-black uppercase tracking-widest text-[10px]">MDM Management System</p>
-                <h1 class="text-3xl font-black text-slate-800 uppercase italic">Daily Log & Monthly Config</h1>
+                <h2 class="text-xl font-black text-emerald-700 uppercase tracking-tighter">MDM Official Report Generator</h2>
+                <p class="text-[10px] text-slate-400 font-bold uppercase italic">Auto-calculates balances from previous months</p>
             </div>
-            <input type="date" id="entryDate" class="bg-white border-2 border-slate-200 rounded-2xl px-6 py-3 font-bold text-slate-700 outline-none focus:border-emerald-500 shadow-sm">
+            <div class="flex gap-3">
+                <input type="month" id="reportMonth" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm font-bold" onchange="fetchCurrentMonthData()">
+                <button onclick="window.print()" class="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs hover:bg-emerald-600 transition-all">
+                    <i class="fa-solid fa-print mr-2"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
+        <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
+            <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
+            <div class="text-center flex-1">
+                <p class="italic text-xs font-serif">Office of the Headmaster</p>
+                <h1 class="text-xl font-bold tracking-tight uppercase">Government Primary School Pethgam Wagoora</h1>
+                <h3 class="text-[11px] font-bold uppercase tracking-widest mt-1">Monthly Expenditure Statement - MDM Scheme</h3>
+            </div>
+            <div class="w-16"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <div class="space-y-6">
-                <div class="bg-slate-900 rounded-[2rem] p-6 text-white shadow-xl">
-                    <h2 class="text-xs font-black uppercase text-emerald-400 mb-4 tracking-widest">Monthly Parameters</h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[9px] font-bold uppercase opacity-60">Monthly Enrollment (Total Roll)</label>
-                            <div class="grid grid-cols-2 gap-2 mt-1">
-                                <input type="number" id="ppEnroll" placeholder="PP (KG)" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
-                                <input type="number" id="pEnroll" placeholder="Primary" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
-                            </div>
-                        </div>
+        <table>
+            <thead class="bg-slate-50">
+                <tr>
+                    <th>Month</th>
+                    <th>Scheme</th>
+                    <th>Roll</th>
+                    <th>Work Days</th>
+                    <th>MDM Days</th>
+                    <th>Stud. Cov.</th>
+                    <th>Meals</th>
+                    <th>Open Rice</th>
+                    <th>Lifted</th>
+                    <th>Utilized</th>
+                    <th>Close Rice</th>
+                    <th>Open Funds</th>
+                    <th>Utilized Cost</th>
+                    <th>Received</th>
+                    <th>Close Funds</th>
+                    <th>Cooks</th>
+                </tr>
+            </thead>
+            <tbody id="statementBody">
+                </tbody>
+        </table>
 
-                        <div>
-                            <label class="text-[9px] font-bold uppercase opacity-60">Expenditure Rate (Per Student)</label>
-                            <div class="grid grid-cols-2 gap-2 mt-1">
-                                <input type="number" step="0.01" id="ppRate" placeholder="PP Rate" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
-                                <input type="number" step="0.01" id="pRate" placeholder="P Rate" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
-                            </div>
-                        </div>
-
-                        <div class="pt-2 border-t border-slate-800">
-                            <label class="text-[9px] font-bold uppercase opacity-60">Received This Month (Lifted)</label>
-                            <input type="number" step="0.001" id="riceReceived" placeholder="Rice Received (kg)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm mt-1 outline-none">
-                            <input type="number" step="0.01" id="fundsReceived" placeholder="Funds Received (₹)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm mt-2 outline-none">
-                        </div>
-                    </div>
-                </div>
+        <div class="mt-8 flex justify-between items-end text-[10px]">
+            <div class="space-y-1">
+                <p><strong>MDM A/C:</strong> 0486040500000273</p>
+                <p><strong>Cook:</strong> SHAHEENA BANO</p>
             </div>
-
-            <div class="lg:col-span-2 space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-child"></i></div>
-                            <h2 class="font-black text-slate-700 uppercase text-sm">Pre-Primary Daily</h2>
-                        </div>
-                        <div class="space-y-4">
-                            <input type="number" id="ppPresent" placeholder="Students Present" oninput="calcRice('pp')" class="w-full bg-slate-50 rounded-2xl p-4 outline-none font-black text-xl border-2 border-transparent focus:border-orange-500">
-                            <div class="bg-orange-50 p-3 rounded-xl">
-                                <p class="text-[9px] font-bold text-orange-600 uppercase">Rice Consumed (100g/student)</p>
-                                <p class="text-lg font-black text-slate-800"><span id="ppRiceDisplay">0</span> <span class="text-xs">grams</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-children"></i></div>
-                            <h2 class="font-black text-slate-700 uppercase text-sm">Primary Daily</h2>
-                        </div>
-                        <div class="space-y-4">
-                            <input type="number" id="pPresent" placeholder="Students Present" oninput="calcRice('p')" class="w-full bg-slate-50 rounded-2xl p-4 outline-none font-black text-xl border-2 border-transparent focus:border-blue-500">
-                            <div class="bg-blue-50 p-3 rounded-xl">
-                                <p class="text-[9px] font-bold text-blue-600 uppercase">Rice Consumed (100g/student)</p>
-                                <p class="text-lg font-black text-slate-800"><span id="pRiceDisplay">0</span> <span class="text-xs">grams</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <div class="flex flex-col md:flex-row gap-4 items-center">
-                        <div class="flex-1">
-                            <p class="text-xs font-bold text-slate-400 uppercase">Daily Meals Calculation</p>
-                            <h3 class="text-xl font-black text-slate-800">Total Meals: <span id="totalMeals">0</span></h3>
-                        </div>
-                        <button onclick="saveMdmEntry()" id="saveBtn" class="w-full md:w-auto bg-emerald-500 text-white font-black px-12 py-5 rounded-2xl uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100">
-                            Sync Daily Data
-                        </button>
-                    </div>
-                </div>
+            <div class="text-right w-48 pt-10 border-t border-black">
+                <p class="font-black uppercase">Headmaster Signature</p>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { db } from '../../assets/js/firebase.js';
-        import { collection, addDoc, serverTimestamp } from "
-                <p><strong>MDM A/C:</strong> 0486040500000273</p>
-                <p><strong>Cook:</strong> SHAHEENA BANO (0486040100006054)</p>
-            </div>
-            <div class="text-center">
-                <div class="w-32 border-b border-black mb-1"></div>
-                <p class="text-[10px] font-bold uppercase">Headmaster Signature</p>
-            </div>
-        </div>
-    </div>
+        import { collection, query, where, getDocs, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
-        function updateReport() {
-            // Get Month
-            const monthInput = document.getElementById('reportMonth').value;
-            if(monthInput) {
-                const date = new Date(monthInput);
-                const monthName = date.toLocaleString('default', { month: 'long' }).toUpperCase();
-                document.getElementById('displayMonth').innerText = monthName + " " + date.getFullYear();
-            }
+        window.fetchCurrentMonthData = async function() {
+            const currentMonth = document.getElementById('reportMonth').value;
+            if(!currentMonth) return;
 
-            // Get Global Days
-            const wDays = document.getElementById('workingDays').value || "0";
-            const sDays = document.getElementById('mdmServedDays').value || "0";
-            document.querySelectorAll('.wDays').forEach(el => el.innerText = wDays);
-            document.querySelectorAll('.sDays').forEach(el => el.innerText = sDays);
+            // 1. Calculate Previous Month String
+            const date = new Date(currentMonth + "-01");
+            date.setMonth(date.getMonth() - 1);
+            const prevMonth = date.toISOString().substring(0, 7);
 
-            // Pre-Primary Math
-            const ppRoll = parseInt(document.getElementById('ppRoll').value) || 0;
-            const ppCovered = parseInt(document.getElementById('ppCovered').value) || 0;
-            const ppRice = parseFloat(document.getElementById('ppRice').value) || 0;
-            const ppCost = (ppCovered * 5.45).toFixed(2); // Example cooking cost rate
+            try {
+                // 2. Fetch Previous Month for Opening Balances
+                const prevQuery = query(collection(db, "mdm_monthly_summaries"), where("monthYear", "==", prevMonth));
+                const prevSnap = await getDocs(prevQuery);
+                let openingRice = 0, openingFunds = 0;
 
-            document.getElementById('cellPpRoll').innerText = ppRoll;
-            document.getElementById('cellPpCovered').innerText = ppCovered;
-            document.getElementById('cellPpMeals').innerText = ppCovered;
-            document.getElementById('cellPpRice').innerText = ppRice.toFixed(3);
-            document.getElementById('cellPpCost').innerText = ppCost;
+                prevSnap.forEach(doc => {
+                    openingRice = doc.data().closingRice || 0;
+                    openingFunds = doc.data().closingFunds || 0;
+                });
 
-            // Primary Math
-            const pRoll = parseInt(document.getElementById('pRoll').value) || 0;
-            const pCovered = parseInt(document.getElementById('pCovered').value) || 0;
-            const pRice = parseFloat(document.getElementById('pRice').value) || 0;
-            const pCost = (pCovered * 8.17).toFixed(2); // Example cooking cost rate
+                // 3. Fetch All Daily Entries for Current Month
+                const dailyQuery = query(collection(db, "mdm_entries"), where("monthYear", "==", currentMonth));
+                const dailySnap = await getDocs(dailyQuery);
+                
+                let stats = {
+                    ppRoll: 0, pRoll: 0, ppCov: 0, pCov: 0, 
+                    riceLifted: 0, fundsRec: 0, 
+                    riceUtil: 0, fundsUtil: 0,
+                    daysServed: 0, ppRate: 5.45, pRate: 8.17 // Default Rates
+                };
 
-            document.getElementById('cellPRoll').innerText = pRoll;
-            document.getElementById('cellPCovered').innerText = pCovered;
-            document.getElementById('cellPMeals').innerText = pCovered;
-            document.getElementById('cellPRice').innerText = pRice.toFixed(3);
-            document.getElementById('cellPCost').innerText = pCost;
+                dailySnap.forEach(doc => {
+                    const d = doc.data();
+                    stats.ppRoll = d.pp_enroll || stats.ppRoll;
+                    stats.pRoll = d.p_enroll || stats.pRoll;
+                    stats.ppCov += d.pp_present || 0;
+                    stats.pCov += d.p_present || 0;
+                    stats.riceLifted += d.rice_lifted || 0;
+                    stats.fundsRec += d.funds_received || 0;
+                    stats.riceUtil += (d.pp_present + d.p_present) * 0.1; // 100g each
+                    stats.ppRate = d.pp_exp_rate || stats.ppRate;
+                    stats.pRate = d.p_exp_rate || stats.pRate;
+                    stats.daysServed++;
+                });
 
-            // Totals
-            document.getElementById('cellTotalRoll').innerText = ppRoll + pRoll;
-            document.getElementById('cellTotalCovered').innerText = ppCovered + pCovered;
-            document.getElementById('cellTotalMeals').innerText = ppCovered + pCovered;
-            document.getElementById('cellTotalRice').innerText = (ppRice + pRice).toFixed(3);
-            document.getElementById('cellTotalCost').innerText = (parseFloat(ppCost) + parseFloat(pCost)).toFixed(2);
+                stats.fundsUtil = (stats.ppCov * stats.ppRate) + (stats.pCov * stats.pRate);
+                
+                renderTable(currentMonth, stats, openingRice, openingFunds);
+
+            } catch (e) { console.error(e); }
+        };
+
+        function renderTable(month, s, opRice, opFunds) {
+            const date = new Date(month + "-01");
+            const label = date.toLocaleString('default', { month: 'short' }).toUpperCase() + " " + date.getFullYear();
+            
+            const closeRice = (opRice + s.riceLifted - s.riceUtil).toFixed(3);
+            const closeFunds = (opFunds + s.fundsRec - s.fundsUtil).toFixed(2);
+
+            document.getElementById('statementBody').innerHTML = `
+                <tr>
+                    <td rowspan="3" class="vertical-text font-bold">${label}</td>
+                    <td class="font-bold">Pre-Pri</td>
+                    <td>${s.ppRoll}</td><td>24</td><td>${s.daysServed}</td><td>${s.ppCov}</td><td>${s.ppCov}</td>
+                    <td rowspan="3">${opRice.toFixed(3)}</td>
+                    <td rowspan="3">${s.riceLifted.toFixed(3)}</td>
+                    <td>${(s.ppCov * 0.1).toFixed(3)}</td>
+                    <td rowspan="3">${closeRice}</td>
+                    <td rowspan="3">${opFunds.toFixed(2)}</td>
+                    <td>${(s.ppCov * s.ppRate).toFixed(2)}</td>
+                    <td rowspan="3">${s.fundsRec.toFixed(2)}</td>
+                    <td rowspan="3">${closeFunds}</td>
+                    <td rowspan="3">1</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Primary</td>
+                    <td>${s.pRoll}</td><td>24</td><td>${s.daysServed}</td><td>${s.pCov}</td><td>${s.pCov}</td>
+                    <td>${(s.pCov * 0.1).toFixed(3)}</td>
+                    <td>${(s.pCov * s.pRate).toFixed(2)}</td>
+                </tr>
+                <tr class="bg-slate-100 font-black">
+                    <td>TOTAL</td>
+                    <td>${s.ppRoll + s.pRoll}</td><td>24</td><td>${s.daysServed}</td>
+                    <td>${s.ppCov + s.pCov}</td><td>${s.ppCov + s.pCov}</td>
+                    <td>${s.riceUtil.toFixed(3)}</td>
+                    <td>${s.fundsUtil.toFixed(2)}</td>
+                </tr>
+            `;
         }
     </script>
 </body>
 </html>
-</html>
+                    
