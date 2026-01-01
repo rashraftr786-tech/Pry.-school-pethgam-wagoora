@@ -187,6 +187,28 @@
     </div>
 
     <script>
+        import { db } from '../assets/js/firebase.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+async function submitToMaster() {
+    // Gather data from your inputs
+    const studentData = {
+        fullName: document.getElementById('inputName').value,
+        aadhaar: document.querySelectorAll('#aadhaarNumBoxes .char-box').innerText, // simplified for example
+        fatherName: "", // pull from your inputs
+        status: "pending", // Essential for the review system
+        submittedAt: serverTimestamp(),
+        // ... include all other fields here
+    };
+
+    try {
+        await addDoc(collection(db, "pending_admissions"), studentData);
+        alert("Application submitted! Please wait for Admin approval.");
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+}
+        
         function createGrid(id, count) {
             const container = document.getElementById(id);
             if(!container) return;
