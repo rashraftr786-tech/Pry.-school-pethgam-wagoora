@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Roll Call | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 p-4">
+
+    <div class="max-w-md mx-auto">
+        <header class="mb-6">
+            <h1 class="text-xl font-black uppercase text-slate-800">Daily Attendance</h1>
+            <p id="displayDate" class="text-xs font-bold text-blue-500 uppercase tracking-widest"></p>
+        </header>
+
+        <div id="attendanceContainer" class="space-y-3 mb-24">
+            <div class="p-10 text-center text-slate-400 animate-pulse">Loading Students...</div>
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-200">
+            <button onclick="submitAttendance()" class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl uppercase tracking-widest shadow-xl">
+                Submit Roll Call
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from '../../assets/js/firebase.js';
+        import { collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const date = new Date();
+        document.getElementById('displayDate').innerText = date.toDateString();
+
+        // 1. Fetch from admin/master-ledger database
+        async function loadClassList() {
+            const container = document.getElementById('attendanceContainer');
+            try {
+                const querySnapshot = await getDocs(collection(db, "students"));
+                let html = "";
+                
+                querySnapshot.forEach((doc) => {
+                    const student = doc.data();
+                    html += `
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-black uppercase text-slate-900">${student.fullName}</p>
+                                <p class="text-[9px] text-slate-400 font-bold">ADM: ${student.admissionNo}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <label class="relative">
+                                    <input type="radio" name="status-${doc.id}" value="P" checked class="peer hidden">
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-slate-100 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 peer-checked:text-white transition-all text-xs font-black">P</div>
+                                </label>
+                                <label class="relative">
+                                    <input type="radio" name="status-${doc.id}" value="A" class="peer hidden">
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-slate-100 peer-checked:bg-red-500 peer-checked:border-red-500 peer-checked:text-white transition-all text-xs font-black">A</div>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html || "<p class='text-center'>No Students in Ledger.</p>";
+            } catch (e) {
+                container.innerHTML = "<p class='text-red-500'>Error loading database.</p>";
+            }
+        }
+
+        // 2. Submit and Sync with MDM Reports
+        window.submitAttendance = async function() {
+            const radios = document.querySelectorAll('input[type="radio"]:checked');
+            let presentCount = 0;
+            let totalRoll = radios.length;
+
+            radios.forEach(r => { if(r.value === 'P') presentCount++; });
+
+            try {
+                await addDoc(collection(db, "daily_attendance"), {
+                    date: date.toISOString().split('T')[0],
+                    presentCount: presentCount,
+                    totalRoll: totalRoll,
+                    timestamp: serverTimestamp()
+                });
+                
+                alert(`Attendance marked! ${presentCount} students present.`);
+            } catch (e) {
+                alert("Submission failed: " + e.message);
+            }
+        }
+
+        loadClassList();
+    </script>
+</body>
+</html>
