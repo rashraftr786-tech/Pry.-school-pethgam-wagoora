@@ -3,177 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDM Expenditure Statement | GPS Pethgam</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>MDM Management System | GPS Pethgam</title>
     <style>
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; padding: 0; }
-            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; }
+        :root {
+            --primary-color: #1a202c;
+            --border-color: #000;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        th, td { border: 1px solid black; padding: 3px; text-align: center; }
-        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .no-print {
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2.section-title {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-cols: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-save { background: #38a169; color: white; }
+        .btn-generate { background: #3182ce; color: white; }
+        .btn-print { background: #2d3748; color: white; }
+        .btn-reset { background: #e53e3e; color: white; }
+
+        /* A4 Page Styling */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 { margin: 5px 0; font-size: 20px; text-transform: uppercase; }
+        .header h3 { margin: 5px 0; font-size: 14px; font-weight: normal; font-style: italic; }
+        .header h2 { margin: 10px 0; font-size: 16px; text-decoration: underline; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        th { background-color: #f2f2f2; }
+
+        .footer-section {
+            margin-top: 30px;
+            font-size: 12px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            margin-top: 20px;
+        }
+
+        .signature-space {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sig-box {
+            border-top: 1px solid #000;
+            width: 200px;
+            text-align: center;
+            padding-top: 5px;
+            font-weight: bold;
+        }
+
+        .records-table {
+            width: 100%;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .no-print { display: none; }
+            .a4-page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                height: auto;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-100 p-4">
+<body>
 
-    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <h2 class="text-xl font-black text-emerald-700 uppercase tracking-tighter">MDM Official Report Generator</h2>
-                <p class="text-[10px] text-slate-400 font-bold uppercase italic">Auto-calculates balances from previous months</p>
+    <div class="no-print">
+        <h2 class="section-title">Daily MDM Data Entry</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="dailyDate">
             </div>
-            <div class="flex gap-3">
-                <input type="month" id="reportMonth" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm font-bold" onchange="fetchCurrentMonthData()">
-                <button onclick="window.print()" class="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs hover:bg-emerald-600 transition-all">
-                    <i class="fa-solid fa-print mr-2"></i> Print
-                </button>
+            <div class="form-group">
+                <label>Scheme Type</label>
+                <select id="schemeType">
+                    <option value="Pre-Primary">Pre-Primary (Bal Vatika)</option>
+                    <option value="Primary">Primary</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Total Roll</label>
+                <input type="number" id="totalRoll" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label>MDM Served Today?</label>
+                <select id="mdmServed">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Students Covered</label>
+                <input type="number" id="studentsCovered" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label>Rice Opening Bal (kg)</label>
+                <input type="number" step="0.001" id="riceOpening" placeholder="0.000">
+            </div>
+            <div class="form-group">
+                <label>Rice Lifted (kg)</label>
+                <input type="number" step="0.001" id="riceLifted" placeholder="0.000">
+            </div>
+            <div class="form-group">
+                <label>Rice Utilized (kg)</label>
+                <input type="number" step="0.001" id="riceUtilized" placeholder="0.000">
+            </div>
+            <div class="form-group">
+                <label>Funds Opening (₹)</label>
+                <input type="number" step="0.01" id="fundsOpening" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Funds Received (₹)</label>
+                <input type="number" step="0.01" id="fundsReceived" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Funds Utilized (₹)</label>
+                <input type="number" step="0.01" id="fundsUtilized" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Cooks Working</label>
+                <input type="number" id="cooksWorking" value="1">
             </div>
         </div>
+        <div class="btn-group">
+            <button class="btn-save" onclick="saveEntry()">Save Daily Entry</button>
+            <button class="btn-generate" onclick="generateStatement()">Generate Monthly Statement</button>
+            <button class="btn-reset" onclick="resetData()">Reset All Data</button>
+        </div>
+
+        <h3 style="margin-top:30px">Daily Records for <span id="currentMonthYear"></span></h3>
+        <table class="records-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Scheme</th>
+                    <th>Roll</th>
+                    <th>Served</th>
+                    <th>Covered</th>
+                    <th>Rice Util</th>
+                    <th>Funds Util</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="dailyRecordsBody"></tbody>
+        </table>
     </div>
 
-    <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
-        <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
-            <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
-            <div class="text-center flex-1">
-                <p class="italic text-xs font-serif">Office of the Headmaster</p>
-                <h1 class="text-xl font-bold tracking-tight uppercase">Government Primary School Pethgam Wagoora</h1>
-                <h3 class="text-[11px] font-bold uppercase tracking-widest mt-1">Monthly Expenditure Statement - MDM Scheme</h3>
-            </div>
-            <div class="w-16"></div>
+    <div class="a4-page" id="printableArea">
+        <div class="header">
+            <h3>OFFICE OF THE HEADMASTER</h3>
+            <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+            <h2 id="statementTitle">Month Wise / Department Wise Expenditure Statement under MDM Scheme</h2>
+            <p style="font-size: 12px; font-weight: bold; margin-bottom: 0;">Statement for the Month of: <span id="monthNameDisplay">________</span></p>
         </div>
 
         <table>
-            <thead class="bg-slate-50">
+            <thead>
                 <tr>
-                    <th>Month</th>
-                    <th>Scheme</th>
-                    <th>Roll</th>
-                    <th>Work Days</th>
-                    <th>MDM Days</th>
-                    <th>Stud. Cov.</th>
-                    <th>Meals</th>
-                    <th>Open Rice</th>
-                    <th>Lifted</th>
-                    <th>Utilized</th>
-                    <th>Close Rice</th>
-                    <th>Open Funds</th>
-                    <th>Utilized Cost</th>
-                    <th>Received</th>
-                    <th>Close Funds</th>
-                    <th>Cooks</th>
+                    <th rowspan="2">Month</th>
+                    <th rowspan="2">Scheme</th>
+                    <th rowspan="2">Total Roll</th>
+                    <th rowspan="2">No. of Working Days</th>
+                    <th rowspan="2">No. of Days MDM Served</th>
+                    <th rowspan="2">No. of Students Covered</th>
+                    <th rowspan="2">No. of Meals Served</th>
+                    <th colspan="4">Food Grains (Rice) in Kgs</th>
+                    <th colspan="4">Cooking Cost Funds in ₹</th>
+                    <th rowspan="2">No. of Cooks Working</th>
+                </tr>
+                <tr>
+                    <th>Opening Balance</th>
+                    <th>Quantity Lifted</th>
+                    <th>Quantity Utilized</th>
+                    <th>Closing Balance</th>
+                    <th>Opening Balance</th>
+                    <th>Funds Utilized</th>
+                    <th>Funds Received</th>
+                    <th>Closing Balance</th>
                 </tr>
             </thead>
-            <tbody id="statementBody">
+            <tbody id="statementTableBody">
                 </tbody>
         </table>
 
-        <div class="mt-8 flex justify-between items-end text-[10px]">
-            <div class="space-y-1">
-                <p><strong>MDM A/C:</strong> 0486040500000273</p>
-                <p><strong>Cook:</strong> SHAHEENA BANO</p>
+        <div class="footer-section">
+            <div class="details-grid">
+                <div>
+                    <p><strong>MDM A/C of School (16 digits):</strong> 0486040500000273</p>
+                    <p><strong>MDM I/C Name:</strong> <span id="icNameDisp">________________</span></p>
+                    <p><strong>Contact Number:</strong> <span id="icContactDisp">________________</span></p>
+                </div>
+                <div style="border-left: 1px solid #000; padding-left: 20px;">
+                    <p><strong>Account Number of Cooks:</strong></p>
+                    <p>Name: SHAHEENA BANO</p>
+                    <p>A/C No: 0486040100006054</p>
+                </div>
             </div>
-            <div class="text-right w-48 pt-10 border-t border-black">
-                <p class="font-black uppercase">Headmaster Signature</p>
+
+            <div class="signature-space">
+                <div class="sig-box">MDM Incharge</div>
+                <div class="sig-box">Headmaster</div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { db } from '../../assets/js/firebase.js';
-        import { collection, query, where, getDocs, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div class="no-print" style="text-align: center; margin-bottom: 50px;">
+        <button class="btn-print" onclick="window.print()">Print Statement (A4)</button>
+    </div>
 
-        window.fetchCurrentMonthData = async function() {
-            const currentMonth = document.getElementById('reportMonth').value;
-            if(!currentMonth) return;
+    <script>
+        // Initialize Date
+        document.getElementById('dailyDate').valueAsDate = new Date();
 
-            // 1. Calculate Previous Month String
-            const date = new Date(currentMonth + "-01");
-            date.setMonth(date.getMonth() - 1);
-            const prevMonth = date.toISOString().substring(0, 7);
-
-            try {
-                // 2. Fetch Previous Month for Opening Balances
-                const prevQuery = query(collection(db, "mdm_monthly_summaries"), where("monthYear", "==", prevMonth));
-                const prevSnap = await getDocs(prevQuery);
-                let openingRice = 0, openingFunds = 0;
-
-                prevSnap.forEach(doc => {
-                    openingRice = doc.data().closingRice || 0;
-                    openingFunds = doc.data().closingFunds || 0;
-                });
-
-                // 3. Fetch All Daily Entries for Current Month
-                const dailyQuery = query(collection(db, "mdm_entries"), where("monthYear", "==", currentMonth));
-                const dailySnap = await getDocs(dailyQuery);
-                
-                let stats = {
-                    ppRoll: 0, pRoll: 0, ppCov: 0, pCov: 0, 
-                    riceLifted: 0, fundsRec: 0, 
-                    riceUtil: 0, fundsUtil: 0,
-                    daysServed: 0, ppRate: 5.45, pRate: 8.17 // Default Rates
-                };
-
-                dailySnap.forEach(doc => {
-                    const d = doc.data();
-                    stats.ppRoll = d.pp_enroll || stats.ppRoll;
-                    stats.pRoll = d.p_enroll || stats.pRoll;
-                    stats.ppCov += d.pp_present || 0;
-                    stats.pCov += d.p_present || 0;
-                    stats.riceLifted += d.rice_lifted || 0;
-                    stats.fundsRec += d.funds_received || 0;
-                    stats.riceUtil += (d.pp_present + d.p_present) * 0.1; // 100g each
-                    stats.ppRate = d.pp_exp_rate || stats.ppRate;
-                    stats.pRate = d.p_exp_rate || stats.pRate;
-                    stats.daysServed++;
-                });
-
-                stats.fundsUtil = (stats.ppCov * stats.ppRate) + (stats.pCov * stats.pRate);
-                
-                renderTable(currentMonth, stats, openingRice, openingFunds);
-
-            } catch (e) { console.error(e); }
-        };
-
-        function renderTable(month, s, opRice, opFunds) {
-            const date = new Date(month + "-01");
-            const label = date.toLocaleString('default', { month: 'short' }).toUpperCase() + " " + date.getFullYear();
-            
-            const closeRice = (opRice + s.riceLifted - s.riceUtil).toFixed(3);
-            const closeFunds = (opFunds + s.fundsRec - s.fundsUtil).toFixed(2);
-
-            document.getElementById('statementBody').innerHTML = `
-                <tr>
-                    <td rowspan="3" class="vertical-text font-bold">${label}</td>
-                    <td class="font-bold">Pre-Pri</td>
-                    <td>${s.ppRoll}</td><td>24</td><td>${s.daysServed}</td><td>${s.ppCov}</td><td>${s.ppCov}</td>
-                    <td rowspan="3">${opRice.toFixed(3)}</td>
-                    <td rowspan="3">${s.riceLifted.toFixed(3)}</td>
-                    <td>${(s.ppCov * 0.1).toFixed(3)}</td>
-                    <td rowspan="3">${closeRice}</td>
-                    <td rowspan="3">${opFunds.toFixed(2)}</td>
-                    <td>${(s.ppCov * s.ppRate).toFixed(2)}</td>
-                    <td rowspan="3">${s.fundsRec.toFixed(2)}</td>
-                    <td rowspan="3">${closeFunds}</td>
-                    <td rowspan="3">1</td>
-                </tr>
-                <tr>
-                    <td class="font-bold">Primary</td>
-                    <td>${s.pRoll}</td><td>24</td><td>${s.daysServed}</td><td>${s.pCov}</td><td>${s.pCov}</td>
-                    <td>${(s.pCov * 0.1).toFixed(3)}</td>
-                    <td>${(s.pCov * s.pRate).toFixed(2)}</td>
-                </tr>
-                <tr class="bg-slate-100 font-black">
-                    <td>TOTAL</td>
-                    <td>${s.ppRoll + s.pRoll}</td><td>24</td><td>${s.daysServed}</td>
-                    <td>${s.ppCov + s.pCov}</td><td>${s.ppCov + s.pCov}</td>
-                    <td>${s.riceUtil.toFixed(3)}</td>
-                    <td>${s.fundsUtil.toFixed(2)}</td>
-                </tr>
-            `;
+        // Data Storage
+        function getRecords() {
+            return JSON.parse(localStorage.getItem('mdm_records')) || [];
         }
+
+        function saveEntry() {
+            const date = document.getElementById('dailyDate').value;
+            if (!date) return alert("Select a date");
+
+            const records = getRecords();
+            const entry = {
+                id: Date.now(),
+                date: date,
+                month: date.substring(0, 7), // YYYY-MM
+                scheme: document.getElementById('schemeType').value,
+                roll: parseInt(document.getElementById('totalRoll').value) || 0,
+                served: document.getElementById('mdmServed').value,
+                covered: parseInt(document.getElementById('studentsCovered').value) || 0,
+                riceOpen: parseFloat(document.getElementById('riceOpening').value) || 0,
+                riceLifted: parseFloat(document.getElementById('riceLifted').value) || 0,
+                riceUtil: parseFloat(document.getElementById('riceUtilized').value) || 0,
+                fundsOpen: parseFloat(document.getElementById('fundsOpening').value) || 0,
+                fundsRec: parseFloat(document.getElementById('fundsReceived').value) || 0,
+                fundsUtil: parseFloat(document.getElementById('fundsUtilized').value) || 0,
+                cooks: parseInt(document.getElementById('cooksWorking').value) || 0
+            };
+
+            records.push(entry);
+            localStorage.setItem('mdm_records', JSON.stringify(records));
+            updateDailyTable();
+            alert("Entry Saved Successfully");
+        }
+
+        function deleteEntry(id) {
+            let records = getRecords();
+            records = records.filter(r => r.id !== id);
+            localStorage.setItem('mdm_records', JSON.stringify(records));
+            updateDailyTable();
+        }
+
+        function resetData() {
+            if(confirm("Are you sure you want to clear ALL data?")) {
+                localStorage.removeItem('mdm_records');
+                location.reload();
+            }
+        }
+
+        function updateDailyTable() {
+            const records = getRecords();
+            const body = document.getElementById('dailyRecordsBody');
+            body.innerHTML = '';
+            
+            // Sort by date descending
+            records.sort((a,b) => b.date.localeCompare(a.date));
+
+            records.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${r.date}</td>
+                    <td>${r.scheme}</td>
+                    <td>${r.roll}</td>
+                    <td>${r.served}</td>
+                    <td>${r.covered}</td>
+                    <td>${r.riceUtil}</td>
+                    <td>${r.fundsUtil}</td>
+                    <td><button onclick="deleteEntry(${r.id})" style="background:#e53e3e; color:white; padding:2px 5px; font-size:10px; border-radius:3px;">Del</button></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function generateStatement() {
+            const dateInput = document.getElementById('dailyDate').value;
+            const targetMonth = dateInput.substring(0, 7);
+            const records = getRecords().filter(r => r.month === targetMonth);
+            
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const d = new Date(dateInput);
+            document.getElementById('monthNameDisplay').innerText = monthNames[d.getMonth()] + " " + d.getFullYear();
+
+            const body = document.getElementById('statementTableBody');
+            body.innerHTML = '';
+
+            const schemes = ['Pre-Primary', 'Primary'];
+            let grandTotal = {
+                roll: 0, wDays: 0, sDays: 0, covered: 0, riceOpen: 0, riceLifted: 0, riceUtil: 0, 
+                fundsOpen: 0, fundsUtil: 0, fundsRec: 0, cooks: 0
+            };
+
+            const groupedData = schemes.map(s => {
+                const sRecs = records.filter(r => r.scheme === s);
+                if (sRecs.length === 0) return null;
+
+                const roll = sRecs[0].roll; // Taking latest roll entry
+                const wDays = new Set(sRecs.map(r => r.date)).size;
+                const sDays = sRecs.filter(r => r.served === 'Yes').length;
+                const covered = sRecs.reduce((acc, r) => acc + r.covered, 0);
+                
+                // For opening balances, we take the earliest entry in the month
+                sRecs.sort((a,b) => a.date.localeCompare(b.date));
+                const riceOpen = sRecs[0].riceOpen;
+                const fundsOpen = sRecs[0].fundsOpen;
+
+                const riceLifted = sRecs.reduce((acc, r) => acc + r.riceLifted, 0);
+                const riceUtil = sRecs.reduce((acc, r) => acc + r.riceUtil, 0);
+                const fundsRec = sRecs.reduce((acc, r) => acc + r.fundsRec, 0);
+                const fundsUtil = sRecs.reduce((acc, r) => acc + r.fundsUtil, 0);
+                const cooks = sRecs[sRecs.length - 1].cooks;
+
+                const riceClose = (riceOpen + riceLifted) - riceUtil;
+                const fundsClose = (fundsOpen + fundsRec) - fundsUtil;
+
+                return {
+                    name: s, roll, wDays, sDays, covered, riceOpen, riceLifted, riceUtil, riceClose,
+                    fundsOpen, fundsUtil, fundsRec, fundsClose, cooks
+                };
+            });
+
+            groupedData.forEach((data, index) => {
+                if(!data) return;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    ${index === 0 ? `<td rowspan="3" style="font-weight:bold">${monthNames[d.getMonth()].toUpperCase()}</td>` : ''}
+                    <td style="text-align:left; font-weight:bold;">${data.name}</td>
+                    <td>${data.roll}</td>
+                    <td>${data.wDays}</td>
+                    <td>${data.sDays}</td>
+                    <td>${data.covered}</td>
+                    <td>${data.covered}</td>
+                    <td>${data.riceOpen.toFixed(3)}</td>
+                    <td>${data.riceLifted.toFixed(3)}</td>
+                    <td>${data.riceUtil.toFixed(3)}</td>
+                    <td>${data.riceClose.toFixed(3)}</td>
+                    <td>${data.fundsOpen.toFixed(2)}</td>
+                    <td>${data.fundsUtil.toFixed(2)}</td>
+                    <td>${data.fundsRec.toFixed(2)}</td>
+                    <td>${data.fundsClose.toFixed(2)}</td>
+                    <td>${data.cooks}</td>
+                `;
+                body.appendChild(tr);
+
+                grandTotal.roll += data.roll;
+                grandTotal.wDays = Math.max(grandTotal.wDays, data.wDays);
+                grandTotal.sDays = Math.max(grandTotal.sDays, data.sDays);
+                grandTotal.covered += data.covered;
+                grandTotal.riceOpen += data.riceOpen;
+                grandTotal.riceLifted += data.riceLifted;
+                grandTotal.riceUtil += data.riceUtil;
+                grandTotal.fundsOpen += data.fundsOpen;
+                grandTotal.fundsUtil += data.fundsUtil;
+                grandTotal.fundsRec += data.fundsRec;
+                grandTotal.cooks = Math.max(grandTotal.cooks, data.cooks);
+            });
+
+            // Total Row
+            const trTotal = document.createElement('tr');
+            trTotal.style.fontWeight = 'bold';
+            trTotal.style.backgroundColor = '#f2f2f2';
+            trTotal.innerHTML = `
+                <td>TOTAL</td>
+                <td>${grandTotal.roll}</td>
+                <td>${grandTotal.wDays}</td>
+                <td>${grandTotal.sDays}</td>
+                <td>${grandTotal.covered}</td>
+                <td>${grandTotal.covered}</td>
+                <td>${grandTotal.riceOpen.toFixed(3)}</td>
+                <td>${grandTotal.riceLifted.toFixed(3)}</td>
+                <td>${grandTotal.riceUtil.toFixed(3)}</td>
+                <td>${(grandTotal.riceOpen + grandTotal.riceLifted - grandTotal.riceUtil).toFixed(3)}</td>
+                <td>${grandTotal.fundsOpen.toFixed(2)}</td>
+                <td>${grandTotal.fundsUtil.toFixed(2)}</td>
+                <td>${grandTotal.fundsRec.toFixed(2)}</td>
+                <td>${(grandTotal.fundsOpen + grandTotal.fundsRec - grandTotal.fundsUtil).toFixed(2)}</td>
+                <td>${grandTotal.cooks}</td>
+            `;
+            body.appendChild(trTotal);
+
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Run on load
+        updateDailyTable();
     </script>
 </body>
 </html>
