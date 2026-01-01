@@ -1,104 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDM Expenditure Statement | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>.field-group { @apply bg-white p-4 rounded-2xl border border-slate-100 shadow-sm; }</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; }
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        th, td { border: 1px solid black; padding: 4px; text-align: center; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
+    </style>
 </head>
-<body class="bg-slate-50 p-6 font-sans">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black italic uppercase">Daily MDM Consumption Entry</h2>
-            <div id="auto-date" class="text-blue-600 font-bold"></div>
+<body class="bg-slate-100 p-4">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
+        <h2 class="text-xl font-black text-emerald-700 mb-4 uppercase tracking-tighter">Report Data Entry</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="space-y-3">
+                <p class="text-[10px] font-black text-slate-400 uppercase">1. Period & Days</p>
+                <input type="month" id="reportMonth" class="w-full p-2 bg-slate-50 rounded-lg border text-xs font-bold" onchange="updateReport()">
+                <input type="number" id="workingDays" placeholder="Working Days" class="w-full p-2 bg-slate-50 rounded-lg border text-xs" oninput="updateReport()">
+                <input type="number" id="mdmServedDays" placeholder="Days MDM Served" class="w-full p-2 bg-slate-50 rounded-lg border text-xs" oninput="updateReport()">
+            </div>
+
+            <div class="space-y-3 p-3 bg-orange-50/50 rounded-2xl border border-orange-100">
+                <p class="text-[10px] font-black text-orange-600 uppercase">2. Pre-Primary (KG)</p>
+                <input type="number" id="ppRoll" placeholder="Total Roll (KG)" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+                <input type="number" id="ppCovered" placeholder="Students Covered" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+                <input type="number" id="ppRice" step="0.001" placeholder="Rice Utilized (kg)" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+            </div>
+
+            <div class="space-y-3 p-3 bg-blue-50/50 rounded-2xl border border-blue-100">
+                <p class="text-[10px] font-black text-blue-600 uppercase">3. Primary (1st-5th)</p>
+                <input type="number" id="pRoll" placeholder="Total Roll (Pri)" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+                <input type="number" id="pCovered" placeholder="Students Covered" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+                <input type="number" id="pRice" step="0.001" placeholder="Rice Utilized (kg)" class="w-full p-2 bg-white rounded-lg border text-xs" oninput="updateReport()">
+            </div>
+
+            <div class="flex flex-col justify-end gap-2">
+                <button onclick="window.print()" class="w-full bg-emerald-600 text-white font-black py-3 rounded-xl hover:bg-emerald-700 transition-all uppercase text-xs">Print Statement</button>
+                <p class="text-[9px] text-center text-slate-400 font-bold italic">Totals are auto-calculated below.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
+        <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
+            <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
+            <div class="text-center flex-1">
+                <p class="italic text-sm font-serif">Office of the Headmaster</p>
+                <h1 class="text-2xl font-bold tracking-tight uppercase">Government Primary School Pethgam Wagoora</h1>
+                <h3 class="text-md font-bold uppercase tracking-widest mt-1">Month Wise Expenditure Statement under MDM Scheme</h3>
+            </div>
+            <div class="w-16"></div>
         </div>
 
-        <form class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="field-group">
-                    <label class="text-[10px] font-bold uppercase text-slate-400">On Roll Primary</label>
-                    <input type="number" id="rollP" class="w-full text-lg font-bold outline-none" value="85">
-                </div>
-                <div class="field-group">
-                    <label class="text-[10px] font-bold uppercase text-slate-400">Present Primary</label>
-                    <input type="number" id="presentP" oninput="calculateMDM()" class="w-full text-lg font-bold outline-none text-emerald-600">
-                </div>
-            </div>
+        <table>
+            <thead class="bg-slate-50">
+                <tr>
+                    <th>Month</th>
+                    <th>Scheme</th>
+                    <th>Total Roll</th>
+                    <th>Working Days</th>
+                    <th>MDM Served</th>
+                    <th>Students Covered</th>
+                    <th>Meals Served</th>
+                    <th>Opening Rice</th>
+                    <th>Rice Lifted</th>
+                    <th>Rice Utilized</th>
+                    <th>Closing Rice</th>
+                    <th>Opening Funds</th>
+                    <th>Cooking Cost Utilized</th>
+                    <th>Funds Received</th>
+                    <th>Closing Funds</th>
+                    <th>Cooks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3" class="vertical-text" id="displayMonth">MONTH YEAR</td>
+                    <td class="font-bold">Pre-Primary (Bal Vatika)</td>
+                    <td id="cellPpRoll">0</td>
+                    <td class="wDays">0</td>
+                    <td class="sDays">0</td>
+                    <td id="cellPpCovered">0</td>
+                    <td id="cellPpMeals">0</td>
+                    <td>-</td> <td>0.000</td>
+                    <td id="cellPpRice">0.000</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td id="cellPpCost">-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td rowspan="3" class="font-bold">1</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Primary (1st-5th)</td>
+                    <td id="cellPRoll">0</td>
+                    <td class="wDays">0</td>
+                    <td class="sDays">0</td>
+                    <td id="cellPCovered">0</td>
+                    <td id="cellPMeals">0</td>
+                    <td>-</td>
+                    <td>0.000</td>
+                    <td id="cellPRice">0.000</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td id="cellPCost">-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr class="bg-slate-100 font-black">
+                    <td>Total</td>
+                    <td id="cellTotalRoll">0</td>
+                    <td class="wDays">0</td>
+                    <td class="sDays">0</td>
+                    <td id="cellTotalCovered">0</td>
+                    <td id="cellTotalMeals">0</td>
+                    <td>-</td>
+                    <td>0.000</td>
+                    <td id="cellTotalRice">0.000</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td id="cellTotalCost">0.00</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <div class="field-group">
-                <h3 class="text-[10px] font-black uppercase mb-3 text-blue-500">Rice Stock Management (KG)</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="text-[9px] uppercase">Last Balance</label>
-                        <input type="number" id="lastRice" class="w-full border-b" value="45.5">
-                    </div>
-                    <div>
-                        <label class="text-[9px] uppercase">Rice Received</label>
-                        <input type="number" id="recRice" oninput="calculateMDM()" class="w-full border-b text-blue-600">
-                    </div>
-                    <div>
-                        <label class="text-[9px] uppercase text-red-500 font-bold">Today's Consumption</label>
-                        <div id="consRice" class="font-bold">0.00</div>
-                    </div>
-                </div>
+        <div class="mt-8 flex justify-between items-end">
+            <div class="text-[10px] space-y-1">
+                <p><strong>MDM A/C:</strong> 0486040500000273</p>
+                <p><strong>Cook:</strong> SHAHEENA BANO (0486040100006054)</p>
             </div>
-
-            <div class="field-group">
-                <h3 class="text-[10px] font-black uppercase mb-3 text-orange-500">Cooking Cost & Funds (₹)</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="text-[9px] uppercase">Rate Per Student</label>
-                        <input type="number" id="rate" class="w-full border-b" value="5.45">
-                    </div>
-                    <div>
-                        <label class="text-[9px] uppercase">Funds Received</label>
-                        <input type="number" id="recFunds" oninput="calculateMDM()" class="w-full border-b">
-                    </div>
-                    <div>
-                        <label class="text-[9px] uppercase text-red-500 font-bold">Today's Liability</label>
-                        <div id="consFunds" class="font-bold">₹ 0.00</div>
-                    </div>
-                </div>
+            <div class="text-center">
+                <div class="w-32 border-b border-black mb-1"></div>
+                <p class="text-[10px] font-bold uppercase">Headmaster Signature</p>
             </div>
-
-            <div class="bg-slate-900 text-white p-6 rounded-[2rem] grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-[9px] uppercase opacity-50">Closing Rice Balance</p>
-                    <p id="closingRice" class="text-2xl font-black">-- KG</p>
-                </div>
-                <div>
-                    <p class="text-[9px] uppercase opacity-50">Closing Fund Balance</p>
-                    <p id="closingFunds" class="text-2xl font-black">₹ --</p>
-                </div>
-            </div>
-            
-            <button type="button" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl uppercase tracking-widest shadow-lg shadow-blue-200">Save Daily Entry</button>
-        </form>
+        </div>
     </div>
 
     <script>
-        // Auto-Generate Month/Date
-        const d = new Date();
-        document.getElementById('auto-date').innerText = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+        function updateReport() {
+            // Get Month
+            const monthInput = document.getElementById('reportMonth').value;
+            if(monthInput) {
+                const date = new Date(monthInput);
+                const monthName = date.toLocaleString('default', { month: 'long' }).toUpperCase();
+                document.getElementById('displayMonth').innerText = monthName + " " + date.getFullYear();
+            }
 
-        function calculateMDM() {
-            const present = parseFloat(document.getElementById('presentP').value) || 0;
-            const rate = parseFloat(document.getElementById('rate').value) || 0;
-            const lastR = parseFloat(document.getElementById('lastRice').value) || 0;
-            const recR = parseFloat(document.getElementById('recRice').value) || 0;
-            const recF = parseFloat(document.getElementById('recFunds').value) || 0;
+            // Get Global Days
+            const wDays = document.getElementById('workingDays').value || "0";
+            const sDays = document.getElementById('mdmServedDays').value || "0";
+            document.querySelectorAll('.wDays').forEach(el => el.innerText = wDays);
+            document.querySelectorAll('.sDays').forEach(el => el.innerText = sDays);
 
-            // Calculations
-            const consR = (present * 0.100).toFixed(2); // 100g per student
-            const consF = (present * rate).toFixed(2);
-            
-            const closeR = (lastR + recR - consR).toFixed(2);
-            const closeF = (recF - consF).toFixed(2);
+            // Pre-Primary Math
+            const ppRoll = parseInt(document.getElementById('ppRoll').value) || 0;
+            const ppCovered = parseInt(document.getElementById('ppCovered').value) || 0;
+            const ppRice = parseFloat(document.getElementById('ppRice').value) || 0;
+            const ppCost = (ppCovered * 5.45).toFixed(2); // Example cooking cost rate
 
-            // Update UI
-            document.getElementById('consRice').innerText = consR + " KG";
-            document.getElementById('consFunds').innerText = "₹ " + consF;
-            document.getElementById('closingRice').innerText = closeR + " KG";
-            document.getElementById('closingFunds').innerText = "₹ " + closeF;
+            document.getElementById('cellPpRoll').innerText = ppRoll;
+            document.getElementById('cellPpCovered').innerText = ppCovered;
+            document.getElementById('cellPpMeals').innerText = ppCovered;
+            document.getElementById('cellPpRice').innerText = ppRice.toFixed(3);
+            document.getElementById('cellPpCost').innerText = ppCost;
+
+            // Primary Math
+            const pRoll = parseInt(document.getElementById('pRoll').value) || 0;
+            const pCovered = parseInt(document.getElementById('pCovered').value) || 0;
+            const pRice = parseFloat(document.getElementById('pRice').value) || 0;
+            const pCost = (pCovered * 8.17).toFixed(2); // Example cooking cost rate
+
+            document.getElementById('cellPRoll').innerText = pRoll;
+            document.getElementById('cellPCovered').innerText = pCovered;
+            document.getElementById('cellPMeals').innerText = pCovered;
+            document.getElementById('cellPRice').innerText = pRice.toFixed(3);
+            document.getElementById('cellPCost').innerText = pCost;
+
+            // Totals
+            document.getElementById('cellTotalRoll').innerText = ppRoll + pRoll;
+            document.getElementById('cellTotalCovered').innerText = ppCovered + pCovered;
+            document.getElementById('cellTotalMeals').innerText = ppCovered + pCovered;
+            document.getElementById('cellTotalRice').innerText = (ppRice + pRice).toFixed(3);
+            document.getElementById('cellTotalCost').innerText = (parseFloat(ppCost) + parseFloat(pCost)).toFixed(2);
         }
     </script>
 </body>
+</html>
 </html>
