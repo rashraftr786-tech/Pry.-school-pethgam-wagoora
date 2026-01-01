@@ -3,104 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily MDM Log | GPS Pethgam</title>
+    <title>MDM Daily Entry | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
         body { font-family: 'Outfit', sans-serif; }
-        .input-card { transition: all 0.3s ease; border: 2px solid transparent; }
-        .input-card:focus-within { border-color: #10b981; background: #f0fdf4; }
     </style>
 </head>
-<body class="bg-slate-50 p-4 md:p-8">
+<body class="bg-slate-50 pb-20">
 
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-end mb-8">
+    <div class="max-w-5xl mx-auto p-4 md:p-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
             <div>
-                <p class="text-emerald-600 font-black uppercase tracking-widest text-xs">MDM Management System</p>
-                <h1 class="text-3xl font-black text-slate-800 uppercase italic">Daily Consumption Log</h1>
+                <p class="text-emerald-600 font-black uppercase tracking-widest text-[10px]">MDM Management System</p>
+                <h1 class="text-3xl font-black text-slate-800 uppercase italic">Daily Log & Monthly Config</h1>
             </div>
-            <div class="text-right">
-                <input type="date" id="entryDate" class="bg-white border-2 border-slate-200 rounded-xl px-4 py-2 font-bold text-slate-700 outline-none focus:border-emerald-500">
-            </div>
+            <input type="date" id="entryDate" class="bg-white border-2 border-slate-200 rounded-2xl px-6 py-3 font-bold text-slate-700 outline-none focus:border-emerald-500 shadow-sm">
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 input-card">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-child-reaching"></i>
-                    </div>
-                    <h2 class="font-black text-slate-700 uppercase">Pre-Primary (KG)</h2>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Students Present</label>
-                        <input type="number" id="ppPresent" placeholder="e.g. 21" class="w-full bg-slate-50 rounded-xl p-3 outline-none font-bold text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Rice Utilized (Grams)</label>
-                        <input type="number" id="ppRice" placeholder="e.g. 2100" class="w-full bg-slate-50 rounded-xl p-3 outline-none font-bold text-lg text-orange-600">
-                        <p class="text-[9px] mt-1 text-slate-400">* Standard: 100g per student</p>
+            <div class="space-y-6">
+                <div class="bg-slate-900 rounded-[2rem] p-6 text-white shadow-xl">
+                    <h2 class="text-xs font-black uppercase text-emerald-400 mb-4 tracking-widest">Monthly Parameters</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[9px] font-bold uppercase opacity-60">Monthly Enrollment (Total Roll)</label>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <input type="number" id="ppEnroll" placeholder="PP (KG)" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
+                                <input type="number" id="pEnroll" placeholder="Primary" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[9px] font-bold uppercase opacity-60">Expenditure Rate (Per Student)</label>
+                            <div class="grid grid-cols-2 gap-2 mt-1">
+                                <input type="number" step="0.01" id="ppRate" placeholder="PP Rate" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
+                                <input type="number" step="0.01" id="pRate" placeholder="P Rate" class="bg-slate-800 border border-slate-700 rounded-xl p-2 text-xs outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-800">
+                            <label class="text-[9px] font-bold uppercase opacity-60">Received This Month (Lifted)</label>
+                            <input type="number" step="0.001" id="riceReceived" placeholder="Rice Received (kg)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm mt-1 outline-none">
+                            <input type="number" step="0.01" id="fundsReceived" placeholder="Funds Received (₹)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm mt-2 outline-none">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 input-card">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-children"></i>
+            <div class="lg:col-span-2 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-child"></i></div>
+                            <h2 class="font-black text-slate-700 uppercase text-sm">Pre-Primary Daily</h2>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="number" id="ppPresent" placeholder="Students Present" oninput="calcRice('pp')" class="w-full bg-slate-50 rounded-2xl p-4 outline-none font-black text-xl border-2 border-transparent focus:border-orange-500">
+                            <div class="bg-orange-50 p-3 rounded-xl">
+                                <p class="text-[9px] font-bold text-orange-600 uppercase">Rice Consumed (100g/student)</p>
+                                <p class="text-lg font-black text-slate-800"><span id="ppRiceDisplay">0</span> <span class="text-xs">grams</span></p>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="font-black text-slate-700 uppercase">Primary (1st-5th)</h2>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Students Present</label>
-                        <input type="number" id="pPresent" placeholder="e.g. 47" class="w-full bg-slate-50 rounded-xl p-3 outline-none font-bold text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Rice Utilized (Grams)</label>
-                        <input type="number" id="pRice" placeholder="e.g. 4700" class="w-full bg-slate-50 rounded-xl p-3 outline-none font-bold text-lg text-blue-600">
-                        <p class="text-
-                <tr>
-                    <td class="font-bold">Primary (1st-5th)</td>
-                    <td id="cellPRoll">0</td>
-                    <td class="wDays">0</td>
-                    <td class="sDays">0</td>
-                    <td id="cellPCovered">0</td>
-                    <td id="cellPMeals">0</td>
-                    <td>-</td>
-                    <td>0.000</td>
-                    <td id="cellPRice">0.000</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td id="cellPCost">-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr class="bg-slate-100 font-black">
-                    <td>Total</td>
-                    <td id="cellTotalRoll">0</td>
-                    <td class="wDays">0</td>
-                    <td class="sDays">0</td>
-                    <td id="cellTotalCovered">0</td>
-                    <td id="cellTotalMeals">0</td>
-                    <td>-</td>
-                    <td>0.000</td>
-                    <td id="cellTotalRice">0.000</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td id="cellTotalCost">0.00</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            </tbody>
-        </table>
 
-        <div class="mt-8 flex justify-between items-end">
-            <div class="text-[10px] space-y-1">
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-children"></i></div>
+                            <h2 class="font-black text-slate-700 uppercase text-sm">Primary Daily</h2>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="number" id="pPresent" placeholder="Students Present" oninput="calcRice('p')" class="w-full bg-slate-50 rounded-2xl p-4 outline-none font-black text-xl border-2 border-transparent focus:border-blue-500">
+                            <div class="bg-blue-50 p-3 rounded-xl">
+                                <p class="text-[9px] font-bold text-blue-600 uppercase">Rice Consumed (100g/student)</p>
+                                <p class="text-lg font-black text-slate-800"><span id="pRiceDisplay">0</span> <span class="text-xs">grams</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <div class="flex-1">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Daily Meals Calculation</p>
+                            <h3 class="text-xl font-black text-slate-800">Total Meals: <span id="totalMeals">0</span></h3>
+                        </div>
+                        <button onclick="saveMdmEntry()" id="saveBtn" class="w-full md:w-auto bg-emerald-500 text-white font-black px-12 py-5 rounded-2xl uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100">
+                            Sync Daily Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from '../../assets/js/firebase.js';
+        import { collection, addDoc, serverTimestamp } from "
                 <p><strong>MDM A/C:</strong> 0486040500000273</p>
                 <p><strong>Cook:</strong> SHAHEENA BANO (0486040100006054)</p>
             </div>
