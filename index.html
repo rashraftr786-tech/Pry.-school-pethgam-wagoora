@@ -6,6 +6,17 @@
     <script>
   alert("Government Primary School Pethgam Wagoora");
     <button onclick="showMessage()">Click Me</button>
+    <script>
+  function submitForm() {
+    var name = document.getElementById("studentName").value;
+
+    if (name === "") {
+      alert("Please enter student name");
+    } else {
+      alert("Admission form submitted for " + name);
+    }
+  }
+</script>
 </script>
     body {
       font-family: Arial, sans-serif;
