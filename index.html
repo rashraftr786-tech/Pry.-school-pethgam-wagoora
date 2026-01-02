@@ -3,45 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Pethgam Wagoora | Official Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-50">
+    <title>School ERP | Pethgam Wagoora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        :root {
+            --primary-blue: #4A90E2;
+            --sunny-yellow: #FFD93D;
+            --leaf-green: #6BCB77;
+            --berry-red: #FF6B6B;
+            --soft-white: #F9F9F9;
+        }
 
-    <div class="relative bg-slate-900 h-[60vh] flex items-center justify-center text-center p-6 rounded-b-[4rem] overflow-hidden">
-        <div class="relative z-10">
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">GPS PETHGAM</h1>
-            <p class="text-blue-400 font-bold uppercase tracking-widest text-sm mb-8">Nurturing Excellence Since 1974</p>
-            
-            <a href="admin/modules/admission-form.html" class="bg-blue-600 text-white px-10 py-5 rounded-full font-black uppercase text-xs tracking-widest shadow-2xl hover:bg-blue-700 transition-all inline-block border-4 border-white/10">
-                <i class="fa-solid fa-paper-plane mr-2"></i> Apply Online for Admission 2025
-            </a>
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--soft-white);
+            color: #333;
+        }
+
+        /* Stunning Navigation */
+        header {
+            background: var(--primary-blue);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--sunny-yellow);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-area h1 {
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 0px var(--berry-red);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: var(--sunny-yellow);
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue), #63a4ff);
+            color: white;
+            padding: 60px 5%;
+            text-align: center;
+            border-radius: 0 0 50px 50px;
+        }
+
+        .hero h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-login {
+            background: var(--berry-red);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin-top: 20px;
+            box-shadow: 0 6px 0px #c0392b;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0px #c0392b;
+        }
+
+        /* Colorful Dashboard Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            padding: 50px 5%;
+        }
+
+        .card {
+            padding: 30px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            transition: transform 0.3s;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card:hover { transform: translateY(-10px) rotate(2deg); }
+        .admin-card { background: var(--berry-red); }
+        .teacher-card { background: var(--leaf-green); }
+        .student-card { background: var(--primary-blue); }
+        .parent-card { background: #9b59b6; }
+
+        .card i { font-size: 3rem; display: block; margin-bottom: 10px; }
+
+        /* Public Links Section */
+        .info-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-bottom: 50px;
+        }
+
+        .info-pill {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            padding: 10px 25px;
+            border-radius: 50px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .info-pill:hover { background: var(--primary-blue); color: white; }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <img src="assets/images/logo.png" alt="Logo" width="60">
+            <h1>Pethgam Wagoora</h1>
         </div>
-        <i class="fa-solid fa-school absolute -bottom-10 -right-10 text-[20rem] text-white/5"></i>
+        <nav>
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="mdm.html">MDM Info</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Learn, Grow, & Shine! 🌟</h2>
+        <p>Welcome to our school's magic digital portal. Everything you need in one place!</p>
+        <a href="login.html" class="btn-login">Go to Login 🚀</a>
+    </section>
+
+    <div class="card-container">
+        <a href="admin/dashboard.html" class="card admin-card">
+            <h3>Admin</h3>
+            <p>School Management</p>
+        </a>
+        <a href="teacher/dashboard.html" class="card teacher-card">
+            <h3>Teacher</h3>
+            <p>Classroom & Marks</p>
+        </a>
+        <a href="student/dashboard.html" class="card student-card">
+            <h3>Student</h3>
+            <p>Homework & Results</p>
+        </a>
+        <a href="parent/dashboard.html" class="card parent-card">
+            <h3>Parent</h3>
+            <p>Track Progress</p>
+        </a>
     </div>
 
-    <main class="max-w-6xl mx-auto -mt-16 p-6 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-20">
-        <a href="admin/dashboard.html" class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100 flex items-center gap-6 group hover:scale-[1.02] transition-transform">
-            <div class="w-20 h-20 bg-slate-900 text-white rounded-3xl flex items-center justify-center text-3xl group-hover:rotate-12 transition-transform">
-                <i class="fa-solid fa-user-shield"></i>
-            </div>
-            <div>
-                <h3 class="text-xl font-black text-slate-800 uppercase">Admin Portal</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-tight">Staff & School Management</p>
-            </div>
-        </a>
+    <div class="info-grid">
+        <a href="staff.html" class="info-pill">Meet Our Staff</a>
+        <a href="downloads.html" class="info-pill">Forms & Downloads</a>
+        <a href="officer/dashboard.html" class="info-pill">Reporting Officer</a>
+    </div>
 
-        <a href="teacher/dashboard.html" class="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100 flex items-center gap-6 group hover:scale-[1.02] transition-transform">
-            <div class="w-20 h-20 bg-emerald-600 text-white rounded-3xl flex items-center justify-center text-3xl group-hover:rotate-12 transition-transform">
-                <i class="fa-solid fa-chalkboard-user"></i>
-            </div>
-            <div>
-                <h3 class="text-xl font-black text-slate-800 uppercase">Teacher Portal</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase tracking-tight">Daily Attendance & MDM</p>
-            </div>
-        </a>
-    </main>
+    <footer>
+        <p>© 2026 Pethgam Wagoora School ERP | Built for a Brighter Future</p>
+        <div style="margin-top:10px;">
+            <a href="#" style="color:var(--sunny-yellow); margin: 0 10px;">Urdu</a> | 
+            <a href="#" style="color:var(--sunny-yellow); margin: 0 10px;">Kashmiri</a>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/lang-switcher.js"></script>
 </body>
 </html>
 
