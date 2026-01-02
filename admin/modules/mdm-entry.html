@@ -40,7 +40,7 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-cols: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -66,11 +66,11 @@
         }
 
         .config-box {
-            background-color: #edf2f7;
+            background-color: #f0fff4;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
-            border-left: 5px solid #3182ce;
+            border-left: 5px solid #38a169;
         }
 
         .btn-group {
@@ -156,7 +156,7 @@
     <div class="no-print">
         <div class="config-box">
             <h2 class="section-title">⚙️ Monthly Settings (Fixed Values)</h2>
-            <p style="font-size: 12px; color: #718096; margin-bottom: 15px;">Set these once per month. They can be updated anytime before generating the statement.</p>
+            <p style="font-size: 12px; color: #4a5568; margin-bottom: 15px;">Define rates, cook counts, and opening balances here once per month.</p>
             <div class="form-grid">
                 <div class="form-group">
                     <label>PP Total Roll</label>
@@ -167,7 +167,15 @@
                     <input type="number" id="pRoll" placeholder="0">
                 </div>
                 <div class="form-group">
-                    <label>Rice Opening Bal (kg)</label>
+                    <label>PP Rate/Student (₹)</label>
+                    <input type="number" step="0.01" id="ppRate" placeholder="5.45">
+                </div>
+                <div class="form-group">
+                    <label>Pri. Rate/Student (₹)</label>
+                    <input type="number" step="0.01" id="pRate" placeholder="8.17">
+                </div>
+                <div class="form-group">
+                    <label>Rice Opening (kg)</label>
                     <input type="number" step="0.001" id="riceOpening" placeholder="0.000">
                 </div>
                 <div class="form-group">
@@ -175,12 +183,16 @@
                     <input type="number" step="0.001" id="riceLifted" placeholder="0.000">
                 </div>
                 <div class="form-group">
-                    <label>Funds Opening Bal (₹)</label>
+                    <label>Funds Opening (₹)</label>
                     <input type="number" step="0.01" id="fundsOpening" placeholder="0.00">
                 </div>
                 <div class="form-group">
                     <label>Funds Received (₹)</label>
                     <input type="number" step="0.01" id="fundsReceived" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>No. of Cooks</label>
+                    <input type="number" id="numCooks" value="1">
                 </div>
             </div>
             <button class="btn-config" onclick="saveMonthlySettings()">Update Monthly Settings</button>
@@ -209,10 +221,6 @@
             <div class="form-group">
                 <label>Students Covered</label>
                 <input type="number" id="studentsCovered" placeholder="0">
-            </div>
-            <div class="form-group">
-                <label>Cooks Working</label>
-                <input type="number" id="cooksWorking" value="1">
             </div>
         </div>
         
@@ -256,6 +264,7 @@
                     <th rowspan="2">Meals Served</th>
                     <th colspan="4">Rice (Kgs)</th>
                     <th colspan="4">Cooking Cost Funds (₹)</th>
+                    <th rowspan="2">No. of Cooks</th>
                 </tr>
                 <tr>
                     <th>Opening</th>
@@ -285,22 +294,22 @@
     </div>
 
     <script>
-        // Set Today's Date
         document.getElementById('dailyDate').valueAsDate = new Date();
 
-        // --- Data Handling ---
         function getRecords() { return JSON.parse(localStorage.getItem('mdm_daily')) || []; }
-        function getSettings() { return JSON.parse(localStorage.getItem('mdm_settings')) || { ppRoll:0, pRoll:0, riceOpening:0, riceLifted:0, fundsOpening:0, fundsReceived:0 }; }
+        function getSettings() { return JSON.parse(localStorage.getItem('mdm_settings')) || { ppRoll:0, pRoll:0, ppRate:5.45, pRate:8.17, riceOpening:0, riceLifted:0, fundsOpening:0, fundsReceived:0, numCooks:1 }; }
 
-        // Load Settings on start
         window.onload = function() {
             const s = getSettings();
             document.getElementById('ppRoll').value = s.ppRoll;
             document.getElementById('pRoll').value = s.pRoll;
+            document.getElementById('ppRate').value = s.ppRate;
+            document.getElementById('pRate').value = s.pRate;
             document.getElementById('riceOpening').value = s.riceOpening;
             document.getElementById('riceLifted').value = s.riceLifted;
             document.getElementById('fundsOpening').value = s.fundsOpening;
             document.getElementById('fundsReceived').value = s.fundsReceived;
+            document.getElementById('numCooks').value = s.numCooks;
             updateDailyTable();
         };
 
@@ -308,10 +317,13 @@
             const settings = {
                 ppRoll: parseInt(document.getElementById('ppRoll').value) || 0,
                 pRoll: parseInt(document.getElementById('pRoll').value) || 0,
+                ppRate: parseFloat(document.getElementById('ppRate').value) || 0,
+                pRate: parseFloat(document.getElementById('pRate').value) || 0,
                 riceOpening: parseFloat(document.getElementById('riceOpening').value) || 0,
                 riceLifted: parseFloat(document.getElementById('riceLifted').value) || 0,
                 fundsOpening: parseFloat(document.getElementById('fundsOpening').value) || 0,
-                fundsReceived: parseFloat(document.getElementById('fundsReceived').value) || 0
+                fundsReceived: parseFloat(document.getElementById('fundsReceived').value) || 0,
+                numCooks: parseInt(document.getElementById('numCooks').value) || 1
             };
             localStorage.setItem('mdm_settings', JSON.stringify(settings));
             alert("Monthly Settings Updated!");
@@ -326,8 +338,7 @@
                 month: date.substring(0, 7),
                 scheme: document.getElementById('schemeType').value,
                 served: document.getElementById('mdmServed').value,
-                covered: parseInt(document.getElementById('studentsCovered').value) || 0,
-                cooks: parseInt(document.getElementById('cooksWorking').value) || 0
+                covered: parseInt(document.getElementById('studentsCovered').value) || 0
             };
             records.push(entry);
             localStorage.setItem('mdm_daily', JSON.stringify(records));
@@ -346,10 +357,7 @@
             const body = document.getElementById('dailyRecordsBody');
             body.innerHTML = '';
             records.slice(0, 10).forEach(r => {
-                body.innerHTML += `<tr>
-                    <td>${r.date}</td><td>${r.scheme}</td><td>${r.served}</td><td>${r.covered}</td>
-                    <td><button onclick="deleteEntry(${r.id})" style="color:red; background:none; cursor:pointer;">[x]</button></td>
-                </tr>`;
+                body.innerHTML += `<tr><td>${r.date}</td><td>${r.scheme}</td><td>${r.served}</td><td>${r.covered}</td><td><button onclick="deleteEntry(${r.id})" style="color:red; background:none; cursor:pointer;">[x]</button></td></tr>`;
             });
         }
 
@@ -366,411 +374,57 @@
             body.innerHTML = '';
 
             const schemes = [
-                { name: 'Pre-Primary', roll: s.ppRoll, rate: 5.45 }, // Example rate per student
-                { name: 'Primary', roll: s.pRoll, rate: 8.17 }      // Example rate per student
+                { name: 'Pre-Primary', roll: s.ppRoll, rate: s.ppRate },
+                { name: 'Primary', roll: s.pRoll, rate: s.pRate }
             ];
 
             let totalUtilizedRice = 0;
             let totalUtilizedFunds = 0;
 
-            schemes.forEach(sc => {
+            schemes.forEach((sc, idx) => {
                 const sRecs = records.filter(r => r.scheme === sc.name);
-                const wDays = new Set(sRecs.map(r => r.date)).size;
-                const sDays = sRecs.filter(r => r.served === 'Yes').length;
-                const covered = sRecs.reduce((acc
-        .header h2 { margin: 10px 0; font-size: 16px; text-decoration: underline; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
-
-        th, td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-            word-wrap: break-word;
-        }
-
-        th { background-color: #f2f2f2; }
-
-        .footer-section {
-            margin-top: 30px;
-            font-size: 12px;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-cols: 1fr 1fr;
-            margin-top: 20px;
-        }
-
-        .signature-space {
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .sig-box {
-            border-top: 1px solid #000;
-            width: 200px;
-            text-align: center;
-            padding-top: 5px;
-            font-weight: bold;
-        }
-
-        .records-table {
-            width: 100%;
-            margin-top: 20px;
-            font-size: 12px;
-        }
-
-        @media print {
-            body { background: none; padding: 0; }
-            .no-print { display: none; }
-            .a4-page {
-                margin: 0;
-                box-shadow: none;
-                width: 100%;
-                height: auto;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="no-print">
-        <h2 class="section-title">Daily MDM Data Entry</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="dailyDate">
-            </div>
-            <div class="form-group">
-                <label>Scheme Type</label>
-                <select id="schemeType">
-                    <option value="Pre-Primary">Pre-Primary (Bal Vatika)</option>
-                    <option value="Primary">Primary</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Total Roll</label>
-                <input type="number" id="totalRoll" placeholder="0">
-            </div>
-            <div class="form-group">
-                <label>MDM Served Today?</label>
-                <select id="mdmServed">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Students Covered</label>
-                <input type="number" id="studentsCovered" placeholder="0">
-            </div>
-            <div class="form-group">
-                <label>Rice Opening Bal (kg)</label>
-                <input type="number" step="0.001" id="riceOpening" placeholder="0.000">
-            </div>
-            <div class="form-group">
-                <label>Rice Lifted (kg)</label>
-                <input type="number" step="0.001" id="riceLifted" placeholder="0.000">
-            </div>
-            <div class="form-group">
-                <label>Rice Utilized (kg)</label>
-                <input type="number" step="0.001" id="riceUtilized" placeholder="0.000">
-            </div>
-            <div class="form-group">
-                <label>Funds Opening (₹)</label>
-                <input type="number" step="0.01" id="fundsOpening" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Funds Received (₹)</label>
-                <input type="number" step="0.01" id="fundsReceived" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Funds Utilized (₹)</label>
-                <input type="number" step="0.01" id="fundsUtilized" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Cooks Working</label>
-                <input type="number" id="cooksWorking" value="1">
-            </div>
-        </div>
-        <div class="btn-group">
-            <button class="btn-save" onclick="saveEntry()">Save Daily Entry</button>
-            <button class="btn-generate" onclick="generateStatement()">Generate Monthly Statement</button>
-            <button class="btn-reset" onclick="resetData()">Reset All Data</button>
-        </div>
-
-        <h3 style="margin-top:30px">Daily Records for <span id="currentMonthYear"></span></h3>
-        <table class="records-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Scheme</th>
-                    <th>Roll</th>
-                    <th>Served</th>
-                    <th>Covered</th>
-                    <th>Rice Util</th>
-                    <th>Funds Util</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="dailyRecordsBody"></tbody>
-        </table>
-    </div>
-
-    <div class="a4-page" id="printableArea">
-        <div class="header">
-            <h3>OFFICE OF THE HEADMASTER</h3>
-            <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-            <h2 id="statementTitle">Month Wise / Department Wise Expenditure Statement under MDM Scheme</h2>
-            <p style="font-size: 12px; font-weight: bold; margin-bottom: 0;">Statement for the Month of: <span id="monthNameDisplay">________</span></p>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th rowspan="2">Month</th>
-                    <th rowspan="2">Scheme</th>
-                    <th rowspan="2">Total Roll</th>
-                    <th rowspan="2">No. of Working Days</th>
-                    <th rowspan="2">No. of Days MDM Served</th>
-                    <th rowspan="2">No. of Students Covered</th>
-                    <th rowspan="2">No. of Meals Served</th>
-                    <th colspan="4">Food Grains (Rice) in Kgs</th>
-                    <th colspan="4">Cooking Cost Funds in ₹</th>
-                    <th rowspan="2">No. of Cooks Working</th>
-                </tr>
-                <tr>
-                    <th>Opening Balance</th>
-                    <th>Quantity Lifted</th>
-                    <th>Quantity Utilized</th>
-                    <th>Closing Balance</th>
-                    <th>Opening Balance</th>
-                    <th>Funds Utilized</th>
-                    <th>Funds Received</th>
-                    <th>Closing Balance</th>
-                </tr>
-            </thead>
-            <tbody id="statementTableBody">
-                </tbody>
-        </table>
-
-        <div class="footer-section">
-            <div class="details-grid">
-                <div>
-                    <p><strong>MDM A/C of School (16 digits):</strong> 0486040500000273</p>
-                    <p><strong>MDM I/C Name:</strong> <span id="icNameDisp">________________</span></p>
-                    <p><strong>Contact Number:</strong> <span id="icContactDisp">________________</span></p>
-                </div>
-                <div style="border-left: 1px solid #000; padding-left: 20px;">
-                    <p><strong>Account Number of Cooks:</strong></p>
-                    <p>Name: SHAHEENA BANO</p>
-                    <p>A/C No: 0486040100006054</p>
-                </div>
-            </div>
-
-            <div class="signature-space">
-                <div class="sig-box">MDM Incharge</div>
-                <div class="sig-box">Headmaster</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="no-print" style="text-align: center; margin-bottom: 50px;">
-        <button class="btn-print" onclick="window.print()">Print Statement (A4)</button>
-    </div>
-
-    <script>
-        // Initialize Date
-        document.getElementById('dailyDate').valueAsDate = new Date();
-
-        // Data Storage
-        function getRecords() {
-            return JSON.parse(localStorage.getItem('mdm_records')) || [];
-        }
-
-        function saveEntry() {
-            const date = document.getElementById('dailyDate').value;
-            if (!date) return alert("Select a date");
-
-            const records = getRecords();
-            const entry = {
-                id: Date.now(),
-                date: date,
-                month: date.substring(0, 7), // YYYY-MM
-                scheme: document.getElementById('schemeType').value,
-                roll: parseInt(document.getElementById('totalRoll').value) || 0,
-                served: document.getElementById('mdmServed').value,
-                covered: parseInt(document.getElementById('studentsCovered').value) || 0,
-                riceOpen: parseFloat(document.getElementById('riceOpening').value) || 0,
-                riceLifted: parseFloat(document.getElementById('riceLifted').value) || 0,
-                riceUtil: parseFloat(document.getElementById('riceUtilized').value) || 0,
-                fundsOpen: parseFloat(document.getElementById('fundsOpening').value) || 0,
-                fundsRec: parseFloat(document.getElementById('fundsReceived').value) || 0,
-                fundsUtil: parseFloat(document.getElementById('fundsUtilized').value) || 0,
-                cooks: parseInt(document.getElementById('cooksWorking').value) || 0
-            };
-
-            records.push(entry);
-            localStorage.setItem('mdm_records', JSON.stringify(records));
-            updateDailyTable();
-            alert("Entry Saved Successfully");
-        }
-
-        function deleteEntry(id) {
-            let records = getRecords();
-            records = records.filter(r => r.id !== id);
-            localStorage.setItem('mdm_records', JSON.stringify(records));
-            updateDailyTable();
-        }
-
-        function resetData() {
-            if(confirm("Are you sure you want to clear ALL data?")) {
-                localStorage.removeItem('mdm_records');
-                location.reload();
-            }
-        }
-
-        function updateDailyTable() {
-            const records = getRecords();
-            const body = document.getElementById('dailyRecordsBody');
-            body.innerHTML = '';
-            
-            // Sort by date descending
-            records.sort((a,b) => b.date.localeCompare(a.date));
-
-            records.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${r.date}</td>
-                    <td>${r.scheme}</td>
-                    <td>${r.roll}</td>
-                    <td>${r.served}</td>
-                    <td>${r.covered}</td>
-                    <td>${r.riceUtil}</td>
-                    <td>${r.fundsUtil}</td>
-                    <td><button onclick="deleteEntry(${r.id})" style="background:#e53e3e; color:white; padding:2px 5px; font-size:10px; border-radius:3px;">Del</button></td>
-                `;
-                body.appendChild(tr);
-            });
-        }
-
-        function generateStatement() {
-            const dateInput = document.getElementById('dailyDate').value;
-            const targetMonth = dateInput.substring(0, 7);
-            const records = getRecords().filter(r => r.month === targetMonth);
-            
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const d = new Date(dateInput);
-            document.getElementById('monthNameDisplay').innerText = monthNames[d.getMonth()] + " " + d.getFullYear();
-
-            const body = document.getElementById('statementTableBody');
-            body.innerHTML = '';
-
-            const schemes = ['Pre-Primary', 'Primary'];
-            let grandTotal = {
-                roll: 0, wDays: 0, sDays: 0, covered: 0, riceOpen: 0, riceLifted: 0, riceUtil: 0, 
-                fundsOpen: 0, fundsUtil: 0, fundsRec: 0, cooks: 0
-            };
-
-            const groupedData = schemes.map(s => {
-                const sRecs = records.filter(r => r.scheme === s);
-                if (sRecs.length === 0) return null;
-
-                const roll = sRecs[0].roll; // Taking latest roll entry
                 const wDays = new Set(sRecs.map(r => r.date)).size;
                 const sDays = sRecs.filter(r => r.served === 'Yes').length;
                 const covered = sRecs.reduce((acc, r) => acc + r.covered, 0);
                 
-                // For opening balances, we take the earliest entry in the month
-                sRecs.sort((a,b) => a.date.localeCompare(b.date));
-                const riceOpen = sRecs[0].riceOpen;
-                const fundsOpen = sRecs[0].fundsOpen;
+                const utilRice = (covered * 100) / 1000; 
+                const utilFunds = (covered * sc.rate);
+                
+                totalUtilizedRice += utilRice;
+                totalUtilizedFunds += utilFunds;
 
-                const riceLifted = sRecs.reduce((acc, r) => acc + r.riceLifted, 0);
-                const riceUtil = sRecs.reduce((acc, r) => acc + r.riceUtil, 0);
-                const fundsRec = sRecs.reduce((acc, r) => acc + r.fundsRec, 0);
-                const fundsUtil = sRecs.reduce((acc, r) => acc + r.fundsUtil, 0);
-                const cooks = sRecs[sRecs.length - 1].cooks;
-
-                const riceClose = (riceOpen + riceLifted) - riceUtil;
-                const fundsClose = (fundsOpen + fundsRec) - fundsUtil;
-
-                return {
-                    name: s, roll, wDays, sDays, covered, riceOpen, riceLifted, riceUtil, riceClose,
-                    fundsOpen, fundsUtil, fundsRec, fundsClose, cooks
-                };
+                body.innerHTML += `
+                    <tr>
+                        <td style="text-align:left; font-weight:bold;">${sc.name}</td>
+                        <td>${sc.roll}</td><td>${wDays}</td><td>${sDays}</td><td>${covered}</td><td>${covered}</td>
+                        <td>--</td><td>--</td><td>${utilRice.toFixed(3)}</td><td>--</td>
+                        <td>--</td><td>${utilFunds.toFixed(2)}</td><td>--</td><td>--</td>
+                        ${idx === 0 ? `<td rowspan="3" style="font-weight:bold">${s.numCooks}</td>` : ''}
+                    </tr>`;
             });
 
-            groupedData.forEach((data, index) => {
-                if(!data) return;
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    ${index === 0 ? `<td rowspan="3" style="font-weight:bold">${monthNames[d.getMonth()].toUpperCase()}</td>` : ''}
-                    <td style="text-align:left; font-weight:bold;">${data.name}</td>
-                    <td>${data.roll}</td>
-                    <td>${data.wDays}</td>
-                    <td>${data.sDays}</td>
-                    <td>${data.covered}</td>
-                    <td>${data.covered}</td>
-                    <td>${data.riceOpen.toFixed(3)}</td>
-                    <td>${data.riceLifted.toFixed(3)}</td>
-                    <td>${data.riceUtil.toFixed(3)}</td>
-                    <td>${data.riceClose.toFixed(3)}</td>
-                    <td>${data.fundsOpen.toFixed(2)}</td>
-                    <td>${data.fundsUtil.toFixed(2)}</td>
-                    <td>${data.fundsRec.toFixed(2)}</td>
-                    <td>${data.fundsClose.toFixed(2)}</td>
-                    <td>${data.cooks}</td>
-                `;
-                body.appendChild(tr);
+            const riceClose = (s.riceOpening + s.riceLifted) - totalUtilizedRice;
+            const fundsClose = (s.fundsOpening + s.fundsReceived) - totalUtilizedFunds;
 
-                grandTotal.roll += data.roll;
-                grandTotal.wDays = Math.max(grandTotal.wDays, data.wDays);
-                grandTotal.sDays = Math.max(grandTotal.sDays, data.sDays);
-                grandTotal.covered += data.covered;
-                grandTotal.riceOpen += data.riceOpen;
-                grandTotal.riceLifted += data.riceLifted;
-                grandTotal.riceUtil += data.riceUtil;
-                grandTotal.fundsOpen += data.fundsOpen;
-                grandTotal.fundsUtil += data.fundsUtil;
-                grandTotal.fundsRec += data.fundsRec;
-                grandTotal.cooks = Math.max(grandTotal.cooks, data.cooks);
-            });
-
-            // Total Row
-            const trTotal = document.createElement('tr');
-            trTotal.style.fontWeight = 'bold';
-            trTotal.style.backgroundColor = '#f2f2f2';
-            trTotal.innerHTML = `
-                <td>TOTAL</td>
-                <td>${grandTotal.roll}</td>
-                <td>${grandTotal.wDays}</td>
-                <td>${grandTotal.sDays}</td>
-                <td>${grandTotal.covered}</td>
-                <td>${grandTotal.covered}</td>
-                <td>${grandTotal.riceOpen.toFixed(3)}</td>
-                <td>${grandTotal.riceLifted.toFixed(3)}</td>
-                <td>${grandTotal.riceUtil.toFixed(3)}</td>
-                <td>${(grandTotal.riceOpen + grandTotal.riceLifted - grandTotal.riceUtil).toFixed(3)}</td>
-                <td>${grandTotal.fundsOpen.toFixed(2)}</td>
-                <td>${grandTotal.fundsUtil.toFixed(2)}</td>
-                <td>${grandTotal.fundsRec.toFixed(2)}</td>
-                <td>${(grandTotal.fundsOpen + grandTotal.fundsRec - grandTotal.fundsUtil).toFixed(2)}</td>
-                <td>${grandTotal.cooks}</td>
-            `;
-            body.appendChild(trTotal);
-
-            window.scrollTo(0, document.body.scrollHeight);
+            body.innerHTML += `
+                <tr style="font-weight:bold; background:#f2f2f2;">
+                    <td>TOTAL</td>
+                    <td>${s.ppRoll + s.pRoll}</td><td>--</td><td>--</td><td>--</td><td>--</td>
+                    <td>${s.riceOpening.toFixed(3)}</td>
+                    <td>${s.riceLifted.toFixed(3)}</td>
+                    <td>${totalUtilizedRice.toFixed(3)}</td>
+                    <td>${riceClose.toFixed(3)}</td>
+                    <td>${s.fundsOpening.toFixed(2)}</td>
+                    <td>${totalUtilizedFunds.toFixed(2)}</td>
+                    <td>${s.fundsReceived.toFixed(2)}</td>
+                    <td>${fundsClose.toFixed(2)}</td>
+                </tr>`;
         }
 
-        // Run on load
-        updateDailyTable();
+        function resetData() { if(confirm("Reset EVERYTHING?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
-                    
+            
+                                
+                
