@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Admission - GPS Pethgam Wagoora</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      color: darkgreen;
+    }
+
+    form {
+      max-width: 500px;
+      margin: auto;
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px;
+      background: darkgreen;
+      color: white;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Student Admission Form</h1>
+
+  <form onsubmit="return saveData()">
+    <label>Student Name:</label>
+    <input type="text" id="studentName">
+
+    <label>Father's Name:</label>
+    <input type="text">
+
+    <label>Class:</label>
+    <select>
+      <option>Class 1</option>
+      <option>Class 2</option>
+      <option>Class 3</option>
+      <option>Class 4</option>
+      <option>Class 5</option>
+    </select>
+
+    <label>Date of Birth:</label>
+    <input type="date">
+
+    <label>Address:</label>
+    <textarea rows="3"></textarea>
+
+    <button type="submit">Submit Admission</button>
+  </form>
+
+  <script>
+    function saveData() {
+      var name = document.getElementById("studentName").value;
+
+      if (name === "") {
+        alert("Please enter student name");
+        return false;
+      }
+
+      alert("Admission form submitted for " + name);
+      return false;
+    }
+  </script>
+
+</body>
+</html>
