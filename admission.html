@@ -35,6 +35,16 @@
       margin-top: 4px;
     }
 
+function validateForm() {
+  let agree = document.getElementById("declaration").checked;
+
+  if (!agree) {
+    alert("Please accept the Parents Declaration to proceed.");
+    return false;
+  }
+  return true;
+}
+
     button {
       margin-top: 15px;
       padding: 10px;
@@ -64,6 +74,24 @@
 
 <label>Date of Birth (In Words)</label>
 <input type="text" id="dobWords" readonly>
+  
+  <label>Gender</label>
+<input type="radio" name="gender" value="Male"> Male
+<input type="radio" name="gender" value="Female"> Female
+<input type="radio" name="gender" value="Other"> Other
+  
+  <label>Class to which Admission is Sought</label>
+<select id="studentClass">
+  <option value="">Select Class</option>
+  <option>Pre-Primary (3)</option>
+  <option>Pre-Primary (2)</option>
+  <option>Balvatika</option>
+  <option>Class 1</option>
+  <option>Class 2</option>
+  <option>Class 3</option>
+  <option>Class 4</option>
+  <option>Class 5</option>
+</select>
 
 <label>Blood Group</label>
 <select>
@@ -131,6 +159,31 @@
 
 <label>Pin Code</label>
 <input type="text">
+
+  <hr>
+
+<h3 style="color: darkred;">For Office Use Only</h3>
+
+<label>Admission Number</label>
+<input type="text" id="admissionNo">
+
+<label>Date of Admission</label>
+<input type="date" id="admissionDate">
+
+<label>UDISE / School Code</label>
+<input type="text" id="udiseCode">
+
+<label>Remarks</label>
+<textarea id="remarks" placeholder="Office remarks, if any"></textarea>
+
+<input type="text" id="admissionNo" readonly>
+<input type="date" id="admissionDate" readonly>  
+
+  <label>
+  <input type="checkbox" id="declaration">
+  I hereby declare that the information provided above is true and correct
+  to the best of my knowledge. I take full responsibility for any discrepancy.
+  </label>
 
 <button type="submit">Save Admission</button>
 
