@@ -1,138 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Student Admission - GPS Pethgam Wagoora</title>
+  <title>Student Admission Form</title>
+
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; background-color: #f0f2f5; }
-    h1 { text-align: center; color: #006400; }
-    
-    form { 
-      max-width: 500px; margin: 20px auto; background: white; 
-      padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 10px;
     }
 
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    
-    /* Fix for radio buttons */
-    .gender-container { margin: 10px 0; }
-    .gender-container input { width: auto; margin-right: 5px; }
-    .gender-container label { display: inline; margin-right: 15px; font-weight: normal; }
-
-    button { 
-      margin-top: 20px; padding: 12px; background: #006400; color: white; 
-      border: none; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px;
+    h2 {
+      text-align: center;
+      color: darkgreen;
     }
-    button:hover { background: #004d00; }
 
-    h2 { text-align: center; margin-top: 40px; }
-    table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
-    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-    th { background-color: #006400; color: white; }
-    tr:nth-child(even) { background-color: #f9f9f9; }
+    form {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 6px;
+      margin-top: 4px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      background: darkgreen;
+      color: white;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+    }
   </style>
 </head>
+
 <body>
 
-  <h1>Student Admission Form</h1>
+<h2>Student Admission Form</h2>
 
-  <form id="admissionForm">
-    <label for="studentName">Student Name:</label>
-    <input type="text" id="studentName" required>
+<form>
 
-    <label for="dob">Date of Birth:</label>
-    <input type="date" id="dob" required>
+<!-- STUDENT DETAILS -->
+<label>Name</label>
+  <input type="text">
+<label>Name (As per Aadhaar)</label>
+<input type="text">
 
-    <label for="fatherName">Father's Name:</label>
-    <input type="text" id="fatherName" required>
-    
-    <label for="motherName">Mother's Name:</label>
-    <input type="text" id="motherName">
+<label>Date of Birth</label>
+<input type="date" id="dob" onchange="convertDOB()">
 
-    <label for="studentClass">Class:</label>
-    <select id="studentClass">
-      <option>Class Pre Primary 3</option>
-      <option>Class Pre Primary 2</option>
-      <option>Class Balvatika</option>
-      <option>Class 1</option>
-      <option>Class 2</option>
-      <option>Class 3</option>
-      <option>Class 4</option>
-      <option>Class 5</option>
-    </select>
+<label>Date of Birth (In Words)</label>
+<input type="text" id="dobWords" readonly>
 
-    <label>Gender:</label>
-    <div class="gender-container">
-      <input type="radio" name="gender" value="Male" id="male"> <label for="male">Male</label>
-      <input type="radio" name="gender" value="Female" id="female"> <label for="female">Female</label>
-    </div>
+<label>Blood Group</label>
+<select>
+  <option>Select</option>
+  <option>A+</option><option>A-</option>
+  <option>B+</option><option>B-</option>
+  <option>AB+</option><option>AB-</option>
+  <option>O+</option><option>O-</option>
+</select>
 
-    <button type="submit">Save Admission</button>
-    <script>
-function deleteStudent(index) {
-  if (confirm("Are you sure you want to delete this record?")) {
-    students.splice(index, 1);
-    localStorage.setItem("students", JSON.stringify(students));
-    displayStudents();
-  }
+<label>Category</label>
+<select>
+  <option>Select</option>
+  <option>General</option>
+  <option>OBC</option>
+  <option>SC</option>
+  <option>ST</option>
+</select>
+
+<!-- PARENT DETAILS -->
+<label>Father's Name</label>
+<input type="text">
+
+<label>Father's Contact No</label>
+<input type="tel">
+
+<label>Mother's Name</label>
+<input type="text">
+
+<label>Mother's Contact No</label>
+<input type="tel">
+
+<!-- ID DETAILS -->
+<label>Aadhaar Number</label>
+<input type="text">
+
+<label>PEN Number</label>
+<input type="text">
+
+<label>APAAR ID</label>
+<input type="text">
+
+<!-- BANK DETAILS -->
+<label>Bank Account Number</label>
+<input type="text">
+
+<label>Bank Name</label>
+<input type="text">
+
+<label>IFSC Code</label>
+<input type="text">
+
+<!-- ADDRESS -->
+<label>Mohallah / Residence</label>
+<input type="text">
+
+<label>Village</label>
+<input type="text">
+
+<label>Tehsil</label>
+<input type="text">
+
+<label>District</label>
+<input type="text">
+
+<label>Pin Code</label>
+<input type="text">
+
+<button type="submit">Save Admission</button>
+
+</form>
+
+<script>
+function convertDOB() {
+  const dob = document.getElementById("dob").value;
+  if (!dob) return;
+
+  const date = new Date(dob);
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  document.getElementById("dobWords").value =
+    date.toLocaleDateString('en-IN', options);
 }
-    <th>Class</th>
-<th>Action</th>
-  let students = JSON.parse(localStorage.getItem("students")) || [];
-
-  document.getElementById("admissionForm").onsubmit = function(e) {
-    e.preventDefault(); // Prevents page refresh
-    
-    let name = document.getElementById("studentName").value;
-    let dob = document.getElementById("dob").value;
-    let father = document.getElementById("fatherName").value;
-    let mother = document.getElementById("motherName").value;
-    let cls = document.getElementById("studentClass").value;
-    let gender = document.querySelector('input[name="gender"]:checked');
-
-    if (!gender) {
-      alert("Please select a gender");
-      return;
-    }
-
-    let student = {
-      name, dob, father, mother, 
-      gender: gender.value, 
-      class: cls
-    };
-
-    students.push(student);
-    localStorage.setItem("students", JSON.stringify(students));
-
-    this.reset();
-    displayStudents();
-  };
-
-  function displayStudents() {
-    let tableBody = document.getElementById("studentTable");
-    tableBody.innerHTML = "";
-
-    students.forEach((student, index) => {
-      let row = `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${student.name}</td>
-          <td>${student.dob}</td>
-          <td>${student.father}</td>
-          <td>${student.mother}</td>
-          <td>${student.gender}</td>
-          <td>${student.class}</td>
-        </tr>
-      `;
-      tableBody.innerHTML += row;
-    });
-  }
-
-  // Load data on start
-  displayStudents();
 </script>
 
 </body>
-</html>
-    
+</html>    
