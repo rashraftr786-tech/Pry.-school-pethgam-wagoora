@@ -78,6 +78,11 @@ function validateForm() {
       width: 100%;
       font-size: 16px;
     }
+    #parentSignPreview,
+#inchargeSignPreview,
+#hmSignPreview {
+  display: block !important;
+}
   </style>
 </head>
 
@@ -211,6 +216,18 @@ function validateForm() {
 <input type="text" id="admissionNo" readonly>
 <input type="date" id="admissionDate" readonly>  
 
+    <label>Admission In-charge Signature</label>
+<input type="file" id="inchargeSign" accept="image/*" onchange="previewInchargeSign()">
+
+<br>
+<img id="inchargeSignPreview" style="width:150px; height:60px; border:1px solid #000; display:none;">
+
+    <label>Headmaster Signature</label>
+<input type="file" id="hmSign" accept="image/*" onchange="previewHMSign()">
+
+<br>
+<img id="hmSignPreview" style="width:150px; height:60px; border:1px solid #000; display:none;">
+
   <label>
   <input type="checkbox" id="declaration">
   I hereby declare that the information provided above is true and correct
@@ -271,6 +288,32 @@ function previewPhoto() {
   if (file) {
     let reader = new FileReader();
     reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+  
+function previewParentSign() {
+  previewImage("parentSign", "parentSignPreview");
+}
+
+function previewInchargeSign() {
+  previewImage("inchargeSign", "inchargeSignPreview");
+}
+
+function previewHMSign() {
+  previewImage("hmSign", "hmSignPreview");
+}
+
+function previewImage(inputId, previewId) {
+  let file = document.getElementById(inputId).files[0];
+  let preview = document.getElementById(previewId);
+
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
       preview.src = e.target.result;
       preview.style.display = "block";
     };
