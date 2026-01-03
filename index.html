@@ -12,6 +12,26 @@
   .notice-board li {
     margin-bottom: 8px;
   }
+    .notice-scroll {
+  height: 120px;           /* visible area */
+  overflow: hidden;
+  position: relative;
+}
+
+.notice-scroll ul {
+  position: absolute;
+  animation: scrollUp 10s linear infinite;
+  padding-left: 20px;
+}
+
+@keyframes scrollUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -100%;
+  }
+}
   </style>
 </head>
 
