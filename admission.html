@@ -1,227 +1,237 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Student Admission Form</title>
+  <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
     /* General Styles */
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 10px;
+      background: #f0f0f0;
+      padding: 20px;
       margin: 0;
     }
 
-    form {
-      max-width: 850px; /* Widened to utilize A4 width */
-      margin: auto;
+    /* Beautiful Form Margin */
+    .page-border {
       background: white;
-      padding: 15px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 850px;
+      margin: auto;
+      padding: 10px;
+      border: 4px double darkgreen; /* Double border for professional look */
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
     }
 
-    h2, h3 {
+    form {
+      padding: 10px;
+    }
+
+    /* School Header Styles */
+    .header-container {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid darkgreen;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .school-logo {
+      width: 80px;
+      height: 80px;
+      margin-right: 20px;
+    }
+
+    .header-text {
       text-align: center;
-      margin: 5px 0;
-      color: darkgreen;
+      flex-grow: 1;
     }
 
-    h3 { font-size: 1.1em; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .header-text h1 {
+      margin: 0;
+      font-size: 20px;
+      color: darkgreen;
+      text-transform: uppercase;
+    }
 
-    /* Grid Layout for compact view */
+    .header-text p {
+      margin: 2px 0;
+      font-size: 11px;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    h3 { 
+      font-size: 14px; 
+      margin: 10px 0 5px 0; 
+      background: #e8f5e9; 
+      padding: 4px;
+      border-left: 4px solid darkgreen;
+    }
+
     .row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
-    .field-group {
-      display: flex;
-      flex-direction: column;
-    }
+    .field-group { display: flex; flex-direction: column; }
 
     label {
       font-weight: bold;
-      font-size: 11px;
+      font-size: 10px;
       margin-bottom: 2px;
+      color: #444;
     }
 
     input[type="text"], input[type="date"], input[type="tel"], select, textarea {
       padding: 4px;
       font-size: 12px;
       border: 1px solid #ccc;
-      border-radius: 3px;
+      border-radius: 2px;
     }
 
-    .photo-section {
-      grid-column: span 1;
+    .photo-box {
+      width: 100px;
+      height: 110px;
+      border: 1px solid #000;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      text-align: center;
+      background: #fafafa;
     }
 
-    /* Print Specific Adjustments */
+    /* Declaration & Signatures */
+    .declaration-box {
+      font-size: 10px;
+      line-height: 1.4;
+      text-align: justify;
+      margin-top: 10px;
+      border: 1px solid #eee;
+      padding: 8px;
+    }
+
+    .sig-placeholder {
+      border-top: 1px solid #000;
+      margin-top: 35px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: bold;
+      padding-top: 5px;
+    }
+
     @media print {
       body { background: white; padding: 0; }
-      form { box-shadow: none; max-width: 100%; padding: 0; width: 100%; }
-      button, input[type="file"] { display: none !important; }
-      
-      /* Keep previews visible */
-      #photoPreview, #parentSignPreview, #inchargeSignPreview, #hmSignPreview {
-        display: block !important;
-      }
-
-      .row { gap: 15px; }
-      label { font-size: 10px; }
-      input, select { border: 1px solid #999 !important; }
-
-      @page {
-        size: A4;
-        margin: 0.5cm;
-      }
+      .page-border { border: 3px double darkgreen; box-shadow: none; max-width: 100%; }
+      button, .no-print { display: none !important; }
+      @page { size: A4; margin: 0.5cm; }
     }
 
-    button {
-      margin-top: 10px;
-      padding: 8px;
+    .print-btn {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      padding: 10px;
       background: darkgreen;
       color: white;
       border: none;
       cursor: pointer;
+      font-weight: bold;
     }
   </style>
 </head>
-
 <body>
 
-<div id="printArea">
-  <form id="admissionForm">
-    <h2>Student Admission Form</h2>
+<div class="page-border" id="printArea">
+  <div class="header-container">
+    <img src="logo.png" alt="Logo" class="school-logo">
+    <div class="header-text">
+      <h1>Government Primary School</h1>
+      <h2 style="margin:0; font-size: 18px; color: darkgreen;">Pethgam Wagoora 193109</h2>
+      <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora</p>
+      <p>E-mail: pspethgam@gmail.com | Udise Code: 01022202207 | Contact: 959644988</p>
+    </div>
+  </div>
 
+  <form>
     <div class="row">
       <div class="field-group" style="grid-column: span 2;">
-        <label>Name of Student</label>
+        <label>Full Name of Student</label>
         <input type="text">
         <label>Name (As per Aadhaar)</label>
         <input type="text">
-      </div>
-      <div class="photo-section">
-        <label>Photograph</label>
-        <input type="file" id="studentPhoto" accept="image/*" onchange="previewPhoto()">
-        <img id="photoPreview" style="width:80px; height:90px; border:1px solid #000; margin-top:5px; background:#eee;">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="field-group">
-        <label>Date of Birth</label>
-        <input type="date" id="dob" onchange="convertDOB()">
-      </div>
-      <div class="field-group" style="grid-column: span 2;">
-        <label>Date of Birth (In Words)</label>
-        <input type="text" id="dobWords" readonly>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="field-group">
-        <label>Gender</label>
-        <div style="font-size: 12px; display: flex; gap: 5px; align-items: center;">
-          <input type="radio" name="gender" value="Male"> M
-          <input type="radio" name="gender" value="Female"> F
-          <input type="radio" name="gender" value="Other"> O
+        <div class="row" style="margin-top:5px">
+            <div class="field-group"><label>DOB</label><input type="date" id="dob" onchange="convertDOB()"></div>
+            <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" readonly></div>
         </div>
       </div>
-      <div class="field-group">
-        <label>Class Sought</label>
-        <select id="studentClass">
-          <option value="">Select Class</option>
-          <option>Pre-Primary (3)</option><option>Pre-Primary (2)</option><option>Balvatika</option>
-          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-        </select>
+      <div style="display: flex; justify-content: center;">
+        <div class="photo-box">Passport Size<br>Photograph</div>
       </div>
-      <div class="field-group">
-        <label>Blood Group</label>
-        <select><option>Select</option><option>A+</option><option>B+</option><option>O+</option><option>AB+</option></select>
-      </div>
+    </div>
+
+    <div class="row">
+      <div class="field-group"><label>Gender</label><select><option>Male</option><option>Female</option><option>Other</option></select></div>
+      <div class="field-group"><label>Class Seeking</label><input type="text"></div>
+      <div class="field-group"><label>Category</label><select><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
     </div>
 
     <div class="row">
       <div class="field-group"><label>Father's Name</label><input type="text"></div>
       <div class="field-group"><label>Mother's Name</label><input type="text"></div>
-      <div class="field-group"><label>Category</label><select><option>Gen</option><option>OBC</option><option>SC/ST</option></select></div>
+      <div class="field-group"><label>Contact Number</label><input type="tel"></div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Father's Contact</label><input type="tel"></div>
-      <div class="field-group"><label>Mother's Contact</label><input type="tel"></div>
       <div class="field-group"><label>Aadhaar Number</label><input type="text"></div>
-    </div>
-
-    <div class="row">
       <div class="field-group"><label>PEN Number</label><input type="text"></div>
       <div class="field-group"><label>APAAR ID</label><input type="text"></div>
-      <div class="field-group"><label>Bank Account</label><input type="text"></div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Bank Name</label><input type="text"></div>
+      <div class="field-group"><label>Bank Account No</label><input type="text"></div>
+      <div class="field-group"><label>Bank & Branch</label><input type="text"></div>
       <div class="field-group"><label>IFSC Code</label><input type="text"></div>
+    </div>
+
+    <div class="row">
+      <div class="field-group" style="grid-column: span 2;"><label>Residence Address</label><input type="text"></div>
       <div class="field-group"><label>Pin Code</label><input type="text"></div>
     </div>
 
-    <div class="row">
-      <div class="field-group"><label>Residence/Mohallah</label><input type="text"></div>
-      <div class="field-group"><label>Village</label><input type="text"></div>
-      <div class="field-group"><label>District</label><input type="text"></div>
+    <div class="declaration-box">
+      <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
     </div>
 
-    <h3 style="color: darkred;">For Office Use Only</h3>
-    <div class="row">
-      <div class="field-group"><label>Admission No</label><input type="text" id="admissionNo"></div>
-      <div class="field-group"><label>Date of Admission</label><input type="date" id="admissionDate"></div>
-      <div class="field-group"><label>UDISE Code</label><input type="text" id="udiseCode"></div>
+    <div class="row" style="margin-top: 10px;">
+        <div></div><div></div>
+        <div class="sig-placeholder">Signature of Parent</div>
     </div>
 
+    <h3 style="color: darkred; border-left-color: darkred;">For Office Use Only</h3>
     <div class="row">
-      <div class="field-group" style="grid-column: span 3;">
+      <div class="field-group"><label>Admission Number</label><input type="text" id="admNo"></div>
+      <div class="field-group"><label>Date of Admission</label><input type="date"></div>
+      <div class="field-group"><label>Udise Code</label><input type="text" value="01022202207"></div>
+    </div>
+    
+    <div class="field-group">
         <label>Remarks</label>
-        <textarea id="remarks" rows="1"></textarea>
-      </div>
+        <textarea rows="1"></textarea>
     </div>
 
-    <div class="row" style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 10px;">
-      <div class="field-group">
-        <label>Admission In-charge</label>
-        <input type="file" id="inchargeSign" onchange="previewInchargeSign()">
-        <img id="inchargeSignPreview" style="width:100px; height:40px; border:1px solid #eee;">
-      </div>
-      <div class="field-group">
-        <label>Headmaster</label>
-        <input type="file" id="hmSign" onchange="previewHMSign()">
-        <img id="hmSignPreview" style="width:100px; height:40px; border:1px solid #eee;">
-      </div>
-      <div class="field-group">
-        <label>Parent/Guardian</label>
-        <input type="file" id="parentSign" onchange="previewParentSign()">
-        <img id="parentSignPreview" style="width:100px; height:40px; border:1px solid #eee;">
-      </div>
-    </div>
-
-    <div style="margin-top: 10px; font-size: 10px;">
-      <input type="checkbox" id="declaration"> I declare that the info provided is true and correct.
-    </div>
-
-    <div style="text-align:center;">
-        <button type="submit">Save</button>
-        <button type="button" onclick="printForm()">🖨️ Print Form</button>
+    <div class="row" style="margin-top: 10px;">
+      <div class="sig-placeholder">Adm. Incharge</div>
+      <div></div>
+      <div class="sig-placeholder">Sign of HOI</div>
     </div>
   </form>
 </div>
 
+<button class="print-btn no-print" onclick="window.print()">🖨️ Print Admission Form</button>
+
 <script>
-// Logic remains same, only updated to link to new IDs
 function convertDOB() {
   const dob = document.getElementById("dob").value;
   if (!dob) return;
@@ -229,41 +239,8 @@ function convertDOB() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   document.getElementById("dobWords").value = date.toLocaleDateString('en-IN', options);
 }
-
-function generateAdmissionDetails() {
-  let year = new Date().getFullYear();
-  let random = Math.floor(100 + Math.random() * 900);
-  document.getElementById("admissionNo").value = "GPSPW-" + year + "-" + random;
-  document.getElementById("admissionDate").value = new Date().toISOString().split("T")[0];
-}
-
-window.onload = generateAdmissionDetails;
-
-function printForm() {
-  window.print();
-}
-
-// Unified Preview Function
-function previewImage(inputId, previewId) {
-  let file = document.getElementById(inputId).files[0];
-  let preview = document.getElementById(previewId);
-  if (file) {
-    let reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function previewPhoto() { previewImage("studentPhoto", "photoPreview"); }
-function previewParentSign() { previewImage("parentSign", "parentSignPreview"); }
-function previewInchargeSign() { previewImage("inchargeSign", "inchargeSignPreview"); }
-function previewHMSign() { previewImage("hmSign", "hmSignPreview"); }
 </script>
 
 </body>
 </html>
-
-
+            
