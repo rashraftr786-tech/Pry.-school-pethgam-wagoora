@@ -6,7 +6,9 @@
   <style>
 
     @media print {
-
+#photoPreview {
+  display: block !important;
+}
   button {
     display: none;
   }
@@ -89,6 +91,13 @@ function validateForm() {
 <!-- STUDENT DETAILS -->
 <label>Name</label>
   <input type="text">
+    
+<label>Student Photograph</label>
+<input type="file" id="studentPhoto" accept="image/*" onchange="previewPhoto()">
+
+<br>
+<img id="photoPreview" style="width:120px; height:140px; border:1px solid #000; display:none;">
+    
 <label>Name (As per Aadhaar)</label>
 <input type="text">
 
@@ -208,6 +217,13 @@ function validateForm() {
   to the best of my knowledge. I take full responsibility for any discrepancy.
   </label>
 
+    <h3>Parent / Guardian Signature</h3>
+
+<input type="file" id="parentSign" accept="image/*" onchange="previewParentSign()">
+
+<br>
+<img id="parentSignPreview" style="width:150px; height:60px; border:1px solid #000; display:none;">
+
 <button type="submit">Save Admission</button>
 
   <button type="button" onclick="printForm()">🖨️ Print Admission Form</button>
@@ -248,7 +264,20 @@ function printForm() {
   window.print();
   document.body.innerHTML = original;
 }
-</script>
+function previewPhoto() {
+  let file = document.getElementById("studentPhoto").files[0];
+  let preview = document.getElementById("photoPreview");
+
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+}
+  </script>
 
 </body>
 </html>    
