@@ -1,146 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Student Admission - GPS Pethgam Wagoora</title>
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 15px;
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; background-color: #f0f2f5; }
+    h1 { text-align: center; color: #006400; }
+    
+    form { 
+      max-width: 500px; margin: 20px auto; background: white; 
+      padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
     }
 
-    h1 {
-      text-align: center;
-      color: darkgreen;
-    }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    
+    /* Fix for radio buttons */
+    .gender-container { margin: 10px 0; }
+    .gender-container input { width: auto; margin-right: 5px; }
+    .gender-container label { display: inline; margin-right: 15px; font-weight: normal; }
 
-    form {
-      max-width: 500px;
-      margin: auto;
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 5px;
+    button { 
+      margin-top: 20px; padding: 12px; background: #006400; color: white; 
+      border: none; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px;
     }
+    button:hover { background: #004d00; }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 6px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 8px;
-      background: darkgreen;
-      color: white;
-      border: none;
-      width: 100%;
-    }
+    h2 { text-align: center; margin-top: 40px; }
+    table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #006400; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
   </style>
 </head>
-
 <body>
 
   <h1>Student Admission Form</h1>
 
-  <form onsubmit="return saveStudent()">
-  <label>Student Name:</label>
-  <input type="text" id="studentName">
+  <form id="admissionForm">
+    <label for="studentName">Student Name:</label>
+    <input type="text" id="studentName" required>
 
-    <label>Date of Birth:</label>
-  <input type="date" id="dob">
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" required>
 
-  <label>Father's Name:</label>
-  <input type="text" id="fatherName">
+    <label for="fatherName">Father's Name:</label>
+    <input type="text" id="fatherName" required>
     
-    <label>Mother's Name:</label>
-  <input type="text" id="motherName">
+    <label for="motherName">Mother's Name:</label>
+    <input type="text" id="motherName">
 
-  <label>Class:</label>
-  <select id="studentClass">
-    <option>Class Pre Primary 3</option>
-    <option>Class Pre Primary 2</option>
-    <option>Class Balvatika</option>
-    <option>Class 1</option>
-    <option>Class 2</option>
-    <option>Class 3</option>
-    <option>Class 4</option>
-    <option>Class 5</option>
-  </select>
+    <label for="studentClass">Class:</label>
+    <select id="studentClass">
+      <option>Class Pre Primary 3</option>
+      <option>Class Pre Primary 2</option>
+      <option>Class Balvatika</option>
+      <option>Class 1</option>
+      <option>Class 2</option>
+      <option>Class 3</option>
+      <option>Class 4</option>
+      <option>Class 5</option>
+    </select>
 
-    <label>Gender:</label><br>
-    <input type="radio" name="gender"value="Male"> Male
-  <input type="radio" name="gender"value="Female"> Male
+    <label>Gender:</label>
+    <div class="gender-container">
+      <input type="radio" name="gender" value="Male" id="male"> <label for="male">Male</label>
+      <input type="radio" name="gender" value="Female" id="female"> <label for="female">Female</label>
+    </div>
 
-  <button type="submit">Save Admission</button>
-</form>
+    <button type="submit">Save Admission</button>
+  </form>
+
   <h2>Submitted Admissions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Student Name</th>
+        <th>Date of Birth</th>
+        <th>Father's Name</th>
+        <th>Mother's Name</th>
+        <th>Gender</th>
+        <th>Class</th>
+      </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
 
-<table border="1" width="100%">
-  <thead>
-    <tr>
-      <th>S.No</th>
-      <th>Student Name</th>
-      <th>Date of Birth</th>
-      <th>Father's Name</th>
-      <th>Mother's Name</th>
-      <th>Gender</th>
-      <th>Class</th>
-    </tr>
-  </thead>
-  <tbody id="studentTable">
-  </tbody>
-</table>
-
-  <script>
-    function saveData() {
-      var name = document.getElementById("studentName").value;
-
-      if (name === "") {
-        alert("Please enter student name");
-        return false;
-      }
-
-      alert("Admission form submitted for " + name);
-      return false;
-    }
-  <script>
+<script>
   let students = JSON.parse(localStorage.getItem("students")) || [];
 
-  function saveStudent() {
+  document.getElementById("admissionForm").onsubmit = function(e) {
+    e.preventDefault(); // Prevents page refresh
+    
     let name = document.getElementById("studentName").value;
     let dob = document.getElementById("dob").value;
     let father = document.getElementById("fatherName").value;
     let mother = document.getElementById("motherName").value;
     let cls = document.getElementById("studentClass").value;
-
     let gender = document.querySelector('input[name="gender"]:checked');
 
-    if (name === "" || father === "" || dob === "" || !gender) {
-      alert("Please fill all required fields");
-      return false;
+    if (!gender) {
+      alert("Please select a gender");
+      return;
     }
 
     let student = {
-      name: name,
-      dob: dob,
-      father: father,
-      mother: mother,
-      gender: gender.value,
+      name, dob, father, mother, 
+      gender: gender.value, 
       class: cls
     };
 
     students.push(student);
     localStorage.setItem("students", JSON.stringify(students));
 
-    document.querySelector("form").reset();
+    this.reset();
     displayStudents();
-
-    return false;
-  }
+  };
 
   function displayStudents() {
-    let table = document.getElementById("studentTable");
-    table.innerHTML = "";
+    let tableBody = document.getElementById("studentTable");
+    tableBody.innerHTML = "";
 
     students.forEach((student, index) => {
       let row = `
@@ -154,12 +134,14 @@
           <td>${student.class}</td>
         </tr>
       `;
-      table.innerHTML += row;
+      tableBody.innerHTML += row;
     });
   }
 
+  // Load data on start
   displayStudents();
 </script>
 
 </body>
 </html>
+    
