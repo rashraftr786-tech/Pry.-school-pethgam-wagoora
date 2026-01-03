@@ -103,23 +103,29 @@
       alert("Admission form submitted for " + name);
       return false;
     }
-  </script>
   <script>
   let students = JSON.parse(localStorage.getItem("students")) || [];
 
   function saveStudent() {
     let name = document.getElementById("studentName").value;
+    let dob = document.getElementById("dob").value;
     let father = document.getElementById("fatherName").value;
+    let mother = document.getElementById("motherName").value;
     let cls = document.getElementById("studentClass").value;
 
-    if (name === "" || father === "") {
+    let gender = document.querySelector('input[name="gender"]:checked');
+
+    if (name === "" || father === "" || dob === "" || !gender) {
       alert("Please fill all required fields");
       return false;
     }
 
     let student = {
       name: name,
+      dob: dob,
       father: father,
+      mother: mother,
+      gender: gender.value,
       class: cls
     };
 
@@ -153,7 +159,7 @@
   }
 
   displayStudents();
-  </script>
+</script>
 
 </body>
 </html>
