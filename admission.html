@@ -4,6 +4,28 @@
   <title>Student Admission Form</title>
 
   <style>
+
+    @media print {
+
+  button {
+    display: none;
+  }
+
+  body {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  form {
+    border: none;
+    box-shadow: none;
+  }
+
+  h1, h2, h3 {
+    text-align: center;
+  }
+    }
+    
     body {
       font-family: Arial, sans-serif;
       background: #f5f5f5;
@@ -61,7 +83,8 @@ function validateForm() {
 
 <h2>Student Admission Form</h2>
 
-<form>
+<div id="printArea">
+  <form>
 
 <!-- STUDENT DETAILS -->
 <label>Name</label>
@@ -187,7 +210,9 @@ function validateForm() {
 
 <button type="submit">Save Admission</button>
 
+  <button type="button" onclick="printForm()">🖨️ Print Admission Form</button>
 </form>
+</div>
 
 <script>
 function convertDOB() {
@@ -198,6 +223,30 @@ function convertDOB() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   document.getElementById("dobWords").value =
     date.toLocaleDateString('en-IN', options);
+}
+function generateAdmissionDetails() {
+  // Generate Admission Number
+  let year = new Date().getFullYear();
+  let random = Math.floor(100 + Math.random() * 900); // 3-digit random
+  let admissionNo = "GPSPW-" + year + "-" + random;
+
+  document.getElementById("admissionNo").value = admissionNo;
+
+  // Set today's date
+  let today = new Date().toISOString().split("T")[0];
+  document.getElementById("admissionDate").value = today;
+}
+
+// Call function when page loads
+window.onload = generateAdmissionDetails;
+
+function printForm() {
+  let content = document.getElementById("printArea").innerHTML;
+  let original = document.body.innerHTML;
+
+  document.body.innerHTML = content;
+  window.print();
+  document.body.innerHTML = original;
 }
 </script>
 
