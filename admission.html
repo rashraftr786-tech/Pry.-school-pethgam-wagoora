@@ -103,6 +103,56 @@
       return false;
     }
   </script>
+  <script>
+  let students = JSON.parse(localStorage.getItem("students")) || [];
+
+  function saveStudent() {
+    let name = document.getElementById("studentName").value;
+    let father = document.getElementById("fatherName").value;
+    let cls = document.getElementById("studentClass").value;
+
+    if (name === "" || father === "") {
+      alert("Please fill all required fields");
+      return false;
+    }
+
+    let student = {
+      name: name,
+      father: father,
+      class: cls
+    };
+
+    students.push(student);
+    localStorage.setItem("students", JSON.stringify(students));
+
+    document.querySelector("form").reset();
+    displayStudents();
+
+    return false;
+  }
+
+  function displayStudents() {
+    let table = document.getElementById("studentTable");
+    table.innerHTML = "";
+
+    students.forEach((student, index) => {
+      let row = `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${student.name}</td>
+          <td>${student.dob}</td>
+          <td>${student.father}</td>
+          <td>${student.mother}</td>
+          <td>${student.gender}</td>
+          <td>${student.class}</td>
+        </tr>
+      `;
+      table.innerHTML += row;
+    });
+  }
+
+  displayStudents();
+  </script>
 
 </body>
 </html>
