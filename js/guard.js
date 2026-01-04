@@ -1,4 +1,4 @@
-const role = localStorage.getItem("role");
+const role = localStorage.getItem("userRole");
 
 if (!role) {
   window.location.href = "login.html";
