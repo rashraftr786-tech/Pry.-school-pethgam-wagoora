@@ -220,15 +220,30 @@
   </div>
 
   <div class="field-group">
-    <label>Blood Group</label>
-    <input type="text" placeholder="A+, O+, B+ etc">
+  <label>Blood Group</label>
+  <select id="bloodGroup">
+    <option value="">Select</option>
+    <option>A+</option><option>A-</option>
+    <option>B+</option><option>B-</option>
+    <option>AB+</option><option>AB-</option>
+    <option>O+</option><option>O-</option>
+  </select>
   </div>
 
   <div class="field-group">
-    <label>Class Seeking Admission</label>
-    <input type="text">
+  <label>Class Seeking</label>
+  <select id="studentClass">
+    <option value="">Select Class</option>
+    <option>Pre-Primary (3)</option>
+    <option>Pre-Primary (2)</option>
+    <option>Balvatika</option>
+    <option>Class 1</option>
+    <option>Class 2</option>
+    <option>Class 3</option>
+    <option>Class 4</option>
+    <option>Class 5</option>
+  </select>
   </div>
-</div>
 
 <div class="row">
   <div class="field-group">
@@ -319,23 +334,42 @@
         <div class="sig-placeholder">Signature of Parent</div>
     </div>
 
-    <h3 style="color: darkred; border-left-color: darkred;">For Office Use Only</h3>
-    <div class="row">
-      <div class="field-group"><label>Admission Number</label><input type="text" id="admNo" readonly></div>
-      <div class="field-group"><label>Date of Admission</label><input type="date"></div>
-      <div class="field-group"><label>Udise Code</label><input type="text" value="01022202207"></div>
-    </div>
-    
-    <div class="field-group">
-        <label>Remarks</label>
-        <textarea rows="1"></textarea>
-    </div>
+    <div id="officeSection" style="display:none;">
 
-    <div class="row" style="margin-top: 10px;">
-      <div class="sig-placeholder">Adm. Incharge</div>
-      <div></div>
-      <div class="sig-placeholder">Sign of HOI</div>
+  <h3 style="color: darkred; border-left-color: darkred;">
+    For Office Use Only
+  </h3>
+
+  <div class="row">
+    <div class="field-group">
+      <label>Admission Number</label>
+      <input type="text" id="admNo">
     </div>
+    <div class="field-group">
+      <label>Date of Admission</label>
+      <input type="date">
+    </div>
+    <div class="field-group">
+      <label>Udise Code</label>
+      <input type="text" value="01022202207">
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Remarks</label>
+    <textarea rows="1"></textarea>
+  </div>
+
+  <div class="row" style="margin-top: 10px;">
+    <div class="sig-placeholder">Adm. Incharge</div>
+    <div></div>
+    <div class="sig-placeholder">Sign of HOI</div>
+  </div>
+
+</div>
+      <div class="no-print" style="text-align:center; margin-top:15px;">
+  <button type="button" class="print-btn" onclick="submitAdmission()">Submit Admission Form</button>
+      </div>
   </form>
 </div>
 
@@ -387,13 +421,35 @@ window.onload = function () {
   const rand = Math.floor(1000 + Math.random() * 9000);
   document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
 };
+document.getElementById("officeSection").style.display = "block";
 
 function saveAndPrint() {
     // This triggers the browser print dialog. 
     // Users can select "Save as PDF" from the printer list.
     window.print();
 }
-</script>
+function submitAdmission() {
+
+  let admission = {
+    admNo: document.getElementById("admNo").value,
+    name: document.querySelector("input[placeholder], input[type=text]").value,
+    dob: document.getElementById("dob").value,
+    dobWords: document.getElementById("dobWords").value,
+    gender: document.querySelector("select").value,
+    bloodGroup: document.getElementById("bloodGroup").value,
+    class: document.getElementById("studentClass").value,
+    fatherName: document.querySelectorAll("input[type=text]")[2].value,
+    motherName: document.querySelectorAll("input[type=text]")[3].value,
+    status: "Pending Approval"
+  };
+
+  let records = JSON.parse(localStorage.getItem("admissions")) || [];
+  records.push(admission);
+  localStorage.setItem("admissions", JSON.stringify(records));
+
+  alert("Admission Submitted Successfully!");
+}
+  </script>
 
 </body>
 </html>
