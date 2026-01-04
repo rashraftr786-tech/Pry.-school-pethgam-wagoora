@@ -460,25 +460,27 @@ function saveAndPrint() {
     window.print();
 }
 function submitAdmission() {
+  const form = document.getElementById('admissionForm');
+  
+  // Checks if all 'required' fields are filled
+  if(!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
 
-  let admission = {
-    admNo: document.getElementById("admNo").value,
-    name: document.querySelector("input[placeholder], input[type=text]").value,
-    dob: document.getElementById("dob").value,
-    dobWords: document.getElementById("dobWords").value,
-    gender: document.querySelector("select").value,
-    bloodGroup: document.getElementById("bloodGroup").value,
-    class: document.getElementById("studentClass").value,
-    fatherName: document.querySelectorAll("input[type=text]")[2].value,
-    motherName: document.querySelectorAll("input[type=text]")[3].value,
-    status: "Pending Approval"
-  };
+  const formData = new FormData(form);
+  const admission = Object.fromEntries(formData.entries());
+
+  // Manually add non-input fields or specific IDs
+  admission.admNo = document.getElementById("admNo").value;
+  admission.dobWords = document.getElementById("dobWords").value;
+  admission.status = "Pending Approval";
 
   let records = JSON.parse(localStorage.getItem("admissions")) || [];
   records.push(admission);
   localStorage.setItem("admissions", JSON.stringify(records));
 
-  alert("Admission Submitted Successfully!");
+  alert("Admission for " + (admission.studentName || "Student") + " submitted successfully!");
 }
 
   </script>
