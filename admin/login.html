@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Admin Login | GPS Pethgam Wagoora</title>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,6 +10,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
     .login-box {
@@ -24,38 +24,55 @@
     h2 {
       text-align: center;
       color: darkgreen;
+      margin-top: 0;
     }
 
     input {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 12px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box; /* Important for width */
     }
 
     button {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       background: darkgreen;
       color: white;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #004d00;
     }
 
     .error {
       color: red;
-      font-size: 12px;
+      font-size: 13px;
       text-align: center;
+      margin-top: 15px;
+      min-height: 15px; /* Keeps layout stable */
     }
   </style>
 </head>
-
 <body>
 
-<form id="loginForm" onsubmit="event.preventDefault(); login();">
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password" required>
-  <button type="submit">Login</button>
-</form>
+<div class="login-box">
+  <h2>Admin Login</h2>
+  
+  <form id="loginForm" onsubmit="event.preventDefault(); login();">
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <p class="error" id="error"></p>
+</div>
 
 <script>
 function login() {
@@ -63,7 +80,12 @@ function login() {
   const password = document.getElementById("password").value;
   const errorElement = document.getElementById("error");
 
-  // Logic with corrected email spelling: pspethgam (with an 'e')
+  // Clear previous error message
+  errorElement.innerText = "";
+
+  console.log("Login attempt for:", email);
+
+  // Verification Logic
   if (email === "pspethgam@gmail.com" && password === "admin@123") {
     localStorage.setItem("userRole", "HOI");
     window.location.href = "dashboard.html";
@@ -73,12 +95,12 @@ function login() {
     window.location.href = "dashboard.html";
   }
   else {
-    // Better UX: Show error on page instead of a popup alert
+    // This will now work because the 'error' ID exists again
     errorElement.innerText = "Invalid Email or Password";
   }
 }
 </script>
 
-
 </body>
 </html>
+
