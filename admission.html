@@ -149,12 +149,10 @@
     }
 
     @media print {
-      body { background: white; padding: 0; }
-      .page-border { border: 3px double darkgreen; box-shadow: none; max-width: 100%; margin: 0; }
-      .no-print { display: none !important; }
-      @page { size: A4; margin: 0.4cm; }
-      input, textarea, select { border: 1px solid #999 !important; }
-    }
+  .no-print, input[type="file"] { display: none !important; }
+  .page-border { border: 2px solid #000; box-shadow: none; margin: 0; }
+  input, select, textarea { border: none !important; border-bottom: 1px dotted #000 !important; }
+}
 
     .button-container {
       text-align: center;
@@ -194,9 +192,9 @@
     <div class="row">
       <div class="field-group" style="grid-column: span 2;">
         <label>Full Name of Student</label>
-        <input type="text">
+        <input type="text" name="studentName">
         <label>Name (As per Aadhaar)</label>
-        <input type="text">
+        <input type="text" name="aadhaarName">
         <div class="row" style="margin-top:5px">
             <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" onchange="convertDOB()"></div>
             <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" readonly></div>
@@ -262,7 +260,7 @@
     <div class="row">
   <div class="field-group">
     <label>Father's Name</label>
-    <input type="text">
+    <input type="text" name="fatherName">
   </div>
 
   <div class="field-group">
@@ -272,7 +270,7 @@
 
   <div class="field-group">
     <label>Mother's Name</label>
-    <input type="text">
+    <input type="text" name="motherName">
   </div>
 </div>
 
@@ -299,26 +297,48 @@
 
 <div class="row">
   <div class="field-group">
-    <label>Mohallah / House No.</label>
-    <input type="text">
+    <label for="mohallah">Mohallah / House No.</label>
+<input 
+  type="text" 
+  id="mohallah" 
+  name="mohallah" 
+  placeholder="e.g. Ward No. 3, Near Masjid"
+  required
+>
   </div>
 
   <div class="field-group">
-    <label>Village / Ward</label>
-    <input type="text">
+  <label for="village">Village / Ward</label>
+  <input
+    type="text"
+    id="village"
+    name="village"
+    placeholder="e.g. Pethgam / Ward No. 5"
+    required
+  >
   </div>
 
   <div class="field-group">
-    <label>Tehsil</label>
-    <input type="text">
-  </div>
+  <label for="tehsil">Tehsil</label>
+  <input
+    type="text"
+    id="tehsil"
+    name="tehsil"
+    placeholder="e.g. Wagoora"
+    required
+  >
 </div>
 
-<div class="row">
-  <div class="field-group">
-    <label>District</label>
-    <input type="text">
-  </div>
+<div class="field-group">
+  <label for="district">District</label>
+  <input
+    type="text"
+    id="district"
+    name="district"
+    placeholder="e.g. Baramulla"
+    required
+  >
+</div>
 
   <div class="field-group">
     <label>Pin Code</label>
@@ -460,6 +480,7 @@ function submitAdmission() {
 
   alert("Admission Submitted Successfully!");
 }
+
   </script>
 
 </body>
