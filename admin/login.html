@@ -51,39 +51,34 @@
 
 <body>
 
-<div class="login-box">
-  <h2>Admin Login</h2>
-
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-
-  <button type="button" onclick="login()">Login</button>
-
-  <p class="error" id="error"></p>
-</div>
+<form id="loginForm" onsubmit="event.preventDefault(); login();">
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <button type="submit">Login</button>
+</form>
 
 <script>
 function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  const errorElement = document.getElementById("error");
 
-  // HOI Login
-  if (email === "pspathgam@gmail.com" && password === "admin@123") {
+  // Logic with corrected email spelling: pspethgam (with an 'e')
+  if (email === "pspethgam@gmail.com" && password === "admin@123") {
     localStorage.setItem("userRole", "HOI");
     window.location.href = "dashboard.html";
   }
-
-  // Admission Incharge Login
-  else if (email === "pspathgam@gmail.com" && password === "incharge@123") {
+  else if (email === "pspethgam@gmail.com" && password === "incharge@123") {
     localStorage.setItem("userRole", "INCHARGE");
     window.location.href = "dashboard.html";
   }
-
   else {
-    alert("Invalid Email or Password");
+    // Better UX: Show error on page instead of a popup alert
+    errorElement.innerText = "Invalid Email or Password";
   }
 }
 </script>
+
 
 </body>
 </html>
