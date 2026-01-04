@@ -148,27 +148,22 @@
       padding-top: 5px;
     }
 
-    @media print {
+    /* Update your existing @media print section */
+@media print {
   .no-print, input[type="file"] { display: none !important; }
+  
+  /* Force the Office Section to show on paper, even if hidden on screen */
+  #officeSection { 
+    display: block !important; 
+    margin-top: 20px;
+    border-top: 2px dashed #000; /* Optional: adds a visual separator for the office part */
+    padding-top: 10px;
+  }
+
   .page-border { border: 2px solid #000; box-shadow: none; margin: 0; }
   input, select, textarea { border: none !important; border-bottom: 1px dotted #000 !important; }
 }
 
-    .button-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .print-btn {
-      padding: 10px 25px;
-      background: darkgreen;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 4px;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
@@ -482,7 +477,31 @@ function submitAdmission() {
 
   alert("Admission for " + (admission.studentName || "Student") + " submitted successfully!");
 }
+// This logic ensures that if an admin is logged in, they see the section to fill it.
+// If it's a blank form for a parent, it stays hidden on screen but appears on the printout.
+const role = localStorage.getItem("userRole"); 
 
+function checkOfficeVisibility() {
+  const officeSection = document.getElementById("officeSection");
+  
+  // If the user is an admin (HOI/INCHARGE), show it on screen so they can fill it
+  if (role === "HOI" || role === "INCHARGE") {
+    officeSection.style.display = "block";
+  } else {
+    // Hidden for parents on screen, but @media print will still show it on the hard copy
+    officeSection.style.display = "none";
+  }
+}
+
+// Call this inside window.onload
+window.onload = function () {
+  const year = new Date().getFullYear();
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
+  
+  checkOfficeVisibility();
+};
+  
   </script>
 
 </body>
