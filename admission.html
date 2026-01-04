@@ -203,7 +203,8 @@
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end;">
-        <div class="photo-box">Passport Size<br>Photograph</div>
+        <div class="photo-box">
+  <input type="file" accept="image/*" style="font-size:9px;">
       </div>
     </div>
 
@@ -247,7 +248,7 @@
 
     <h3 style="color: darkred; border-left-color: darkred;">For Office Use Only</h3>
     <div class="row">
-      <div class="field-group"><label>Admission Number</label><input type="text" id="admNo"></div>
+      <div class="field-group"><label>Admission Number</label><input type="text" id="admNo" readonly></div>
       <div class="field-group"><label>Date of Admission</label><input type="date"></div>
       <div class="field-group"><label>Udise Code</label><input type="text" value="01022202207"></div>
     </div>
@@ -307,6 +308,12 @@ function convertDOB() {
 
     document.getElementById("dobWords").value = `${dayWord} ${monthWord} ${yearWord}`;
 }
+  
+window.onload = function () {
+  const year = new Date().getFullYear();
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
+};
 
 function saveAndPrint() {
     // This triggers the browser print dialog. 
