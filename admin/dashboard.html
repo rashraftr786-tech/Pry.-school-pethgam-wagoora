@@ -1,56 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin ERP | GPS Pethgam</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        if (sessionStorage.getItem('isAdmin') !== 'true') { window.location.href = 'login.html'; }
-    </script>
-    <style>
-        #sidebar { transition: transform 0.3s ease-in-out; z-index: 100; }
-        .sidebar-hide { transform: translateX(-100%); }
-        .content-full { margin-left: 0 !important; }
-    </style>
+  <title>Admin Dashboard</title>
+  <script src="../js/guard.js"></script>
+  <style>
+    body { font-family: Arial; background:#f4f4f4; }
+    .top {
+      background: darkgreen;
+      color: white;
+      padding: 10px;
+    }
+    .box {
+      background: white;
+      margin: 15px;
+      padding: 15px;
+      border-left: 5px solid darkgreen;
+    }
+    button {
+      padding: 8px 15px;
+      background: darkgreen;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body class="bg-slate-100 flex min-h-screen overflow-hidden">
+<body>
 
-    <aside id="sidebar" class="w-64 bg-slate-900 text-white fixed h-full shadow-2xl">
-        <div class="p-6 text-center border-b border-slate-800 flex justify-between items-center">
-            <h1 class="text-lg font-black italic">GPS PETHGAM</h1>
-            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <nav class="p-4 space-y-2">
-            <button onclick="load('master-ledger.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-database"></i> Master Ledger</button>
-            <button onclick="load('admission-form.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-user-plus"></i> Admission Form</button>
-            <button onclick="load('mdm-entry.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-bowl-rice"></i> MDM Daily Entry</button>
-            <button onclick="load('mdm-report.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-bowl-rice"></i> MDM Monthly Report</button>
-            <button onclick="load('staff-attendance.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-calendar-check"></i> Staff Attendance</button>
-            <button onclick="load('staff-manager.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-users-gear"></i> Staff Manager</button>
-            <button onclick="load('certificate-gen.html')" class="w-full text-left p-3 rounded-xl hover:bg-blue-600 text-xs font-bold uppercase flex gap-2"><i class="fa-solid fa-file-contract"></i> Certificate Gen</button>
-        </nav>
-    </aside>
+<div class="top">
+  <h2>Admin Dashboard</h2>
+</div>
 
-    <main id="main-area" class="flex-1 lg:ml-64 p-4 transition-all duration-300">
-        <header class="flex items-center gap-4 mb-4">
-            <button onclick="toggleSidebar()" class="bg-white p-3 rounded-xl shadow-sm"><i class="fa-solid fa-bars"></i></button>
-            <h2 class="font-black text-slate-400 uppercase text-xs tracking-widest">School Management Console</h2>
-        </header>
-        <iframe id="viewport" src="modules/master-ledger.html" class="w-full h-[85vh] rounded-[2rem] shadow-2xl bg-white border-none"></iframe>
-    </main>
+<div class="box">
+  <p><b>Role:</b> <span id="roleText"></span></p>
+  <button onclick="logout()">Logout</button>
+</div>
 
-    <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('sidebar-hide');
-            document.getElementById('main-area').classList.toggle('content-full');
-        }
-        function load(file) {
-            document.getElementById('viewport').src = 'modules/' + file;
-            if(window.innerWidth < 1024) toggleSidebar();
-        }
-    </script>
+<script>
+document.getElementById("roleText").innerText =
+  localStorage.getItem("role");
+
+function logout() {
+  localStorage.removeItem("role");
+  window.location.href = "login.html";
+}
+</script>
+
 </body>
 </html>
-            
