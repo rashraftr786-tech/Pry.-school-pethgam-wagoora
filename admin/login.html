@@ -62,7 +62,28 @@
   <p class="error" id="error"></p>
 </div>
 
-<script src="../js/auth.js"></script>
+<script>
+function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  // HOI Login
+  if (email === "pspathgam@gmail.com" && password === "admin@123") {
+    localStorage.setItem("userRole", "HOI");
+    window.location.href = "dashboard.html";
+  }
+
+  // Admission Incharge Login
+  else if (email === "pspathgam@gmail.com" && password === "incharge@123") {
+    localStorage.setItem("userRole", "INCHARGE");
+    window.location.href = "dashboard.html";
+  }
+
+  else {
+    alert("Invalid Email or Password");
+  }
+}
+</script>
 
 </body>
 </html>
