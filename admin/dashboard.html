@@ -43,26 +43,8 @@
 </div>
 
 <script>
-// 1. Display the Role
-const userRole = localStorage.getItem("userRole");
-document.getElementById("roleText").innerText = userRole || "Guest";
-
-// 2. Load and Generate the Student Table
-function loadAdmissions() {
-  const container = document.getElementById("studentList");
-  // Retrieve records from local storage
-  const records = JSON.parse(localStorage.getItem("admissions")) || [];
-
-  if (records.length === 0) {
-    container.innerHTML = "<p>No admission forms found.</p>";
-    return;
-  }
-
-  let html = '<table border="1" style="width:100%; border-collapse: collapse; text-align: left;">';
-  html += '<tr style="background: #eee;"><th>Student Name</th><th>ID</th><th>Status</th><th>Action</th></tr>';
-
-  records.forEach(student => {
-    // Determine status color for visibility
+// Inside your dashboard.html <script>
+records.forEach(student => {
     const statusColor = student.status === "Approved" ? "green" : "orange";
     
     html += `
@@ -79,26 +61,9 @@ function loadAdmissions() {
           </a>
         </td>
       </tr>`;
-  });
+});
 
-  html += '</table>';
-  container.innerHTML = html;
-}
-
-// 3. Logout Function
-function logout() {
-  localStorage.removeItem("userRole");
-  // FIXED: ../ tells the browser to go up one folder to find login.html
-  window.location.href = "../login.html";
-}
-
-// Initialize the dashboard
-window.onload = loadAdmissions;
 </script>
-
-
-</body>
-
 
 </body>
 </html>
