@@ -395,26 +395,30 @@
 </div>
 
 <script>
+// 1. PHOTO PREVIEW
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
-  img.src = URL.createObjectURL(event.target.files[0]);
-  img.style.display = "block";
+  if (event.target.files[0]) {
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.style.display = "block";
+  }
 }
-function numberToWords(num) {
-    const ones = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth', 'Nineteenth'];
+
+// 2. DATE TO WORDS CONVERSION
+function numberToWords() {
     const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     
-    // Simplistic year converter for 2000-2030 range
     const yearToWords = (y) => {
-        if(y >= 2000 && y < 2030) {
+        if(y >= 2000 && y <= 2035) {
             const part2 = y - 2000;
             if (part2 === 0) return "Two Thousand";
-            return "Two Thousand " + days[part2];
+            // Simple logic for 2000-2035
+            const yearWords = part2 < 20 ? days[part2] : "Twenty " + days[part2 - 20];
+            return "Two Thousand " + yearWords;
         }
-        return y;
+        return y; // Fallback to number if out of range
     };
-
     return { days, months, yearToWords };
 }
 
@@ -428,81 +432,118 @@ function convertDOB() {
     const year = dateObj.getFullYear();
 
     const tools = numberToWords();
-    
-    // Format: Twenty second June Two Thousand Nineteen
-    // Using days array for the cardinal numbers to words
     const dayWord = tools.days[day];
     const monthWord = tools.months[month];
     const yearWord = tools.yearToWords(year);
 
     document.getElementById("dobWords").value = `${dayWord} ${monthWord} ${yearWord}`;
 }
+
+// 3. ADMINISTRATIVE LOGIC
+const role = localStorage.getItem("userRole"); 
+
+function checkOfficeVisibility() {
+  const officeSection = document.getElementById("officeSection");
+  if (!officeSection) return;
   
-window.onload = function () {
-  const year = new Date().getFullYear();
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
-};
-const role = localStorage.getItem("userRole"); // "HOI" or "INCHARGE"
-
-if (role === "HOI" || role === "INCHARGE") {
-  document.getElementById("officeSection").style.display = "block";
+  // Show on screen only for admins; CSS @media print handles showing it on paper
+  if (role === "HOI" || role === "INCHARGE") {
+    officeSection.style.display = "block";
+  } else {
+    officeSection.style.display = "none";
+  }
 }
 
-function saveAndPrint() {
-    // This triggers the browser print dialog. 
-    // Users can select "Save as PDF" from the printer list.
-    window.print();
+// 4. LOAD EXISTING STUDENT DATA (For View & Approve)
+function loadStudentData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentId = urlParams.get('id');
+
+  if (studentId) {
+    let records = JSON.parse(localStorage.getItem("admissions")) || [];
+    let student = records.find(r => r.admNo === studentId);
+
+    if (student) {
+      // Fill all fields that have a 'name' attribute matching the data keys
+      Object.keys(student).forEach(key => {
+        let field = document.querySelector(`[name="${key}"]`);
+        if (field) {
+          field.value = student[key];
+        }
+      });
+      
+      // Fill specific IDs
+      document.getElementById("admNo").value = student.admNo;
+      if (student.dob) {
+          document.getElementById("dob").value = student.dob;
+          convertDOB();
+      }
+      
+      // If admin is viewing an existing record, update the button text
+      if (role === "HOI" || role === "INCHARGE") {
+          const submitBtn = document.querySelector(".print-btn");
+          if (submitBtn) submitBtn.innerText = "Approve & Update Admission";
+      }
+    }
+  }
 }
+
+// 5. SUBMIT / UPDATE ADMISSION
 function submitAdmission() {
   const form = document.getElementById('admissionForm');
   
-  // Checks if all 'required' fields are filled
   if(!form.checkValidity()) {
     form.reportValidity();
     return;
   }
 
   const formData = new FormData(form);
-  const admission = Object.fromEntries(formData.entries());
+  const admissionData = Object.fromEntries(formData.entries());
 
-  // Manually add non-input fields or specific IDs
-  admission.admNo = document.getElementById("admNo").value;
-  admission.dobWords = document.getElementById("dobWords").value;
-  admission.status = "Pending Approval";
+  // Add metadata
+  admissionData.admNo = document.getElementById("admNo").value;
+  admissionData.dobWords = document.getElementById("dobWords").value;
+  admissionData.dob = document.getElementById("dob").value;
+  
+  // Set status: If admin is logged in, it's "Approved", otherwise "Pending Approval"
+  admissionData.status = (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval";
 
   let records = JSON.parse(localStorage.getItem("admissions")) || [];
-  records.push(admission);
-  localStorage.setItem("admissions", JSON.stringify(records));
-
-  alert("Admission for " + (admission.studentName || "Student") + " submitted successfully!");
-}
-// This logic ensures that if an admin is logged in, they see the section to fill it.
-// If it's a blank form for a parent, it stays hidden on screen but appears on the printout.
-const role = localStorage.getItem("userRole"); 
-
-function checkOfficeVisibility() {
-  const officeSection = document.getElementById("officeSection");
   
-  // If the user is an admin (HOI/INCHARGE), show it on screen so they can fill it
-  if (role === "HOI" || role === "INCHARGE") {
-    officeSection.style.display = "block";
+  // Check if we are updating an existing student or adding a new one
+  const existingIndex = records.findIndex(r => r.admNo === admissionData.admNo);
+  
+  if (existingIndex !== -1) {
+    records[existingIndex] = admissionData; // Update
+    alert("Admission for " + admissionData.studentName + " has been Approved/Updated!");
   } else {
-    // Hidden for parents on screen, but @media print will still show it on the hard copy
-    officeSection.style.display = "none";
+    records.push(admissionData); // New
+    alert("Admission Form submitted successfully! Please wait for school approval.");
   }
+
+  localStorage.setItem("admissions", JSON.stringify(records));
 }
 
-// Call this inside window.onload
+function saveAndPrint() {
+    window.print();
+}
+
+// 6. INITIALIZE PAGE
 window.onload = function () {
-  const year = new Date().getFullYear();
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
-  
   checkOfficeVisibility();
-};
   
-  </script>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('id')) {
+    loadStudentData();
+  } else {
+    // Only generate a NEW ID if it's a fresh form
+    const year = new Date().getFullYear();
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
+  }
+};
+</script>
+
 
 </body>
 </html>
