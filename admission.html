@@ -551,7 +551,17 @@ function previewPhoto(event) {
   }
 }
 
-// 2. DATE TO WORDS
+<script>
+// 1. PHOTO PREVIEW
+function previewPhoto(event) {
+  const img = document.getElementById("photoPreview");
+  if (event.target && event.target.files[0]) {
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.style.display = "block";
+  }
+}
+
+// 2. DATE TO WORDS LOGIC
 function numberToWords() {
     const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -574,52 +584,64 @@ function convertDOB() {
     document.getElementById("dobWords").value = `${tools.days[dateObj.getDate()]} ${tools.months[dateObj.getMonth()]} ${tools.yearToWords(dateObj.getFullYear())}`;
 }
 
-// 3. LOAD DATA & ADMIN VISIBILITY
-function initializeForm() {
+// 3. MAIN INITIALIZATION (LAPS FIX)
+window.onload = function() {
   const role = localStorage.getItem("userRole"); 
   const officeSection = document.getElementById("officeSection");
   const urlParams = new URLSearchParams(window.location.search);
   const studentId = urlParams.get('id');
 
-  // FORCE SHOW ADMIN SECTION
+  console.log("Logged in Role:", role); // Debugging
+  console.log("URL Student ID:", studentId); // Debugging
+
+  // FIX A: Show Office Section for Admin
   if (role === "HOI" || role === "INCHARGE") {
-    if(officeSection) officeSection.style.display = "block";
+    if(officeSection) {
+        officeSection.style.display = "block";
+        console.log("Admin detected: Office section shown.");
+    }
   }
 
+  // FIX B: Load Data from Storage
   if (studentId) {
-    // Attempt to load student from localStorage
     const records = JSON.parse(localStorage.getItem("admissions")) || [];
     const student = records.find(r => r.admNo === studentId);
 
     if (student) {
-      // Loop through every input/select and fill it if the 'name' matches the data key
-      const inputs = document.querySelectorAll('input, select, textarea');
-      inputs.forEach(input => {
-        if (student[input.name]) {
+      console.log("Student found:", student.studentName);
+      
+      // Auto-fill all inputs using their 'name' attribute
+      const allInputs = document.querySelectorAll('#admissionForm input, #admissionForm select, #admissionForm textarea');
+      allInputs.forEach(input => {
+        if (student[input.name] !== undefined) {
           input.value = student[input.name];
         }
       });
 
-      // Fill non-named fields
+      // Handle specific IDs that might not have 'name' attributes
       document.getElementById("admNo").value = student.admNo;
       if (student.dob) {
         document.getElementById("dob").value = student.dob;
         convertDOB();
       }
 
-      // Change button text for the Admin
+      // Update button text for Admin Approval
       const submitBtn = document.querySelector(".print-btn");
-      if (submitBtn && role) submitBtn.innerText = "Approve & Update Record";
+      if (submitBtn && role) {
+          submitBtn.innerText = "Approve & Save Changes";
+      }
+    } else {
+      console.error("No student record found for ID:", studentId);
     }
   } else {
-    // Generate new ID only if it's a new form
+    // New Form Mode
     const year = new Date().getFullYear();
     const rand = Math.floor(1000 + Math.random() * 9000);
     document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
   }
-}
+};
 
-// 4. SUBMIT / APPROVE FUNCTION
+// 4. SUBMIT/APPROVE ACTION
 function submitAdmission() {
   const form = document.getElementById('admissionForm');
   const role = localStorage.getItem("userRole");
@@ -629,33 +651,36 @@ function submitAdmission() {
   const formData = new FormData(form);
   const admissionData = Object.fromEntries(formData.entries());
 
-  // Attach key IDs manually
+  // Ensure these manual values are saved
   admissionData.admNo = document.getElementById("admNo").value;
-  admissionData.dobWords = document.getElementById("dobWords").value;
   admissionData.dob = document.getElementById("dob").value;
+  admissionData.dobWords = document.getElementById("dobWords").value;
   
-  // Logic: If admin clicks submit, it becomes 'Approved'
+  // Update Status
   admissionData.status = (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval";
 
   let records = JSON.parse(localStorage.getItem("admissions")) || [];
   const index = records.findIndex(r => r.admNo === admissionData.admNo);
   
   if (index !== -1) {
-    records[index] = admissionData; // Overwrite old data with approved data
-    alert("Record successfully Updated and marked as " + admissionData.status);
+    records[index] = admissionData; // Overwrite
+    alert("Record Approved and Updated Successfully!");
   } else {
-    records.push(admissionData); // Save new submission
-    alert("Form submitted successfully!");
+    records.push(admissionData); // Create
+    alert("Form Submitted Successfully!");
   }
 
   localStorage.setItem("admissions", JSON.stringify(records));
+  
+  // If admin, go back to dashboard
+  if (role) {
+      window.location.href = "admin/dashboard.html";
+  }
 }
 
 function saveAndPrint() { window.print(); }
-
-// Trigger everything on load
-window.onload = initializeForm;
 </script>
+
 
 </body>
 </html>
