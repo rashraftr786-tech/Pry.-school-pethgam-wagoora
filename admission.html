@@ -539,18 +539,7 @@ function submitAdmission() {
     alert("Form submitted successfully!");
   }
 
-  localStorage.setItem("admissions", JSON.stringify(records));
-}
-// 1. PHOTO PREVIEW
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  if (event.target.files[0]) {
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-  }
-}
-
-// 1. PHOTO PREVIEW
+// 1. Photo Preview
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
   if (event.target && event.target.files[0]) {
@@ -559,7 +548,7 @@ function previewPhoto(event) {
   }
 }
 
-// 2. DATE TO WORDS LOGIC
+// 2. DOB to Words
 function numberToWords() {
     const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -582,64 +571,54 @@ function convertDOB() {
     document.getElementById("dobWords").value = `${tools.days[dateObj.getDate()]} ${tools.months[dateObj.getMonth()]} ${tools.yearToWords(dateObj.getFullYear())}`;
 }
 
-// 3. MAIN INITIALIZATION (LAPS FIX)
+// 3. The Core Fix: Initialization
 window.onload = function() {
   const role = localStorage.getItem("userRole"); 
   const officeSection = document.getElementById("officeSection");
   const urlParams = new URLSearchParams(window.location.search);
   const studentId = urlParams.get('id');
 
-  console.log("Logged in Role:", role); // Debugging
-  console.log("URL Student ID:", studentId); // Debugging
+  console.log("System Initialized. Role:", role, "ID:", studentId);
 
-  // FIX A: Show Office Section for Admin
+  // Show Office Section for Admin
   if (role === "HOI" || role === "INCHARGE") {
-    if(officeSection) {
-        officeSection.style.display = "block";
-        console.log("Admin detected: Office section shown.");
-    }
+    if(officeSection) officeSection.style.display = "block";
   }
 
-  // FIX B: Load Data from Storage
+  // Load Data
   if (studentId) {
     const records = JSON.parse(localStorage.getItem("admissions")) || [];
     const student = records.find(r => r.admNo === studentId);
 
     if (student) {
-      console.log("Student found:", student.studentName);
-      
-      // Auto-fill all inputs using their 'name' attribute
-      const allInputs = document.querySelectorAll('#admissionForm input, #admissionForm select, #admissionForm textarea');
-      allInputs.forEach(input => {
-        if (student[input.name] !== undefined) {
-          input.value = student[input.name];
+      // Fill all fields using 'name' attribute
+      const allFields = document.querySelectorAll('#admissionForm input, #admissionForm select, #admissionForm textarea');
+      allFields.forEach(field => {
+        if (student[field.name] !== undefined) {
+          field.value = student[field.name];
         }
       });
 
-      // Handle specific IDs that might not have 'name' attributes
+      // Fill fixed IDs
       document.getElementById("admNo").value = student.admNo;
       if (student.dob) {
         document.getElementById("dob").value = student.dob;
         convertDOB();
       }
 
-      // Update button text for Admin Approval
+      // Update button text for Admin
       const submitBtn = document.querySelector(".print-btn");
-      if (submitBtn && role) {
-          submitBtn.innerText = "Approve & Save Changes";
-      }
-    } else {
-      console.error("No student record found for ID:", studentId);
+      if (submitBtn && role) submitBtn.innerText = "Approve & Update Admission";
     }
   } else {
-    // New Form Mode
+    // New ID for fresh forms
     const year = new Date().getFullYear();
     const rand = Math.floor(1000 + Math.random() * 9000);
     document.getElementById("admNo").value = "GPSPW-" + year + "-" + rand;
   }
 };
 
-// 4. SUBMIT/APPROVE ACTION
+// 4. Submit / Update logic
 function submitAdmission() {
   const form = document.getElementById('admissionForm');
   const role = localStorage.getItem("userRole");
@@ -649,34 +628,31 @@ function submitAdmission() {
   const formData = new FormData(form);
   const admissionData = Object.fromEntries(formData.entries());
 
-  // Ensure these manual values are saved
+  // Attach key IDs manually
   admissionData.admNo = document.getElementById("admNo").value;
   admissionData.dob = document.getElementById("dob").value;
   admissionData.dobWords = document.getElementById("dobWords").value;
   
-  // Update Status
+  // Set status
   admissionData.status = (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval";
 
   let records = JSON.parse(localStorage.getItem("admissions")) || [];
   const index = records.findIndex(r => r.admNo === admissionData.admNo);
   
   if (index !== -1) {
-    records[index] = admissionData; // Overwrite
+    records[index] = admissionData; // Update
     alert("Record Approved and Updated Successfully!");
   } else {
-    records.push(admissionData); // Create
+    records.push(admissionData); // Save New
     alert("Form Submitted Successfully!");
   }
 
   localStorage.setItem("admissions", JSON.stringify(records));
-  
-  // If admin, go back to dashboard
-  if (role) {
-      window.location.href = "admin/dashboard.html";
-  }
+  if (role) window.location.href = "admin/dashboard.html";
 }
 
 function saveAndPrint() { window.print(); }
+
 </script>
 
 
