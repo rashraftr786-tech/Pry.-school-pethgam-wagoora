@@ -500,87 +500,102 @@ function convertDOB() {
 // 3. INITIALIZATION (LOAD DATA & SHOW OFFICE USE)
 window.onload = function() {
   const role = localStorage.getItem("userRole"); 
-  const officeSection = document.getElementById("officeSection");
-  const urlParams = new URLSearchParams(window.location.search);
-  const studentId = urlParams.get('id');
-
-  // Show Office Use only for Admins
-  if (role === "HOI" || role === "INCHARGE") {
-    if(officeSection) officeSection.style.display = "block";
+<script>
+// 1. Photo Preview
+function previewPhoto(event) {
+  const img = document.getElementById("photoPreview");
+  if (event.target && event.target.files[0]) {
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.style.display = "block";
   }
+}
 
-  // Load Student Data if ID exists in URL
-  if (studentId) {
-    const records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const student = records.find(r => r.admNo === studentId);
+// 2. DOB to Words
+function convertDOB() {
+    const dobInput = document.getElementById("dob").value;
+    if (!dobInput) return;
+    const dateObj = new Date(dobInput);
+    const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    document.getElementById("dobWords").value = `${days[dateObj.getDate()]} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+}
 
-    if (student) {
-      // Automatically fill all fields with a 'name' attribute
-      const fields = document.querySelectorAll('#admissionForm input, #admissionForm select, #admissionForm textarea');
-      fields.forEach(field => {
-        if (student[field.name] !== undefined) {
-          field.value = student[field.name];
-        }
-      });
-      // Fill specific IDs
-      document.getElementById("admNo").value = student.admNo;
-      if (student.dob) {
-        document.getElementById("dob").value = student.dob;
-        convertDOB();
-      }
-      // Update button text
-      const btn = document.querySelector(".print-btn");
-      if (btn && role) btn.innerText = "Approve & Update Record";
+// 3. CORE INITIALIZATION
+window.onload = function() {
+    const role = localStorage.getItem("userRole");
+    const params = new URLSearchParams(window.location.search);
+    const studentId = params.get('id');
+    const officeSection = document.getElementById("officeSection");
+
+    // Show Office Section for Admins
+    if (role === "HOI" || role === "INCHARGE") {
+        if (officeSection) officeSection.style.display = "block";
     }
-  } else {
-    // New ID for fresh form
-    const rand = Math.floor(1000 + Math.random() * 9000);
-    document.getElementById("admNo").value = "GPSPW-2026-" + rand;
-  }
+
+    if (studentId) {
+        const records = JSON.parse(localStorage.getItem("admissions")) || [];
+        const student = records.find(r => r.admNo === studentId);
+
+        if (student) {
+            // This loop finds inputs by name AND by common ID patterns
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                if (student[input.name]) {
+                    input.value = student[input.name];
+                } else if (student[input.id]) {
+                    input.value = student[input.id];
+                }
+            });
+
+            // Specific Fixes
+            document.getElementById("admNo").value = student.admNo;
+            if (student.dob) {
+                document.getElementById("dob").value = student.dob;
+                convertDOB();
+            }
+
+            const btn = document.querySelector(".print-btn");
+            if (btn && role) btn.innerText = "Approve & Update Record";
+        }
+    } else {
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById("admNo").value = "GPSPW-2026-" + rand;
+    }
 };
 
-// 4. SUBMIT & SAVE
+// 4. SUBMIT & PRINT
 function submitAdmission() {
-  const form = document.getElementById('admissionForm');
-  const role = localStorage.getItem("userRole");
+    const form = document.getElementById('admissionForm');
+    const role = localStorage.getItem("userRole");
 
-  if(!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
+    if(!form.checkValidity()) { form.reportValidity(); return; }
 
-  const formData = new FormData(form);
-  const admissionData = Object.fromEntries(formData.entries());
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-  // Manually add IDs
-  admissionData.admNo = document.getElementById("admNo").value;
-  admissionData.dob = document.getElementById("dob").value;
-  admissionData.dobWords = document.getElementById("dobWords").value;
-  admissionData.status = (role) ? "Approved" : "Pending Approval";
+    data.admNo = document.getElementById("admNo").value;
+    data.dob = document.getElementById("dob").value;
+    data.dobWords = document.getElementById("dobWords").value;
+    data.status = (role) ? "Approved" : "Pending Approval";
 
-  let records = JSON.parse(localStorage.getItem("admissions")) || [];
-  const index = records.findIndex(r => r.admNo === admissionData.admNo);
-  
-  if (index !== -1) {
-    records[index] = admissionData; // Update existing
-    alert("Record Updated and Approved!");
-  } else {
-    records.push(admissionData); // New
-    alert("Form Submitted Successfully!");
-  }
+    let records = JSON.parse(localStorage.getItem("admissions")) || [];
+    const index = records.findIndex(r => r.admNo === data.admNo);
 
-  localStorage.setItem("admissions", JSON.stringify(records));
-  
-  if (role) {
-    window.location.href = "admin/dashboard.html";
-  }
+    if (index !== -1) {
+        records[index] = data;
+        alert("Success: Record Approved!");
+    } else {
+        records.push(data);
+        alert("Success: Form Submitted!");
+    }
+
+    localStorage.setItem("admissions", JSON.stringify(records));
+    if (role) window.location.href = "admin/dashboard.html";
 }
 
-// 5. PRINT FUNCTION
-function saveAndPrint() {
-    window.print();
-}
+function saveAndPrint() { window.print(); }
 </script>
+
 </body>
 </html>
             
