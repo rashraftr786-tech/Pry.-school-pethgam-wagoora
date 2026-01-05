@@ -43,12 +43,14 @@
 </div>
 
 <script>
-// Display the Role
-document.getElementById("roleText").innerText = localStorage.getItem("userRole") || "Guest";
+// 1. Display the Role
+const userRole = localStorage.getItem("userRole");
+document.getElementById("roleText").innerText = userRole || "Guest";
 
-// Generate the list of students dynamically
+// 2. Load and Generate the Student Table
 function loadAdmissions() {
   const container = document.getElementById("studentList");
+  // Retrieve records from local storage
   const records = JSON.parse(localStorage.getItem("admissions")) || [];
 
   if (records.length === 0) {
@@ -57,15 +59,24 @@ function loadAdmissions() {
   }
 
   let html = '<table border="1" style="width:100%; border-collapse: collapse; text-align: left;">';
-  html += '<tr style="background: #eee;"><th>Student Name</th><th>ID</th><th>Action</th></tr>';
+  html += '<tr style="background: #eee;"><th>Student Name</th><th>ID</th><th>Status</th><th>Action</th></tr>';
 
   records.forEach(student => {
+    // Determine status color for visibility
+    const statusColor = student.status === "Approved" ? "green" : "orange";
+    
     html += `
       <tr>
-        <td style="padding: 8px;">${student.studentName || 'Unnamed'}</td>
+        <td style="padding: 8px;">${student.studentName || 'New Applicant'}</td>
         <td style="padding: 8px;">${student.admNo}</td>
+        <td style="padding: 8px; color: ${statusColor}; font-weight: bold;">
+            ${student.status || 'Pending'}
+        </td>
         <td style="padding: 8px;">
-          <a href="admission.html?id=${student.admNo}" style="color: darkgreen; font-weight: bold;">View & Approve</a>
+          <a href="../admission.html?id=${student.admNo}" 
+             style="background: darkgreen; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 11px;">
+             View & Approve
+          </a>
         </td>
       </tr>`;
   });
@@ -74,14 +85,17 @@ function loadAdmissions() {
   container.innerHTML = html;
 }
 
+// 3. Logout Function
 function logout() {
   localStorage.removeItem("userRole");
-  window.location.href = "login.html";
+  // FIXED: ../ tells the browser to go up one folder to find login.html
+  window.location.href = "../login.html";
 }
 
-// Load data on start
-loadAdmissions();
+// Initialize the dashboard
+window.onload = loadAdmissions;
 </script>
+
 
 </body>
 
