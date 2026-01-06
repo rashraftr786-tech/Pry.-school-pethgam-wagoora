@@ -5,82 +5,86 @@
   <title>Admission Register - GPS Pethgam Wagoora</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    
+    /* Navigation Bar */
+    .nav-bar { background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00; margin: -20px -20px 20px -20px; }
+    .nav-bar a { color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1); font-size: 14px; }
+    .nav-bar a:hover { background: rgba(255,255,255,0.2); }
+
     .register-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 5px solid darkgreen; }
     
-    .register-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-    .register-header h2 { margin: 0; color: #1a5d1a; letter-spacing: 1px; }
+    .register-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .register-header h2 { margin: 0; color: #1a5d1a; font-size: 20px; }
 
-    /* Search & Filter Bar */
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; }
     .search-input { padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
 
-    .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; }
-    .btn-add { background: darkgreen; color: white; }
+    .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; display: inline-block; }
     .btn-print { background: #444; color: white; }
 
-    /* Table Styling */
     .table-wrapper { overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
-    th { background: #f8f9fa; color: #333; padding: 12px; text-align: left; border-bottom: 2px solid darkgreen; position: sticky; top: 0; }
-    td { padding: 10px; border-bottom: 1px solid #eee; color: #444; }
-    tr:nth-child(even) { background: #fafafa; }
-    tr:hover { background: #f1f8f1; }
+    table { width: 100%; border-collapse: collapse; font-size: 11.5px; white-space: nowrap; }
+    th { background: #f8f9fa; color: #333; padding: 10px; text-align: left; border-bottom: 2px solid darkgreen; position: sticky; top: 0; }
+    td { padding: 8px; border-bottom: 1px solid #eee; color: #444; vertical-align: middle; }
+    
+    /* Photo Style in Table */
+    .student-thumb { width: 40px; height: 45px; object-fit: cover; border: 1px solid #ddd; border-radius: 2px; background: #eee; }
 
     .status-pill { padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
     .status-approved { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
     @media print {
-      .no-print, .btn, .filter-bar { display: none !important; }
+      .no-print, .nav-bar, .filter-bar { display: none !important; }
       body { padding: 0; background: white; }
       .register-card { border: none; box-shadow: none; width: 100%; }
-      table { font-size: 9px; border: 1px solid #000; }
-      th, td { border: 1px solid #ccc; padding: 5px; }
-      @page { size: landscape; margin: 10mm; }
+      table { font-size: 8.5px; border: 1px solid #000; }
+      th, td { border: 1px solid #ccc; padding: 4px; }
+      .student-thumb { width: 35px; height: 40px; }
+      @page { size: landscape; margin: 5mm; }
     }
   </style>
 </head>
 <body>
-  <div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00;">
-    <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 New Admission</a>
-    <a href="adm-register.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📋 View Register</a>
-  </div>
-  
+
+<div class="nav-bar no-print">
+    <a href="admission.html">📝 Admission Form</a>
+    <a href="adm-register.html" style="background: rgba(255,255,255,0.3);">📋 View Register</a>
+</div>
 
 <div class="register-card">
   <div class="register-header">
     <div>
-      <h2>Admission Register (Session 2026)</h2>
-      <small>GPS Pethgam Wagoora | Udise: 01022202207</small>
+      <h2>GPS Pethgam Wagoora - Admission Register 2026</h2>
+      <small>Udise: 01022202207 | District: Baramulla</small>
     </div>
     <div class="no-print">
-      <a href="admission.html" class="btn btn-add">+ New Admission</a>
-      <button onclick="window.print()" class="btn btn-print">Print Register</button>
+      <button onclick="window.print()" class="btn btn-print">Print Register (Landscape)</button>
     </div>
   </div>
 
   <div class="filter-bar no-print">
-    <input type="text" id="searchInput" class="search-input" placeholder="Search by Student Name or Aadhaar..." onkeyup="searchTable()">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Aadhaar or Class..." onkeyup="searchTable()">
   </div>
 
   <div class="table-wrapper">
     <table id="regTable">
       <thead>
         <tr>
-          <th>S.No / Adm No</th>
+          <th>Photo</th>
+          <th>Adm No</th>
           <th>Student Name</th>
-          <th>Parentage (Father & Mother)</th>
+          <th>Parentage (F/M)</th>
           <th>Class</th>
           <th>DOB</th>
-          <th>Gender</th>
+          <th>Gender / Blood</th>
           <th>Aadhaar Number</th>
-          <th>APAAR ID</th>
-          <th>PEN Number</th>
-          <th>Contact (F/M)</th>
-          <th>Bank Acc & IFSC</th>
-          <th>Address (Village)</th>
+          <th>APAAR / PEN</th>
+          <th>Contacts (F/M)</th>
+          <th>Bank Details</th>
+          <th>Address</th>
           <th>Status</th>
-          <th class="no-print">Action</th>
+          <th class="no-print">Review</th>
         </tr>
       </thead>
       <tbody id="tableContent">
@@ -97,19 +101,23 @@ function loadData() {
 
     records.forEach(student => {
         const row = document.createElement("tr");
+        
+        // Handle Photo: If no photo is saved, show a placeholder
+        const photoSrc = student.studentPhoto || 'https://via.placeholder.com/40x45?text=No+Img';
+
         row.innerHTML = `
+            <td><img src="${photoSrc}" class="student-thumb" alt="Photo"></td>
             <td><strong>${student.admNo || '---'}</strong></td>
             <td>${student.studentName}</td>
             <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
             <td>${student.studentClass}</td>
             <td>${student.dob}</td>
-            <td>${student.gender}</td>
+            <td>${student.gender} / ${student.bloodGroup || 'N/A'}</td>
             <td>${student.aadhaarNo}</td>
-            <td>${student.apaarId || '---'}</td>
-            <td>${student.penId || '---'}</td>
-            <td>${student.fatherContact}<br>${student.motherContact}</td>
+            <td>A: ${student.apaarId || '---'}<br>P: ${student.penId || '---'}</td>
+            <td>F: ${student.fatherContact}<br>M: ${student.motherContact}</td>
             <td>${student.bankAcc}<br><small>${student.ifsc}</small></td>
-            <td>${student.village}</td>
+            <td>${student.village}, ${student.mohallah}</td>
             <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
             <td class="no-print">
                 <a href="admission.html?id=${student.admNo}" style="color:blue; text-decoration:none; font-weight:bold;">Review</a>
@@ -132,3 +140,4 @@ window.onload = loadData;
 </script>
 </body>
 </html>
+            
