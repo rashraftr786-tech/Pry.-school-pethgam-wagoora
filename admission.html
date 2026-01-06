@@ -203,16 +203,55 @@ function previewPhoto(event) {
   }
 }
 
-// 2. DOB CONVERSION
+// 2. DOB CONVERSION (Enhanced to convert figures to full words)
 function convertDOB() {
     const dobInput = document.querySelector('input[name="dob"]');
     const dobWordsInput = document.querySelector('input[name="dobWords"]');
+    
     if (dobInput && dobInput.value && dobWordsInput) {
         const dateObj = new Date(dobInput.value);
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        dobWordsInput.value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+        const day = dateObj.getDate();
+        const monthIndex = dateObj.getMonth();
+        const year = dateObj.getFullYear();
+
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const ordinals = [
+            "", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
+            "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteenth", "Twentieth",
+            "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth", "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"
+        ];
+
+        // Function to convert year number to words
+        const yearToWords = (year) => {
+            const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+            if (year >= 2000 && year < 2100) {
+                let part2 = year % 100;
+                let wordPart2 = "";
+                if (part2 === 0) wordPart2 = "";
+                else if (part2 < 10) wordPart2 = units[part2];
+                else if (part2 < 20) wordPart2 = teens[part2 - 10];
+                else wordPart2 = tens[Math.floor(part2 / 10)] + (part2 % 10 !== 0 ? " " + units[part2 % 10] : "");
+                
+                return "Two Thousand" + (wordPart2 !== "" ? " " + wordPart2 : "");
+            }
+            return year.toString(); // Fallback for years outside 2000-2099
+        };
+
+        const dayWord = ordinals[day];
+        const monthWord = months[monthIndex];
+        const yearWord = yearToWords(year);
+
+        dobWordsInput.value = `${dayWord} ${monthWord} ${yearWord}`;
     }
 }
+
 
 // 3. INITIALIZATION (The "Blank Form" & "Office Section" Fix)
 window.onload = function() {
