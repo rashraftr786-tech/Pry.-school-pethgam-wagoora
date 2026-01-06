@@ -2,68 +2,56 @@
 <html>
 <head>
   <title>Admin Dashboard</title>
-  <script src="../js/guard.js"></script>
   <style>
-    body { font-family: Arial; background:#f4f4f4; }
-    .top {
-      background: darkgreen;
-      color: white;
-      padding: 10px;
-    }
-    .box {
-      background: white;
-      margin: 15px;
-      padding: 15px;
-      border-left: 5px solid darkgreen;
-    }
-    button {
-      padding: 8px 15px;
-      background: darkgreen;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+    body { font-family: Arial; background:#f4f4f4; padding: 20px; }
+    .top { background: darkgreen; color: white; padding: 15px; border-radius: 5px; }
+    .box { background: white; margin-top: 15px; padding: 20px; border-left: 5px solid darkgreen; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+    th { background: #f8f8f8; }
+    .btn-view { background: darkgreen; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 13px; }
   </style>
 </head>
 <body>
 
 <div class="top">
   <h2>Admin Dashboard - GPS Pethgam</h2>
+  <p>Logged in as: <span id="roleText"></span></p>
+  <button onclick="localStorage.removeItem('userRole'); window.location.href='../login.html'" style="cursor:pointer">Logout</button>
 </div>
 
 <div class="box">
-  <p><b>Role:</b> <span id="roleText"></span></p>
-  <button onclick="logout()">Logout</button>
-</div>
-
-<div class="box">
-  <h3>Pending Admissions</h3>
-  <div id="studentList">
-    </div>
+  <h3>Student Admission Records</h3>
+  <div id="studentList">Loading...</div>
 </div>
 
 <script>
-// Inside your dashboard.html <script>
-records.forEach(student => {
-    const statusColor = student.status === "Approved" ? "green" : "orange";
-    
-    html += `
-      <tr>
-        <td style="padding: 8px;">${student.studentName || 'New Applicant'}</td>
-        <td style="padding: 8px;">${student.admNo}</td>
-        <td style="padding: 8px; color: ${statusColor}; font-weight: bold;">
-            ${student.status || 'Pending'}
-        </td>
-        <td style="padding: 8px;">
-          <a href="../admission.html?id=${student.admNo}" 
-             style="background: darkgreen; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 11px;">
-             View & Approve
-          </a>
-        </td>
-      </tr>`;
-});
+window.onload = function() {
+    const userRole = localStorage.getItem("userRole");
+    document.getElementById("roleText").innerText = userRole || "Guest";
 
+    const container = document.getElementById("studentList");
+    const records = JSON.parse(localStorage.getItem("admissions")) || [];
+
+    if (records.length === 0) {
+        container.innerHTML = "<p>No records found.</p>";
+        return;
+    }
+
+    let html = '<table><tr><th>Student Name</th><th>ID</th><th>Status</th><th>Action</th></tr>';
+    records.forEach(student => {
+        html += `
+          <tr>
+            <td>${student.studentName || 'New applicant'}</td>
+            <td>${student.admNo}</td>
+            <td style="color: ${student.status === 'Approved' ? 'green' : 'orange'}; font-weight: bold;">${student.status || 'Pending'}</td>
+            <td><a href="../admission.html?id=${student.admNo}" class="btn-view">View & Approve</a></td>
+          </tr>`;
+    });
+    html += '</table>';
+    container.innerHTML = html;
+};
 </script>
-
 </body>
 </html>
+
