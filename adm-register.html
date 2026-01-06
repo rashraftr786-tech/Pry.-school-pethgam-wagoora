@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admission Register - GPS Pethgam Wagoora</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    .register-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 5px solid darkgreen; }
+    
+    .register-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    .register-header h2 { margin: 0; color: #1a5d1a; letter-spacing: 1px; }
+
+    /* Search & Filter Bar */
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    .search-input { padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+
+    .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; }
+    .btn-add { background: darkgreen; color: white; }
+    .btn-print { background: #444; color: white; }
+
+    /* Table Styling */
+    .table-wrapper { overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+    th { background: #f8f9fa; color: #333; padding: 12px; text-align: left; border-bottom: 2px solid darkgreen; position: sticky; top: 0; }
+    td { padding: 10px; border-bottom: 1px solid #eee; color: #444; }
+    tr:nth-child(even) { background: #fafafa; }
+    tr:hover { background: #f1f8f1; }
+
+    .status-pill { padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+    .status-approved { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+    @media print {
+      .no-print, .btn, .filter-bar { display: none !important; }
+      body { padding: 0; background: white; }
+      .register-card { border: none; box-shadow: none; width: 100%; }
+      table { font-size: 9px; border: 1px solid #000; }
+      th, td { border: 1px solid #ccc; padding: 5px; }
+      @page { size: landscape; margin: 10mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="register-card">
+  <div class="register-header">
+    <div>
+      <h2>Admission Register (Session 2026)</h2>
+      <small>GPS Pethgam Wagoora | Udise: 01022202207</small>
+    </div>
+    <div class="no-print">
+      <a href="admission.html" class="btn btn-add">+ New Admission</a>
+      <button onclick="window.print()" class="btn btn-print">Print Register</button>
+    </div>
+  </div>
+
+  <div class="filter-bar no-print">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search by Student Name or Aadhaar..." onkeyup="searchTable()">
+  </div>
+
+  <div class="table-wrapper">
+    <table id="regTable">
+      <thead>
+        <tr>
+          <th>S.No / Adm No</th>
+          <th>Student Name</th>
+          <th>Parentage (Father & Mother)</th>
+          <th>Class</th>
+          <th>DOB</th>
+          <th>Gender</th>
+          <th>Aadhaar Number</th>
+          <th>APAAR ID</th>
+          <th>PEN Number</th>
+          <th>Contact (F/M)</th>
+          <th>Bank Acc & IFSC</th>
+          <th>Address (Village)</th>
+          <th>Status</th>
+          <th class="no-print">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableContent">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function loadData() {
+    const records = JSON.parse(localStorage.getItem("admissions")) || [];
+    const tbody = document.getElementById("tableContent");
+    tbody.innerHTML = "";
+
+    records.forEach(student => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><strong>${student.admNo || '---'}</strong></td>
+            <td>${student.studentName}</td>
+            <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
+            <td>${student.studentClass}</td>
+            <td>${student.dob}</td>
+            <td>${student.gender}</td>
+            <td>${student.aadhaarNo}</td>
+            <td>${student.apaarId || '---'}</td>
+            <td>${student.penId || '---'}</td>
+            <td>${student.fatherContact}<br>${student.motherContact}</td>
+            <td>${student.bankAcc}<br><small>${student.ifsc}</small></td>
+            <td>${student.village}</td>
+            <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
+            <td class="no-print">
+                <a href="admission.html?id=${student.admNo}" style="color:blue; text-decoration:none; font-weight:bold;">Review</a>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function searchTable() {
+    let input = document.getElementById("searchInput").value.toUpperCase();
+    let rows = document.getElementById("regTable").getElementsByTagName("tr");
+    for (let i = 1; i < rows.length; i++) {
+        let text = rows[i].textContent || rows[i].innerText;
+        rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+    }
+}
+
+window.onload = loadData;
+</script>
+</body>
+</html>
