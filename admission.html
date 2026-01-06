@@ -1,176 +1,33 @@
-<!DOCTYPE html
+<!DOCTYPE html>
 <html>
 <head>
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
-    /* General Styles */
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 10px;
-      margin: 0;
-    }
-
-    /* Beautiful Form Margin & Watermark Container */
-    .page-border {
-      background: white;
-      max-width: 800px; /* Adjusted for better A4 fit */
-      margin: auto;
-      padding: 20px;
-      border: 4px double darkgreen;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      position: relative; /* For Watermark positioning */
-      overflow: hidden;
-    }
-
-    /* Light Colour Watermark */
-    .watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-30deg);
-      opacity: 0.10; /* light */
-      width: 400px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    form {
-      position: relative;
-      z-index: 1; /* Keep text above watermark */
-    }
-
-    /* Form Title */
-    .form-title {
-      text-align: center;
-      text-decoration: underline;
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #000;
-      text-transform: uppercase;
-    }
-
-    /* School Header Styles */
-    .header-container {
-      display: flex;
-      align-items: center;
-      border-bottom: 2px solid darkgreen;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-    }
-
-    .school-logo {
-      width: 80px;
-      height: 80px;
-      margin-right: 20px;
-    }
-
-    .header-text {
-      text-align: center;
-      flex-grow: 1;
-    }
-
-    .header-text h1 {
-      margin: 0;
-      font-size: 20px;
-      color: darkgreen;
-      text-transform: uppercase;
-    }
-
-    .header-text p {
-      margin: 2px 0;
-      font-size: 11px;
-      color: #333;
-      line-height: 1.3;
-    }
-
-    h3 { 
-      font-size: 13px; 
-      margin: 10px 0 5px 0; 
-      background: #e8f5e9; 
-      padding: 4px;
-      border-left: 4px solid darkgreen;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 10px; margin: 0; }
+    .page-border { background: white; max-width: 800px; margin: auto; padding: 20px; border: 4px double darkgreen; box-shadow: 0 0 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); opacity: 0.10; width: 400px; pointer-events: none; z-index: 0; }
+    form { position: relative; z-index: 1; }
+    .form-title { text-align: center; text-decoration: underline; font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #000; text-transform: uppercase; }
+    .header-container { display: flex; align-items: center; border-bottom: 2px solid darkgreen; padding-bottom: 10px; margin-bottom: 10px; }
+    .school-logo { width: 80px; height: 80px; margin-right: 20px; }
+    .header-text { text-align: center; flex-grow: 1; }
+    .header-text h1 { margin: 0; font-size: 20px; color: darkgreen; text-transform: uppercase; }
+    .header-text p { margin: 2px 0; font-size: 11px; color: #333; line-height: 1.3; }
+    h3 { font-size: 13px; margin: 10px 0 5px 0; background: #e8f5e9; padding: 4px; border-left: 4px solid darkgreen; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 6px; }
     .field-group { display: flex; flex-direction: column; }
-
-    label {
-      font-weight: bold;
-      font-size: 10px;
-      margin-bottom: 2px;
-      color: #444;
-    }
-
-    input[type="text"], input[type="date"], input[type="tel"], select, textarea {
-      padding: 4px;
-      font-size: 12px;
-      border: 1px solid #ccc;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.8);
-    }
-
-    .photo-box {
-      width: 100px;
-      height: 115px;
-      border: 1px solid #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      text-align: center;
-      background: #fff;
-    }
-
-    .declaration-box {
-      font-size: 10px;
-      line-height: 1.4;
-      text-align: justify;
-      margin-top: 10px;
-      border: 1px solid #eee;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.7);
-    }
-
-    .sig-placeholder {
-      border-top: 1px solid #000;
-      margin-top: 30px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: bold;
-      padding-top: 5px;
-    }
-
-    /* Update your existing @media print section */
-@media print {
-  .no-print, input[type="file"] { display: none !important; }
-  
-  /* Force the Office Section to show on paper, even if hidden on screen */
-  #officeSection { 
-    display: block !important; 
-    margin-top: 20px;
-    border-top: 2px dashed #000; /* Optional: adds a visual separator for the office part */
-    padding-top: 10px;
-  }
-
-  .page-border { border: 2px solid #000; box-shadow: none; margin: 0; }
-  input, select, textarea { border: none !important; border-bottom: 1px dotted #000 !important; }
-}
-
+    label { font-weight: bold; font-size: 10px; margin-bottom: 2px; color: #444; }
+    input[type="text"], input[type="date"], input[type="tel"], select, textarea { padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 2px; background: rgba(255, 255, 255, 0.8); }
+    .photo-box { width: 100px; height: 115px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; background: #fff; }
+    .declaration-box { font-size: 10px; line-height: 1.4; text-align: justify; margin-top: 10px; border: 1px solid #eee; padding: 8px; background: rgba(255, 255, 255, 0.7); }
+    .sig-placeholder { border-top: 1px solid #000; margin-top: 30px; text-align: center; font-size: 11px; font-weight: bold; padding-top: 5px; }
+    @media print { .no-print, input[type="file"] { display: none !important; } #officeSection { display: block !important; margin-top: 20px; border-top: 2px dashed #000; padding-top: 10px; } .page-border { border: 2px solid #000; box-shadow: none; margin: 0; } input, select, textarea { border: none !important; border-bottom: 1px dotted #000 !important; } }
   </style>
 </head>
 <body>
 
 <div class="page-border" id="printArea">
   <img src="logo.png" class="watermark" alt="watermark">
-
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="header-text">
@@ -187,330 +44,90 @@
     <div class="row">
       <div class="field-group" style="grid-column: span 2;">
         <label>Full Name of Student</label>
-        <input type="text" name="studentName">
+        <input type="text" name="studentName" required>
         <label>Name (As per Aadhaar)</label>
         <input type="text" name="aadhaarName">
         <div class="row" style="margin-top:5px">
-            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" onchange="convertDOB()"></div>
-            <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" readonly></div>
+            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
+            <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end;">
-  <div class="photo-box">
-    <img id="photoPreview" style="max-width:100%; max-height:100%; display:none;">
-    <input type="file" accept="image/*" onchange="previewPhoto(event)" style="font-size:9px;">
-  </div>
-</div>
+        <div class="photo-box">
+          <img id="photoPreview" style="max-width:100%; max-height:100%; display:none;">
+          <input type="file" accept="image/*" onchange="previewPhoto(event)" style="font-size:9px;">
+        </div>
+      </div>
     </div>
 
     <div class="row">
-  <div class="field-group">
-    <label>Gender</label>
-    <select name="gender">
-  <option>Male</option>
-  <option>Female</option>
-</select>
-  </div>
-
-  <div class="field-group">
-    <label>Blood Group</label>
-    <select id="bloodGroup">
-      <option value="">Select</option>
-      <option>A+</option><option>A-</option>
-      <option>B+</option><option>B-</option>
-      <option>AB+</option><option>AB-</option>
-      <option>O+</option><option>O-</option>
-    </select>
-  </div>
-
-  <div class="field-group">
-    <label>Category</label>
-    <select>
-      <option>General</option>
-      <option>OBC</option>
-      <option>SC</option>
-      <option>ST</option>
-    </select>
-  </div>
-</div>
-
-<div class="row">
-  <div class="field-group">
-    <label>Class Seeking</label>
-    <select id="studentClass">
-      <option value="">Select Class</option>
-      <option>Pre-Primary (3)</option>
-      <option>Pre-Primary (2)</option>
-      <option>Balvatika</option>
-      <option>Class 1</option>
-      <option>Class 2</option>
-      <option>Class 3</option>
-      <option>Class 4</option>
-      <option>Class 5</option>
-    </select>
-  </div>
-</div>
-
-    <div class="row">
-  <div class="field-group">
-    <label>Father's Name</label>
-    <input type="text" name="fatherName">
-  </div>
-
-  <div class="field-group">
-    <label>Father's Contact No.</label>
-    <input type="tel">
-  </div>
-
-  <div class="field-group">
-    <label>Mother's Name</label>
-    <input type="text" name="motherName">
-  </div>
-</div>
-
-<div class="row">
-  <div class="field-group">
-    <label>Mother's Contact No.</label>
-    <input type="tel">
-  </div>
-</div>
-
-    <div class="row">
-      <div class="field-group"><label>Aadhaar Number</label><input type="text"></div>
-      <div class="field-group"><label>PEN Number</label><input type="text"></div>
-      <div class="field-group"><label>APAAR ID</label><input type="text"></div>
+      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+      <div class="field-group"><label>Blood Group</label><select name="bloodGroup"><option value="">Select</option><option>A+</option><option>B+</option><option>O+</option><option>AB+</option></select></div>
+      <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Bank Account No</label><input type="text"></div>
-      <div class="field-group"><label>Bank & Branch</label><input type="text"></div>
-      <div class="field-group"><label>IFSC Code</label><input type="text"></div>
+      <div class="field-group"><label>Class Seeking</label><select name="studentClass"><option value="">Select Class</option><option>Class 1</option><option>Class 2</option><option>Class 3</option></select></div>
+    </div>
+
+    <div class="row">
+      <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
+      <div class="field-group"><label>Father's Contact</label><input type="tel" name="fatherContact"></div>
+      <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
+    </div>
+
+    <div class="row">
+      <div class="field-group"><label>Aadhaar Number</label><input type="text" name="aadhaarNumber"></div>
+      <div class="field-group"><label>PEN Number</label><input type="text" name="penNumber"></div>
+      <div class="field-group"><label>APAAR ID</label><input type="text" name="apaarId"></div>
+    </div>
+
+    <div class="row">
+      <div class="field-group"><label>Bank Account No</label><input type="text" name="bankAcc"></div>
+      <div class="field-group"><label>Bank & Branch</label><input type="text" name="bankBranch"></div>
+      <div class="field-group"><label>IFSC Code</label><input type="text" name="ifsc"></div>
     </div>
 
     <h3>Residential Address</h3>
-
-<div class="row">
-  <div class="field-group">
-    <label for="mohallah">Mohallah / House No.</label>
-<input 
-  type="text" 
-  id="mohallah" 
-  name="mohallah" 
-  placeholder="e.g. Ward No. 3, Near Masjid"
-  required
->
-  </div>
-
-  <div class="field-group">
-  <label for="village">Village / Ward</label>
-  <input
-    type="text"
-    id="village"
-    name="village"
-    placeholder="e.g. Pethgam / Ward No. 5"
-    required
-  >
-  </div>
-
-  <div class="field-group">
-  <label for="tehsil">Tehsil</label>
-  <input
-    type="text"
-    id="tehsil"
-    name="tehsil"
-    placeholder="e.g. Wagoora"
-    required
-  >
-</div>
-
-<div class="field-group">
-  <label for="district">District</label>
-  <input
-    type="text"
-    id="district"
-    name="district"
-    placeholder="e.g. Baramulla"
-    required
-  >
-</div>
-
-  <div class="field-group">
-    <label>Pin Code</label>
-    <input type="text">
-  </div>
-</div>
+    <div class="row">
+      <div class="field-group"><label>Mohallah</label><input type="text" name="mohallah" required></div>
+      <div class="field-group"><label>Village</label><input type="text" name="village" required></div>
+      <div class="field-group"><label>Tehsil</label><input type="text" name="tehsil" required></div>
+      <div class="field-group"><label>District</label><input type="text" name="district" required></div>
+      <div class="field-group"><label>Pin Code</label><input type="text" name="pincode"></div>
+    </div>
     
     <div class="declaration-box">
-  <input type="checkbox" required>
-  <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
-    </div>
-
-    <div class="row" style="margin-top: 5px;">
-        <div></div><div></div>
-        <div class="sig-placeholder">Signature of Parent</div>
+      <input type="checkbox" required> <strong>Parents Declaration:</strong> I hereby declare that the information provided is true.
     </div>
 
     <div id="officeSection" style="display:none;">
-
-  <h3 style="color: darkred; border-left-color: darkred;">
-    For Office Use Only
-  </h3>
-
-  <div class="row">
-    <div class="field-group">
-      <label>Admission Number</label>
-      <input type="text" id="admNo">
-    </div>
-    <div class="field-group">
-      <label>Date of Admission</label>
-      <input type="date">
-    </div>
-    <div class="field-group">
-      <label>Udise Code</label>
-      <input type="text" value="01022202207">
-    </div>
-  </div>
-
-  <div class="field-group">
-    <label>Remarks</label>
-    <textarea rows="1"></textarea>
-  </div>
-
-  <div class="row" style="margin-top: 10px;">
-    <div class="sig-placeholder">Adm. Incharge</div>
-    <div></div>
-    <div class="sig-placeholder">Sign of HOI</div>
-  </div>
-
-</div>
-      <div class="no-print" style="text-align:center; margin-top:15px;">
-  <button type="button" class="print-btn" onclick="submitAdmission()">Submit Admission Form</button>
+      <h3 style="color: darkred; border-left-color: darkred;">For Office Use Only</h3>
+      <div class="row">
+        <div class="field-group"><label>Admission Number</label><input type="text" id="admNo" name="admNo"></div>
+        <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
+        <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207"></div>
       </div>
+      <div class="field-group"><label>Remarks</label><textarea name="remarks" rows="1"></textarea></div>
+    </div>
+
+    <div class="no-print" style="text-align:center; margin-top:15px; display: flex; gap: 10px; justify-content: center;">
+      <button type="button" class="print-btn" onclick="submitAdmission()" style="background: darkgreen; color: white; padding: 10px;">Submit Admission Form</button>
+      <button type="button" class="print-btn" onclick="saveAndPrint()" style="background: #333; color: white; padding: 10px;">Save & Print PDF</button>
+    </div>
   </form>
 </div>
 
-<div class="button-container no-print">
-    <button class="print-btn" onclick="saveAndPrint()">Save Form & Print/PDF</button>
-</div>
-
 <script>
-// 1. PHOTO PREVIEW
+// Consolidated Script Logic
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
-  if (event.target.files[0]) {
+  if (event.target.files && event.target.files[0]) {
     img.src = URL.createObjectURL(event.target.files[0]);
     img.style.display = "block";
   }
 }
 
-// 2. DATE TO WORDS CONVERSION
-function numberToWords() {
-    const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    const yearToWords = (y) => {
-        if(y >= 2000 && y <= 2035) {
-            const part2 = y - 2000;
-            if (part2 === 0) return "Two Thousand";
-            // Simple logic for 2000-2035
-            const yearWords = part2 < 20 ? days[part2] : "Twenty " + days[part2 - 20];
-            return "Two Thousand " + yearWords;
-        }
-        return y; // Fallback to number if out of range
-    };
-    return { days, months, yearToWords };
-}
-
-function convertDOB() {
-    const dobInput = document.getElementById("dob").value;
-    if (!dobInput) return;
-
-    const dateObj = new Date(dobInput);
-    const day = dateObj.getDate();
-    const month = dateObj.getMonth();
-    const year = dateObj.getFullYear();
-
-    const tools = numberToWords();
-    const dayWord = tools.days[day];
-    const monthWord = tools.months[month];
-    const yearWord = tools.yearToWords(year);
-
-    document.getElementById("dobWords").value = `${dayWord} ${monthWord} ${yearWord}`;
-}
-
-// 3. ADMINISTRATIVE LOGIC
-const role = localStorage.getItem("userRole"); 
-
-<script>
-// 1. PHOTO PREVIEW
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  if (event.target.files[0]) {
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-  }
-}
-
-// 2. DATE TO WORDS LOGIC
-function numberToWords() {
-    const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    const yearToWords = (y) => {
-        if(y >= 2000 && y <= 2035) {
-            const part2 = y - 2000;
-            if (part2 === 0) return "Two Thousand";
-            const yearWords = part2 < 20 ? days[part2] : "Twenty " + days[part2 - 20];
-            return "Two Thousand " + yearWords;
-        }
-        return y;
-    };
-    return { days, months, yearToWords };
-}
-
-function convertDOB() {
-    const dobInput = document.getElementById("dob").value;
-    if (!dobInput) return;
-    const dateObj = new Date(dobInput);
-    const tools = numberToWords();
-<script>
-// 1. PHOTO PREVIEW
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  if (event.target && event.target.files[0]) {
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-  }
-}
-
-// 2. DOB CONVERSION
-function convertDOB() {
-    const dobInput = document.getElementById("dob").value;
-    if (!dobInput) return;
-    const dateObj = new Date(dobInput);
-    const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    const dayWord = days[dateObj.getDate()];
-    const monthWord = months[dateObj.getMonth()];
-    const yearWord = dateObj.getFullYear();
-    document.getElementById("dobWords").value = `${dayWord} ${monthWord} Two Thousand ${yearWord - 2000}`;
-}
-
-// 3. INITIALIZATION (LOAD DATA & SHOW OFFICE USE)
-window.onload = function() {
-  const role = localStorage.getItem("userRole"); 
-<script>
-// 1. Photo Preview
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  if (event.target && event.target.files[0]) {
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-  }
-}
-
-// 2. DOB to Words
 function convertDOB() {
     const dobInput = document.getElementById("dob").value;
     if (!dobInput) return;
@@ -520,14 +137,12 @@ function convertDOB() {
     document.getElementById("dobWords").value = `${days[dateObj.getDate()]} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
-// 3. CORE INITIALIZATION
 window.onload = function() {
     const role = localStorage.getItem("userRole");
     const params = new URLSearchParams(window.location.search);
     const studentId = params.get('id');
     const officeSection = document.getElementById("officeSection");
 
-    // Show Office Section for Admins
     if (role === "HOI" || role === "INCHARGE") {
         if (officeSection) officeSection.style.display = "block";
     }
@@ -535,47 +150,27 @@ window.onload = function() {
     if (studentId) {
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
         const student = records.find(r => r.admNo === studentId);
-
         if (student) {
-            // This loop finds inputs by name AND by common ID patterns
             const allInputs = document.querySelectorAll('input, select, textarea');
             allInputs.forEach(input => {
-                if (student[input.name]) {
-                    input.value = student[input.name];
-                } else if (student[input.id]) {
-                    input.value = student[input.id];
-                }
+                if (student[input.name]) input.value = student[input.name];
             });
-
-            // Specific Fixes
             document.getElementById("admNo").value = student.admNo;
-            if (student.dob) {
-                document.getElementById("dob").value = student.dob;
-                convertDOB();
-            }
-
-            const btn = document.querySelector(".print-btn");
-            if (btn && role) btn.innerText = "Approve & Update Record";
+            convertDOB();
         }
     } else {
-        const rand = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById("admNo").value = "GPSPW-2026-" + rand;
+        document.getElementById("admNo").value = "GPSPW-2026-" + Math.floor(1000 + Math.random() * 9000);
     }
 };
 
-// 4. SUBMIT & PRINT
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
-    const role = localStorage.getItem("userRole");
-
     if(!form.checkValidity()) { form.reportValidity(); return; }
 
+    const role = localStorage.getItem("userRole");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    data.admNo = document.getElementById("admNo").value;
-    data.dob = document.getElementById("dob").value;
-    data.dobWords = document.getElementById("dobWords").value;
     data.status = (role) ? "Approved" : "Pending Approval";
 
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -583,10 +178,10 @@ function submitAdmission() {
 
     if (index !== -1) {
         records[index] = data;
-        alert("Success: Record Approved!");
+        alert("Record Updated!");
     } else {
         records.push(data);
-        alert("Success: Form Submitted!");
+        alert("Form Submitted!");
     }
 
     localStorage.setItem("admissions", JSON.stringify(records));
@@ -598,4 +193,4 @@ function saveAndPrint() { window.print(); }
 
 </body>
 </html>
-            
+    
