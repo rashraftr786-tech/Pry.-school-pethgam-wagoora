@@ -9,15 +9,20 @@
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10px; background: #f0f0f0; }
         
         .printable-area {
-            width: 287mm;
-            height: 200mm;
-            background: white;
-            margin: auto;
-            border: 4px solid #5a3d8c;
-            padding: 8px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
+    width: 287mm;
+    height: 200mm;
+    background: white;
+    margin: auto;
+    border: 4px solid #5a3d8c;
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* ADD THE TWO LINES BELOW */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+}
+
         }
 
         /* Header with UDID, Email, and Contact */
