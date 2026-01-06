@@ -138,36 +138,25 @@
     </div>
 
     <div class="top-info-container">
-        <div class="details-table">
-            <table>
-                <tr>
-                    <td class="label-cell">Student Name:</td><td id="sname"></td>
-                    <td class="label-cell">Adm. No:</td><td id="admNo"></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Fathers Name:</td><td id="fname"></td>
-                    <td class="label-cell">D.O.B:</td><td id="dob"></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Mothers Name:</td><td id="mname"></td>
-                    <td class="label-cell">Roll No:</td><td id="rollNo"></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Apaar ID:</td><td id="apaar"></td>
-                    <td class="label-cell">PEN No:</td><td id="pen"></td>
-                </tr>
+    <div class="details-table" style="flex: 0 0 65%;">
+        <table>
+            <tr>
+                <td class="label-cell">Student Name:</td><td id="sname" style="text-align:left; padding-left:10px;"></td>
+                <td class="label-cell">Adm. No:</td><td id="admNo"></td>
+            </tr>
             </table>
-        </div>
-        <div class="details-table" style="max-width: 120px;">
-             <table>
-                <tr><td class="label-cell" style="text-align:center; width: auto;">Class</td></tr>
-                <tr><td style="font-size: 24px; font-weight: bold; color: #5a3d8c; padding: 12px;" id="classVal">--</td></tr>
-             </table>
-        </div>
-        <div class="photo-box" id="photoBox">
-            <span style="font-size: 9px; color: #999;">No Photo Found</span>
-        </div>
     </div>
+
+    <div class="class-box-container" style="flex: 0 0 15%; border: 1px solid #444; text-align: center;">
+        <div class="label-cell" style="width: 100%; text-align: center; border-bottom: 1px solid #444;">Class</div>
+        <div style="font-size: 32px; font-weight: bold; color: #5a3d8c; padding: 15px 0;" id="classVal">--</div>
+    </div>
+
+    <div class="photo-box" id="photoBox" style="flex: 0 0 100px; margin-left: auto;">
+        <span style="font-size: 9px; color: #999;">No Photo Found</span>
+    </div>
+</div>
+
 
     <table class="subject-table">
         <thead>
