@@ -2,125 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
-    /* A4 Preparation */
     @page { size: A4; margin: 0; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f0f0; padding: 0; margin: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; }
     
     .page-border {
       background: white;
-      width: 210mm; /* Strict A4 Width */
-      min-height: 297mm; /* Strict A4 Height */
-      margin: 10mm auto;
-      padding: 15mm;
+      width: 210mm;
+      height: 297mm; /* Strict A4 lock */
+      margin: auto;
+      padding: 8mm 12mm;
       box-sizing: border-box;
-      border: 4px double darkgreen;
+      border: 3px double darkgreen;
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
     }
 
-    .watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-30deg);
-      opacity: 0.07;
-      width: 500px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    form { position: relative; z-index: 1; }
-
-    /* Header Section */
     .header-container {
       display: flex;
       align-items: center;
-      border-bottom: 3px solid darkgreen;
-      padding-bottom: 15px;
-      margin-bottom: 20px;
+      border-bottom: 2px solid darkgreen;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
     }
-    .school-logo { width: 90px; height: 90px; margin-right: 25px; }
-    .header-text { text-align: center; flex-grow: 1; }
-    .header-text h1 { margin: 0; font-size: 24px; color: darkgreen; text-transform: uppercase; letter-spacing: 1px; }
-    .header-text h2 { margin: 5px 0; font-size: 18px; color: #1a5d1a; }
-    .header-text p { margin: 2px 0; font-size: 12px; color: #333; font-weight: 500; }
+    .school-logo { width: 65px; height: 65px; margin-right: 15px; }
+    .header-text h1 { margin: 0; font-size: 19px; color: darkgreen; text-transform: uppercase; }
+    .header-text p { margin: 1px 0; font-size: 10px; color: #333; }
 
-    .form-title {
-      text-align: center;
-      text-decoration: underline;
-      font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 25px;
-      text-transform: uppercase;
-    }
+    .form-title { text-align: center; font-weight: bold; font-size: 15px; margin-bottom: 8px; text-decoration: underline; }
 
-    h3 { 
-      font-size: 14px; 
-      margin: 20px 0 12px 0; 
-      background: #e8f5e9; 
-      padding: 6px 12px;
-      border-left: 5px solid darkgreen;
-      text-transform: uppercase;
-    }
+    h3 { font-size: 11px; margin: 6px 0 4px 0; background: #f0f9f0; padding: 2px 8px; border-left: 3px solid darkgreen; text-transform: uppercase; }
 
-    /* Grid Layout */
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 12px; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 4px; }
     .field-group { display: flex; flex-direction: column; }
     
-    label { font-weight: bold; font-size: 11px; margin-bottom: 4px; color: #222; }
-    input, select, textarea { 
-      padding: 7px; 
-      font-size: 13px; 
-      border: 1px solid #aaa; 
-      border-radius: 3px; 
-      background: rgba(255, 255, 255, 0.9);
-    }
+    label { font-weight: bold; font-size: 9.5px; margin-bottom: 1px; color: #333; }
+    input, select { padding: 3px; font-size: 11.5px; border: 1px solid #999; border-radius: 2px; }
 
     .photo-box {
-      width: 120px;
-      height: 140px;
-      border: 2px solid #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      width: 95px;
+      height: 105px;
+      border: 1px solid #000;
+      text-align: center;
+      font-size: 8px;
       background: #fff;
-      font-size: 10px;
-      font-weight: bold;
     }
 
     .declaration-box {
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: 10px;
+      line-height: 1.25;
       text-align: justify;
-      margin-top: 25px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      background: #fafafa;
-      border-radius: 4px;
+      margin-top: 8px;
+      border: 1px solid #ddd;
+      padding: 6px;
     }
 
-    .sig-section { margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; }
-    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 12px; font-weight: bold; padding-top: 8px; }
+    .sig-section { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 12px; }
+    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 9px; font-weight: bold; padding-top: 3px; margin: 0 10px; }
 
-    /* Office Use Only - Highlighted */
-    #officeSection { 
-      background: #fff9f9; 
-      padding: 15px; 
-      border: 1px solid #ffcccc; 
-      margin-top: 30px; 
-    }
-
-    .no-print { margin-top: 30px; text-align: center; }
-    button { padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 5px; border: none; }
+    #officeSection { border: 1px dashed darkred; padding: 6px; margin-top: 8px; background: #fffcfc; }
 
     @media print {
-      body { background: white; }
-      .page-border { margin: 0; box-shadow: none; border: 2px solid darkgreen; }
+      body { background: none; }
+      .page-border { margin: 0; border: 2px solid darkgreen; }
       .no-print { display: none !important; }
       #officeSection { display: block !important; }
     }
@@ -128,111 +72,101 @@
 </head>
 <body>
 
-<div class="page-border" id="printArea">
-  <img src="logo.png" class="watermark" alt="GPS Logo Watermark">
-
+<div class="page-border">
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="header-text">
-      <h1>Government Primary School</h1>
-      <h2>Pethgam Wagoora 193109</h2>
-      <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora</p>
-      <p>E-mail: pspethgam@gmail.com | Udise Code: 01022202207 | Contact: 959644988</p>
+      <h1>Government Primary School Pethgam Wagoora</h1>
+      <p>Udise Code: 01022202207 | E-mail: pspethgam@gmail.com | Contact: 959644988</p>
+      <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora, Baramulla, J&K</p>
     </div>
   </div>
 
-  <div class="form-title">Student Admission Form</div>
+  <div class="form-title">STUDENT ADMISSION FORM (Session 2026)</div>
 
   <form id="admissionForm">
-    <div class="row" style="grid-template-columns: 1fr 1fr 130px;">
+    <div class="row" style="grid-template-columns: 1fr 1fr 100px;">
       <div class="field-group" style="grid-column: span 2;">
-        <label>Full Name of Student (In Block Letters)</label>
-        <input type="text" name="studentName" required style="text-transform: uppercase;">
-        
-        <label style="margin-top:10px;">Name (As per Aadhaar Card)</label>
+        <label>Full Name of Student</label>
+        <input type="text" name="studentName" required>
+        <label style="margin-top:3px">Name (As per Aadhaar)</label>
         <input type="text" name="aadhaarName">
-
-        <div class="row" style="margin-top:10px; grid-template-columns: 1fr 2fr;">
-            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()" required></div>
-            <div class="field-group"><label>Date of Birth (In Words)</label><input type="text" id="dobWords" name="dobWords" readonly></div>
+        <div class="row" style="margin-top:3px">
+            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
+            <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <div class="photo-box">
-          <img id="photoPreview" style="max-width:100%; max-height:100%; display:none;">
-          <span id="photoText">PASTE RECENT<br>PASSPORT SIZE<br>PHOTOGRAPH</span>
-          <input type="file" accept="image/*" onchange="previewPhoto(event)" class="no-print" style="width: 100%; font-size: 9px; margin-top: 5px;">
-        </div>
+      <div class="photo-box">
+        <img id="photoPreview" style="max-width:100%; max-height:75px; display:none;">
+        <p id="photoTxt">Affix Passport Photo</p>
+        <input type="file" onchange="previewPhoto(event)" class="no-print" style="width:85px; font-size:7px;">
       </div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Gender</label><select name="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-      <div class="field-group"><label>Blood Group</label><select name="bloodGroup"><option value="">Unknown</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
-      <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option></select></div>
+      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
+      <div class="field-group"><label>Blood Group</label><input type="text" name="bloodGroup"></div>
+      <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
     </div>
 
     <div class="row">
-        <div class="field-group"><label>Class Seeking Admission</label><select name="studentClass" required><option value="">Select Class</option><option>Pre-Primary (3+)</option><option>Pre-Primary (4+)</option><option>Balvatika (5+)</option><option>Class 1st</option><option>Class 2nd</option><option>Class 3rd</option><option>Class 4th</option><option>Class 5th</option></select></div>
-        <div class="field-group"><label>Aadhaar Number</label><input type="text" name="aadhaarNo" maxlength="12"></div>
-        <div class="field-group"><label>PEN Number / APAAR ID</label><input type="text" name="penNumber"></div>
+        <div class="field-group"><label>Class Seeking</label><input type="text" name="studentClass"></div>
+        <div class="field-group"><label>Aadhaar Number (12 Digits)</label><input type="text" name="aadhaarNo" pattern="\d{12}" title="12 digits required" maxlength="12"></div>
+        <div class="field-group"><label>APAAR / PEN ID (12 Digits)</label><input type="text" name="penId" pattern="\d{12}" title="12 digits required" maxlength="12"></div>
     </div>
 
-    <h3>Parent / Guardian Information</h3>
+    <h3>Parental Information</h3>
     <div class="row">
         <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
         <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
-        <div class="field-group"><label>Primary Contact Number</label><input type="tel" name="contact"></div>
+        <div class="field-group"><label>Contact No</label><input type="tel" name="contact"></div>
     </div>
 
-    <h3>Bank Details (For DBT/Scholarships)</h3>
+    <h3>Bank Details</h3>
     <div class="row">
-        <div class="field-group"><label>Bank Account Number</label><input type="text" name="bankAcc"></div>
-        <div class="field-group"><label>Bank Name & Branch</label><input type="text" name="bankBranch"></div>
-        <div class="field-group"><label>IFSC Code</label><input type="text" name="ifsc" style="text-transform: uppercase;"></div>
+        <div class="field-group"><label>Account No (16 Digits)</label><input type="text" name="bankAcc" pattern="\d{16}" title="16 digits required" maxlength="16"></div>
+        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" title="11 characters required" maxlength="11" style="text-transform:uppercase"></div>
+        <div class="field-group"><label>Bank Name</label><input type="text" name="bankName"></div>
     </div>
 
     <h3>Residential Address</h3>
     <div class="row">
-        <div class="field-group"><label>Mohallah / House No.</label><input type="text" name="mohallah"></div>
+        <div class="field-group"><label>Mohallah / House No</label><input type="text" name="mohallah"></div>
         <div class="field-group"><label>Village / Ward</label><input type="text" name="village"></div>
         <div class="field-group"><label>Tehsil</label><input type="text" name="tehsil" value="Wagoora"></div>
     </div>
     <div class="row">
-        <div class="field-group"><label>District</label><input type="text" name="district" value="Baramulla"></div>
+        <div class="field-group"><label>District</label><input type="text" name="dist" value="Baramulla"></div>
         <div class="field-group"><label>Pin Code</label><input type="text" name="pincode" value="193109"></div>
-        <div class="field-group"><label>State / UT</label><input type="text" name="state" value="Jammu & Kashmir"></div>
+        <div class="field-group"><label>State</label><input type="text" name="state" value="Jammu & Kashmir"></div>
     </div>
 
     <div class="declaration-box">
-        <input type="checkbox" required style="transform: scale(1.2); margin-right: 10px;">
-        <strong>Parents Declaration:</strong> 
-        I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+        <input type="checkbox" required> <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
     </div>
 
     <div class="sig-section">
         <div></div><div></div>
-        <div class="sig-placeholder" style="margin-top: 40px;">Signature of Parent/Guardian</div>
+        <div class="sig-placeholder">Signature of Parent</div>
     </div>
 
     <div id="officeSection" style="display:none;">
-      <h3 style="color: darkred; border-left-color: darkred;">For Office Use Only</h3>
+      <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
       <div class="row">
-        <div class="field-group"><label>Admission Number (S.No)</label><input type="text" id="admNo" name="admNo"></div>
-        <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
-        <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207" readonly></div>
+        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo"></div>
+        <div class="field-group"><label>Admission Date</label><input type="date" name="admDate"></div>
+        <div class="field-group"><label>Udise Code (11 Digits)</label><input type="text" name="udise" value="01022202207" pattern="\d{11}" maxlength="11" readonly></div>
       </div>
-      <div class="field-group"><label>Teacher's Remarks</label><textarea name="remarks" rows="1"></textarea></div>
-      <div class="sig-section">
+      <div class="sig-section" style="margin-top: 20px;">
         <div class="sig-placeholder">Admission Incharge</div>
         <div></div>
         <div class="sig-placeholder">Head of Institution (HOI)</div>
       </div>
     </div>
 
-    <div class="no-print" style="display: flex; gap: 15px; justify-content: center;">
-      <button type="button" onclick="submitAdmission()" style="background: darkgreen; color: white;">Save Student Record</button>
-      <button type="button" onclick="window.print()" style="background: #333; color: white;">Print / Save as PDF</button>
+    <div class="no-print" style="text-align:center; margin-top:10px;">
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:6px 15px; border:none; border-radius:3px; cursor:pointer;">Save Data</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:6px 15px; border:none; border-radius:3px; cursor:pointer;">Print to PDF</button>
     </div>
   </form>
 </div>
@@ -240,7 +174,7 @@
 <script>
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
-  const txt = document.getElementById("photoText");
+  const txt = document.getElementById("photoTxt");
   if (event.target.files[0]) {
     img.src = URL.createObjectURL(event.target.files[0]);
     img.style.display = "block";
@@ -252,14 +186,8 @@ function convertDOB() {
     const dob = document.getElementById("dob").value;
     if (!dob) return;
     const dateObj = new Date(dob);
-    const days = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth', 'Nineteenth', 'Twentieth', 'Twenty-First', 'Twenty-Second', 'Twenty-Third', 'Twenty-Fourth', 'Twenty-Fifth', 'Twenty-Sixth', 'Twenty-Seventh', 'Twenty-Eighth', 'Twenty-Ninth', 'Thirtieth', 'Thirty-First'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    const day = dateObj.getDate();
-    const month = months[dateObj.getMonth()];
-    const year = dateObj.getFullYear();
-    
-    document.getElementById("dobWords").value = `${days[day]} of ${month}, ${year}`;
+    document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
 window.onload = function() {
@@ -277,15 +205,12 @@ window.onload = function() {
         if (student) {
             const inputs = document.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
-                if (student[input.name] !== undefined) {
-                    input.value = student[input.name];
-                }
+                if (student[input.name] !== undefined) input.value = student[input.name];
             });
             convertDOB();
         }
     } else {
-        const year = new Date().getFullYear();
-        document.getElementById("admNo").value = "GPSPW/" + year + "/" + Math.floor(100 + Math.random() * 899);
+        document.getElementById("admNo").value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
     }
 };
 
@@ -298,7 +223,6 @@ function submitAdmission() {
     const data = Object.fromEntries(formData.entries());
 
     data.status = role ? "Approved" : "Pending Approval";
-    
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
     const index = records.findIndex(r => r.admNo === data.admNo);
 
@@ -312,4 +236,4 @@ function submitAdmission() {
 </script>
 </body>
 </html>
-        
+      
