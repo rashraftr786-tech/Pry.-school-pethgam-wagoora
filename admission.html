@@ -187,18 +187,17 @@
 </div>
 
 <script>
-// 1. PHOTO PREVIEW: Immediately converts to Base64 so it's ready for saving
+// 1. PHOTO PREVIEW (Base64)
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
   const txt = document.getElementById("photoTxt");
   const file = event.target.files[0];
-  
   if (file) {
     const reader = new FileReader();
-    reader.onload = function(e) {
-      img.src = e.target.result; // This is the Base64 string
+    reader.onload = (e) => {
+      img.src = e.target.result;
       img.style.display = "block";
-      txt.style.display = "none";
+      if(txt) txt.style.display = "none";
     };
     reader.readAsDataURL(file);
   }
@@ -213,29 +212,29 @@ function convertDOB() {
     document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
-// 3. INITIALIZATION: Handles Edit Mode, Roles, and Auto-ID
+// 3. INITIALIZATION (Fixes Blank Form)
 window.onload = function() {
     const role = localStorage.getItem("userRole");
     const params = new URLSearchParams(window.location.search);
-    const studentId = params.get('id');
+    const studentId = params.get('id'); // This catches the ID from the "View" button
 
-    // Restore Office Section ONLY if Role is correct
+    // Show/Hide Office Section
     const officeSection = document.getElementById("officeSection");
     if (officeSection) {
-        if (role === "HOI" || role === "INCHARGE") {
-            officeSection.style.display = "block";
-        } else {
-            officeSection.style.display = "none";
-        }
+        officeSection.style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
     }
 
     if (studentId) {
-        // EDIT MODE: Load existing data
+        console.log("Attempting to load student ID:", studentId);
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
-        const student = records.find(r => r.admNo === studentId);
         
+        // Find the student by matching the admNo string
+        const student = records.find(r => r.admNo.trim() === studentId.trim());
+
         if (student) {
-            // Manually map fields to ensure they populate even without 'name' attributes
+            console.log("Student Found:", student);
+            // Manually map fields to HTML IDs
+            // Make sure your HTML IDs match these exactly!
             if(document.getElementById("admNo")) document.getElementById("admNo").value = student.admNo;
             if(document.getElementById("studentName")) document.getElementById("studentName").value = student.studentName || "";
             if(document.getElementById("fatherName")) document.getElementById("fatherName").value = student.fatherName || "";
@@ -249,14 +248,19 @@ window.onload = function() {
             if (student.studentPhoto) {
                 const img = document.getElementById("photoPreview");
                 const txt = document.getElementById("photoTxt");
-                img.src = student.studentPhoto;
-                img.style.display = "block";
-                txt.style.display = "none";
+                if(img) {
+                    img.src = student.studentPhoto;
+                    img.style.display = "block";
+                    if(txt) txt.style.display = "none";
+                }
             }
             convertDOB();
+        } else {
+            console.error("No student found in localStorage with ID:", studentId);
+            alert("Error: Student record not found.");
         }
     } else {
-        // NEW MODE: Generate ID only if one doesn't exist
+        // NEW FORM: Generate ID
         const admInput = document.getElementById("admNo");
         if (admInput && !admInput.value) {
             admInput.value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
@@ -264,7 +268,7 @@ window.onload = function() {
     }
 };
 
-// 4. SUBMISSION: Handles Update vs New and Strict Approval
+// 4. SUBMISSION
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
     if(!form.checkValidity()) { form.reportValidity(); return; }
@@ -273,13 +277,6 @@ function submitAdmission() {
     const admNoValue = document.getElementById("admNo").value;
     const photoPreview = document.getElementById("photoPreview");
 
-    // STRICT APPROVAL LOGIC
-    let finalStatus = "Pending Approval";
-    if (role === "HOI" || role === "INCHARGE") {
-        finalStatus = "Approved";
-    }
-
-    // Build the data object manually
     const data = {
         admNo: admNoValue,
         studentName: document.getElementById("studentName").value,
@@ -290,29 +287,27 @@ function submitAdmission() {
         dobWords: document.getElementById("dobWords").value,
         apaarId: document.getElementById("apaarId") ? document.getElementById("apaarId").value : "",
         penId: document.getElementById("penId") ? document.getElementById("penId").value : "",
-        status: finalStatus,
-        studentPhoto: photoPreview.src.startsWith("data:image") ? photoPreview.src : ""
+        status: (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval",
+        studentPhoto: (photoPreview && photoPreview.src.startsWith("data:image")) ? photoPreview.src : ""
     };
 
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
-    
-    // Check if we are UPDATING or ADDING NEW
     const index = records.findIndex(r => r.admNo === admNoValue);
 
     if (index !== -1) {
-        // If updating, and no new photo was selected, keep the old one
+        // Preserve photo if no new one was uploaded
         if (!data.studentPhoto && records[index].studentPhoto) {
             data.studentPhoto = records[index].studentPhoto;
         }
-        records[index] = data; // Overwrite existing
+        records[index] = data; // Update existing
     } else {
-        records.push(data); // Add new
+        records.push(data); // Create new
     }
 
     localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Data Saved Successfully!");
-
-    // Redirect based on role
+    alert("Record Processed Successfully!");
+    
+    // Redirect
     if (role === "HOI" || role === "INCHARGE") {
         window.location.href = "admin/dashboard.html";
     } else {
@@ -320,7 +315,6 @@ function submitAdmission() {
     }
 }
 </script>
-
   
 </body>
 </html>
