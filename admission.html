@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 10px; margin: 0; }
@@ -17,16 +18,15 @@
     .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 6px; }
     .field-group { display: flex; flex-direction: column; }
     label { font-weight: bold; font-size: 10px; margin-bottom: 2px; color: #444; }
-    input[type="text"], input[type="date"], input[type="tel"], select, textarea { padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 2px; background: rgba(255, 255, 255, 0.8); }
-    .photo-box { width: 100px; height: 115px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; background: #fff; }
-    .declaration-box { font-size: 10px; line-height: 1.4; text-align: justify; margin-top: 10px; border: 1px solid #eee; padding: 8px; background: rgba(255, 255, 255, 0.7); }
+    input, select, textarea { padding: 4px; font-size: 12px; border: 1px solid #ccc; border-radius: 2px; }
+    .photo-box { width: 100px; height: 115px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; background: #fff; }
     .sig-placeholder { border-top: 1px solid #000; margin-top: 30px; text-align: center; font-size: 11px; font-weight: bold; padding-top: 5px; }
-    @media print { .no-print, input[type="file"] { display: none !important; } #officeSection { display: block !important; margin-top: 20px; border-top: 2px dashed #000; padding-top: 10px; } .page-border { border: 2px solid #000; box-shadow: none; margin: 0; } input, select, textarea { border: none !important; border-bottom: 1px dotted #000 !important; } }
+    @media print { .no-print, input[type="file"] { display: none !important; } #officeSection { display: block !important; } }
   </style>
 </head>
 <body>
 
-<div class="page-border" id="printArea">
+<div class="page-border">
   <img src="logo.png" class="watermark" alt="watermark">
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
@@ -34,7 +34,6 @@
       <h1>Government Primary School</h1>
       <h2 style="margin:0; font-size: 18px; color: darkgreen;">Pethgam Wagoora 193109</h2>
       <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora</p>
-      <p>E-mail: pspethgam@gmail.com | Udise Code: 01022202207 | Contact: 959644988</p>
     </div>
   </div>
 
@@ -45,8 +44,6 @@
       <div class="field-group" style="grid-column: span 2;">
         <label>Full Name of Student</label>
         <input type="text" name="studentName" required>
-        <label>Name (As per Aadhaar)</label>
-        <input type="text" name="aadhaarName">
         <div class="row" style="margin-top:5px">
             <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
             <div class="field-group" style="grid-column: span 2;"><label>DOB in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
@@ -55,50 +52,21 @@
       <div style="display: flex; justify-content: flex-end;">
         <div class="photo-box">
           <img id="photoPreview" style="max-width:100%; max-height:100%; display:none;">
-          <input type="file" accept="image/*" onchange="previewPhoto(event)" style="font-size:9px;">
+          <input type="file" accept="image/*" onchange="previewPhoto(event)" class="no-print">
         </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
-      <div class="field-group"><label>Blood Group</label><select name="bloodGroup"><option value="">Select</option><option>A+</option><option>B+</option><option>O+</option><option>AB+</option></select></div>
+      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
       <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+      <div class="field-group"><label>Class Seeking</label><input type="text" name="studentClass"></div>
     </div>
 
     <div class="row">
-      <div class="field-group"><label>Class Seeking</label><select name="studentClass"><option value="">Select Class</option><option>Class 1</option><option>Class 2</option><option>Class 3</option></select></div>
-    </div>
-
-    <div class="row">
-      <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
-      <div class="field-group"><label>Father's Contact</label><input type="tel" name="fatherContact"></div>
-      <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
-    </div>
-
-    <div class="row">
-      <div class="field-group"><label>Aadhaar Number</label><input type="text" name="aadhaarNumber"></div>
-      <div class="field-group"><label>PEN Number</label><input type="text" name="penNumber"></div>
-      <div class="field-group"><label>APAAR ID</label><input type="text" name="apaarId"></div>
-    </div>
-
-    <div class="row">
-      <div class="field-group"><label>Bank Account No</label><input type="text" name="bankAcc"></div>
-      <div class="field-group"><label>Bank & Branch</label><input type="text" name="bankBranch"></div>
-      <div class="field-group"><label>IFSC Code</label><input type="text" name="ifsc"></div>
-    </div>
-
-    <h3>Residential Address</h3>
-    <div class="row">
-      <div class="field-group"><label>Mohallah</label><input type="text" name="mohallah" required></div>
-      <div class="field-group"><label>Village</label><input type="text" name="village" required></div>
-      <div class="field-group"><label>Tehsil</label><input type="text" name="tehsil" required></div>
-      <div class="field-group"><label>District</label><input type="text" name="district" required></div>
-      <div class="field-group"><label>Pin Code</label><input type="text" name="pincode"></div>
-    </div>
-    
-    <div class="declaration-box">
-      <input type="checkbox" required> <strong>Parents Declaration:</strong> I hereby declare that the information provided is true.
+        <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
+        <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
+        <div class="field-group"><label>Contact No</label><input type="tel" name="contact"></div>
     </div>
 
     <div id="officeSection" style="display:none;">
@@ -106,91 +74,79 @@
       <div class="row">
         <div class="field-group"><label>Admission Number</label><input type="text" id="admNo" name="admNo"></div>
         <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
-        <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207"></div>
+        <div class="field-group"><label>Status</label><input type="text" name="status" id="statusField" readonly></div>
       </div>
       <div class="field-group"><label>Remarks</label><textarea name="remarks" rows="1"></textarea></div>
     </div>
 
-    <div class="no-print" style="text-align:center; margin-top:15px; display: flex; gap: 10px; justify-content: center;">
-      <button type="button" class="print-btn" onclick="submitAdmission()" style="background: darkgreen; color: white; padding: 10px;">Submit Admission Form</button>
-      <button type="button" class="print-btn" onclick="saveAndPrint()" style="background: #333; color: white; padding: 10px;">Save & Print PDF</button>
+    <div class="no-print" style="text-align:center; margin-top:20px;">
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:10px 20px; cursor:pointer; border:none;">Save & Submit</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:10px 20px; cursor:pointer; border:none;">Print to PDF</button>
     </div>
   </form>
 </div>
 
 <script>
-// Consolidated Script Logic
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
-  if (event.target.files && event.target.files[0]) {
+  if (event.target.files[0]) {
     img.src = URL.createObjectURL(event.target.files[0]);
     img.style.display = "block";
   }
 }
 
 function convertDOB() {
-    const dobInput = document.getElementById("dob").value;
-    if (!dobInput) return;
-    const dateObj = new Date(dobInput);
-    const days = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty', 'Twenty One', 'Twenty Two', 'Twenty Three', 'Twenty Four', 'Twenty Five', 'Twenty Six', 'Twenty Seven', 'Twenty Eight', 'Twenty Nine', 'Thirty', 'Thirty One'];
+    const dob = document.getElementById("dob").value;
+    if (!dob) return;
+    const dateObj = new Date(dob);
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById("dobWords").value = `${days[dateObj.getDate()]} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
 window.onload = function() {
     const role = localStorage.getItem("userRole");
     const params = new URLSearchParams(window.location.search);
     const studentId = params.get('id');
-    const officeSection = document.getElementById("officeSection");
 
+    // Show office use for Admin
     if (role === "HOI" || role === "INCHARGE") {
-        if (officeSection) officeSection.style.display = "block";
+        document.getElementById("officeSection").style.display = "block";
     }
 
     if (studentId) {
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
         const student = records.find(r => r.admNo === studentId);
         if (student) {
-            const allInputs = document.querySelectorAll('input, select, textarea');
-            allInputs.forEach(input => {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
                 if (student[input.name]) input.value = student[input.name];
             });
-            document.getElementById("admNo").value = student.admNo;
             convertDOB();
         }
     } else {
-        document.getElementById("admNo").value = "GPSPW-2026-" + Math.floor(1000 + Math.random() * 9000);
+        document.getElementById("admNo").value = "GPSPW-" + Math.floor(1000 + Math.random() * 9000);
     }
 };
 
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
-    if(!form.checkValidity()) { form.reportValidity(); return; }
-
     const role = localStorage.getItem("userRole");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    data.status = (role) ? "Approved" : "Pending Approval";
-
+    data.status = role ? "Approved" : "Pending Approval";
+    
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
     const index = records.findIndex(r => r.admNo === data.admNo);
 
-    if (index !== -1) {
-        records[index] = data;
-        alert("Record Updated!");
-    } else {
-        records.push(data);
-        alert("Form Submitted!");
-    }
+    if (index !== -1) records[index] = data;
+    else records.push(data);
 
     localStorage.setItem("admissions", JSON.stringify(records));
+    alert("Data Saved Successfully!");
     if (role) window.location.href = "admin/dashboard.html";
 }
-
-function saveAndPrint() { window.print(); }
 </script>
-
 </body>
 </html>
-    
+          
