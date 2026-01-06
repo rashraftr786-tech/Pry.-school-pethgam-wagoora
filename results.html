@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Results | GPS Pethgam Wagoora</title>
+  <style>
+    /* ... (Include your header, menu, and footer styles here) ... */
+    
+    .result-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    .search-box input {
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
+      border: 2px solid darkgreen;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .search-btn {
+      background: darkgreen;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .search-btn:hover { background: #1b5e20; }
+    
+    .instruction { font-size: 14px; color: #666; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+  <header class="school-header">
+    <img src="logo.png" alt="School Logo" class="school-logo">
+    <div class="school-title">
+      <h1>Government Primary School</h1>
+      <h2>Pethgam Wagoora – 193109</h2>
+      <p>Zone Wagoora · District Baramulla</p>
+    </div>
+  </header>
+
+  <nav class="menu">
+    <a href="index.html">Home</a>
+    <a href="admission.html">Admission</a>
+    <a href="results.html" style="color: #ffeb3b;">Results</a>
+    <a href="mdm.html">MDM</a>
+    <a href="notice.html">Notice</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div class="result-container">
+    <h2 style="color: darkgreen;">Check Student Result</h2>
+    <p class="instruction">Enter the Admission Number provided during enrollment to view and download the official Mark Sheet.</p>
+    
+    <div class="search-box">
+      <input type="text" id="admInput" placeholder="Enter Admission No. (e.g., GPSPW/2026/123)">
+      <br>
+      <button class="search-btn" onclick="redirectToMarksheet()">View Mark Sheet</button>
+    </div>
+  </div>
+
+  <script>
+    function redirectToMarksheet() {
+      const admNo = document.getElementById('admInput').value.trim();
+      
+      if (!admNo) {
+        alert("Please enter a valid Admission Number.");
+        return;
+      }
+
+      // Check if this student actually exists in your local database
+      const records = JSON.parse(localStorage.getItem("results")) || [];
+      const studentExists = records.some(r => r.admNo === admNo);
+
+      if (studentExists) {
+        // Redirect to your marks-sheet.html with the ID as a parameter
+        window.location.href = `marks-sheet.html?admNo=${encodeURIComponent(admNo)}`;
+      } else {
+        alert("Result not found. Please verify the Admission Number or contact school administration.");
+      }
+    }
+  </script>
+
+  </body>
+</html>
