@@ -1,107 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Official Marksheet | GPS Pethgam Wagoora</title>
-<style>
-  @page { size: A4; margin: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f2f2f2; margin:0; padding: 20px; }
-  
-  .sheet {
-    width:210mm;
-    height:297mm;
-    margin:auto;
-    background:white;
-    padding:15mm;
-    box-sizing: border-box;
-    border:10px double #0a6b3c;
-    position: relative;
-  }
+  <meta charset="UTF-8">
+  <title>Report Card | GPS Pethgam Wagoora</title>
+  <style>
+    @page { size: A4; margin: 10mm; }
+    body { font-family: sans-serif; margin: 0; font-size: 11px; }
+    .card { width: 190mm; border: 2px solid #5a3d8c; margin: auto; }
+    
+    .top-header { background: #5a3d8c; color: white; display: flex; align-items: center; padding: 10px; }
+    .logo { width: 60px; height: 60px; margin-right: 15px; background: white; border-radius: 50%; }
+    .title-text { text-align: center; flex-grow: 1; }
+    
+    .info-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; border-bottom: 1px solid #000; }
+    .info-item { border: 0.5px solid #ccc; padding: 4px; display: flex; }
+    .info-item b { width: 90px; color: #5a3d8c; }
 
-  /* Header Styling */
-  .header-box { text-align: center; border-bottom: 2px solid #0a6b3c; padding-bottom: 10px; margin-bottom: 15px; }
-  .header-box h1 { margin: 0; color: #0a6b3c; font-size: 24px; text-transform: uppercase; }
-  .header-box p { margin: 2px 0; font-size: 12px; font-weight: bold; }
-
-  .photo-area {
-    position: absolute;
-    top: 75px;
-    right: 60px;
-    width: 90px;
-    height: 100px;
-    border: 1px solid #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-
-  .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  .info-table td { border: none; padding: 6px; text-align: left; font-size: 14px; }
-  .info-table b { color: #333; }
-
-  .marks-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  .marks-table th, .marks-table td { border: 1px solid #333; padding: 10px; text-align: center; }
-  .marks-table th { background: #f0f0f0; }
-  
-  .section-title { background: #e8f5e9; font-weight: bold; text-align: left !important; padding-left: 15px; }
-
-  .footer { margin-top: 50px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; font-size: 13px; }
-  .sig { border-top: 1px solid #000; padding-top: 5px; font-weight: bold; }
-
-  .grading-scale { margin-top: 30px; font-size: 10px; border: 1px solid #ddd; padding: 5px; width: fit-content; }
-
-  .print-btn { margin: 15px auto; display: block; padding: 10px 25px; background: #0a6b3c; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold;}
-  @media print { .print-btn { display: none; } body { background: white; padding: 0; } .sheet { border: 5px solid #0a6b3c; margin: 0; } }
-</style>
+    table.main-table { width: 100%; border-collapse: collapse; text-align: center; }
+    table.main-table th, table.main-table td { border: 1px solid #000; padding: 3px; }
+    .bg-purple { background: #dcd0ff; font-weight: bold; }
+    .bg-green { background: #e8f5e9; }
+    
+    .bottom-section { display: grid; grid-template-columns: 1fr 1fr 1fr; height: 180px; }
+    .box { border: 1px solid #000; padding: 5px; }
+    
+    .footer-sigs { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 40px; text-align: center; border-top: 1px solid #000; padding-top: 5px; font-weight: bold; }
+  </style>
 </head>
 <body>
 
-<div class="sheet">
-  <div class="header-box">
-    <h1>Government Primary School</h1>
-    <p>Pethgam Wagoora, Baramulla - 193109</p>
-    <p>Udise Code: 01022202207 | Session: 2025-2026</p>
-    <h2 style="margin: 10px 0 0 0; text-decoration: underline;">ANNUAL PROGRESS REPORT</h2>
+<div class="card">
+  <div class="top-header">
+    <img src="logo.png" class="logo">
+    <div class="title-text">
+      <h2 style="margin:0">GOVERNMENT PRIMARY SCHOOL</h2>
+      <h3 style="margin:0">PETHGAM WAGOORA 193109</h3>
+    </div>
   </div>
 
-  <div class="photo-area">
-    <img id="studentPhoto" src="" alt="Student Photo">
-  </div>
+  <div id="studentInfo" class="info-grid"></div>
 
-  <table class="info-table">
-    <tr>
-      <td width="15%"><b>Name:</b></td><td width="35%" id="sname" style="border-bottom: 1px dotted #000;"></td>
-      <td width="15%"><b>Adm No:</b></td><td width="15%" id="admNo" style="border-bottom: 1px dotted #000;"></td>
+  <table class="main-table">
+    <tr class="bg-purple">
+      <th>Subject</th>
+      <th>FA1-FA6 (30)</th>
+      <th>CCA (20)</th>
+      <th>SA (50)</th>
+      <th>Total (100)</th>
+      <th>Grade</th>
+      <th>Proficiency</th>
     </tr>
-    <tr>
-      <td><b>Parentage:</b></td><td id="parentage" style="border-bottom: 1px dotted #000;"></td>
-      <td><b>Class:</b></td><td id="class" style="border-bottom: 1px dotted #000;"></td>
-    </tr>
-    <tr>
-      <td><b>DOB:</b></td><td id="dob" style="border-bottom: 1px dotted #000;"></td>
-      <td><b>Roll No:</b></td><td id="rollNo" style="border-bottom: 1px dotted #000;"></td>
+    <tbody id="marksBody"></tbody>
+    <tr class="bg-purple">
+      <td>Grand Total</td><td id="gtFa"></td><td id="gtCca"></td><td id="gtSa"></td><td id="gtTotal"></td><td id="gtGrade"></td><td></td>
     </tr>
   </table>
 
-  <table class="marks-table">
-    <thead>
-      <tr>
-        <th width="40%">Subject</th>
-        <th width="30%">Max Marks</th>
-        <th width="30%">Marks Obtained</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td class="section-title">English</td><td>100</td><td id="english"></td></tr>
-      <tr><td class="section-title">Mathematics</td><td>100</td><td id="math"></td></tr>
-      <tr><td class="section-title">EVS / Science</td><td>100</td><td id="evs"></td></tr>
-      <tr><td class="section-title">Urdu</td><td>100</td><td id="urdu"></td></tr>
-      <tr><td class="section-title">Kashmiri</td><td>100</td><td id="kashmiri"></td></tr>
-      <tr style="background: #f9f9f9; font-weight: bold;">
-        <td>GRAND TOTAL</td><td>500</td><td id="total"></td>
-      </tr>
-    </tbody>
+  <div class="bottom-section">
+    <div class="box">
+      <b style="color: blue;">Final Results</b><br><br>
+      Total Obtained: <span id="resTotal"></span><br>
+      Max Marks: 500<br>
+      Percentage: <span id="resPerc"></span><br>
+      Grade: <span id="resGrade"></span><br>
+      Result: <b id="resFinal"></b>
+    </div>
+    <div class="box">
+      <b>General Remarks</b><br>
+      <p id="resRemarks" style="font-size: 10px;"></p>
+    </div>
+    <div class="box">
+      <b>Attendance %:</b> <span id="resAtt"></span><br><br>
+      <span>School Rank: <b id="rankS"></b></span><br>
+      <span>Class Rank: <b id="rankC"></b></span>
+    </div>
+  </div>
+
+  <div class="footer-sigs">
+    <div>Sign. Form Teacher</div>
+    <div>Sign. Exam I/C</div>
+    <div>Parents Signature</div>
+    <div>Seal & Sign. Headmaster</div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const admNo = params.get("admNo");
+
+const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+const results = JSON.parse(localStorage.getItem("results")) || [];
+const sInfo = admissions.find(x => x.admNo === admNo);
+const sMarks = results.find(x => x.admNo === admNo);
+
+if(sInfo && sMarks) {
+    document.getElementById('studentInfo').innerHTML = `
+        <div class="info-item"><b>Student Name:</b> ${sInfo.studentName}</div>
+        <div class="info-item"><b>Adm No:</b> ${admNo}</div>
+        <div class="info-item"><b>Roll No:</b> ${sMarks.rollNo}</div>
+        <div class="info-item"><b>Father:</b> ${sInfo.fatherName}</div>
+        <div class="info-item"><b>Class:</b> ${sInfo.studentClass}</div>
+        <div class="info-item"><b>D.O.B:</b> ${sInfo.dob}</div>
+    `;
+
+    let gtFa = 0, gtCca = 0, gtSa = 0, gtTotal = 0;
+    
+    Object.keys(sMarks.marks).forEach(sub => {
+        const m = sMarks.marks[sub];
+        const faSum = m.fa.reduce((a, b) => a + b, 0);
+        const total = faSum + m.cca + m.sa;
+        
+        gtFa += faSum; gtCca += m.cca; gtSa += m.sa; gtTotal += total;
+
+        const grade = total > 85 ? 'A+' : total > 70 ? 'A' : total > 55 ? 'B' : total > 33 ? 'C' : 'E';
+        const prof = total > 70 ? 'Sky' : total > 45 ? 'Mountain' : 'Stream';
+
+        document.getElementById('marksBody').innerHTML += `
+            <tr>
+                <td>${sub}</td><td>${faSum}</td><td>${m.cca}</td><td>${m.sa}</td><td>${total}</td><td>${grade}</td><td>${prof}</td>
+            </tr>`;
+    });
+
+    document.getElementById('gtFa').innerText = gtFa;
+    document.getElementById('gtCca').innerText = gtCca;
+    document.getElementById('gtSa').innerText = gtSa;
+    document.getElementById('gtTotal').innerText = gtTotal;
+    
+    const finalPerc = Math.round(gtTotal / 5);
+    document.getElementById('resTotal').innerText = gtTotal;
+    document.getElementById('resPerc').innerText = finalPerc + "%";
+    document.getElementById('resAtt').innerText = sMarks.attendance || '0';
+    document.getElementById('resRemarks').innerText = sMarks.remarks;
+}
+</script>
+</body>
+</html>
   </table>
 
   <table class="marks-table" style="width: 60%; margin: 0 auto;">
