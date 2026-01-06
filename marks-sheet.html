@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Official Marksheet | GPS Pethgam Wagoora</title>
+<style>
+  @page { size: A4; margin: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f2f2f2; margin:0; padding: 20px; }
+  
+  .sheet {
+    width:210mm;
+    height:297mm;
+    margin:auto;
+    background:white;
+    padding:15mm;
+    box-sizing: border-box;
+    border:10px double #0a6b3c;
+    position: relative;
+  }
+
+  /* Header Styling */
+  .header-box { text-align: center; border-bottom: 2px solid #0a6b3c; padding-bottom: 10px; margin-bottom: 15px; }
+  .header-box h1 { margin: 0; color: #0a6b3c; font-size: 24px; text-transform: uppercase; }
+  .header-box p { margin: 2px 0; font-size: 12px; font-weight: bold; }
+
+  .photo-area {
+    position: absolute;
+    top: 75px;
+    right: 60px;
+    width: 90px;
+    height: 100px;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo-area img { width: 100%; height: 100%; object-fit: cover; }
+
+  .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .info-table td { border: none; padding: 6px; text-align: left; font-size: 14px; }
+  .info-table b { color: #333; }
+
+  .marks-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .marks-table th, .marks-table td { border: 1px solid #333; padding: 10px; text-align: center; }
+  .marks-table th { background: #f0f0f0; }
+  
+  .section-title { background: #e8f5e9; font-weight: bold; text-align: left !important; padding-left: 15px; }
+
+  .footer { margin-top: 50px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; font-size: 13px; }
+  .sig { border-top: 1px solid #000; padding-top: 5px; font-weight: bold; }
+
+  .grading-scale { margin-top: 30px; font-size: 10px; border: 1px solid #ddd; padding: 5px; width: fit-content; }
+
+  .print-btn { margin: 15px auto; display: block; padding: 10px 25px; background: #0a6b3c; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold;}
+  @media print { .print-btn { display: none; } body { background: white; padding: 0; } .sheet { border: 5px solid #0a6b3c; margin: 0; } }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="header-box">
+    <h1>Government Primary School</h1>
+    <p>Pethgam Wagoora, Baramulla - 193109</p>
+    <p>Udise Code: 01022202207 | Session: 2025-2026</p>
+    <h2 style="margin: 10px 0 0 0; text-decoration: underline;">ANNUAL PROGRESS REPORT</h2>
+  </div>
+
+  <div class="photo-area">
+    <img id="studentPhoto" src="" alt="Student Photo">
+  </div>
+
+  <table class="info-table">
+    <tr>
+      <td width="15%"><b>Name:</b></td><td width="35%" id="sname" style="border-bottom: 1px dotted #000;"></td>
+      <td width="15%"><b>Adm No:</b></td><td width="15%" id="admNo" style="border-bottom: 1px dotted #000;"></td>
+    </tr>
+    <tr>
+      <td><b>Parentage:</b></td><td id="parentage" style="border-bottom: 1px dotted #000;"></td>
+      <td><b>Class:</b></td><td id="class" style="border-bottom: 1px dotted #000;"></td>
+    </tr>
+    <tr>
+      <td><b>DOB:</b></td><td id="dob" style="border-bottom: 1px dotted #000;"></td>
+      <td><b>Roll No:</b></td><td id="rollNo" style="border-bottom: 1px dotted #000;"></td>
+    </tr>
+  </table>
+
+  <table class="marks-table">
+    <thead>
+      <tr>
+        <th width="40%">Subject</th>
+        <th width="30%">Max Marks</th>
+        <th width="30%">Marks Obtained</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="section-title">English</td><td>100</td><td id="english"></td></tr>
+      <tr><td class="section-title">Mathematics</td><td>100</td><td id="math"></td></tr>
+      <tr><td class="section-title">EVS / Science</td><td>100</td><td id="evs"></td></tr>
+      <tr><td class="section-title">Urdu</td><td>100</td><td id="urdu"></td></tr>
+      <tr><td class="section-title">Kashmiri</td><td>100</td><td id="kashmiri"></td></tr>
+      <tr style="background: #f9f9f9; font-weight: bold;">
+        <td>GRAND TOTAL</td><td>500</td><td id="total"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="marks-table" style="width: 60%; margin: 0 auto;">
+    <tr>
+      <th class="section-title">Percentage</th><td id="percent"></td>
+      <th class="section-title">Grade</th><td id="grade"></td>
+    </tr>
+    <tr>
+      <th class="section-title">Result</th><td colspan="3" id="result" style="font-weight: bold;"></td>
+    </tr>
+  </table>
+
+  <div class="grading-scale">
+    <b>Grading Scale:</b> A+: 85-100% | A: 70-84% | B: 55-69% | C: 40-54% | D: 33-39% | E: Below 33% (Needs Improvement)
+  </div>
+
+  <div class="footer">
+    <div class="sig">Class Teacher</div>
+    <div class="sig">Exam Incharge</div>
+    <div class="sig">Parent's Signature</div>
+    <div class="sig">Headmaster Stamp</div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">Download Marksheet (PDF)</button>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("admNo");
+
+// 1. Get Student Personal Info from Admission Register
+const admissionRecords = JSON.parse(localStorage.getItem("admissions")) || [];
+const studentInfo = admissionRecords.find(x => x.admNo === studentId);
+
+// 2. Get Academic Marks from Results storage
+const resultRecords = JSON.parse(localStorage.getItem("results")) || [];
+const marksInfo = resultRecords.find(x => x.admNo === studentId);
+
+if(!studentInfo || !marksInfo){
+  alert("Student Data or Result not found in system.");
+} else {
+  // Fill Personal Data
+  document.getElementById("sname").innerText = studentInfo.studentName;
+  document.getElementById("admNo").innerText = studentInfo.admNo;
+  document.getElementById("class").innerText = studentInfo.studentClass;
+  document.getElementById("parentage").innerText = "Mr. " + studentInfo.fatherName;
+  document.getElementById("dob").innerText = studentInfo.dob;
+  document.getElementById("rollNo").innerText = marksInfo.rollNo || "N/A";
+  document.getElementById("studentPhoto").src = studentInfo.studentPhoto || "logo.png";
+
+  // Fill Marks Data
+  let total = 0;
+  const subs = ['english', 'math', 'evs', 'urdu', 'kashmiri'];
+  subs.forEach(sub => {
+    let score = marksInfo.subjects[sub] || 0;
+    document.getElementById(sub).innerText = score;
+    total += parseInt(score);
+  });
+
+  document.getElementById("total").innerText = total;
+  let percent = Math.round((total / 500) * 100);
+  document.getElementById("percent").innerText = percent + "%";
+
+  let grade = percent >= 85 ? "A+" : percent >= 70 ? "A" : percent >= 55 ? "B" : percent >= 40 ? "C" : percent >= 33 ? "D" : "E";
+  document.getElementById("grade").innerText = grade;
+  document.getElementById("result").innerText = percent >= 33 ? "PASSED" : "PROMOTED WITH REMARKS";
+}
+</script>
+</body>
+</html>
