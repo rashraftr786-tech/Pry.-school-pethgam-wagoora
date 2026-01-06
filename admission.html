@@ -12,7 +12,7 @@
       width: 210mm;
       height: 297mm;
       margin: auto;
-      padding: 12mm 15mm;
+      padding: 10mm 15mm;
       box-sizing: border-box;
       border: 3px double darkgreen;
       position: relative;
@@ -22,29 +22,30 @@
       display: flex;
       align-items: center;
       border-bottom: 2px solid darkgreen;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
     }
-    .school-logo { width: 80px; height: 80px; margin-right: 20px; }
-    .header-text h1 { margin: 0; font-size: 22px; color: darkgreen; text-transform: uppercase; }
-    .header-text p { margin: 2px 0; font-size: 11px; color: #333; }
+    .school-logo { width: 75px; height: 75px; margin-right: 20px; }
+    .header-text h1 { margin: 0; font-size: 21px; color: darkgreen; text-transform: uppercase; }
+    .header-text p { margin: 1px 0; font-size: 10px; color: #333; }
 
-    .form-title { text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 15px; text-decoration: underline; }
+    .form-title { text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 12px; text-decoration: underline; }
 
-    h3 { font-size: 13px; margin: 12px 0 8px 0; background: #f0f9f0; padding: 5px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; }
+    h3 { font-size: 12px; margin: 10px 0 6px 0; background: #f0f9f0; padding: 4px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; }
 
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 8px; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
+    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 6px; }
     .field-group { display: flex; flex-direction: column; }
     
-    label { font-weight: bold; font-size: 11px; margin-bottom: 3px; color: #222; }
-    input, select { padding: 5px; font-size: 13px; border: 1px solid #777; border-radius: 2px; }
+    label { font-weight: bold; font-size: 10.5px; margin-bottom: 2px; color: #222; }
+    input, select { padding: 4px; font-size: 12.5px; border: 1px solid #777; border-radius: 2px; }
 
     .photo-box {
-      width: 110px;
-      height: 130px;
+      width: 105px;
+      height: 125px;
       border: 1px solid #000;
       text-align: center;
-      font-size: 9px;
+      font-size: 8px;
       background: #fff;
       display: flex;
       flex-direction: column;
@@ -53,19 +54,19 @@
     }
 
     .declaration-box {
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 11.5px; /* Adjusted font for perfect 4-line flow */
+      line-height: 1.4;
       text-align: justify;
-      margin-top: 15px;
+      margin-top: 10px;
       border: 1px solid #ccc;
-      padding: 12px;
+      padding: 10px;
       background: #fafafa;
     }
 
-    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; }
-    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 12px; font-weight: bold; padding-top: 5px; width: 200px; }
+    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 30px; }
+    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 11px; font-weight: bold; padding-top: 4px; width: 190px; }
 
-    #officeSection { border: 2px dashed darkred; padding: 12px; margin-top: 20px; background: #fffcfc; }
+    #officeSection { border: 2px dashed darkred; padding: 10px; margin-top: 15px; background: #fffcfc; }
 
     @media print {
       body { background: none; }
@@ -90,38 +91,35 @@
   <div class="form-title">STUDENT ADMISSION FORM (Session 2026)</div>
 
   <form id="admissionForm">
-    <div class="row" style="grid-template-columns: 1fr 1fr 120px;">
+    <div class="row" style="grid-template-columns: 1fr 1fr 115px;">
       <div class="field-group" style="grid-column: span 2;">
         <label>Full Name of Student</label>
         <input type="text" name="studentName" required>
-        <label style="margin-top:8px">Name (As per Aadhaar Card)</label>
+        <label style="margin-top:6px">Name (As per Aadhaar Card)</label>
         <input type="text" name="aadhaarName">
-        <div class="row" style="margin-top:8px">
+        <div class="row" style="margin-top:6px">
             <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
             <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
         </div>
       </div>
       <div class="photo-box">
         <img id="photoPreview" style="max-width:100%; max-height:100px; display:none;">
-        <p id="photoTxt">Affix Passport Size Photograph</p>
-        <input type="file" onchange="previewPhoto(event)" class="no-print" style="width:100px; font-size:8px; margin-top:5px;">
+        <p id="photoTxt">Passport Photograph</p>
+        <input type="file" onchange="previewPhoto(event)" class="no-print" style="width:95px; font-size:7px; margin-top:5px;">
       </div>
     </div>
 
-    <div class="row">
+    <div class="row-4">
       <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
       <div class="field-group"><label>Blood Group</label><input type="text" name="bloodGroup"></div>
       <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+      <div class="field-group"><label>Seeking Class</label><input type="text" name="studentClass"></div>
     </div>
 
     <div class="row">
-        <div class="field-group"><label>Class Seeking Admission</label><input type="text" name="studentClass"></div>
-        <div class="field-group"><label>Aadhaar Number (12 Digits)</label><input type="text" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
+        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
         <div class="field-group"><label>APAAR ID (12 Digits)</label><input type="text" name="apaarId" pattern="\d{12}" maxlength="12"></div>
-    </div>
-    <div class="row">
         <div class="field-group"><label>PEN Number (12 Digits)</label><input type="text" name="penId" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"></div><div class="field-group"></div>
     </div>
 
     <h3>Parental & Contact Information</h3>
@@ -132,14 +130,13 @@
     </div>
     <div class="row">
         <div class="field-group"><label>Mother's Contact No</label><input type="tel" name="motherContact"></div>
-        <div class="field-group"></div><div class="field-group"></div>
+        <div class="field-group"><label>Bank Name & Branch</label><input type="text" name="bankName"></div>
+        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
     </div>
 
-    <h3>Bank Details</h3>
     <div class="row">
-        <div class="field-group"><label>Account No (16 Digits)</label><input type="text" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
-        <div class="field-group"><label>IFSC Code (11 Characters)</label><input type="text" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
-        <div class="field-group"><label>Bank & Branch Name</label><input type="text" name="bankName"></div>
+        <div class="field-group" style="grid-column: span 1;"><label>Account No (16 Digits)</label><input type="text" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
+        <div class="field-group" style="grid-column: span 2;"></div>
     </div>
 
     <h3>Residential Address</h3>
@@ -165,26 +162,27 @@
 
     <div id="officeSection" style="display:none;">
       <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
-      <div class="row">
+      <div class="row" style="margin-bottom:0px">
         <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo"></div>
         <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
         <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207" readonly></div>
       </div>
-      <div class="field-group" style="margin-top:10px;"><label>Remarks</label><textarea name="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
-      <div class="sig-section" style="margin-top: 50px;">
+      <div class="field-group" style="margin-top:8px;"><label>Remarks</label><textarea name="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
+      <div class="sig-section" style="margin-top: 35px;">
         <div class="sig-placeholder">Admission Incharge</div>
         <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
       </div>
     </div>
 
-    <div class="no-print" style="text-align:center; margin-top:20px;">
-      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:10px 25px; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Save & Update</button>
-      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:10px 25px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:10px;">Print Admission Form</button>
+    <div class="no-print" style="text-align:center; margin-top:15px;">
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Save & Update</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:10px;">Print Form</button>
     </div>
   </form>
 </div>
 
 <script>
+// Previous script remains intact
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
   const txt = document.getElementById("photoTxt");
@@ -207,11 +205,9 @@ window.onload = function() {
     const role = localStorage.getItem("userRole");
     const params = new URLSearchParams(window.location.search);
     const studentId = params.get('id');
-
     if (role === "HOI" || role === "INCHARGE") {
         document.getElementById("officeSection").style.display = "block";
     }
-
     if (studentId) {
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
         const student = records.find(r => r.admNo === studentId);
@@ -230,18 +226,14 @@ window.onload = function() {
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
     if(!form.checkValidity()) { form.reportValidity(); return; }
-
     const role = localStorage.getItem("userRole");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-
     data.status = role ? "Approved" : "Pending Approval";
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
     const index = records.findIndex(r => r.admNo === data.admNo);
-
     if (index !== -1) records[index] = data;
     else records.push(data);
-
     localStorage.setItem("admissions", JSON.stringify(records));
     alert("Form Successfully Processed!");
     if (role) window.location.href = "admin/dashboard.html";
@@ -249,5 +241,4 @@ function submitAdmission() {
 </script>
 </body>
 </html>
-
-    
+        
