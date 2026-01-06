@@ -20,63 +20,56 @@
             flex-direction: column;
         }
 
-        /* Header */
+        /* Header with UDID, Email, and Contact */
         .school-header { background: #5a3d8c; color: white; display: flex; align-items: center; padding: 8px; border-radius: 4px 4px 0 0; }
-        .school-logo { width: 65px; height: 65px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
+        .school-logo { width: 75px; height: 75px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
         .header-text { flex-grow: 1; text-align: center; }
         .header-text h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
-        .header-text h2 { margin: 0; font-size: 18px; font-weight: normal; opacity: 0.9; }
+        .header-text h2 { margin: 2px 0; font-size: 16px; font-weight: normal; opacity: 0.9; }
+        .header-contacts { font-size: 11px; margin-top: 4px; display: flex; justify-content: center; gap: 20px; font-style: italic; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; }
 
-        /* Student Details & Photo Box */
         .top-info-container { display: flex; gap: 10px; margin-top: 5px; }
         .details-table { flex-grow: 1; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
         th, td { border: 1px solid #444; padding: 4px; text-align: center; }
         .label-cell { background: #e1f5fe; text-align: left; font-weight: bold; width: 130px; }
         
+        /* Linked Photo Box */
         .photo-box {
-            width: 90px;
-            height: 105px;
+            width: 95px;
+            height: 110px;
             border: 2px solid #5a3d8c;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            color: #666;
             background: #fafafa;
-            text-align: center;
+            overflow: hidden;
         }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Marks Table */
         .subject-table { margin-top: 8px; }
         .subject-table th { background: #dcd0ff; font-size: 10px; }
         .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; }
 
-        /* Bottom Layout Sections */
         .bottom-grid { display: grid; grid-template-columns: 28% 44% 28%; gap: 10px; margin-top: 10px; flex-grow: 1; }
         .section-box { border: 1px solid #444; display: flex; flex-direction: column; }
         .section-header { background: #5a3d8c; color: white; font-weight: bold; padding: 4px; text-align: center; font-size: 12px; }
 
-        /* Remarks and Co-Scholastic (Left Column) */
         .left-col { display: flex; flex-direction: column; gap: 8px; }
-        .remarks-content { padding: 8px; font-size: 11px; flex-grow: 1; border: 1px solid #ccc; margin: 5px; min-height: 50px; }
+        .remarks-content { padding: 8px; font-size: 11px; flex-grow: 1; border: 1px solid #ccc; margin: 5px; min-height: 50px; font-style: italic; }
 
-        /* Graph Section (Middle Column) */
         .chart-wrap { padding: 5px; flex-grow: 1; display: flex; align-items: center; }
 
-        /* Proficiency & Final Results (Right Column) */
         .right-col { display: flex; flex-direction: column; gap: 8px; }
         .prof-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
 
-        /* Signature Space */
         .footer-sigs { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 20px; gap: 10px; }
         .sig-block { text-align: center; }
-        .sig-space { height: 45px; } /* Empty space for actual signature/stamp */
+        .sig-space { height: 45px; } 
         .sig-label { border-top: 1.5px solid #333; padding-top: 4px; font-size: 11px; font-weight: bold; background: #f5f5f5; }
 
         .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        @media print { .btn-download { display: none; } body { background: white; padding: 0; } .printable-area { border: 2px solid #5a3d8c; } }
+        @media print { .btn-download { display: none; } body { background: white; padding: 0; } }
     </style>
 </head>
 <body>
@@ -86,7 +79,12 @@
         <img src="logo.png" class="school-logo" alt="GPS Logo">
         <div class="header-text">
             <h1>GOVERNMENT PRIMARY SCHOOL</h1>
-            <h2>PETHGAM WAGOORA 193109</h2>
+            <h2>PETHGAM WAGOORA – 193109</h2>
+            <div class="header-contacts">
+                <span>UDISE: 01022202207</span>
+                <span>Email: pspathgam@gmail.com</span>
+                <span>Contact: +91 7006261694</span>
+            </div>
         </div>
     </div>
 
@@ -111,14 +109,14 @@
                 </tr>
             </table>
         </div>
-        <div class="details-table" style="max-width: 150px;">
+        <div class="details-table" style="max-width: 120px;">
              <table>
                 <tr><td class="label-cell" style="text-align:center; width: auto;">Class</td></tr>
-                <tr><td style="font-size: 24px; font-weight: bold; color: #5a3d8c; padding: 10px;" id="classVal">4th</td></tr>
+                <tr><td style="font-size: 24px; font-weight: bold; color: #5a3d8c; padding: 12px;" id="classVal">--</td></tr>
              </table>
         </div>
         <div class="photo-box" id="photoBox">
-            <span>Affix Photo Here</span>
+            <span style="font-size: 9px; color: #999;">No Photo Found</span>
         </div>
     </div>
 
@@ -200,11 +198,18 @@ const admNo = params.get("admNo");
 
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
 const results = JSON.parse(localStorage.getItem("results")) || [];
+
+// Sort results for ranking
+const sortedAllResults = [...results].sort((a, b) => {
+    const totalA = Object.values(a.marks).reduce((acc, m) => acc + (m.fa.reduce((sum, f) => sum + f, 0) + m.cca + m.sa), 0);
+    const totalB = Object.values(b.marks).reduce((acc, m) => acc + (m.fa.reduce((sum, f) => sum + f, 0) + m.cca + m.sa), 0);
+    return totalB - totalA;
+});
+
 const sInfo = admissions.find(x => x.admNo === admNo);
 const sMarks = results.find(x => x.admNo === admNo);
 
 if(sInfo && sMarks) {
-    // Basic Info
     document.getElementById('sname').innerText = sInfo.studentName;
     document.getElementById('admNo').innerText = sInfo.admNo;
     document.getElementById('fname').innerText = sInfo.fatherName;
@@ -214,31 +219,35 @@ if(sInfo && sMarks) {
     document.getElementById('rollNo').innerText = sMarks.rollNo;
     document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
     document.getElementById('pen').innerText = sInfo.penId || "N/A";
-    document.getElementById('remarksText').innerText = sMarks.remarks || "No remarks provided.";
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
     
-    // Set Photo if exists
+    // LINKED PHOTO AUTOMATION
     if(sInfo.studentPhoto) {
-        document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`;
+        document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" alt="Student Photo">`;
     }
 
-    let labels = [];
-    let data = [];
-    let gt30 = 0, gt20 = 0, gt50 = 0, gt100 = 0;
-    
+    // RANK CALCULATION AUTOMATION
+    const schoolRank = sortedAllResults.findIndex(r => r.admNo === admNo) + 1;
+    document.getElementById('sRank').innerText = schoolRank;
+
+    const classResults = sortedAllResults.filter(r => {
+        const student = admissions.find(a => a.admNo === r.admNo);
+        return student && student.studentClass === sInfo.studentClass;
+    });
+    const classRank = classResults.findIndex(r => r.admNo === admNo) + 1;
+    document.getElementById('cRank').innerText = classRank;
+
+    let labels = [], data = [], gt30 = 0, gt20 = 0, gt50 = 0, gt100 = 0;
     const subjects = Object.keys(sMarks.marks);
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
         const faT = m.fa.reduce((a, b) => a + b, 0);
         const rowT = faT + m.cca + m.sa;
-        
         gt30 += faT; gt20 += m.cca; gt50 += m.sa; gt100 += rowT;
-        labels.push(sub);
-        data.push(rowT);
-
+        labels.push(sub); data.push(rowT);
         const grade = rowT > 85 ? 'A+' : rowT > 70 ? 'A' : rowT > 55 ? 'B' : rowT > 40 ? 'C' : 'D';
         const prof = rowT > 70 ? 'Sky' : rowT > 45 ? 'Mountain' : 'Stream';
-
         document.getElementById('marksBody').innerHTML += `
             <tr>
                 <td class="subject-name">${sub}</td>
@@ -249,36 +258,27 @@ if(sInfo && sMarks) {
             </tr>`;
     });
 
-    // Grand Totals
     document.getElementById('gt30').innerText = gt30;
     document.getElementById('gt20').innerText = gt20;
     document.getElementById('gt50').innerText = gt50;
     document.getElementById('gt100').innerText = gt100;
-    
     const perc = Math.round(gt100 / 5);
     document.getElementById('resTotal').innerText = gt100 + " / 500";
     document.getElementById('resPerc').innerText = perc + "%";
     
-    // Proficiency Ticks
     if(perc > 70) document.getElementById('pSky').innerText = "✓";
     else if(perc > 45) document.getElementById('pMtn').innerText = "✓";
     else document.getElementById('pStrm').innerText = "✓";
 
-    // Chart
     new Chart(document.getElementById('marksChart'), {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Score (100)',
-                data: data,
-                backgroundColor: '#5a3d8c',
-                borderRadius: 5
-            }]
+            datasets: [{ label: 'Score', data: data, backgroundColor: '#5a3d8c', borderRadius: 4 }]
         },
         options: { 
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, 
+            maintainAspectRatio: false, 
             scales: { y: { beginAtZero: true, max: 100 } },
             plugins: { legend: { display: false } }
         }
@@ -287,5 +287,4 @@ if(sInfo && sMarks) {
 </script>
 </body>
 </html>
-        
-        
+                    
