@@ -276,45 +276,128 @@ function submitAdmission() {
     const role = localStorage.getItem("userRole");
     const admNoValue = document.getElementById("admNo").value;
     const photoPreview = document.getElementById("photoPreview");
-
-    const data = {
-        admNo: admNoValue,
-        studentName: document.getElementById("studentName").value,
-        fatherName: document.getElementById("fatherName").value,
-        motherName: document.getElementById("motherName").value,
-        studentClass: document.getElementById("studentClass").value,
-        dob: document.getElementById("dob").value,
-        dobWords: document.getElementById("dobWords").value,
-        apaarId: document.getElementById("apaarId") ? document.getElementById("apaarId").value : "",
-        penId: document.getElementById("penId") ? document.getElementById("penId").value : "",
-        status: (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval",
-        studentPhoto: (photoPreview && photoPreview.src.startsWith("data:image")) ? photoPreview.src : ""
+<script>
+// 1. PHOTO PREVIEW (Base64 conversion for persistence)
+function previewPhoto(event) {
+  const img = document.getElementById("photoPreview");
+  const txt = document.getElementById("photoTxt");
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target.result;
+      img.style.display = "block";
+      if(txt) txt.style.display = "none";
     };
+    reader.readAsDataURL(file);
+  }
+}
+
+// 2. DOB CONVERSION
+function convertDOB() {
+    const dobInput = document.querySelector('input[name="dob"]');
+    const dobWordsInput = document.querySelector('input[name="dobWords"]');
+    if (!dobInput || !dobInput.value) return;
+    
+    const dateObj = new Date(dobInput.value);
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    dobWordsInput.value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+}
+
+// 3. INITIALIZATION (Fills form using name attributes)
+window.onload = function() {
+    const role = localStorage.getItem("userRole");
+    const params = new URLSearchParams(window.location.search);
+    const studentId = params.get('id');
+
+    // Office Section Logic
+    const officeSection = document.getElementById("officeSection");
+    if (officeSection) {
+        officeSection.style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
+    }
+
+    if (studentId) {
+        const records = JSON.parse(localStorage.getItem("admissions")) || [];
+        const student = records.find(r => r.admNo.trim() === decodeURIComponent(studentId).trim());
+
+        if (student) {
+            // LOOP through all inputs and match them to the student data object keys
+            const inputs = document.querySelectorAll('#admissionForm input, #admissionForm select, #admissionForm textarea');
+            inputs.forEach(input => {
+                if (student[input.name] !== undefined) {
+                    if (input.type === 'checkbox') {
+                        input.checked = student[input.name];
+                    } else {
+                        input.value = student[input.name];
+                    }
+                }
+            });
+            
+            // Restore Photo
+            if (student.studentPhoto) {
+                const img = document.getElementById("photoPreview");
+                const txt = document.getElementById("photoTxt");
+                img.src = student.studentPhoto;
+                img.style.display = "block";
+                if(txt) txt.style.display = "none";
+            }
+            convertDOB();
+        } else {
+            alert("Error: Student record not found in database.");
+        }
+    } else {
+        // NEW FORM: Generate ID only if input is empty
+        const admInput = document.querySelector('input[name="admNo"]');
+        if (admInput && !admInput.value) {
+            admInput.value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
+        }
+    }
+};
+
+// 4. SUBMISSION (Captures all fields and handles update vs new)
+function submitAdmission() {
+    const form = document.getElementById('admissionForm');
+    if(!form.checkValidity()) { form.reportValidity(); return; }
+
+    const role = localStorage.getItem("userRole");
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Explicitly handle the photo from the <img> tag since <input type="file"> doesn't hold Base64
+    const photoPreview = document.getElementById("photoPreview");
+    if (photoPreview && photoPreview.src.startsWith("data:image")) {
+        data.studentPhoto = photoPreview.src;
+    }
+
+    // Set Status
+    data.status = (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval";
 
     let records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const index = records.findIndex(r => r.admNo === admNoValue);
+    
+    // Check if updating
+    const index = records.findIndex(r => r.admNo === data.admNo);
 
     if (index !== -1) {
-        // Preserve photo if no new one was uploaded
+        // If updating, preserve old photo if no new one was uploaded
         if (!data.studentPhoto && records[index].studentPhoto) {
             data.studentPhoto = records[index].studentPhoto;
         }
-        records[index] = data; // Update existing
+        records[index] = data; // Update
     } else {
-        records.push(data); // Create new
+        records.push(data); // Create New
     }
 
     localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Record Processed Successfully!");
+    alert("Success: Record " + (index !== -1 ? "Updated" : "Saved") + " Successfully!");
     
-    // Redirect
-    if (role === "HOI" || role === "INCHARGE") {
+    if (role) {
         window.location.href = "admin/dashboard.html";
     } else {
         window.location.reload();
     }
 }
 </script>
+
   
 </body>
 </html>
