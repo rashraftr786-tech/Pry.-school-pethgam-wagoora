@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Marks | GPS Pethgam Wagoora</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+    
+    /* Navigation Bar */
+    .admin-nav { background: #1a5d1a; padding: 12px; display: flex; gap: 15px; justify-content: center; border-bottom: 3px solid #ffcc00; }
+    .admin-nav a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; padding: 5px 10px; border-radius: 4px; }
+    .admin-nav a:hover { background: rgba(255,255,255,0.2); }
+
+    .container { max-width: 800px; margin: 30px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+    h2 { color: #1a5d1a; border-bottom: 2px solid #1a5d1a; padding-bottom: 10px; margin-top: 0; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+    .field-group { display: flex; flex-direction: column; }
+    label { font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #333; }
+    input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    
+    .marks-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #eee; }
+    .marks-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center; }
+    .marks-grid label { margin: 0; }
+
+    .btn-save { width: 100%; background: #1a5d1a; color: white; padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+    .btn-save:hover { background: #144614; }
+
+    .student-preview { background: #e8f5e9; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; color: #2e7d32; display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="admin-nav">
+      <a href="admission.html">📝 Admission</a>
+      <a href="adm-register.html">📋 Register</a>
+      <a href="upload-results.html" style="background: rgba(255,255,255,0.2);">📤 Upload Marks</a>
+      <a href="results.html">🎓 Online Result</a>
+  </div>
+
+  <div class="container">
+    <h2>Upload Student Marks</h2>
+    
+    <div class="row">
+        <div class="field-group">
+            <label>Admission Number</label>
+            <input type="text" id="admNo" placeholder="Enter Adm No" oninput="lookupStudent()">
+        </div>
+        <div class="field-group">
+            <label>Exam Roll Number</label>
+            <input type="text" id="rollNo" placeholder="Enter Roll No">
+        </div>
+    </div>
+
+    <div id="studentPreview" class="student-preview"></div>
+
+    <div class="marks-section">
+        <h3 style="margin-top:0; font-size: 16px; color: #1a5d1a;">Subject Wise Marks (Max: 100)</h3>
+        <div class="marks-grid">
+            <label>English</label><input type="number" id="m_english" max="100" placeholder="0-100">
+            <label>Mathematics</label><input type="number" id="m_math" max="100" placeholder="0-100">
+            <label>EVS / Science</label><input type="number" id="m_evs" max="100" placeholder="0-100">
+            <label>Urdu</label><input type="number" id="m_urdu" max="100" placeholder="0-100">
+            <label>Kashmiri</label><input type="number" id="m_kashmiri" max="100" placeholder="0-100">
+        </div>
+    </div>
+
+    <button class="btn-save" onclick="saveResult()">Save & Publish Result</button>
+  </div>
+
+  <script>
+    function lookupStudent() {
+        const admNo = document.getElementById('admNo').value.trim();
+        const preview = document.getElementById('studentPreview');
+        
+        const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+        const student = admissions.find(s => s.admNo === admNo);
+
+        if (student) {
+            preview.style.display = "block";
+            preview.innerText = `Student Found: ${student.studentName} | Class: ${student.studentClass}`;
+        } else {
+            preview.style.display = "none";
+        }
+    }
+
+    function saveResult() {
+        const admNo = document.getElementById('admNo').value.trim();
+        const rollNo = document.getElementById('rollNo').value.trim();
+        
+        if (!admNo) { alert("Please enter Admission Number"); return; }
+
+        const resultsData = {
+            admNo: admNo,
+            rollNo: rollNo,
+            subjects: {
+                english: parseInt(document.getElementById('m_english').value) || 0,
+                math: parseInt(document.getElementById('m_math').value) || 0,
+                evs: parseInt(document.getElementById('m_evs').value) || 0,
+                urdu: parseInt(document.getElementById('m_urdu').value) || 0,
+                kashmiri: parseInt(document.getElementById('m_kashmiri').value) || 0
+            }
+        };
+
+        let results = JSON.parse(localStorage.getItem("results")) || [];
+        
+        // Update if exists, else add new
+        const index = results.findIndex(r => r.admNo === admNo);
+        if (index !== -1) {
+            results[index] = resultsData;
+        } else {
+            results.push(resultsData);
+        }
+
+        localStorage.setItem("results", JSON.stringify(results));
+        alert("Marks uploaded successfully for " + admNo);
+        
+        // Optional: Clear form
+        document.getElementById('admNo').value = "";
+        document.getElementById('rollNo').value = "";
+        document.querySelectorAll('.marks-grid input').forEach(i => i.value = "");
+        document.getElementById('studentPreview').style.display = "none";
+    }
+  </script>
+</body>
+</html>
