@@ -5,76 +5,49 @@
     <title>Official Report Card - GPS Pethgam Wagoora</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @page { size: A4 landscape; margin: 5mm; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10px; background: #f0f0f0; }
+    <style>
+    /* 1. Force the page to have zero margins so the browser doesn't shift your design */
+    @page { 
+        size: A4 landscape; 
+        margin: 0; 
+    }
+
+    body { 
+        margin: 0; 
+        padding: 0; 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
+    }
+
+    .printable-area {
+        /* 2. Slightly reduced width to account for PDF printer bleed-off */
+        width: 297mm; /* Full width of A4 Landscape */
+        height: 210mm; /* Full height of A4 Landscape */
+        background: white;
+        margin: 0;
+        padding: 10mm; /* Internal padding instead of external margin */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
         
-        .printable-area {
-    width: 287mm;
-    height: 200mm;
-    background: white;
-    margin: auto;
-    border: 4px solid #5a3d8c;
-    padding: 8px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    /* ADD THE TWO LINES BELOW */
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-}
-
-        }
-
-        /* Header with UDID, Email, and Contact */
-        .school-header { background: #5a3d8c; color: white; display: flex; align-items: center; padding: 8px; border-radius: 4px 4px 0 0; }
-        .school-logo { width: 75px; height: 75px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
-        .header-text { flex-grow: 1; text-align: center; }
-        .header-text h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
-        .header-text h2 { margin: 2px 0; font-size: 16px; font-weight: normal; opacity: 0.9; }
-        .header-contacts { font-size: 11px; margin-top: 4px; display: flex; justify-content: center; gap: 20px; font-style: italic; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; }
-
-        .top-info-container { display: flex; gap: 10px; margin-top: 5px; }
-        .details-table { flex-grow: 1; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th, td { border: 1px solid #444; padding: 4px; text-align: center; }
-        .label-cell { background: #e1f5fe; text-align: left; font-weight: bold; width: 130px; }
+        /* 3. Essential color and graphic rendering properties */
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
         
-        /* Linked Photo Box */
-        .photo-box {
-            width: 95px;
-            height: 110px;
-            border: 2px solid #5a3d8c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fafafa;
-            overflow: hidden;
+        /* 4. This prevents the browser from breaking the container across two pages */
+        page-break-after: always;
+        overflow: hidden;
+    }
+
+    /* 5. Fix for the Chart.js canvas to ensure it doesn't disappear */
+    @media print {
+        canvas {
+            min-height: 100%;
+            max-width: 100%;
         }
-        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .subject-table { margin-top: 8px; }
-        .subject-table th { background: #dcd0ff; font-size: 10px; }
-        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; }
-
-        .bottom-grid { display: grid; grid-template-columns: 28% 44% 28%; gap: 10px; margin-top: 10px; flex-grow: 1; }
-        .section-box { border: 1px solid #444; display: flex; flex-direction: column; }
-        .section-header { background: #5a3d8c; color: white; font-weight: bold; padding: 4px; text-align: center; font-size: 12px; }
-
-        .left-col { display: flex; flex-direction: column; gap: 8px; }
-        .remarks-content { padding: 8px; font-size: 11px; flex-grow: 1; border: 1px solid #ccc; margin: 5px; min-height: 50px; font-style: italic; }
-
-        .chart-wrap { padding: 5px; flex-grow: 1; display: flex; align-items: center; }
-
-        .right-col { display: flex; flex-direction: column; gap: 8px; }
-        .prof-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
-
-        .footer-sigs { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 20px; gap: 10px; }
-        .sig-block { text-align: center; }
-        .sig-space { height: 45px; } 
-        .sig-label { border-top: 1.5px solid #333; padding-top: 4px; font-size: 11px; font-weight: bold; background: #f5f5f5; }
-
-        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        @media print {
+        .btn-download { display: none; }
+    }
+@media print {
     /* Forces background colors to render */
     * {
         -webkit-print-color-adjust: exact !important;
