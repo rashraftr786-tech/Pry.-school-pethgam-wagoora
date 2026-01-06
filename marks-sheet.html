@@ -1,88 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Report Card | GPS Pethgam Wagoora</title>
-  <style>
-    @page { size: A4; margin: 10mm; }
-    body { font-family: sans-serif; margin: 0; font-size: 11px; }
-    .card { width: 190mm; border: 2px solid #5a3d8c; margin: auto; }
-    
-    .top-header { background: #5a3d8c; color: white; display: flex; align-items: center; padding: 10px; }
-    .logo { width: 60px; height: 60px; margin-right: 15px; background: white; border-radius: 50%; }
-    .title-text { text-align: center; flex-grow: 1; }
-    
-    .info-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; border-bottom: 1px solid #000; }
-    .info-item { border: 0.5px solid #ccc; padding: 4px; display: flex; }
-    .info-item b { width: 90px; color: #5a3d8c; }
+    <meta charset="UTF-8">
+    <title>Report Card - GPS Pethgam Wagoora</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @page { size: A4 landscape; margin: 5mm; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10px; background: #ccc; }
+        
+        .printable-area {
+            width: 287mm; /* A4 Landscape width minus margins */
+            height: 200mm;
+            background: white;
+            margin: auto;
+            border: 4px solid #5a3d8c;
+            padding: 5px;
+            box-sizing: border-box;
+        }
 
-    table.main-table { width: 100%; border-collapse: collapse; text-align: center; }
-    table.main-table th, table.main-table td { border: 1px solid #000; padding: 3px; }
-    .bg-purple { background: #dcd0ff; font-weight: bold; }
-    .bg-green { background: #e8f5e9; }
-    
-    .bottom-section { display: grid; grid-template-columns: 1fr 1fr 1fr; height: 180px; }
-    .box { border: 1px solid #000; padding: 5px; }
-    
-    .footer-sigs { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 40px; text-align: center; border-top: 1px solid #000; padding-top: 5px; font-weight: bold; }
-  </style>
+        /* Header Styling matching the image */
+        .school-header { background: #5a3d8c; color: white; display: flex; align-items: center; padding: 5px; text-align: center; position: relative; }
+        .school-logo { width: 70px; height: 70px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
+        .header-text { flex-grow: 1; }
+        .header-text h1 { margin: 0; font-size: 26px; letter-spacing: 2px; }
+        .header-text h2 { margin: 0; font-size: 20px; font-weight: normal; }
+
+        /* Tables and Layout */
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 5px; }
+        th, td { border: 1px solid #444; padding: 3px; text-align: center; }
+        .label-cell { background: #e1f5fe; text-align: left; font-weight: bold; width: 120px; }
+        .data-cell { width: 150px; }
+        
+        .subject-table th { background: #dcd0ff; }
+        .subject-name { text-align: left; font-weight: bold; padding-left: 10px; color: #b71c1c; }
+
+        /* Keys and Results Grid */
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-top: 5px; height: 180px;}
+        .section-box { border: 1px solid #444; }
+        .section-header { background: #5a3d8c; color: white; font-weight: bold; padding: 3px; }
+        
+        /* Proficiency Checkboxes */
+        .prof-row { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid #eee; }
+        .check-mark { font-weight: bold; font-size: 16px; color: green; }
+
+        /* Chart Area */
+        .graph-section { display: flex; border: 1px solid #444; margin-top: 5px; height: 180px; }
+        .chart-container { width: 45%; padding: 5px; border-right: 1px solid #444; }
+        .remarks-box { width: 25%; padding: 10px; font-size: 12px; border-right: 1px solid #444; }
+        .co-scholastic { width: 30%; }
+
+        .footer-sigs { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 15px; text-align: center; }
+        .sig-line { border-top: 1px solid #000; padding-top: 3px; font-size: 11px; font-weight: bold; background: #37474f; color: white; }
+
+        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background: darkgreen; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        @media print { .btn-download { display: none; } body { background: white; padding: 0; } }
+    </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="top-header">
-    <img src="logo.png" class="logo">
-    <div class="title-text">
-      <h2 style="margin:0">GOVERNMENT PRIMARY SCHOOL</h2>
-      <h3 style="margin:0">PETHGAM WAGOORA 193109</h3>
+<div class="printable-area">
+    <div class="school-header">
+        <img src="logo.png" class="school-logo" alt="Logo">
+        <div class="header-text">
+            <h1>GOVERNMENT PRIMARY SCHOOL</h1>
+            <h2>PETHGAM WAGOORA 193109</h2>
+        </div>
     </div>
-  </div>
 
-  <div id="studentInfo" class="info-grid"></div>
+    <table>
+        <tr>
+            <td class="label-cell">Student Name:</td><td class="data-cell" id="sname"></td>
+            <td class="label-cell">Adm. No:</td><td class="data-cell" id="admNo"></td>
+            <td rowspan="4" style="width:100px; font-weight:bold; font-size:20px; color:#5a3d8c;">4th</td>
+        </tr>
+        <tr>
+            <td class="label-cell">Fathers Name:</td><td id="fname"></td>
+            <td class="label-cell">D.O.B:</td><td id="dob"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">Mothers Name:</td><td id="mname"></td>
+            <td class="label-cell">Class:</td><td id="class"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">Academic Session:</td><td>Nov.-Dec. 2024</td>
+            <td class="label-cell">Roll No:</td><td id="rollNo"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">Apaar ID:</td><td id="apaar"></td>
+            <td class="label-cell">PEN No:</td><td id="pen"></td>
+        </tr>
+    </table>
 
-  <table class="main-table">
-    <tr class="bg-purple">
-      <th>Subject</th>
-      <th>FA1-FA6 (30)</th>
-      <th>CCA (20)</th>
-      <th>SA (50)</th>
-      <th>Total (100)</th>
-      <th>Grade</th>
-      <th>Proficiency</th>
-    </tr>
-    <tbody id="marksBody"></tbody>
-    <tr class="bg-purple">
-      <td>Grand Total</td><td id="gtFa"></td><td id="gtCca"></td><td id="gtSa"></td><td id="gtTotal"></td><td id="gtGrade"></td><td></td>
-    </tr>
-  </table>
+    <table class="subject-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>FA1 (5)</th><th>FA2 (5)</th><th>FA3 (5)</th><th>FA4 (5)</th><th>FA5 (5)</th><th>FA6 (5)</th>
+                <th>Total (30)</th>
+                <th>Co-Curricular (20)</th>
+                <th>Summative (50)</th>
+                <th>Total (100)</th>
+                <th>Grade</th>
+                <th>Proficiency</th>
+            </tr>
+        </thead>
+        <tbody id="marksBody"></tbody>
+        <tr style="background:#e8f5e9; font-weight:bold;">
+            <td>Grand Total</td>
+            <td id="fa1T"></td><td id="fa2T"></td><td id="fa3T"></td><td id="fa4T"></td><td id="fa5T"></td><td id="fa6T"></td>
+            <td id="gt30"></td><td id="gt20"></td><td id="gt50"></td><td id="gt100"></td>
+            <td id="finalGrade"></td><td id="finalProf"></td>
+        </tr>
+    </table>
 
-  <div class="bottom-section">
-    <div class="box">
-      <b style="color: blue;">Final Results</b><br><br>
-      Total Obtained: <span id="resTotal"></span><br>
-      Max Marks: 500<br>
-      Percentage: <span id="resPerc"></span><br>
-      Grade: <span id="resGrade"></span><br>
-      Result: <b id="resFinal"></b>
+    <div class="summary-grid">
+        <div class="section-box">
+            <div class="section-header" style="background:#ffeb3b; color:black;">Percentage/Grade Key</div>
+            <table>
+                <tr style="background:#e1f5fe;"><th>%age Scale</th><th>Grade</th></tr>
+                <tr><td>>85% to 100%</td><td>A+</td></tr>
+                <tr><td>>70% to 85%</td><td>A</td></tr>
+                <tr><td>>55% to 70%</td><td>B</td></tr>
+                <tr><td>>40% to 55%</td><td>C</td></tr>
+                <tr><td>>33% to 40%</td><td>D</td></tr>
+            </table>
+        </div>
+        <div class="section-box">
+            <div class="section-header" style="background:#ef5350;">Level of Proficiency</div>
+            <div class="prof-row"><span>Sky (Excellent)</span><span id="pSky"></span></div>
+            <div class="prof-row"><span>Mountain (Good)</span><span id="pMtn"></span></div>
+            <div class="prof-row"><span>Stream (Average)</span><span id="pStrm"></span></div>
+            <div style="background:#2e7d32; color:white; padding:5px; margin-top:5px;">School Rank: <span id="sRank">17</span> | Class Rank: <span id="cRank">4</span></div>
+        </div>
+        <div class="section-box">
+            <div class="section-header" style="background:#5a3d8c;">Final Results</div>
+            <table style="margin:0;">
+                <tr><td class="label-cell">Total Marks:</td><td id="resTotal"></td></tr>
+                <tr><td class="label-cell">Overall %:</td><td id="resPerc"></td></tr>
+                <tr><td class="label-cell">Result:</td><td id="resFinal" style="font-weight:bold;">PASS</td></tr>
+                <tr><td class="label-cell">Position:</td><td style="color:red; font-weight:bold;">Promoted</td></tr>
+            </table>
+        </div>
     </div>
-    <div class="box">
-      <b>General Remarks</b><br>
-      <p id="resRemarks" style="font-size: 10px;"></p>
-    </div>
-    <div class="box">
-      <b>Attendance %:</b> <span id="resAtt"></span><br><br>
-      <span>School Rank: <b id="rankS"></b></span><br>
-      <span>Class Rank: <b id="rankC"></b></span>
-    </div>
-  </div>
 
-  <div class="footer-sigs">
-    <div>Sign. Form Teacher</div>
-    <div>Sign. Exam I/C</div>
-    <div>Parents Signature</div>
-    <div>Seal & Sign. Headmaster</div>
-  </div>
+    <div class="graph-section">
+        <div class="chart-container">
+            <canvas id="marksChart"></canvas>
+        </div>
+        <div class="remarks-box">
+            <div style="font-weight:bold; color:#5a3d8c; border-bottom:1px solid #ccc; margin-bottom:5px;">General Remarks</div>
+            <p id="remarksText"></p>
+        </div>
+        <div class="co-scholastic">
+            <table>
+                <tr style="background:#b71c1c; color:white;"><th>Co-Scholastic</th><th>Grade</th></tr>
+                <tr><td>Attendance %</td><td id="att"></td></tr>
+                <tr><td>Discipline</td><td>A</td></tr>
+                <tr><td>Sports</td><td>B</td></tr>
+                <tr><td>Art & Craft</td><td>A</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer-sigs">
+        <div class="sig-line">Sign. Form Teacher</div>
+        <div class="sig-line">Sign. Exam I/C</div>
+        <div class="sig-line">Parents Signature</div>
+        <div class="sig-line">Seal & Sign. Headmaster</div>
+    </div>
 </div>
+
+<button class="btn-download" onclick="window.print()">Download Marksheet (PDF)</button>
 
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -94,114 +182,66 @@ const sInfo = admissions.find(x => x.admNo === admNo);
 const sMarks = results.find(x => x.admNo === admNo);
 
 if(sInfo && sMarks) {
-    document.getElementById('studentInfo').innerHTML = `
-        <div class="info-item"><b>Student Name:</b> ${sInfo.studentName}</div>
-        <div class="info-item"><b>Adm No:</b> ${admNo}</div>
-        <div class="info-item"><b>Roll No:</b> ${sMarks.rollNo}</div>
-        <div class="info-item"><b>Father:</b> ${sInfo.fatherName}</div>
-        <div class="info-item"><b>Class:</b> ${sInfo.studentClass}</div>
-        <div class="info-item"><b>D.O.B:</b> ${sInfo.dob}</div>
-    `;
+    document.getElementById('sname').innerText = sInfo.studentName;
+    document.getElementById('admNo').innerText = sInfo.admNo;
+    document.getElementById('fname').innerText = sInfo.fatherName;
+    document.getElementById('mname').innerText = sInfo.motherName;
+    document.getElementById('dob').innerText = sInfo.dob;
+    document.getElementById('class').innerText = sInfo.studentClass;
+    document.getElementById('rollNo').innerText = sMarks.rollNo;
+    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
+    document.getElementById('pen').innerText = sInfo.penId || "N/A";
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Performed well.";
+    document.getElementById('att').innerText = sMarks.attendance + "%";
 
-    let gtFa = 0, gtCca = 0, gtSa = 0, gtTotal = 0;
+    let chartData = [];
+    let gtTotal = 0;
     
-    Object.keys(sMarks.marks).forEach(sub => {
+    const subjects = Object.keys(sMarks.marks);
+    subjects.forEach(sub => {
         const m = sMarks.marks[sub];
-        const faSum = m.fa.reduce((a, b) => a + b, 0);
-        const total = faSum + m.cca + m.sa;
-        
-        gtFa += faSum; gtCca += m.cca; gtSa += m.sa; gtTotal += total;
+        const faTotal = m.fa.reduce((a, b) => a + b, 0);
+        const rowTotal = faTotal + m.cca + m.sa;
+        gtTotal += rowTotal;
+        chartData.push(rowTotal);
 
-        const grade = total > 85 ? 'A+' : total > 70 ? 'A' : total > 55 ? 'B' : total > 33 ? 'C' : 'E';
-        const prof = total > 70 ? 'Sky' : total > 45 ? 'Mountain' : 'Stream';
+        const grade = rowTotal > 85 ? 'A+' : rowTotal > 70 ? 'A' : rowTotal > 55 ? 'B' : 'C';
+        const prof = rowTotal > 70 ? 'Sky' : rowTotal > 45 ? 'Mountain' : 'Stream';
 
         document.getElementById('marksBody').innerHTML += `
             <tr>
-                <td>${sub}</td><td>${faSum}</td><td>${m.cca}</td><td>${m.sa}</td><td>${total}</td><td>${grade}</td><td>${prof}</td>
+                <td class="subject-name">${sub}</td>
+                <td>${m.fa[0]}</td><td>${m.fa[1]}</td><td>${m.fa[2]}</td>
+                <td>${m.fa[3]}</td><td>${m.fa[4]}</td><td>${m.fa[5]}</td>
+                <td>${faTotal}</td><td>${m.cca}</td><td>${m.sa}</td>
+                <td style="font-weight:bold">${rowTotal}</td><td>${grade}</td><td>${prof}</td>
             </tr>`;
     });
 
-    document.getElementById('gtFa').innerText = gtFa;
-    document.getElementById('gtCca').innerText = gtCca;
-    document.getElementById('gtSa').innerText = gtSa;
-    document.getElementById('gtTotal').innerText = gtTotal;
+    const perc = Math.round(gtTotal / 5);
+    document.getElementById('resTotal').innerText = gtTotal + " / 500";
+    document.getElementById('resPerc').innerText = perc + "%";
     
-    const finalPerc = Math.round(gtTotal / 5);
-    document.getElementById('resTotal').innerText = gtTotal;
-    document.getElementById('resPerc').innerText = finalPerc + "%";
-    document.getElementById('resAtt').innerText = sMarks.attendance || '0';
-    document.getElementById('resRemarks').innerText = sMarks.remarks;
+    // Set Proficiency Checkboxes
+    if(perc > 70) document.getElementById('pSky').innerHTML = "✓";
+    else if(perc > 45) document.getElementById('pMtn').innerHTML = "✓";
+    else document.getElementById('pStrm').innerHTML = "✓";
+
+    // Initialize Bar Graph
+    new Chart(document.getElementById('marksChart'), {
+        type: 'bar',
+        data: {
+            labels: subjects,
+            datasets: [{
+                label: 'Subject Wise Performance',
+                data: chartData,
+                backgroundColor: '#5c6bc0'
+            }]
+        },
+        options: { scales: { y: { beginAtZero: true, max: 100 } } }
+    });
 }
 </script>
 </body>
 </html>
-  </table>
-
-  <table class="marks-table" style="width: 60%; margin: 0 auto;">
-    <tr>
-      <th class="section-title">Percentage</th><td id="percent"></td>
-      <th class="section-title">Grade</th><td id="grade"></td>
-    </tr>
-    <tr>
-      <th class="section-title">Result</th><td colspan="3" id="result" style="font-weight: bold;"></td>
-    </tr>
-  </table>
-
-  <div class="grading-scale">
-    <b>Grading Scale:</b> A+: 85-100% | A: 70-84% | B: 55-69% | C: 40-54% | D: 33-39% | E: Below 33% (Needs Improvement)
-  </div>
-
-  <div class="footer">
-    <div class="sig">Class Teacher</div>
-    <div class="sig">Exam Incharge</div>
-    <div class="sig">Parent's Signature</div>
-    <div class="sig">Headmaster Stamp</div>
-  </div>
-</div>
-
-<button class="print-btn" onclick="window.print()">Download Marksheet (PDF)</button>
-
-<script>
-const params = new URLSearchParams(window.location.search);
-const studentId = params.get("admNo");
-
-// 1. Get Student Personal Info from Admission Register
-const admissionRecords = JSON.parse(localStorage.getItem("admissions")) || [];
-const studentInfo = admissionRecords.find(x => x.admNo === studentId);
-
-// 2. Get Academic Marks from Results storage
-const resultRecords = JSON.parse(localStorage.getItem("results")) || [];
-const marksInfo = resultRecords.find(x => x.admNo === studentId);
-
-if(!studentInfo || !marksInfo){
-  alert("Student Data or Result not found in system.");
-} else {
-  // Fill Personal Data
-  document.getElementById("sname").innerText = studentInfo.studentName;
-  document.getElementById("admNo").innerText = studentInfo.admNo;
-  document.getElementById("class").innerText = studentInfo.studentClass;
-  document.getElementById("parentage").innerText = "Mr. " + studentInfo.fatherName;
-  document.getElementById("dob").innerText = studentInfo.dob;
-  document.getElementById("rollNo").innerText = marksInfo.rollNo || "N/A";
-  document.getElementById("studentPhoto").src = studentInfo.studentPhoto || "logo.png";
-
-  // Fill Marks Data
-  let total = 0;
-  const subs = ['english', 'math', 'evs', 'urdu', 'kashmiri'];
-  subs.forEach(sub => {
-    let score = marksInfo.subjects[sub] || 0;
-    document.getElementById(sub).innerText = score;
-    total += parseInt(score);
-  });
-
-  document.getElementById("total").innerText = total;
-  let percent = Math.round((total / 500) * 100);
-  document.getElementById("percent").innerText = percent + "%";
-
-  let grade = percent >= 85 ? "A+" : percent >= 70 ? "A" : percent >= 55 ? "B" : percent >= 40 ? "C" : percent >= 33 ? "D" : "E";
-  document.getElementById("grade").innerText = grade;
-  document.getElementById("result").innerText = percent >= 33 ? "PASSED" : "PROMOTED WITH REMARKS";
-}
-</script>
-</body>
-</html>
+      
