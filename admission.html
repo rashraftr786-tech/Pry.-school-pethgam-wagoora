@@ -187,61 +187,55 @@
 </div>
 
 <script>
-// Previous script remains intact
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  const txt = document.getElementById("photoTxt");
-  if (event.target.files[0]) {
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
-    txt.style.display = "none";
-  }
-}
-
-function convertDOB() {
-    const dob = document.getElementById("dob").value;
-    if (!dob) return;
-    const dateObj = new Date(dob);
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
-}
-
-window.onload = function() {
-    const role = localStorage.getItem("userRole");
-    const params = new URLSearchParams(window.location.search);
-    const studentId = params.get('id');
-    if (role === "HOI" || role === "INCHARGE") {
-        document.getElementById("officeSection").style.display = "block";
-    }
-    if (studentId) {
-        const records = JSON.parse(localStorage.getItem("admissions")) || [];
-        const student = records.find(r => r.admNo === studentId);
-        if (student) {
-            const inputs = document.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                if (student[input.name] !== undefined) input.value = student[input.name];
-            });
-            convertDOB();
-        }
-    } else {
-        document.getElementById("admNo").value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
-    }
-};
+// ... keep previewPhoto, convertDOB, and window.onload as they are ...
 
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
     if(!form.checkValidity()) { form.reportValidity(); return; }
+
+    const photoInput = document.querySelector('input[type="file"]');
     const role = localStorage.getItem("userRole");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    
+    // Add logic for Approval Status
     data.status = role ? "Approved" : "Pending Approval";
-    let records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const index = records.findIndex(r => r.admNo === data.admNo);
-    if (index !== -1) records[index] = data;
-    else records.push(data);
-    localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Form Successfully Processed!");
-    if (role) window.location.href = "admin/dashboard.html";
+
+    // FUNCTION TO SAVE DATA
+    const saveData = (photoBase64 = "") => {
+        if (photoBase64) {
+            data.studentPhoto = photoBase64; // This saves the actual image data
+        }
+
+        let records = JSON.parse(localStorage.getItem("admissions")) || [];
+        const index = records.findIndex(r => r.admNo === data.admNo);
+        
+        if (index !== -1) {
+            // If updating, preserve old photo if no new one is uploaded
+            if (!photoBase64 && records[index].studentPhoto) {
+                data.studentPhoto = records[index].studentPhoto;
+            }
+            records[index] = data;
+        } else {
+            records.push(data);
+        }
+
+        localStorage.setItem("admissions", JSON.stringify(records));
+        alert("Form Successfully Processed!");
+        if (role) window.location.href = "admin/dashboard.html";
+        else window.location.reload(); 
+    };
+
+    // PHOTO CONVERSION LOGIC
+    if (photoInput && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            saveData(e.target.result); // Save with the image string
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        saveData(); // Save without a new photo
+    }
 }
 </script>
 </body>
