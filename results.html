@@ -1,44 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Results | GPS Pethgam Wagoora</title>
+  <meta charset="UTF-8">
+  <title>Student Results | GPS Pethgam Wagoora</title>
   <style>
-    /* ... (Include your header, menu, and footer styles here) ... */
+    /* Reuse your School Theme */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
     
-    .result-container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      border: 1px solid #ddd;
+    .school-header { display: flex; align-items: center; background: #e8f5e9; padding: 10px; border-bottom: 3px solid darkgreen; }
+    .school-logo { width: 80px; height: auto; margin-right: 15px; }
+    .school-title h1 { margin: 0; color: darkgreen; font-size: 22px; }
+    .school-title h2 { margin: 0; color: #2e7d32; font-size: 16px; }
+    
+    .menu { background: darkgreen; padding: 10px; text-align: center; }
+    .menu a { color: white; text-decoration: none; margin: 10px; font-weight: bold; padding: 5px 10px; transition: 0.3s; }
+    .menu a:hover { color: #ffeb3b; background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    /* Result Search Section Styling */
+    .content-area {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
     }
 
-    .search-box input {
-      padding: 12px;
-      width: 80%;
-      font-size: 16px;
-      border: 2px solid darkgreen;
-      border-radius: 4px;
-      margin-bottom: 20px;
+    .result-card {
+      background: white;
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-top: 5px solid darkgreen;
+      text-align: center;
     }
+
+    .result-card h2 { color: #1b5e20; margin-bottom: 10px; font-size: 24px; }
+    .result-card p { color: #666; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+
+    .input-group { position: relative; margin-bottom: 25px; }
+    .input-group label { display: block; text-align: left; font-weight: bold; font-size: 12px; color: darkgreen; margin-bottom: 5px; text-transform: uppercase; }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: 0.3s;
+      outline: none;
+    }
+
+    .input-group input:focus { border-color: darkgreen; box-shadow: 0 0 8px rgba(0,100,0,0.1); }
 
     .search-btn {
+      width: 100%;
       background: darkgreen;
       color: white;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
+      padding: 14px;
       font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    .search-btn:hover { background: #1b5e20; }
-    
-    .instruction { font-size: 14px; color: #666; margin-bottom: 20px; }
+    .search-btn:hover { background: #1b5e20; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+    /* Footer Styles */
+    .school-footer { background: #1b5e20; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+    .school-footer p { margin: 5px 0; font-size: 13px; opacity: 0.9; }
+
+    /* Error alert styling */
+    #errorBox { display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -48,51 +90,66 @@
     <div class="school-title">
       <h1>Government Primary School</h1>
       <h2>Pethgam Wagoora – 193109</h2>
-      <p>Zone Wagoora · District Baramulla</p>
     </div>
   </header>
 
   <nav class="menu">
     <a href="index.html">Home</a>
     <a href="admission.html">Admission</a>
-    <a href="results.html" style="color: #ffeb3b;">Results</a>
+    <a href="results.html">Results</a>
     <a href="mdm.html">MDM</a>
     <a href="notice.html">Notice</a>
-    <a href="contact.html">Contact</a>
   </nav>
 
-  <div class="result-container">
-    <h2 style="color: darkgreen;">Check Student Result</h2>
-    <p class="instruction">Enter the Admission Number provided during enrollment to view and download the official Mark Sheet.</p>
-    
-    <div class="search-box">
-      <input type="text" id="admInput" placeholder="Enter Admission No. (e.g., GPSPW/2026/123)">
-      <br>
-      <button class="search-btn" onclick="redirectToMarksheet()">View Mark Sheet</button>
+  <div class="content-area">
+    <div class="result-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/3233/3233514.png" width="60" style="margin-bottom: 15px;" alt="Result Icon">
+      <h2>Check Results</h2>
+      <p>Please enter your <b>Admission Number</b> to view the annual progress report and download the mark sheet.</p>
+      
+      <div id="errorBox">Invalid Admission Number. Please try again.</div>
+
+      <div class="input-group">
+        <label>Admission No / Roll No</label>
+        <input type="text" id="admInput" placeholder="Ex: GPSPW/2026/123" autocomplete="off">
+      </div>
+
+      <button class="search-btn" onclick="checkResult()">
+        <span>🔍 Search Result</span>
+      </button>
     </div>
   </div>
 
+  <footer class="school-footer">
+    <p><strong>GPS Pethgam Wagoora</strong> | Zone Wagoora, Baramulla</p>
+    <p>© 2026 Mohammad Ashraf Rather. All Rights Reserved.</p>
+  </footer>
+
   <script>
-    function redirectToMarksheet() {
+    function checkResult() {
       const admNo = document.getElementById('admInput').value.trim();
+      const errorBox = document.getElementById('errorBox');
       
       if (!admNo) {
-        alert("Please enter a valid Admission Number.");
+        errorBox.innerText = "Please enter an Admission Number.";
+        errorBox.style.display = "block";
         return;
       }
 
-      // Check if this student actually exists in your local database
+      // Checking local database
       const records = JSON.parse(localStorage.getItem("results")) || [];
       const studentExists = records.some(r => r.admNo === admNo);
 
       if (studentExists) {
-        // Redirect to your marks-sheet.html with the ID as a parameter
+        errorBox.style.display = "none";
+        // Pass the Admission Number to the marksheet page
         window.location.href = `marks-sheet.html?admNo=${encodeURIComponent(admNo)}`;
       } else {
-        alert("Result not found. Please verify the Admission Number or contact school administration.");
+        errorBox.innerText = "Result not found. Check the number or contact HOI.";
+        errorBox.style.display = "block";
       }
     }
   </script>
-
-  </body>
+</body>
 </html>
+
