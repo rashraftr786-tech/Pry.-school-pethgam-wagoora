@@ -196,20 +196,22 @@
 const params = new URLSearchParams(window.location.search);
 const admNo = params.get("admNo");
 
+// Fetch data from local storage
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
 const results = JSON.parse(localStorage.getItem("results")) || [];
 
-// Sort results for ranking
+// Sort all results by grand total to calculate School Rank
 const sortedAllResults = [...results].sort((a, b) => {
-    const totalA = Object.values(a.marks).reduce((acc, m) => acc + (m.fa.reduce((sum, f) => sum + f, 0) + m.cca + m.sa), 0);
-    const totalB = Object.values(b.marks).reduce((acc, m) => acc + (m.fa.reduce((sum, f) => sum + f, 0) + m.cca + m.sa), 0);
-    return totalB - totalA;
+    const calcTotal = (r) => Object.values(r.marks).reduce((acc, m) => 
+        acc + (m.fa.reduce((sum, f) => sum + f, 0) + m.cca + m.sa), 0);
+    return calcTotal(b) - calcTotal(a);
 });
 
 const sInfo = admissions.find(x => x.admNo === admNo);
 const sMarks = results.find(x => x.admNo === admNo);
 
-if(sInfo && sMarks) {
+if (sInfo && sMarks) {
+    // Populate Student Details
     document.getElementById('sname').innerText = sInfo.studentName;
     document.getElementById('admNo').innerText = sInfo.admNo;
     document.getElementById('fname').innerText = sInfo.fatherName;
@@ -217,17 +219,21 @@ if(sInfo && sMarks) {
     document.getElementById('dob').innerText = sInfo.dob;
     document.getElementById('classVal').innerText = sInfo.studentClass;
     document.getElementById('rollNo').innerText = sMarks.rollNo;
-    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
-    document.getElementById('pen').innerText = sInfo.penId || "N/A";
+    document.getElementById('apaar').innerText = sInfo.apaarId || "Not Available";
+    document.getElementById('pen').innerText = sInfo.penId || "Not Available";
     document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
     
-    // LINKED PHOTO AUTOMATION
-    if(sInfo.studentPhoto) {
-        document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" alt="Student Photo">`;
+    // PHOTO LINKING LOGIC
+    // This looks for 'studentPhoto' in your admission record (must be Base64 string)
+    const photoBox = document.getElementById('photoBox');
+    if (sInfo.studentPhoto && sInfo.studentPhoto.length > 100) {
+        photoBox.innerHTML = `<img src="${sInfo.studentPhoto}" alt="Student Photo" style="width:100%; height:100%; object-fit:cover;">`;
+    } else {
+        photoBox.innerHTML = `<span style="font-size:10px; color:#999; text-align:center;">Affix Photo<br>Here</span>`;
     }
 
-    // RANK CALCULATION AUTOMATION
+    // RANK CALCULATION
     const schoolRank = sortedAllResults.findIndex(r => r.admNo === admNo) + 1;
     document.getElementById('sRank').innerText = schoolRank;
 
@@ -238,43 +244,65 @@ if(sInfo && sMarks) {
     const classRank = classResults.findIndex(r => r.admNo === admNo) + 1;
     document.getElementById('cRank').innerText = classRank;
 
+    // MARKS CALCULATION & TABLE GENERATION
     let labels = [], data = [], gt30 = 0, gt20 = 0, gt50 = 0, gt100 = 0;
     const subjects = Object.keys(sMarks.marks);
+    
+    document.getElementById('marksBody').innerHTML = ""; // Clear existing rows
+    
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
-        const faT = m.fa.reduce((a, b) => a + b, 0);
-        const rowT = faT + m.cca + m.sa;
-        gt30 += faT; gt20 += m.cca; gt50 += m.sa; gt100 += rowT;
-        labels.push(sub); data.push(rowT);
+        const faT = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
+        const rowT = faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+        
+        gt30 += faT; gt20 += (Number(m.cca) || 0); gt50 += (Number(m.sa) || 0); gt100 += rowT;
+        labels.push(sub); 
+        data.push(rowT);
+
         const grade = rowT > 85 ? 'A+' : rowT > 70 ? 'A' : rowT > 55 ? 'B' : rowT > 40 ? 'C' : 'D';
         const prof = rowT > 70 ? 'Sky' : rowT > 45 ? 'Mountain' : 'Stream';
+        
         document.getElementById('marksBody').innerHTML += `
             <tr>
-                <td class="subject-name">${sub}</td>
+                <td class="subject-name" style="text-align:left; font-weight:bold; color:#b71c1c; padding-left:10px;">${sub}</td>
                 <td>${m.fa[0]}</td><td>${m.fa[1]}</td><td>${m.fa[2]}</td>
                 <td>${m.fa[3]}</td><td>${m.fa[4]}</td><td>${m.fa[5]}</td>
-                <td>${faT}</td><td>${m.cca}</td><td>${m.sa}</td>
-                <td style="font-weight:bold">${rowT}</td><td>${grade}</td><td>${prof}</td>
+                <td style="font-weight:bold;">${faT}</td>
+                <td>${m.cca}</td>
+                <td>${m.sa}</td>
+                <td style="font-weight:bold;">${rowT}</td>
+                <td>${grade}</td>
+                <td>${prof}</td>
             </tr>`;
     });
 
+    // Populate Grand Totals
     document.getElementById('gt30').innerText = gt30;
     document.getElementById('gt20').innerText = gt20;
     document.getElementById('gt50').innerText = gt50;
     document.getElementById('gt100').innerText = gt100;
-    const perc = Math.round(gt100 / 5);
-    document.getElementById('resTotal').innerText = gt100 + " / 500";
+    
+    const perc = Math.round(gt100 / subjects.length);
+    document.getElementById('resTotal').innerText = gt100 + " / " + (subjects.length * 100);
     document.getElementById('resPerc').innerText = perc + "%";
     
-    if(perc > 70) document.getElementById('pSky').innerText = "✓";
-    else if(perc > 45) document.getElementById('pMtn').innerText = "✓";
-    else document.getElementById('pStrm').innerText = "✓";
+    // Proficiency Ticks
+    document.getElementById('pSky').innerText = perc > 70 ? "✓" : "";
+    document.getElementById('pMtn').innerText = (perc > 45 && perc <= 70) ? "✓" : "";
+    document.getElementById('pStrm').innerText = perc <= 45 ? "✓" : "";
 
+    // Generate Bar Graph
     new Chart(document.getElementById('marksChart'), {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [{ label: 'Score', data: data, backgroundColor: '#5a3d8c', borderRadius: 4 }]
+            datasets: [{ 
+                label: 'Subject Score', 
+                data: data, 
+                backgroundColor: '#5a3d8c', 
+                borderRadius: 4,
+                barThickness: 25
+            }]
         },
         options: { 
             responsive: true, 
@@ -283,8 +311,11 @@ if(sInfo && sMarks) {
             plugins: { legend: { display: false } }
         }
     });
+} else {
+    alert("Record not found for Admission No: " + admNo);
 }
 </script>
+
 </body>
 </html>
                     
