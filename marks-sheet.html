@@ -5,126 +5,128 @@
     <title>Official Report Card - GPS Pethgam Wagoora</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @page { size: A4 landscape; margin: 0; }
+        /* 1. Physical Page Constraints */
+        @page { 
+            size: A4 landscape; 
+            margin: 0; 
+        }
+
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0; background: #f0f0f0;
+            margin: 0; 
+            padding: 0; 
+            background: #f0f0f0;
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
         }
 
+        /* 2. Strict Landscape Container */
         .printable-area {
             width: 297mm; 
-            min-height: 209mm; 
+            height: 210mm; /* Strict A4 Landscape Height */
             background: white;
             margin: 0 auto;
-            padding: 10mm; 
+            padding: 8mm; 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             border: 4px solid #5a3d8c;
+            overflow: hidden; /* Prevents vertical spilling */
+            position: relative;
         }
 
-        /* 1. Standardized Widths for Leveling Right Side */
-        .full-width-element {
-            width: 100%;
-            box-sizing: border-box;
-        }
+        .full-width { width: 100%; box-sizing: border-box; }
 
+        /* 3. Header Styling */
         .school-header { 
             background: #5a3d8c !important; 
             color: white !important; 
             display: flex; 
             align-items: center; 
-            padding: 10px; 
+            padding: 8px 15px; 
             border-radius: 4px;
         }
-        .school-logo { width: 65px; height: 65px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
+        .school-logo { width: 55px; height: 55px; background: white; border-radius: 50%; padding: 4px; margin-right: 15px; }
         .header-text { flex-grow: 1; text-align: center; }
-        .header-text h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .header-text h1 { margin: 0; font-size: 19px; letter-spacing: 1px; }
 
+        /* 4. Student Info Section - Fixed Height */
         .top-info-container { 
             display: flex; 
             gap: 10px; 
-            margin-top: 10px; 
-            align-items: stretch;
+            margin-top: 8px; 
+            height: 105px; 
         }
         .details-table { flex-grow: 1; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th, td { border: 1px solid #444; padding: 5px; text-align: center; }
-        .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 115px; }
-        .data-cell { text-align: left; padding-left: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+        th, td { border: 1px solid #444; padding: 4px; text-align: center; }
+        .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 105px; }
+        .data-cell { text-align: left; padding-left: 8px; background: white; }
 
-        .class-box-container { width: 100px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
-        .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 4px; font-size: 11px; }
-        .class-value { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; color: #5a3d8c; }
+        .class-box { width: 90px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
+        .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 3px; font-size: 10px; }
+        .class-val { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; color: #5a3d8c; }
 
-        .photo-box { width: 110px; border: 2px solid #5a3d8c; display: flex; align-items: center; justify-content: center; background: #fafafa; }
+        .photo-box { width: 105px; border: 2px solid #5a3d8c; display: flex; align-items: center; justify-content: center; background: #fafafa; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .subject-table { margin-top: 10px; width: 100%; }
-        .subject-table th { background: #dcd0ff !important; font-size: 10px; }
-        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 10px; }
+        /* 5. Marks Table */
+        .subject-table { margin-top: 8px; width: 100%; table-layout: fixed; }
+        .subject-table th { background: #dcd0ff !important; font-size: 9.5px; padding: 4px 2px; }
+        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; width: 130px; }
 
-        /* 2. Fixed Bottom Grid Columns for Perfect Alignment */
+        /* 6. Bottom Grid - Height Controlled */
         .bottom-grid { 
             display: grid; 
-            grid-template-columns: 28% 44% 28%; 
+            grid-template-columns: 28% 44% 28%; /* Perfect alignment for right side */
             gap: 10px; 
-            margin-top: 10px; 
-            flex-grow: 1;
-            width: 100%;
+            margin-top: 8px; 
+            flex: 1; /* Takes remaining space without overflowing */
+            min-height: 0; 
         }
-        .section-box { border: 1px solid #444; display: flex; flex-direction: column; height: 100%; }
-        .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 5px; text-align: center; font-size: 12px; }
+        .column-stack { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+        .section-box { border: 1px solid #444; display: flex; flex-direction: column; background: white; overflow: hidden; }
+        .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 4px; text-align: center; font-size: 11px; }
         
-        .remarks-content { padding: 10px; font-size: 11px; font-style: italic; flex-grow: 1; }
-        .chart-wrap { flex-grow: 1; padding: 5px; display: flex; align-items: center; justify-content: center; }
-        
-        /* Proficiency and Rank Styles */
-        .prof-row { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
-        .rank-container {
-            background: #37474f !important;
-            color: white !important;
-            padding: 8px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 11px;
-            font-weight: bold;
+        .remarks-content { padding: 6px; font-size: 10.5px; font-style: italic; flex-grow: 1; line-height: 1.2; }
+        .chart-wrap { flex: 1; padding: 5px; min-height: 0; position: relative; }
+
+        .prof-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #eee; font-size: 10px; }
+        .rank-bar {
+            background: #37474f !important; color: white !important;
+            padding: 5px; display: flex; justify-content: space-around; font-size: 10px; font-weight: bold;
             margin-top: auto;
         }
 
+        /* 7. Footer Signatures - Positioned at bottom of A4 */
         .footer-sigs { 
             display: flex; 
             justify-content: space-between; 
-            margin-top: 20px; 
-            padding-bottom: 5px;
+            margin-top: 10px; 
+            padding-top: 5px;
+            width: 100%;
         }
         .sig-block { width: 23%; text-align: center; }
-        .sig-space { height: 40px; }
-        .sig-label { border-top: 1.5px solid #333; padding-top: 5px; font-size: 11px; font-weight: bold; }
+        .sig-space { height: 30px; }
+        .sig-label { border-top: 1.5px solid #000; padding-top: 3px; font-size: 10px; font-weight: bold; }
 
-        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 100; }
+        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; z-index: 100; }
         @media print { .btn-download { display: none; } }
     </style>
 </head>
 <body>
 
 <div class="printable-area">
-    <div class="school-header full-width-element">
+    <div class="school-header full-width">
         <img src="logo.png" class="school-logo" alt="Logo">
         <div class="header-text">
             <h1>GOVERNMENT PRIMARY SCHOOL</h1>
-            <h2 style="margin:0; font-size:14px; opacity:0.9;">PETHGAM WAGOORA – PIN: 193109</h2>
-            <div class="header-contacts" style="font-size: 10px; margin-top: 5px; display: flex; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px;">
-                <span>UDISE: 01022202207</span>
-                <span>Email: pspathgam@gmail.com</span>
-                <span>Contact: +91 7006261694</span>
-            </div>
+            <h2 style="margin:0; font-size:12px;">PETHGAM WAGOORA – PIN: 193109</h2>
+            <div style="font-size: 9px; margin-top: 3px;">UDISE: 01022202207 | Email: pspathgam@gmail.com | Contact: +91 7006261694</div>
         </div>
     </div>
 
-    <div class="top-info-container full-width-element">
+    <div class="top-info-container full-width">
         <div class="details-table">
             <table>
                 <tr><td class="label-cell">Student Name:</td><td class="data-cell" id="sname" colspan="3" style="font-weight:bold;"></td></tr>
@@ -134,39 +136,39 @@
                 <tr><td class="label-cell">Apaar ID:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="pen"></td></tr>
             </table>
         </div>
-        <div class="class-box-container"><div class="class-label">CLASS</div><div class="class-value" id="classVal">--</div></div>
+        <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="classVal">--</div></div>
         <div class="photo-box" id="photoBox"><span style="font-size: 9px; color: #999;">Photo</span></div>
     </div>
 
-    <table class="subject-table full-width-element">
+    <table class="subject-table full-width">
         <thead>
             <tr>
-                <th width="150">Subject</th>
+                <th class="subject-name">Subject</th>
                 <th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th>
                 <th>Total(30)</th><th>CCA(20)</th><th>SA(50)</th>
                 <th>Total(100)</th><th>Grade</th><th>Proficiency</th>
             </tr>
         </thead>
         <tbody id="marksBody"></tbody>
-        <tr style="background:#f1f8e9 !important; font-weight:bold;">
+        <tr style="background:#f1f8e9 !important; font-weight:bold; height: 25px;">
             <td colspan="7" style="text-align:right; padding-right:10px;">Grand Total:</td>
             <td id="gt30"></td><td id="gt20"></td><td id="gt50"></td><td id="gt100"></td>
             <td id="finalGrade"></td><td id="finalProf"></td>
         </tr>
     </table>
 
-    <div class="bottom-grid full-width-element">
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div class="section-box">
+    <div class="bottom-grid full-width">
+        <div class="column-stack">
+            <div class="section-box" style="height: 110px;">
                 <div class="section-header" style="background:#b71c1c !important;">Co-Scholastic Record</div>
                 <table>
-                    <tr><td style="text-align:left;">Attendance %</td><td id="att" width="60"></td></tr>
+                    <tr><td style="text-align:left;">Attendance %</td><td id="att" width="50"></td></tr>
                     <tr><td style="text-align:left;">Discipline</td><td>A</td></tr>
                     <tr><td style="text-align:left;">Sports / Health</td><td>B</td></tr>
                     <tr><td style="text-align:left;">Art & Craft</td><td>A</td></tr>
                 </table>
             </div>
-            <div class="section-box" style="flex-grow: 1;">
+            <div class="section-box" style="flex: 1;">
                 <div class="section-header">General Remarks</div>
                 <div class="remarks-content" id="remarksText"></div>
             </div>
@@ -177,21 +179,21 @@
             <div class="chart-wrap"><canvas id="marksChart"></canvas></div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div class="section-box">
+        <div class="column-stack">
+            <div class="section-box" style="height: 110px;">
                 <div class="section-header">Final Result Summary</div>
-                <table>
-                    <tr><td class="label-cell" style="width:120px;">Total Marks:</td><td id="resTotal" style="font-weight:bold;"></td></tr>
+                <table style="height: 100%;">
+                    <tr><td class="label-cell" style="width:100px;">Total Marks:</td><td id="resTotal" style="font-weight:bold;"></td></tr>
                     <tr><td class="label-cell">Percentage:</td><td id="resPerc"></td></tr>
                     <tr><td class="label-cell">Result:</td><td id="resFinal" style="color:green; font-weight:bold;">PASS</td></tr>
                 </table>
             </div>
-            <div class="section-box" style="flex-grow: 1;">
+            <div class="section-box" style="flex: 1;">
                 <div class="section-header" style="background:#ef5350 !important;">Level of Proficiency</div>
                 <div class="prof-row"><span>Sky (Excellent)</span><b id="pSky"></b></div>
                 <div class="prof-row"><span>Mountain (Good)</span><b id="pMtn"></b></div>
                 <div class="prof-row"><span>Stream (Average)</span><b id="pStrm"></b></div>
-                <div class="rank-container">
+                <div class="rank-bar">
                     <span>School Rank: <span id="sRank">--</span></span>
                     <span>Class Rank: <span id="cRank">--</span></span>
                 </div>
@@ -199,7 +201,7 @@
         </div>
     </div>
 
-    <div class="footer-sigs full-width-element">
+    <div class="footer-sigs full-width">
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Class Teacher</div></div>
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Exam In-Charge</div></div>
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Parent/Guardian</div></div>
@@ -210,7 +212,6 @@
 <button class="btn-download" onclick="window.print()">Print Marksheet / Save PDF</button>
 
 <script>
-// --- JS Logic ---
 const params = new URLSearchParams(window.location.search);
 const admNo = params.get("admNo");
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -230,37 +231,38 @@ if (sInfo && sMarks) {
     document.getElementById('rollNo').innerText = sMarks.rollNo;
     document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
     document.getElementById('pen').innerText = sInfo.penId || "N/A";
-    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Superb Performance, always on front line.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
     
-    if (sInfo.studentPhoto && sInfo.studentPhoto.length > 100) {
+    if (sInfo.studentPhoto) {
         document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`;
     }
 
-    // Rank Logic Updated
     const sortedAll = [...results].sort((a,b) => {
-        const sum = r => Object.values(r.marks).reduce((acc, m) => acc + (m.fa.reduce((s,f)=>s+f,0) + m.cca + m.sa), 0);
-        return sum(b) - sum(a);
+        const sumMarks = r => Object.values(r.marks).reduce((acc, m) => acc + (m.fa.reduce((s,f)=>s+f,0) + m.cca + m.sa), 0);
+        return sumMarks(b) - sumMarks(a);
     });
     document.getElementById('sRank').innerText = sortedAll.findIndex(r => r.admNo === admNo) + 1;
-    
-    const classResults = sortedAll.filter(r => admissions.find(a => a.admNo === r.admNo)?.studentClass === sInfo.studentClass);
-    document.getElementById('cRank').innerText = classResults.findIndex(r => r.admNo === admNo) + 1;
+    const classSet = sortedAll.filter(r => admissions.find(a => a.admNo === r.admNo)?.studentClass === sInfo.studentClass);
+    document.getElementById('cRank').innerText = classSet.findIndex(r => r.admNo === admNo) + 1;
 
-    // Marks Population
-    let labels = [], data = [], gt100 = 0;
+    let labels = [], data = [], gt30=0, gt20=0, gt50=0, gt100 = 0;
     const subjects = Object.keys(sMarks.marks);
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
         const faT = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
         const rowT = faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-        gt100 += rowT;
+        gt30+=faT; gt20+=Number(m.cca); gt50+=Number(m.sa); gt100 += rowT;
         labels.push(sub); data.push(rowT);
         const grade = rowT > 85 ? 'A+' : rowT > 70 ? 'A' : rowT > 55 ? 'B' : rowT > 40 ? 'C' : 'D';
         const prof = rowT > 70 ? 'Sky' : rowT > 45 ? 'Mountain' : 'Stream';
         document.getElementById('marksBody').innerHTML += `<tr><td class="subject-name">${sub}</td><td>${m.fa[0]}</td><td>${m.fa[1]}</td><td>${m.fa[2]}</td><td>${m.fa[3]}</td><td>${m.fa[4]}</td><td>${m.fa[5]}</td><td>${faT}</td><td>${m.cca}</td><td>${m.sa}</td><td style="font-weight:bold;">${rowT}</td><td>${grade}</td><td>${prof}</td></tr>`;
     });
 
+    document.getElementById('gt30').innerText = gt30;
+    document.getElementById('gt20').innerText = gt20;
+    document.getElementById('gt50').innerText = gt50;
+    document.getElementById('gt100').innerText = gt100;
     const perc = Math.round(gt100 / subjects.length);
     document.getElementById('resTotal').innerText = gt100 + " / " + (subjects.length * 100);
     document.getElementById('resPerc').innerText = perc + "%";
@@ -277,4 +279,4 @@ if (sInfo && sMarks) {
 </script>
 </body>
 </html>
-                    
+                
