@@ -5,32 +5,30 @@
     <title>Official Report Card - GPS Pethgam Wagoora</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @page { 
-            size: A4 landscape; 
-            margin: 0; 
-        }
-
+        @page { size: A4 landscape; margin: 0; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; 
-            padding: 0; 
-            background: #f0f0f0;
+            margin: 0; padding: 0; background: #f0f0f0;
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
         }
 
-        /* Fixed: Changed height to min-height and removed overflow:hidden */
         .printable-area {
             width: 297mm; 
             min-height: 209mm; 
             background: white;
             margin: 0 auto;
-            padding: 8mm 10mm; 
+            padding: 10mm; 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             border: 4px solid #5a3d8c;
-            position: relative;
+        }
+
+        /* 1. Standardized Widths for Leveling Right Side */
+        .full-width-element {
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .school-header { 
@@ -40,78 +38,85 @@
             align-items: center; 
             padding: 10px; 
             border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box;
         }
         .school-logo { width: 65px; height: 65px; background: white; border-radius: 50%; padding: 5px; margin-right: 15px; }
         .header-text { flex-grow: 1; text-align: center; }
-        .header-text h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
-        .header-contacts { font-size: 10px; margin-top: 5px; display: flex; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; }
+        .header-text h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
 
         .top-info-container { 
             display: flex; 
             gap: 10px; 
             margin-top: 10px; 
             align-items: stretch;
-            width: 100%;
         }
-        .details-table { flex: 1; }
+        .details-table { flex-grow: 1; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th, td { border: 1px solid #444; padding: 4px; text-align: center; }
-        .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 110px; }
-        .data-cell { text-align: left; padding-left: 8px; background: #fff; }
+        th, td { border: 1px solid #444; padding: 5px; text-align: center; }
+        .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 115px; }
+        .data-cell { text-align: left; padding-left: 8px; }
 
-        .class-box-container { width: 90px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
-        .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 3px; font-size: 10px; }
-        .class-value { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #5a3d8c; }
+        .class-box-container { width: 100px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
+        .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 4px; font-size: 11px; }
+        .class-value { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; color: #5a3d8c; }
 
-        .photo-box { width: 100px; border: 2px solid #5a3d8c; display: flex; align-items: center; justify-content: center; background: #fafafa; }
+        .photo-box { width: 110px; border: 2px solid #5a3d8c; display: flex; align-items: center; justify-content: center; background: #fafafa; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .subject-table { margin-top: 10px; width: 100%; table-layout: fixed; }
-        .subject-table th { background: #dcd0ff !important; font-size: 9px; }
-        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; width: 130px; }
+        .subject-table { margin-top: 10px; width: 100%; }
+        .subject-table th { background: #dcd0ff !important; font-size: 10px; }
+        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 10px; }
 
-        /* Fixed: Grid alignment to ensure right side matches */
+        /* 2. Fixed Bottom Grid Columns for Perfect Alignment */
         .bottom-grid { 
             display: grid; 
             grid-template-columns: 28% 44% 28%; 
             gap: 10px; 
             margin-top: 10px; 
             flex-grow: 1;
+            width: 100%;
         }
-        .section-box { border: 1px solid #444; display: flex; flex-direction: column; background: #fff; }
-        .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 4px; text-align: center; font-size: 11px; }
+        .section-box { border: 1px solid #444; display: flex; flex-direction: column; height: 100%; }
+        .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 5px; text-align: center; font-size: 12px; }
         
-        .remarks-content { padding: 8px; font-size: 11px; font-style: italic; flex-grow: 1; }
-        .chart-wrap { flex-grow: 1; padding: 5px; min-height: 140px; }
-        .prof-row { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
+        .remarks-content { padding: 10px; font-size: 11px; font-style: italic; flex-grow: 1; }
+        .chart-wrap { flex-grow: 1; padding: 5px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Proficiency and Rank Styles */
+        .prof-row { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #eee; font-size: 11px; }
+        .rank-container {
+            background: #37474f !important;
+            color: white !important;
+            padding: 8px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: auto;
+        }
 
-        /* Fixed: Signatures brought back into view */
         .footer-sigs { 
             display: flex; 
             justify-content: space-between; 
-            margin-top: 10px; 
-            padding-top: 10px;
-            width: 100%;
+            margin-top: 20px; 
+            padding-bottom: 5px;
         }
-        .sig-block { width: 22%; text-align: center; }
-        .sig-space { height: 30px; }
-        .sig-label { border-top: 1.5px solid #000; padding-top: 3px; font-size: 11px; font-weight: bold; }
+        .sig-block { width: 23%; text-align: center; }
+        .sig-space { height: 40px; }
+        .sig-label { border-top: 1.5px solid #333; padding-top: 5px; font-size: 11px; font-weight: bold; }
 
-        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 9999; }
-        @media print { .btn-download { display: none; } body { background: white; } }
+        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 100; }
+        @media print { .btn-download { display: none; } }
     </style>
 </head>
 <body>
 
 <div class="printable-area">
-    <div class="school-header">
+    <div class="school-header full-width-element">
         <img src="logo.png" class="school-logo" alt="Logo">
         <div class="header-text">
             <h1>GOVERNMENT PRIMARY SCHOOL</h1>
-            <h2 style="margin:0; font-size:14px;">PETHGAM WAGOORA – PIN: 193109</h2>
-            <div class="header-contacts">
+            <h2 style="margin:0; font-size:14px; opacity:0.9;">PETHGAM WAGOORA – PIN: 193109</h2>
+            <div class="header-contacts" style="font-size: 10px; margin-top: 5px; display: flex; justify-content: center; gap: 20px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px;">
                 <span>UDISE: 01022202207</span>
                 <span>Email: pspathgam@gmail.com</span>
                 <span>Contact: +91 7006261694</span>
@@ -119,7 +124,7 @@
         </div>
     </div>
 
-    <div class="top-info-container">
+    <div class="top-info-container full-width-element">
         <div class="details-table">
             <table>
                 <tr><td class="label-cell">Student Name:</td><td class="data-cell" id="sname" colspan="3" style="font-weight:bold;"></td></tr>
@@ -133,29 +138,29 @@
         <div class="photo-box" id="photoBox"><span style="font-size: 9px; color: #999;">Photo</span></div>
     </div>
 
-    <table class="subject-table">
+    <table class="subject-table full-width-element">
         <thead>
             <tr>
-                <th class="subject-name">Subject</th>
+                <th width="150">Subject</th>
                 <th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th>
                 <th>Total(30)</th><th>CCA(20)</th><th>SA(50)</th>
                 <th>Total(100)</th><th>Grade</th><th>Proficiency</th>
             </tr>
         </thead>
         <tbody id="marksBody"></tbody>
-        <tr style="background:#f1f8e9; font-weight:bold;">
+        <tr style="background:#f1f8e9 !important; font-weight:bold;">
             <td colspan="7" style="text-align:right; padding-right:10px;">Grand Total:</td>
             <td id="gt30"></td><td id="gt20"></td><td id="gt50"></td><td id="gt100"></td>
             <td id="finalGrade"></td><td id="finalProf"></td>
         </tr>
     </table>
 
-    <div class="bottom-grid">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div class="bottom-grid full-width-element">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
             <div class="section-box">
                 <div class="section-header" style="background:#b71c1c !important;">Co-Scholastic Record</div>
                 <table>
-                    <tr><td style="text-align:left;">Attendance %</td><td id="att" width="50"></td></tr>
+                    <tr><td style="text-align:left;">Attendance %</td><td id="att" width="60"></td></tr>
                     <tr><td style="text-align:left;">Discipline</td><td>A</td></tr>
                     <tr><td style="text-align:left;">Sports / Health</td><td>B</td></tr>
                     <tr><td style="text-align:left;">Art & Craft</td><td>A</td></tr>
@@ -172,13 +177,13 @@
             <div class="chart-wrap"><canvas id="marksChart"></canvas></div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
             <div class="section-box">
                 <div class="section-header">Final Result Summary</div>
-                <table style="margin:0; border:none;">
-                    <tr><td class="label-cell" style="border:none;">Total Marks:</td><td id="resTotal" style="font-weight:bold; border:none;"></td></tr>
-                    <tr><td class="label-cell" style="border:none;">Percentage:</td><td id="resPerc" style="border:none;"></td></tr>
-                    <tr><td class="label-cell" style="border:none;">Result:</td><td id="resFinal" style="color:green; font-weight:bold; border:none;">PASS</td></tr>
+                <table>
+                    <tr><td class="label-cell" style="width:120px;">Total Marks:</td><td id="resTotal" style="font-weight:bold;"></td></tr>
+                    <tr><td class="label-cell">Percentage:</td><td id="resPerc"></td></tr>
+                    <tr><td class="label-cell">Result:</td><td id="resFinal" style="color:green; font-weight:bold;">PASS</td></tr>
                 </table>
             </div>
             <div class="section-box" style="flex-grow: 1;">
@@ -186,14 +191,15 @@
                 <div class="prof-row"><span>Sky (Excellent)</span><b id="pSky"></b></div>
                 <div class="prof-row"><span>Mountain (Good)</span><b id="pMtn"></b></div>
                 <div class="prof-row"><span>Stream (Average)</span><b id="pStrm"></b></div>
-                <div style="background:#37474f; color:white; padding:6px; border-radius:4px; font-size:10px; text-align:center; margin: 8px 5px auto 5px;">
-                    Rank: <span id="sRank">--</span> | Class Rank: <span id="cRank">--</span>
+                <div class="rank-container">
+                    <span>School Rank: <span id="sRank">--</span></span>
+                    <span>Class Rank: <span id="cRank">--</span></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="footer-sigs">
+    <div class="footer-sigs full-width-element">
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Class Teacher</div></div>
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Exam In-Charge</div></div>
         <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Parent/Guardian</div></div>
@@ -204,7 +210,7 @@
 <button class="btn-download" onclick="window.print()">Print Marksheet / Save PDF</button>
 
 <script>
-// (Previous JS logic remains identical)
+// --- JS Logic ---
 const params = new URLSearchParams(window.location.search);
 const admNo = params.get("admNo");
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -231,29 +237,33 @@ if (sInfo && sMarks) {
         document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`;
     }
 
-    let labels = [], data = [], gt30 = 0, gt20 = 0, gt50 = 0, gt100 = 0;
-    const subjects = Object.keys(sMarks.marks);
+    // Rank Logic Updated
+    const sortedAll = [...results].sort((a,b) => {
+        const sum = r => Object.values(r.marks).reduce((acc, m) => acc + (m.fa.reduce((s,f)=>s+f,0) + m.cca + m.sa), 0);
+        return sum(b) - sum(a);
+    });
+    document.getElementById('sRank').innerText = sortedAll.findIndex(r => r.admNo === admNo) + 1;
     
+    const classResults = sortedAll.filter(r => admissions.find(a => a.admNo === r.admNo)?.studentClass === sInfo.studentClass);
+    document.getElementById('cRank').innerText = classResults.findIndex(r => r.admNo === admNo) + 1;
+
+    // Marks Population
+    let labels = [], data = [], gt100 = 0;
+    const subjects = Object.keys(sMarks.marks);
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
         const faT = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
         const rowT = faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-        gt30 += faT; gt20 += (Number(m.cca) || 0); gt50 += (Number(m.sa) || 0); gt100 += rowT;
+        gt100 += rowT;
         labels.push(sub); data.push(rowT);
         const grade = rowT > 85 ? 'A+' : rowT > 70 ? 'A' : rowT > 55 ? 'B' : rowT > 40 ? 'C' : 'D';
         const prof = rowT > 70 ? 'Sky' : rowT > 45 ? 'Mountain' : 'Stream';
         document.getElementById('marksBody').innerHTML += `<tr><td class="subject-name">${sub}</td><td>${m.fa[0]}</td><td>${m.fa[1]}</td><td>${m.fa[2]}</td><td>${m.fa[3]}</td><td>${m.fa[4]}</td><td>${m.fa[5]}</td><td>${faT}</td><td>${m.cca}</td><td>${m.sa}</td><td style="font-weight:bold;">${rowT}</td><td>${grade}</td><td>${prof}</td></tr>`;
     });
 
-    document.getElementById('gt30').innerText = gt30;
-    document.getElementById('gt20').innerText = gt20;
-    document.getElementById('gt50').innerText = gt50;
-    document.getElementById('gt100').innerText = gt100;
     const perc = Math.round(gt100 / subjects.length);
     document.getElementById('resTotal').innerText = gt100 + " / " + (subjects.length * 100);
     document.getElementById('resPerc').innerText = perc + "%";
-    document.getElementById('finalGrade').innerText = perc > 85 ? 'A+' : perc > 70 ? 'A' : perc > 55 ? 'B' : perc > 40 ? 'C' : 'D';
-    document.getElementById('finalProf').innerText = perc > 70 ? 'Sky' : perc > 45 ? 'Mountain' : 'Stream';
     document.getElementById('pSky').innerText = perc > 70 ? "✓" : "";
     document.getElementById('pMtn').innerText = (perc > 45 && perc <= 70) ? "✓" : "";
     document.getElementById('pStrm').innerText = perc <= 45 ? "✓" : "";
@@ -267,3 +277,4 @@ if (sInfo && sMarks) {
 </script>
 </body>
 </html>
+                    
