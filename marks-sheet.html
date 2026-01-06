@@ -75,24 +75,34 @@
 
         .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         @media print {
-    .school-header, .section-header, th {
+    /* Forces background colors to render */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Specifically ensures headers and labels keep their color */
+    .school-header, .section-header {
         background-color: #5a3d8c !important;
         color: white !important;
+        -webkit-print-color-adjust: exact !important;
     }
+
     .label-cell {
         background-color: #e1f5fe !important;
-        -webkit-print-color-adjust: exact;
     }
+
     .subject-table th {
         background-color: #dcd0ff !important;
     }
+
+    /* Removes any grey background from the body to keep the PDF clean */
     body {
-        background: none;
-    }
-    .printable-area {
-        border: 4px solid #5a3d8c !important;
+        background: white !important;
     }
 }
+
 
     </style>
 </head>
