@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admission Dossier - GPS Pethgam</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: auto;
+            position: relative;
+            page-break-after: always; /* This creates the 7-page split */
+            box-sizing: border-box;
+        }
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; opacity: 0.05; z-index: -1;
+        }
+        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px; }
+        img.upload-preview { max-width: 100%; max-height: 700px; display: block; margin: 20px auto; border: 1px solid #ccc; }
+        table { width: 100%; border-collapse: collapse; }
+        td { border: 1px solid #000; padding: 10px; }
+        h2 { text-align: center; background: #eee; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="page" id="page1">
+        <img src="logo.png" class="watermark">
+        <div class="header">
+            <h1>GPS PETHGAM WAGOORA</h1>
+            <h2>PAGE 1: ADMISSION FORM</h2>
+        </div>
+        <table id="admTable"></table>
+    </div>
+
+    <div class="page" id="page2">
+        <img src="logo.png" class="watermark">
+        <h2>PAGE 2: APAAR ID CONSENT</h2>
+        <p id="apaarText"></p>
+        <div style="margin-top:100px; display:flex; justify-content:space-between;">
+            <span>Parent Signature</span>
+            <span>Headmaster Seal</span>
+        </div>
+    </div>
+
+    <div class="page"><h2>PAGE 3: BIRTH CERTIFICATE</h2><img id="viewBirth" class="upload-preview"></div>
+    <div class="page"><h2>PAGE 4: BLOOD GROUP REPORT</h2><img id="viewBlood" class="upload-preview"></div>
+    <div class="page"><h2>PAGE 5: AADHAAR (CHILD)</h2><img id="viewAadhaarC" class="upload-preview"></div>
+    <div class="page"><h2>PAGE 6: AADHAAR (PARENT)</h2><img id="viewAadhaarP" class="upload-preview"></div>
+    <div class="page" id="bankPage"><h2>PAGE 7: BANK PASSBOOK</h2><img id="viewBank" class="upload-preview"></div>
+
+    <script>
+        window.onload = function() {
+            const data = JSON.parse(localStorage.getItem('temp_adm'));
+            
+            // Fill Page 1
+            const table = document.getElementById('admTable');
+            const fields = ['sname', 'fname', 'mname', 'dob', 'sclass', 'village', 'aadhaar'];
+            fields.forEach(f => {
+                table.innerHTML += `<tr><td><strong>${f.toUpperCase()}</strong></td><td>${data[f] || ''}</td></tr>`;
+            });
+
+            // Fill Document Pages
+            document.getElementById('viewBirth').src = data.docBirth || '';
+            document.getElementById('viewBlood').src = data.docBlood || '';
+            document.getElementById('viewAadhaarC').src = data.docAadhaarChild || '';
+            document.getElementById('viewAadhaarP').src = data.docAadhaarParent || '';
+            
+            if(data.docBank) {
+                document.getElementById('viewBank').src = data.docBank;
+            } else {
+                document.getElementById('bankPage').style.display = 'none';
+            }
+
+            // Auto Print
+            setTimeout(() => { window.print(); }, 1000);
+        }
+    </script>
+</body>
+</html>
