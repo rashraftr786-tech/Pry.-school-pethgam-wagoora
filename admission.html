@@ -156,49 +156,74 @@
 </div>
 
 <script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('photoPreview').src = e.target.result;
-                document.getElementById('photoPreview').style.display = 'block';
-                document.getElementById('photoLabel').style.display = 'none';
+    // Helper to shrink images so they fit in browser memory
+async function shrinkImage(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const maxWidth = 800; // Limit resolution for PDF
+                const scale = maxWidth / img.width;
+                canvas.width = maxWidth;
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.7)); // 70% quality
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+        };
+    });
+}
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photoPreview').src = e.target.result;
+            document.getElementById('photoPreview').style.display = 'block';
+            document.getElementById('photoLabel').style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
     }
+}
 
-    async function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    }
+async function proceedToApaar() {
+    const form = document.getElementById('admForm');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
 
-    async function proceedToApaar() {
-        const form = document.getElementById('admForm');
-        if (!form.checkValidity()) { form.reportValidity(); return; }
+    const btn = document.querySelector('.btn-proceed');
+    btn.innerText = "Processing Photos... Please Wait";
+    btn.disabled = true;
 
-        const formData = new FormData(form);
-        const data = {};
-        
-        formData.forEach((value, key) => {
-            if (!(value instanceof File)) { data[key] = value; }
-        });
+    const formData = new FormData(form);
+    const data = {};
+    
+    formData.forEach((value, key) => {
+        if (!(value instanceof File)) { data[key] = value; }
+    });
 
-        const fileFields = ['studentPhoto', 'docBirth', 'docBlood', 'docAadhaarChild', 'docAadhaarParent'];
+    // List of all file inputs to process
+    const fileFields = ['studentPhoto', 'docBirth', 'docBlood', 'docAadhaarChild', 'docAadhaarParent'];
+    
+    try {
         for (let field of fileFields) {
             const fileInput = form.querySelector(`[name="${field}"]`);
             if (fileInput && fileInput.files[0]) {
-                data[field] = await fileToBase64(fileInput.files[0]);
+                data[field] = await shrinkImage(fileInput.files[0]);
             }
         }
-
         localStorage.setItem('temp_adm', JSON.stringify(data));
         window.location.href = 'apaar-input.html';
+    } catch (e) {
+        alert("Memory Error: The images are too large. Please try using smaller files.");
+        btn.disabled = false;
+        btn.innerText = "Submit Step 1 & Proceed ➔";
     }
+}
+
 </script>
 
 </body>
