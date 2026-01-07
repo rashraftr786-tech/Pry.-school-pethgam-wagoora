@@ -5,26 +5,27 @@
   <title>Consolidated Master Record | GPS Pethgam Wagoora</title>
   <style>
     @page { size: A4 landscape; margin: 5mm; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; }
     .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; border-radius: 4px; }
     .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; }
     
-    .master-container { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; overflow-x: auto; }
-    .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 20px; }
-    .sub-title { text-align: center; margin: 5px 0 15px 0; color: #333; font-weight: bold; font-size: 14px; }
+    .master-container { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; overflow-x: auto; }
+    .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
+    .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    table { width: 100%; border-collapse: collapse; font-size: 7.5px; margin-top: 10px; }
-    th, td { border: 1px solid #444; padding: 2px; text-align: center; }
-    th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; }
-    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; }
-    .header-group { background: #5a3d8c; color: white; }
+    /* Optimized for extreme horizontal width */
+    table { width: 100%; border-collapse: collapse; font-size: 6.5px; table-layout: fixed; }
+    th, td { border: 1px solid #444; padding: 1px; text-align: center; overflow: hidden; }
+    th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; height: 25px; }
+    .header-group { background: #5a3d8c !important; color: white; font-size: 8px; }
+    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; font-size: 7px; }
     .summary-col { background: #fffde7; font-weight: bold; }
-    .subject-header { background: #e8f5e9; font-weight: bold; }
+    .sub-total { background: #eeeeee; font-weight: bold; }
 
     @media print {
       .nav-header, .no-print { display: none !important; }
       body { background: white; padding: 0; }
-      table { font-size: 6.5px; width: 100%; }
+      table { font-size: 5.5px; }
     }
   </style>
 </head>
@@ -40,41 +41,37 @@
 
 <div class="master-container">
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
-  <div class="sub-title">Consolidated Master Result Sheet (Award Roll) - Session 2024-25</div>
+  <div class="sub-title">Full Consolidated Award Roll (Detailed Assessment) - Session 2024-25</div>
 
   <table id="masterTable">
     <thead>
       <tr class="header-group">
-        <th colspan="7">Student Profile (Identification)</th>
-        <th colspan="9">English (100)</th>
-        <th colspan="9">Mathematics (100)</th>
-        <th colspan="9">EVS (100)</th>
-        <th colspan="9">Urdu (100)</th>
-        <th colspan="9">Kashmiri (100)</th>
-        <th colspan="7">Final Summary</th>
+        <th colspan="7" style="width: 250px;">Student Information</th>
+        <th colspan="9">English</th>
+        <th colspan="9">Mathematics</th>
+        <th colspan="9">EVS</th>
+        <th colspan="9">Urdu</th>
+        <th colspan="9">Kashmiri</th>
+        <th colspan="7">Final Result Summary</th>
       </tr>
       <tr>
-        <th>Adm No</th>
-        <th>Roll No</th>
-        <th>Student Name</th>
-        <th>Father's Name</th>
-        <th>Mother's Name</th>
-        <th>APAAR ID</th>
-        <th>PEN Number</th>
-        
-        <th>F1-6</th><th>CC</th><th>SA</th><th>T</th>
-        <th>F1-6</th><th>CC</th><th>SA</th><th>T</th>
-        <th>F1-6</th><th>CC</th><th>SA</th><th>T</th>
-        <th>F1-6</th><th>CC</th><th>SA</th><th>T</th>
-        <th>F1-6</th><th>CC</th><th>SA</th><th>T</th>
-        
-        <th class="summary-col">G.Total</th>
+        <th style="width:30px;">Adm</th>
+        <th style="width:25px;">Roll</th>
+        <th style="width:80px;">Name</th>
+        <th style="width:80px;">Father's Name</th>
+        <th style="width:80px;">Mother's Name</th>
+        <th style="width:70px;">APAAR ID</th>
+        <th style="width:70px;">PEN No</th>
+
+        ${Array(5).fill('<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>').join('')}
+
+        <th class="summary-col">G.Tot</th>
         <th class="summary-col">%</th>
-        <th class="summary-col">G.P</th>
-        <th class="summary-col">Grade</th>
-        <th class="summary-col">C.Rank</th>
-        <th class="summary-col">S.Rank</th>
-        <th class="summary-col">Remarks</th>
+        <th class="summary-col">GP</th>
+        <th class="summary-col">Grd</th>
+        <th class="summary-col">C.Rk</th>
+        <th class="summary-col">S.Rk</th>
+        <th class="summary-col">Result</th>
       </tr>
     </thead>
     <tbody id="masterBody"></tbody>
@@ -108,14 +105,18 @@ function renderMasterTable() {
         
         subs.forEach(sub => {
             const m = r.marks[sub] || { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
-            const faSum = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
-            const ccMarks = Number(m.cca) || 0;
-            const saMarks = Number(m.sa) || 0;
-            const subTotal = faSum + ccMarks + saMarks;
+            const fa = m.fa || [0,0,0,0,0,0];
+            const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
+            const cc = Number(m.cca) || 0;
+            const sa = Number(m.sa) || 0;
+            const subTotal = faSum + cc + sa;
             grandTotal += subTotal;
             
-            // Displays detailed breakdown per subject as requested
-            subCells += `<td>${faSum}</td><td>${ccMarks}</td><td>${saMarks}</td><td style="font-weight:bold">${subTotal}</td>`;
+            // Build the 9-column assessment scheme per subject
+            subCells += `
+                <td>${fa[0]||0}</td><td>${fa[1]||0}</td><td>${fa[2]||0}</td>
+                <td>${fa[3]||0}</td><td>${fa[4]||0}</td><td>${fa[5]||0}</td>
+                <td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
         });
 
         const perc = (grandTotal / 5).toFixed(1);
@@ -126,9 +127,9 @@ function renderMasterTable() {
             <td>${r.rollNo || '-'}</td>
             <td class="student-info">${s.studentName.toUpperCase()}</td>
             <td class="student-info">${s.fatherName}</td>
-            <td>${s.motherName || '-'}</td>
-            <td style="background:#e3f2fd">${s.apaarId || '-'}</td>
-            <td style="background:#e3f2fd">${s.penNo || '-'}</td>
+            <td class="student-info">${s.motherName || '-'}</td>
+            <td>${s.apaarId || '-'}</td>
+            <td>${s.penNo || '-'}</td>
             ${subCells}
             <td class="summary-col">${grandTotal}</td>
             <td class="summary-col">${perc}%</td>
@@ -141,8 +142,12 @@ function renderMasterTable() {
     });
 }
 
-window.onload = renderMasterTable;
+// Fixed the template literal rendering in the header
+document.addEventListener('DOMContentLoaded', () => {
+    const headerRow = document.querySelector('thead tr:nth-child(2)');
+    // This part is handled by the static HTML above now.
+    renderMasterTable();
+});
 </script>
 </body>
 </html>
-    
