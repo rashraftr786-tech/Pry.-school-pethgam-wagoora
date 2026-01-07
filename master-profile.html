@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Master Profile Hub | GPS Pethgam Wagoora</title>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        
+        /* Administrative Navigation */
+        .admin-bar { 
+            background: #5a3d8c; padding: 15px; color: white; display: flex; 
+            justify-content: space-between; border-radius: 8px; margin-bottom: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .search-box input { padding: 8px; border-radius: 4px; border: none; width: 200px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-print { background: #4caf50; color: white; }
+
+        /* Profile Document Structure */
+        .document-page { 
+            background: white; width: 210mm; min-height: 297mm; margin: auto; 
+            padding: 12mm; box-sizing: border-box; border: 2px solid #5a3d8c;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative;
+        }
+
+        /* Header Style from Picture 2 */
+        .school-header { 
+            background: #5a3d8c !important; color: white; display: flex; 
+            align-items: center; padding: 15px; border-radius: 4px; margin-bottom: 15px;
+        }
+        .header-logo { width: 80px; height: 80px; background: white; border-radius: 10%; margin-right: 20px; }
+        .header-text h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+        .header-sub { font-size: 11px; opacity: 0.9; margin-top: 5px; }
+
+        /* Profile Grid */
+        .profile-grid { display: grid; grid-template-columns: 1fr 120px; gap: 15px; margin-bottom: 20px; }
+        .info-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .info-table td { border: 1px solid #ddd; padding: 6px; }
+        .lbl { background: #f3e5f5; font-weight: bold; width: 130px; }
+        .val { font-weight: bold; color: #1a237e; }
+
+        .photo-box { 
+            border: 2px solid #5a3d8c; height: 140px; display: flex; 
+            align-items: center; justify-content: center; background: #fafafa; font-size: 10px;
+        }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Marks Table - Replicating Result Spreadsheet Layout */
+        .marks-section-title { 
+            background: #5a3d8c; color: white; padding: 5px 10px; 
+            font-size: 14px; font-weight: bold; border-radius: 4px 4px 0 0; margin-top: 15px;
+        }
+        .marks-table { width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: center; }
+        .marks-table th, .marks-table td { border: 1px solid #444; padding: 4px; }
+        .marks-table th { background: #dcd0ff; }
+        .sub-name { text-align: left; padding-left: 8px; font-weight: bold; background: #f9f9f9; }
+
+        /* Co-Scholastic & Final Fields from Picture 1 & 2 */
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .status-box { border: 1px solid #444; padding: 10px; border-radius: 4px; }
+        .result-pass { color: green; font-weight: bold; font-size: 18px; }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .admin-bar { display: none; }
+            .document-page { margin: 0; border: 1px solid #5a3d8c; width: 100%; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-bar">
+    <div class="search-box">
+        <strong>Enter Admission No:</strong>
+        <input type="text" id="inputAdm" placeholder="e.g. 107" onkeypress="if(event.key==='Enter') generateProfile()">
+        <button class="btn" onclick="generateProfile()" style="background:#ffcc00;">View Profile</button>
+    </div>
+    <div>
+        <button class="btn btn-print" onclick="window.print()">📥 Print / Save PDF</button>
+    </div>
+</div>
+
+<div class="document-page" id="printableProfile">
+    <div class="school-header">
+        <div class="header-logo" id="headerLogoContainer">
+            <img src="logo.png" style="width:100%; height:100%;" alt="Logo">
+        </div>
+        <div class="header-text">
+            <h1>GOVERNMENT PRIMARY SCHOOL</h1>
+            <div class="header-sub">PETHGAM WAGOORA – BARAMULLA, J&K (193109)</div>
+            <div class="header-sub">UDISE: 01022202207 | Email: pspathgam@gmail.com | Contact: +91 7006261694</div>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+        <table class="info-table">
+            <tr>
+                <td class="lbl">Student Name</td><td class="val" id="dName" colspan="3">---</td>
+            </tr>
+            <tr>
+                <td class="lbl">Admission No</td><td class="val" id="dAdm">---</td>
+                <td class="lbl">Roll No</td><td class="val" id="dRoll">---</td>
+            </tr>
+            <tr>
+                <td class="lbl">Father's Name</td><td class="val" id="dFather">---</td>
+                <td class="lbl">Mother's Name</td><td class="val" id="dMother">---</td>
+            </tr>
+            <tr>
+                <td class="lbl">Date of Birth</td><td class="val" id="dDob">---</td>
+                <td class="lbl">Class</td><td class="val" id="dClass">---</td>
+            </tr>
+            <tr>
+                <td class="lbl">Apaar ID</td><td class="val" id="dApaar">---</td>
+                <td class="lbl">PEN Number</td><td class="val" id="dPen">---</td>
+            </tr>
+        </table>
+        <div class="photo-box" id="dPhoto">STUDENT PHOTO</div>
+    </div>
+
+    <div class="marks-section-title">Academic Assessment Record (Session 2024-25)</div>
+    <table class="marks-table">
+        <thead>
+            <tr>
+                <th rowspan="2" style="width:120px;">Subject</th>
+                <th colspan="6">Formative Assessments (5 Marks Each)</th>
+                <th rowspan="2">Total<br>(30)</th>
+                <th rowspan="2">Co-Curr<br>(20)</th>
+                <th rowspan="2">Summative<br>(50)</th>
+                <th rowspan="2">Grand Total<br>(100)</th>
+                <th rowspan="2">Grade</th>
+            </tr>
+            <tr>
+                <th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th>
+            </tr>
+        </thead>
+        <tbody id="marksBody">
+            </tbody>
+        <tfoot id="marksFoot">
+            <tr style="background:#e1f5fe; font-weight:bold;">
+                <td colspan="7" style="text-align:right;">OVERALL TOTALS:</td>
+                <td id="gt30">0</td><td id="gt20">0</td><td id="gt50">0</td><td id="gt100">0</td><td id="finalGrade">-</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer-grid">
+        <div class="status-box">
+            <div style="font-weight:bold; border-bottom:1px solid #444; margin-bottom:5px;">Co-Scholastic Record</div>
+            <table style="width:100%; font-size:11px;">
+                <tr><td>Attendance %:</td><td class="val" id="dAtt">---</td></tr>
+                <tr><td>Discipline:</td><td class="val" id="dDisc">A</td></tr>
+                <tr><td>Sports / Health:</td><td class="val" id="dSport">B</td></tr>
+                <tr><td>Art & Craft:</td><td class="val" id="dArt">A</td></tr>
+            </table>
+        </div>
+        <div class="status-box" style="text-align:center;">
+            <div style="font-weight:bold; margin-bottom:5px;">Final Result Summary</div>
+            <div style="font-size:12px;">Percentage: <span id="dPerc" class="val">0%</span></div>
+            <div id="dStatus" class="result-pass">---</div>
+            <div style="font-size:11px; margin-top:5px;">Proficiency: <b id="dProf">---</b></div>
+        </div>
+    </div>
+
+    <div style="margin-top:15px; border:1px solid #444; padding:10px; font-size:12px; height:60px;">
+        <strong>General Remarks:</strong> <span id="dRemarks" style="font-style:italic;">---</span>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 50px; font-size: 11px; font-weight:bold;">
+        <div style="text-align:center; border-top:1px solid #000; width:120px; padding-top:5px;">Class Teacher</div>
+        <div style="text-align:center; border-top:1px solid #000; width:120px; padding-top:5px;">Exam In-Charge</div>
+        <div style="text-align:center; border-top:1px solid #000; width:120px; padding-top:5px;">Parent/Guardian</div>
+        <div style="text-align:center; border-top:1px solid #000; width:140px; padding-top:5px;">Headmaster Seal/Sign</div>
+    </div>
+</div>
+
+<script>
+function generateProfile() {
+    const adm = document.getElementById('inputAdm').value.trim();
+    if(!adm) return alert("Please enter Admission Number");
+
+    const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+    const results = JSON.parse(localStorage.getItem("results")) || [];
+
+    const student = admissions.find(s => s.admNo === adm);
+    const score = results.find(r => r.admNo === adm);
+
+    if(!student) return alert("No Admission Record Found!");
+
+    // Map Personal Profile Fields
+    document.getElementById('dName').innerText = student.studentName.toUpperCase();
+    document.getElementById('dAdm').innerText = student.admNo;
+    document.getElementById('dFather').innerText = student.fatherName;
+    document.getElementById('dMother').innerText = student.motherName;
+    document.getElementById('dDob').innerText = student.dob;
+    document.getElementById('dClass').innerText = student.studentClass || "---";
+    document.getElementById('dApaar').innerText = student.apaarId || "---";
+    document.getElementById('dPen').innerText = student.penNo || "---";
+    if(student.studentPhoto) document.getElementById('dPhoto').innerHTML = `<img src="${student.studentPhoto}">`;
+
+    if(!score) {
+        document.getElementById('marksBody').innerHTML = "<tr><td colspan='12'>No Academic Data found for this session.</td></tr>";
+        return;
+    }
+
+    // Map Academic Fields
+    document.getElementById('dRoll').innerText = score.rollNo || "---";
+    document.getElementById('dAtt').innerText = score.attendance || "---";
+    document.getElementById('dRemarks').innerText = score.remarks || "Superb Performance, Always on front line";
+
+    let totals = { f30:0, cca20:0, sa50:0, g100:0 };
+    const subjects = Object.keys(score.marks || {});
+    const marksBody = document.getElementById('marksBody');
+    marksBody.innerHTML = "";
+
+    subjects.forEach(sub => {
+        const m = score.marks[sub];
+        const fa = (m.fa || [0,0,0,0,0,0]).map(x => Number(x) || 0);
+        const faT = fa.reduce((a,b) => a+b, 0);
+        const cca = Number(m.cca) || 0;
+        const sa = Number(m.sa) || 0;
+        const subTotal = faT + cca + sa;
+
+        totals.f30 += faT; totals.cca20 += cca; totals.sa50 += sa; totals.g100 += subTotal;
+
+        const grade = subTotal >= 90 ? 'A+' : subTotal >= 80 ? 'A' : subTotal >= 70 ? 'B+' : subTotal >= 60 ? 'B' : 'C';
+
+        marksBody.innerHTML += `
+            <tr>
+                <td class="sub-name">${sub}</td>
+                <td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td>
+                <td style="font-weight:bold">${faT}</td>
+                <td>${cca}</td>
+                <td>${sa}</td>
+                <td style="font-weight:bold; background:#f9f9f9">${subTotal}</td>
+                <td>${grade}</td>
+            </tr>`;
+    });
+
+    // Populate Footer Totals
+    document.getElementById('gt30').innerText = totals.f30;
+    document.getElementById('gt20').innerText = totals.cca20;
+    document.getElementById('gt50').innerText = totals.sa50;
+    document.getElementById('gt100').innerText = totals.g100;
+    
+    const avg = totals.g100 / (subjects.length || 1);
+    document.getElementById('dPerc').innerText = Math.round(avg) + "%";
+    document.getElementById('dStatus').innerText = avg >= 33 ? "PASS" : "FAIL";
+    document.getElementById('dProf').innerText = avg >= 80 ? "Sky (Excellent)" : avg >= 50 ? "Mountain (Good)" : "Stream (Average)";
+    document.getElementById('finalGrade').innerText = avg >= 90 ? "A+" : avg >= 80 ? "A" : "B";
+}
+</script>
+</body>
+</html>
+                                
