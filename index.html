@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GPS Pethgam Wagoora - School ERP Portal</title>
-  <link rel="stylesheet" href="css/style.css">
   <style>
     :root {
       --primary: #1b5e20;
@@ -19,27 +18,29 @@
       background-color: #f4f7f6;
     }
 
-    /* 🧭 Navigation matching your file structure */
+    /* Navigation Menu */
     .menu {
       background: var(--primary);
       position: sticky;
       top: 0;
       z-index: 1000;
       text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .menu a {
       color: white;
       text-decoration: none;
-      padding: 15px 20px;
+      padding: 15px 18px;
       display: inline-block;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
+      text-transform: uppercase;
     }
 
     .menu a:hover { color: var(--accent); background: rgba(255,255,255,0.1); }
 
-    /* 🏫 Header Section */
+    /* Header Section */
     .school-header {
       display: flex;
       align-items: center;
@@ -50,8 +51,9 @@
 
     .school-logo { width: 80px; height: auto; margin-right: 20px; }
     .school-title h1 { margin: 0; color: var(--primary); font-size: 24px; }
+    .school-title p { margin: 5px 0 0; color: #666; font-size: 14px; }
 
-    /* 🖼️ Hero Section */
+    /* Hero Section */
     .hero {
       background: var(--primary-gradient);
       color: white;
@@ -60,7 +62,7 @@
       clip-path: ellipse(150% 100% at 50% 0%);
     }
 
-    /* 🧱 ERP Dashboard Cards */
+    /* Dashboard Grid */
     .main-content {
       max-width: 1200px;
       margin: -40px auto 40px;
@@ -78,20 +80,38 @@
       margin-bottom: 25px;
     }
 
-    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quick-links { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 12px; 
+    }
+
     .link-btn {
-      background: #f0f0f0;
-      padding: 15px;
+      background: #f8f9fa;
+      padding: 15px 10px;
       text-align: center;
       border-radius: 8px;
       text-decoration: none;
       color: var(--primary);
       font-weight: bold;
       transition: 0.3s;
+      border: 1px solid #e0e0e0;
+      font-size: 13px;
     }
-    .link-btn:hover { background: var(--primary); color: white; }
+    
+    .link-btn:hover { 
+      background: var(--primary); 
+      color: white; 
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
 
     .school-footer { background: #102e12; color: white; text-align: center; padding: 40px 5%; }
+    
+    @media (max-width: 768px) {
+      .main-content { grid-template-columns: 1fr; }
+      .menu a { padding: 10px; font-size: 11px; }
+    }
   </style>
 </head>
 <body>
@@ -100,58 +120,69 @@
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="school-title">
       <h1>Government Primary School Pethgam Wagoora</h1>
-      <p>UDISE: 01022202207 | Baramulla, J&K</p>
+      <p>UDISE: 01022202207 | Wagoora, Baramulla, J&K</p>
     </div>
   </header>
 
   <nav class="menu">
     <a href="index.html">🏠 Home</a>
     <a href="admission.html">📝 Admission</a>
-    <a href="results.html">📊 Results</a>
-    <a href="mdm-statement.html">🍽️ MDM Report</a>
-    <a href="admin/dashboard.html">🔑 Admin</a>
-    <a href="teacher/dashboard.html">👨‍🏫 Teacher</a>
+    <a href="adm-register.html">📋 Register</a>
+    <a href="upload-results.html">📤 Upload Results</a>
+    <a href="results.html">📊 View Results</a>
+    <a href="mdm.html">🍽️ Daily MDM</a>
+    <a href="mdm-statement.html">📜 MDM Report</a>
   </nav>
 
   <section class="hero">
-    <h2>School ERP & Management System</h2>
-    <p>Empowering education through Firebase-backed digital management.</p>
+    <h2>School Management System (Session 2026)</h2>
+    <p>Centralized platform for Student Records, Academic Results, and MDM Tracking.</p>
   </section>
 
   <div class="main-content">
     <div class="left-col">
       <div class="card">
-        <h3>📢 Welcome to the ERP Portal</h3>
-        <p>This system manages student admissions, result processing, and Mid-Day Meal (MDM) expenditure tracking for GPS Pethgam Wagoora.</p>
+        <h3>📢 System Overview</h3>
+        <p>This ERP portal serves as the primary interface for GPS Pethgam Wagoora staff to manage student lifecycles, from admission to result certification.</p>
       </div>
 
       <div class="card">
-        <h3>📊 Current Statistics</h3>
+        <h3>📊 Current Enrollment</h3>
         <div style="display:flex; justify-content: space-around; text-align:center;">
-          <div><h2 id="totalStudents">0</h2><p>Students</p></div>
-          <div><h2>100%</h2><p>MDM Coverage</p></div>
-          <div><h2>04</h2><p>Faculty</p></div>
+          <div><h2 id="totalStudents" style="color:var(--primary); font-size: 40px;">0</h2><p>Total Students</p></div>
+          <div><h2 style="color:var(--primary); font-size: 40px;">100%</h2><p>MDM Coverage</p></div>
+          <div><h2 style="color:var(--primary); font-size: 40px;">04</h2><p>Active Faculty</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🆔 APAAR / Pen ID Management</h3>
+        <div class="quick-links" style="grid-template-columns: 1fr 1fr;">
+          <a href="apaar-input.html" class="link-btn">Input APAAR Data</a>
+          <a href="apaar-pdf.html" class="link-btn">Generate ID Cards</a>
         </div>
       </div>
     </div>
 
     <div class="right-col">
       <div class="card">
-        <h3>📂 Quick Access</h3>
+        <h3>📂 Administrative Tasks</h3>
         <div class="quick-links">
           <a href="admission.html" class="link-btn">New Admission</a>
-          <a href="mdm.html" class="link-btn">Daily MDM</a>
+          <a href="adm-register.html" class="link-btn">Admission Register</a>
+          <a href="upload-results.html" class="link-btn">Upload Marks</a>
           <a href="results.html" class="link-btn">View Results</a>
-          <a href="adm-register.html" class="link-btn">Register</a>
+          <a href="mdm.html" class="link-btn">Daily MDM Log</a>
+          <a href="mdm-statement.html" class="link-btn">MDM Statement</a>
         </div>
       </div>
       
-      <div class="card" style="background: #fff8dc;">
+      <div class="card" style="background: #fff8dc; border-left: 5px solid #fbc02d;">
         <h3>🔔 Notice Board</h3>
         <marquee direction="up" scrollamount="2" style="height: 100px;">
-          • Winter Vacations starting soon.<br>
-          • New Session Admissions are Open.<br>
-          • MDM Daily logs updated.
+          • Session 2026-27 Admissions started.<br><br>
+          • Ensure all Result Co-Scholastic data is uploaded.<br><br>
+          • APAAR IDs must be linked to Admission Register.
         </marquee>
       </div>
     </div>
@@ -160,19 +191,18 @@
   <footer class="school-footer">
     <p>📍 Wagoora Babareshi Road, Baramulla - 193109</p>
     <p>📞 9596449881 | 📧 pspethgam@gmail.com</p>
-    <hr style="width: 50%; border: 0; border-top: 1px solid #333; margin: 20px auto;">
+    <hr style="width: 50%; border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px auto;">
     <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
   </footer>
 
-  <script src="js/guard.js"></script>
   <script>
-    // Logic to pull student count from local/firestore
     window.onload = function() {
-        const students = JSON.parse(localStorage.getItem("admissionData")) || [];
+        // Updated to check both common key names used in admission forms
+        const students = JSON.parse(localStorage.getItem("admissions")) || 
+                         JSON.parse(localStorage.getItem("admissionData")) || [];
         document.getElementById('totalStudents').innerText = students.length;
     };
   </script>
 </body>
 </html>
       
-            
