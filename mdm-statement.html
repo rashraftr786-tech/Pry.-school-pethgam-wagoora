@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automated MDM Statement - GPS Pethgam Wagoora</title>
+    <style>
+        @page { size: A4 landscape; margin: 10mm; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
+        .report-container { width: 277mm; background: white; padding: 10px; margin: auto; border: 2px solid #000; box-sizing: border-box; position: relative; }
+        .header { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 10px; }
+        .school-logo { width: 80px; position: absolute; left: 10px; top: 0; }
+        .header-text { text-align: center; }
+        .header-text h4 { margin: 0; font-style: italic; font-size: 14px; }
+        .header-text h1 { margin: 5px 0; font-size: 26px; text-transform: uppercase; }
+        .header-text h2 { margin: 0; font-size: 16px; border-bottom: 2px solid #000; display: inline-block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; table-layout: fixed; }
+        th, td { border: 1px solid #000; padding: 4px 2px; text-align: center; word-wrap: break-word; }
+        th { background-color: #f2f2f2; height: 50px; }
+        .month-cell { font-weight: bold; font-size: 14px; writing-mode: vertical-rl; transform: rotate(180deg); }
+        .account-info { margin-top: 10px; font-weight: bold; font-size: 13px; }
+        .footer-sigs { margin-top: 30px; display: flex; justify-content: space-between; }
+        .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
+        .btn { padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-print { background: #1a5d1a; }
+        .btn-finalize { background: #b71c1c; }
+        @media print { .no-print { display: none; } body { background: white; padding: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="report-container">
+    <div class="header">
+        <img src="logo.png" class="school-logo" alt="Logo">
+        <div class="header-text">
+            <h4>Office of the Headmaster</h4>
+            <h1>Government Primary School Pethgam Wagoora</h1>
+            <h2>Month Wise/Department Wise Expenditure Statement under MDM Scheme</h2>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 40px;">Month</th>
+                <th style="width: 90px;">Scheme</th>
+                <th>Total Roll</th>
+                <th>No. of Working Days</th>
+                <th>No. of days MDM Served</th>
+                <th>No of Students Covered</th>
+                <th>No. of Meals Served</th>
+                <th>Opening Balance of Rice</th>
+                <th>Food Grains Lifted</th>
+                <th>Food Grains Utilized</th>
+                <th>Closing Balance of Food Grains</th>
+                <th>Opening Balance of Funds</th>
+                <th>Funds Utilized (Cooking Cost)</th>
+                <th>Funds Received</th>
+                <th>Closing Balance of Funds</th>
+                <th>No. of Cooks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3" class="month-cell" id="displayMonth">JAN 2026</td>
+                <td style="text-align: left;">Pre-Primary (Bal Vatika)</td>
+                <td>21</td>
+                <td rowspan="3" id="servedDays">0</td>
+                <td rowspan="3" id="workingDays">0</td>
+                <td id="ppCovered">0</td>
+                <td id="ppMeals">0</td>
+                <td id="ppOpenRice">0.000</td>
+                <td id="ppLifted">0.000</td>
+                <td id="ppUtilized">0.000</td>
+                <td id="ppCloseRice">0.000</td>
+                <td id="ppOpenFunds">0.00</td>
+                <td id="ppUtilFunds">0.00</td>
+                <td id="ppRecFunds">0.00</td>
+                <td id="ppCloseFunds">0.00</td>
+                <td rowspan="3">1</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;">Primary</td>
+                <td>47</td>
+                <td id="pCovered">0</td>
+                <td id="pMeals">0</td>
+                <td id="pOpenRice">0.000</td>
+                <td id="pLifted">0.000</td>
+                <td id="pUtilized">0.000</td>
+                <td id="pCloseRice">0.000</td>
+                <td id="pOpenFunds">0.00</td>
+                <td id="pUtilFunds">0.00</td>
+                <td id="pRecFunds">0.00</td>
+                <td id="pCloseFunds">0.00</td>
+            </tr>
+            <tr style="font-weight: bold; background: #eee;">
+                <td>Total (68)</td>
+                <td id="tRoll">68</td>
+                <td id="tCovered">0</td>
+                <td id="tMeals">0</td>
+                <td id="tOpenRice">0.000</td>
+                <td id="tLifted">0.000</td>
+                <td id="tUtilized">0.000</td>
+                <td id="tCloseRice">0.000</td>
+                <td id="tOpenFunds">0.00</td>
+                <td id="tUtilFunds">0.00</td>
+                <td id="tRecFunds">0.00</td>
+                <td id="tCloseFunds">0.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="account-info">MDM A/C of School: 0486040500000273</div>
+    
+    <div style="width: 400px; margin-top: 10px;">
+        <table>
+            <tr><th>S.No</th><th>Name of Cook</th><th>A/C No</th></tr>
+            <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
+        </table>
+    </div>
+
+    <div class="footer-sigs">
+        <div><strong>MDM I/C</strong><br>Name: ________________<br>Sig: ________________</div>
+        <div style="text-align: right; font-weight: bold;"><br><br>Headmaster</div>
+    </div>
+</div>
+
+<div class="no-print">
+    <button class="btn btn-finalize" onclick="finalizeBalances()">Finalize & Carry Forward</button>
+    <button class="btn btn-print" onclick="window.print()">Print Statement</button>
+</div>
+
+<script>
+    const now = new Date();
+    const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
+    
+    window.onload = function() {
+        loadStatementData();
+    };
+
+    function loadStatementData() {
+        const logs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
+        const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
+        const rate = parseFloat(localStorage.getItem("mdmRate")) || 5.45;
+
+        // 1. Get Opening Balances for this month
+        const openBal = balances[currentMonthKey] || { rice: 0, funds: 0 };
+        
+        // 2. Filter logs for current month
+        const monthLogs = logs.filter(l => {
+            const d = new Date(l.date);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        });
+
+        let stats = { pp: 0, p: 0, lifted: 0, recFunds: 0, daysServed: monthLogs.length };
+        monthLogs.forEach(l => {
+            stats.pp += parseInt(l.prePriCount || 0);
+            stats.p += parseInt(l.priCount || 0);
+            stats.lifted += parseFloat(l.grainsLifted || 0);
+            stats.recFunds += parseFloat(l.fundsReceived || 0);
+        });
+
+        // 3. Update Pre-Primary Row
+        updateRow('pp', stats.pp, openBal.rice * 0.3, openBal.funds * 0.3, stats.lifted * 0.3, stats.recFunds * 0.3, rate);
+        
+        // 4. Update Primary Row
+        updateRow('p', stats.p, openBal.rice * 0.7, openBal.funds * 0.7, stats.lifted * 0.7, stats.recFunds * 0.7, rate);
+
+        // 5. Update Totals
+        updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.recFunds, rate);
+        
+        document.getElementById('servedDays').innerText = stats.daysServed;
+        document.getElementById('workingDays').innerText = stats.daysServed; // Placeholder
+    }
+
+    function updateRow(prefix, covered, openRice, openFunds, lifted, recFunds, rate) {
+        const utilizedRice = covered * 0.100;
+        const utilizedFunds = covered * rate;
+        const closingRice = (openRice + lifted) - utilizedRice;
+        const closingFunds = (openFunds + recFunds) - utilizedFunds;
+
+        document.getElementById(prefix + 'Covered').innerText = covered;
+        document.getElementById(prefix + 'Meals').innerText = covered;
+        document.getElementById(prefix + 'OpenRice').innerText = openRice.toFixed(3);
+        document.getElementById(prefix + 'Lifted').innerText = lifted.toFixed(3);
+        document.getElementById(prefix + 'Utilized').innerText = utilizedRice.toFixed(3);
+        document.getElementById(prefix + 'CloseRice').innerText = closingRice.toFixed(3);
+        document.getElementById(prefix + 'OpenFunds').innerText = openFunds.toFixed(2);
+        document.getElementById(prefix + 'UtilFunds').innerText = utilizedFunds.toFixed(2);
+        document.getElementById(prefix + 'RecFunds').innerText = recFunds.toFixed(2);
+        document.getElementById(prefix + 'CloseFunds').innerText = closingFunds.toFixed(2);
+    }
+
+    function finalizeBalances() {
+        const closingRice = parseFloat(document.getElementById('tCloseRice').innerText);
+        const closingFunds = parseFloat(document.getElementById('tCloseFunds').innerText);
+        
+        // Calculate next month key
+        let nextMonth = now.getMonth() + 1;
+        let nextYear = now.getFullYear();
+        if(nextMonth > 11) { nextMonth = 0; nextYear++; }
+        const nextKey = `${nextYear}-${nextMonth}`;
+
+        let balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
+        balances[nextKey] = { rice: closingRice, funds: closingFunds };
+        
+        localStorage.setItem("mdmBalances", JSON.stringify(balances));
+        alert("Success! Closing balances carried forward to " + nextKey);
+    }
+</script>
+</body>
+  </html>
+  
