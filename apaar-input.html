@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Step 2: APAAR Consent</title>
+    <style>
+        body { font-family: sans-serif; background: #fffde7; padding: 40px; }
+        .consent-card { max-width: 700px; margin: auto; background: white; padding: 40px; border-radius: 15px; border-left: 10px solid #fbc02d; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .legal-text { background: #f9f9f9; padding: 20px; font-size: 14px; line-height: 1.6; border: 1px solid #ddd; }
+        .btn-finish { background: #fbc02d; color: #000; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="consent-card">
+        <h2 style="color: #f57f17;">APAAR ID Consent Form</h2>
+        <div class="legal-text">
+            I hereby voluntarily give my consent to share the Aadhaar Number and demographic information of my child for the purpose of creation of <strong>APAAR ID</strong> and opening of <strong>DIGILOCKER</strong> account.
+        </div>
+        <div style="margin-top:20px;">
+            <label>PEN Number (if available)</label>
+            <input type="text" id="penNum" style="width:100%; padding:10px; margin-bottom:15px;">
+            <input type="checkbox" id="agree"> <strong>I agree to provide Aadhaar for authentication.</strong>
+        </div>
+        <button class="btn-finish" onclick="finalize()">Finalize & Generate Documents</button>
+    </div>
+    <script>
+        function finalize() {
+            if(!document.getElementById('agree').checked) return alert("Please check the consent box");
+            const step1 = JSON.parse(localStorage.getItem('temp_admission'));
+            const finalData = {...step1, pen: document.getElementById('penNum').value, status: "Verified"};
+            
+            // Save to final register
+            let register = JSON.parse(localStorage.getItem('admissionData')) || [];
+            register.push(finalData);
+            localStorage.setItem('admissionData', JSON.stringify(register));
+            
+            alert("Registration Complete!");
+            window.location.href = 'admission-pdf.html';
+        }
+    </script>
+</body>
+</html>
