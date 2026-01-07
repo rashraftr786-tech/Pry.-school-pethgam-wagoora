@@ -1,361 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student Admission Form - GPS Pethgam Wagoora</title>
-  <style>
-    @page { size: A4; margin: 0; }
-    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; }
-    
-    .page-border {
-      background: white;
-      width: 210mm;
-      height: 297mm;
-      margin: auto;
-      padding: 10mm 15mm;
-      box-sizing: border-box;
-      border: 3px double darkgreen;
-      position: relative;
-    }
-
-    .header-container {
-      display: flex;
-      align-items: center;
-      border-bottom: 2px solid darkgreen;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
-    }
-    .school-logo { width: 75px; height: 75px; margin-right: 20px; }
-    .header-text h1 { margin: 0; font-size: 21px; color: darkgreen; text-transform: uppercase; }
-    .header-text p { margin: 1px 0; font-size: 10px; color: #333; }
-
-    .form-title { text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 12px; text-decoration: underline; }
-
-    h3 { font-size: 12px; margin: 10px 0 6px 0; background: #f0f9f0; padding: 4px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; }
-
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
-    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 6px; }
-    .field-group { display: flex; flex-direction: column; }
-    
-    label { font-weight: bold; font-size: 10.5px; margin-bottom: 2px; color: #222; }
-    input, select { padding: 4px; font-size: 12.5px; border: 1px solid #777; border-radius: 2px; }
-
-    .photo-box {
-      width: 105px;
-      height: 125px;
-      border: 1px solid #000;
-      text-align: center;
-      font-size: 8px;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .declaration-box {
-      font-size: 11.5px; /* Adjusted font for perfect 4-line flow */
-      line-height: 1.4;
-      text-align: justify;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background: #fafafa;
-    }
-
-    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 30px; }
-    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 11px; font-weight: bold; padding-top: 4px; width: 190px; }
-
-    #officeSection { border: 2px dashed darkred; padding: 10px; margin-top: 15px; background: #fffcfc; }
-
-    @media print {
-      body { background: none; }
-      .page-border { margin: 0; border: 2px solid darkgreen; }
-      .no-print { display: none !important; }
-      #officeSection { display: block !important; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Official Report Card - GPS Pethgam Wagoora</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @page { size: A4 landscape; margin: 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0; background: #f0f0f0;
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+        }
+        .printable-area {
+            width: 297mm; height: 210mm; background: white;
+            margin: 0 auto; padding: 8mm 10mm; box-sizing: border-box;
+            display: flex; flex-direction: column; border: 4px solid #5a3d8c;
+            overflow: hidden;
+        }
+        .outer-boundary { width: 100%; box-sizing: border-box; }
+        .school-header { 
+            background: #5a3d8c !important; color: white !important; 
+            display: flex; align-items: center; padding: 12px 20px; border-radius: 4px;
+        }
+        .school-logo { width: 80px; height: 80px; background: white; border-radius: 10%; padding: 5px; margin-right: 20px; }
+        .header-text { flex-grow: 1; text-align: left; }
+        .header-text h1 { margin: 0; font-size: 32px; letter-spacing: 2px; font-family: 'Arial Black', sans-serif; line-height: 1.1; }
+        .header-address { font-size: 13px; margin-top: 5px; font-weight: bold; opacity: 0.9; }
+        .header-right-contact { text-align: right; font-size: 11px; line-height: 1.6; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px; }
+        .top-info-container { display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px; }
+        .details-table { flex: 1; }
+        table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+        th, td { border: 1px solid #444; padding: 4px; text-align: center; }
+        .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 105px; }
+        .data-cell { text-align: left; padding-left: 8px; background: white; font-weight: bold;}
+        .qr-box { width: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #ddd; padding: 2px; background: #fff; }
+        .qr-label { font-size: 8px; font-weight: bold; margin-top: 2px; color: #5a3d8c; }
+        .class-box { width: 95px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
+        .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 3px; font-size: 10px; }
+        .class-val { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; color: #5a3d8c; }
+        .photo-box { width: 110px; border: 2px solid #5a3d8c; display: flex; align-items: center; justify-content: center; background: #fafafa; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .subject-table { margin-top: 8px; table-layout: fixed; width: 100%; }
+        .subject-table th { background: #dcd0ff !important; font-size: 9.5px; height: 25px; }
+        .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; width: 135px; }
+        .bottom-row-container { display: flex; gap: 10px; margin-top: 10px; flex-grow: 1; width: 100%; align-items: stretch; }
+        .col-left { width: 220px; display: flex; flex-direction: column; gap: 8px; }
+        .col-mid { flex: 1; display: flex; flex-direction: column; border: 1px solid #444; min-width: 0; }
+        .col-right { width: 215px; display: flex; flex-direction: column; gap: 8px; }
+        .section-box { border: 1px solid #444; display: flex; flex-direction: column; background: white; overflow: hidden; width: 100%; }
+        .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 5px; text-align: center; font-size: 11px; }
+        .remarks-content { padding: 8px; font-size: 10.5px; font-style: italic; flex-grow: 1; line-height: 1.3; }
+        .chart-wrap { flex: 1; padding: 5px; position: relative; width: 100%; }
+        .prof-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #eee; font-size: 10.5px; }
+        .rank-bar { background: #37474f !important; color: white !important; padding: 8px; display: flex; justify-content: space-around; font-size: 10.5px; font-weight: bold; margin-top: auto; }
+        .footer-sigs { display: flex; justify-content: space-between; margin-top: auto; padding-top: 10px; }
+        .sig-block { width: 23%; text-align: center; }
+        .sig-space { height: 35px; }
+        .sig-label { border-top: 1.5px solid #000; padding-top: 4px; font-size: 11px; font-weight: bold; }
+        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 100; }
+        @media print { .btn-download { display: none; } }
+    </style>
 </head>
 <body>
-  <div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00;">
-    <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 New Admission</a>
-    <a href="adm-register.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📋 View Register</a>
-</div>
 
-
-<div class="page-border">
-  <div class="header-container">
-    <img src="logo.png" alt="Logo" class="school-logo">
-    <div class="header-text">
-      <h1>Government Primary School Pethgam Wagoora</h1>
-      <p>Udise Code: 01022202207 | E-mail: pspethgam@gmail.com | Contact: 959644988</p>
-      <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora, Baramulla, J&K</p>
-    </div>
-  </div>
-
-  <div class="form-title">STUDENT ADMISSION FORM (Session 2026)</div>
-
-  <form id="admissionForm">
-    <div class="row" style="grid-template-columns: 1fr 1fr 115px;">
-      <div class="field-group" style="grid-column: span 2;">
-        <label>Full Name of Student</label>
-        <input type="text" name="studentName" required>
-        <label style="margin-top:6px">Name (As per Aadhaar Card)</label>
-        <input type="text" name="aadhaarName">
-        <div class="row" style="margin-top:6px">
-            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
-            <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
+<div class="printable-area">
+    <div class="school-header outer-boundary">
+        <img src="logo.png" class="school-logo" alt="Logo">
+        <div class="header-text">
+            <h1>GOVERNMENT PRIMARY SCHOOL</h1>
+            <div class="header-address">Wagoora Babareshi Road Near ZEO Office Wagoora</div>
+            <div style="font-size: 11px;">PETHGAM WAGOORA – BARAMULLA, J&K (193109)</div>
         </div>
-      </div>
-      <div class="photo-box">
-        <img id="photoPreview" style="max-width:100%; max-height:100px; display:none;">
-        <p id="photoTxt">Passport Photograph</p>
-        <input type="file" onchange="previewPhoto(event)" class="no-print" style="width:95px; font-size:7px; margin-top:5px;">
-      </div>
+        <div class="header-right-contact">
+            <div>Contact No: +91 7006261694</div>
+            <div>UDISE Code: 01022202207</div>
+            <div>Email Id: pspathgam@gmail.com</div>
+        </div>
     </div>
 
-    <div class="row-4">
-      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
-      <div class="field-group"><label>Blood Group</label><input type="text" name="bloodGroup"></div>
-      <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-      <div class="field-group"><label>Seeking Class</label><input type="text" name="studentClass"></div>
+    <div class="top-info-container outer-boundary">
+        <div class="details-table">
+            <table>
+                <tr><td class="label-cell">Student Name:</td><td class="data-cell" id="sname" colspan="3"></td></tr>
+                <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNoDisplay"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
+                <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
+                <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="session"></td></tr>
+                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="penDisplay"></td></tr>
+            </table>
+        </div>
+        <div class="qr-box"><div id="qrcode"></div><div class="qr-label">SCAN TO VERIFY</div></div>
+        <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="classVal">--</div></div>
+        <div class="photo-box" id="photoBox"><span>Photo</span></div>
     </div>
 
-    <div class="row">
-        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>APAAR ID (12 Digits)</label><input type="text" name="apaarId" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>PEN Number (12 Digits)</label><input type="text" name="penId" pattern="\d{12}" maxlength="12"></div>
+    <table class="subject-table outer-boundary">
+        <thead>
+            <tr>
+                <th class="subject-name">Subject</th>
+                <th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th>
+                <th>Total(30)</th><th>CCA(20)</th><th>SA(50)</th>
+                <th>Total(100)</th><th>Grade</th><th>Proficiency</th>
+            </tr>
+        </thead>
+        <tbody id="marksBody"></tbody>
+        <tr style="background:#f1f8e9 !important; font-weight:bold;">
+            <td style="text-align:right; padding-right:10px;">Grand Totals:</td>
+            <td id="gtFa1">0</td><td id="gtFa2">0</td><td id="gtFa3">0</td><td id="gtFa4">0</td><td id="gtFa5">0</td><td id="gtFa6">0</td>
+            <td id="gt30">0</td><td id="gt20">0</td><td id="gt50">0</td>
+            <td id="gt100">0</td>
+            <td id="finalGrade" style="color:#b71c1c;">-</td>
+            <td id="finalProf" style="color:#b71c1c;">-</td>
+        </tr>
+    </table>
+
+    <div class="bottom-row-container outer-boundary">
+        <div class="col-left">
+            <div class="section-box" style="height: 125px;">
+                <div class="section-header" style="background:#b71c1c !important;">Co-Scholastic Record</div>
+                <table>
+                    <tr><td style="text-align:left;">Attendance %</td><td id="att" width="55"></td></tr>
+                    <tr><td style="text-align:left;">Discipline</td><td>A</td></tr>
+                    <tr><td style="text-align:left;">Sports / Health</td><td>B</td></tr>
+                    <tr><td style="text-align:left;">Art and Craft</td><td>A</td></tr>
+                </table>
+            </div>
+            <div class="section-box" style="flex: 1;"><div class="section-header">General Remarks</div><div class="remarks-content" id="remarksText"></div></div>
+        </div>
+        <div class="col-mid"><div class="section-header" style="background:#ff9800 !important;">Performance Chart</div><div class="chart-wrap"><canvas id="marksChart"></canvas></div></div>
+        <div class="col-right">
+            <div class="section-box" style="height: 110px;">
+                <div class="section-header">Final Result Summary</div>
+                <table style="height: 100%;">
+                    <tr><td class="label-cell">Total Marks:</td><td id="resTotal" style="font-weight:bold;"></td></tr>
+                    <tr><td class="label-cell">Percentage:</td><td id="resPerc"></td></tr>
+                    <tr><td class="label-cell">Result:</td><td id="resFinal" style="color:green; font-weight:bold;">PASS</td></tr>
+                </table>
+            </div>
+            <div class="section-box" style="flex: 1;">
+                <div class="section-header" style="background:#ef5350 !important;">Level of Proficiency</div>
+                <div class="prof-row"><span>Sky (Excellent)</span><b id="pSky"></b></div>
+                <div class="prof-row"><span>Mountain (Good)</span><b id="pMtn"></b></div>
+                <div class="prof-row"><span>Stream (Average)</span><b id="pStrm"></b></div>
+                <div class="rank-bar"><span>School Rank: <span id="sRank">--</span></span><span>Class Rank: <span id="cRank">--</span></span></div>
+            </div>
+        </div>
     </div>
 
-    <h3>Parental & Contact Information</h3>
-    <div class="row">
-        <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
-        <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
-        <div class="field-group"><label>Father's Contact No</label><input type="tel" name="fatherContact"></div>
+    <div class="footer-sigs outer-boundary">
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Class Teacher</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Exam In-Charge</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Parent/Guardian</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Headmaster Seal/Sign</div></div>
     </div>
-    <div class="row">
-        <div class="field-group"><label>Mother's Contact No</label><input type="tel" name="motherContact"></div>
-        <div class="field-group"><label>Bank Name & Branch</label><input type="text" name="bankName"></div>
-        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
-    </div>
-
-    <div class="row">
-        <div class="field-group" style="grid-column: span 1;"><label>Account No (16 Digits)</label><input type="text" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
-        <div class="field-group" style="grid-column: span 2;"></div>
-    </div>
-
-    <h3>Residential Address</h3>
-    <div class="row">
-        <div class="field-group"><label>Mohallah / House No</label><input type="text" name="mohallah"></div>
-        <div class="field-group"><label>Village / Ward</label><input type="text" name="village"></div>
-        <div class="field-group"><label>Tehsil</label><input type="text" name="tehsil" value="Wagoora"></div>
-    </div>
-    <div class="row">
-        <div class="field-group"><label>District</label><input type="text" name="dist" value="Baramulla"></div>
-        <div class="field-group"><label>Pin Code</label><input type="text" name="pincode" value="193109"></div>
-        <div class="field-group"><label>State</label><input type="text" name="state" value="Jammu & Kashmir"></div>
-    </div>
-
-    <div class="declaration-box">
-        <input type="checkbox" required> <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
-    </div>
-
-    <div class="sig-section">
-        <div></div>
-        <div class="sig-placeholder" style="margin-left: auto;">Signature of Parent/Guardian</div>
-    </div>
-
-    <div id="officeSection" style="display:none;">
-      <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
-      <div class="row" style="margin-bottom:0px">
-        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo"></div>
-        <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
-        <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207" readonly></div>
-      </div>
-      <div class="field-group" style="margin-top:8px;"><label>Remarks</label><textarea name="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
-      <div class="sig-section" style="margin-top: 35px;">
-        <div class="sig-placeholder">Admission Incharge</div>
-        <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
-      </div>
-    </div>
-
-    <div class="no-print" style="text-align:center; margin-top:15px;">
-      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Save & Update</button>
-      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:10px;">Print Form</button>
-    </div>
-  </form>
 </div>
+
+<button class="btn-download" onclick="window.print()">Print Marksheet</button>
 
 <script>
-// 1. PHOTO PREVIEW
-function previewPhoto(event) {
-  const img = document.getElementById("photoPreview");
-  const txt = document.getElementById("photoTxt");
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      img.src = e.target.result;
-      img.style.display = "block";
-      if(txt) txt.style.display = "none";
-    };
-    reader.readAsDataURL(file);
-  }
-}
+const params = new URLSearchParams(window.location.search);
+const admNo = params.get("admNo");
+const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+const results = JSON.parse(localStorage.getItem("results")) || [];
+const sInfo = admissions.find(x => x.admNo === admNo);
+const sMarks = results.find(x => x.admNo === admNo);
 
-// 2. DOB CONVERSION (Enhanced to convert figures to full words)
-function convertDOB() {
-    const dobInput = document.querySelector('input[name="dob"]');
-    const dobWordsInput = document.querySelector('input[name="dobWords"]');
+if (sInfo && sMarks) {
+    document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
+    document.getElementById('admNoDisplay').innerText = sInfo.admNo || "";
+    document.getElementById('fname').innerText = sInfo.fatherName || "";
+    document.getElementById('mname').innerText = sInfo.motherName || "";
+    document.getElementById('dob').innerText = sInfo.dob || "";
+    document.getElementById('session').innerText = sInfo.session || "2026";
+    document.getElementById('classVal').innerText = sInfo.studentClass || "";
+    document.getElementById('rollNo').innerText = sMarks.rollNo || "";
+    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
+
+    // --- PEN ID FIX ---
+    // In your Admission Form, the field is 'penId'. 
+    // This fetches it specifically, with common fallbacks.
+    document.getElementById('penDisplay').innerText = sInfo.penId || sInfo.penNo || sInfo.panNo || "N/A";
+
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
+    document.getElementById('att').innerText = sMarks.attendance || "0";
     
-    if (dobInput && dobInput.value && dobWordsInput) {
-        const dateObj = new Date(dobInput.value);
-        const day = dateObj.getDate();
-        const monthIndex = dateObj.getMonth();
-        const year = dateObj.getFullYear();
+    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 85, height: 85 });
+    if (sInfo.studentPhoto) { document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`; }
 
-        const months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
+    // Ranks Calculation
+    let scoreRecords = results.map(r => {
+        let total = 0;
+        if(r.marks){ Object.values(r.marks).forEach(m => {
+            const faT = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
+            total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+        }); }
+        const p = admissions.find(a => a.admNo === r.admNo);
+        return { admNo: r.admNo, total: total, className: p ? p.studentClass : '' };
+    });
+    const sSorted = [...scoreRecords].sort((a, b) => b.total - a.total);
+    document.getElementById('sRank').innerText = sSorted.findIndex(s => s.admNo === admNo) + 1;
+    const cSorted = scoreRecords.filter(s => s.className === sInfo.studentClass).sort((a, b) => b.total - a.total);
+    document.getElementById('cRank').innerText = cSorted.findIndex(s => s.admNo === admNo) + 1;
 
-        const ordinals = [
-            "", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
-            "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteenth", "Twentieth",
-            "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth", "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"
-        ];
+    // Marks Processing
+    let labels = [], cData = [], totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
+    Object.keys(sMarks.marks || {}).forEach(sub => {
+        const m = sMarks.marks[sub];
+        const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
+        const faT = fa.reduce((a, b) => a + b, 0);
+        const cca = Number(m.cca) || 0, sa = Number(m.sa) || 0, rT = faT + cca + sa;
+        totals.fa1 += fa[0]; totals.fa2 += fa[1]; totals.fa3 += fa[2]; totals.fa4 += fa[3]; totals.fa5 += fa[4]; totals.fa6 += fa[5];
+        totals.t30 += faT; totals.t20 += cca; totals.t50 += sa; totals.t100 += rT;
+        labels.push(sub); cData.push(rT);
+        const g = rT>=90?'A+':rT>=80?'A':rT>=70?'B+':rT>=60?'B':rT>=50?'C+':'C';
+        document.getElementById('marksBody').innerHTML += `<tr><td class="subject-name">${sub}</td><td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${faT}</td><td>${cca}</td><td>${sa}</td><td style="font-weight:bold;">${rT}</td><td>${g}</td><td>${rT>=80?'Sky':rT>=50?'Mountain':'Stream'}</td></tr>`;
+    });
 
-        // Function to convert year number to words
-        const yearToWords = (year) => {
-            const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    document.getElementById('gtFa1').innerText = totals.fa1;
+    document.getElementById('gtFa2').innerText = totals.fa2;
+    document.getElementById('gtFa3').innerText = totals.fa3;
+    document.getElementById('gtFa4').innerText = totals.fa4;
+    document.getElementById('gtFa5').innerText = totals.fa5;
+    document.getElementById('gtFa6').innerText = totals.fa6;
+    document.getElementById('gt30').innerText = totals.t30;
+    document.getElementById('gt20').innerText = totals.t20;
+    document.getElementById('gt50').innerText = totals.t50;
+    document.getElementById('gt100').innerText = totals.t100;
 
-            if (year >= 2000 && year < 2100) {
-                let part2 = year % 100;
-                let wordPart2 = "";
-                if (part2 === 0) wordPart2 = "";
-                else if (part2 < 10) wordPart2 = units[part2];
-                else if (part2 < 20) wordPart2 = teens[part2 - 10];
-                else wordPart2 = tens[Math.floor(part2 / 10)] + (part2 % 10 !== 0 ? " " + units[part2 % 10] : "");
-                
-                return "Two Thousand" + (wordPart2 !== "" ? " " + wordPart2 : "");
-            }
-            return year.toString(); // Fallback for years outside 2000-2099
-        };
-
-        const dayWord = ordinals[day];
-        const monthWord = months[monthIndex];
-        const yearWord = yearToWords(year);
-
-        dobWordsInput.value = `${dayWord} ${monthWord} ${yearWord}`;
-    }
-}
-
-
-// 3. INITIALIZATION (The "Blank Form" & "Office Section" Fix)
-window.onload = function() {
-    const role = localStorage.getItem("userRole");
-    const params = new URLSearchParams(window.location.search);
-    const studentId = params.get('id');
-
-    // FIX 1: Handle Office Section Visibility immediately
-    const officeSection = document.getElementById("officeSection");
-    if (officeSection) {
-        if (role === "HOI" || role === "INCHARGE") {
-            officeSection.style.display = "block";
-        } else {
-            officeSection.style.display = "none";
-        }
-    }
-
-    // FIX 2: Generate Admission No ONLY for New Forms
-    if (!studentId) {
-        const admInput = document.getElementById("admNo");
-        if (admInput && !admInput.value) {
-            admInput.value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
-        }
-        return; // Exit here for new forms
-    }
-
-    // FIX 3: Load Data for Edit Mode
-    console.log("Loading Record for ID:", studentId);
-    const records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const student = records.find(r => r.admNo === decodeURIComponent(studentId));
-
-    if (student) {
-        // Find all form elements
-        const form = document.getElementById('admissionForm');
-        const elements = form.elements;
-
-        for (let i = 0; i < elements.length; i++) {
-            const fieldName = elements[i].name;
-            if (fieldName && student[fieldName] !== undefined) {
-                if (elements[i].type === 'checkbox') {
-                    elements[i].checked = student[fieldName];
-                } else {
-                    elements[i].value = student[fieldName];
-                }
-            }
-        }
-
-        // Restore Photo
-        if (student.studentPhoto) {
-            const img = document.getElementById("photoPreview");
-            const txt = document.getElementById("photoTxt");
-            if (img) {
-                img.src = student.studentPhoto;
-                img.style.display = "block";
-                if (txt) txt.style.display = "none";
-            }
-        }
-        convertDOB();
-    }
-};
-
-// 4. SUBMISSION
-function submitAdmission() {
-    const form = document.getElementById('admissionForm');
-    if(!form.checkValidity()) { form.reportValidity(); return; }
-
-    const role = localStorage.getItem("userRole");
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const subCount = Object.keys(sMarks.marks).length;
+    const avg = subCount > 0 ? totals.t100 / subCount : 0;
+    document.getElementById('finalGrade').innerText = avg>=90?'A+':avg>=80?'A':avg>=70?'B+':avg>=60?'B':'C+';
+    document.getElementById('resTotal').innerText = totals.t100 + " / " + (subCount * 100);
+    document.getElementById('resPerc').innerText = Math.round(avg) + "%";
+    const fP = avg>=80?'Sky':avg>=50?'Mountain':'Stream';
+    document.getElementById('finalProf').innerText = fP;
+    document.getElementById('pSky').innerText = fP === 'Sky' ? "✓" : "";
+    document.getElementById('pMtn').innerText = fP === 'Mountain' ? "✓" : "";
+    document.getElementById('pStrm').innerText = fP === 'Stream' ? "✓" : "";
     
-    // Capture the photo from the preview img
-    const photoPreview = document.getElementById("photoPreview");
-    if (photoPreview && photoPreview.src.startsWith("data:image")) {
-        data.studentPhoto = photoPreview.src;
-    }
-
-    // Strict Approval
-    data.status = (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval";
-
-    let records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const index = records.findIndex(r => r.admNo === data.admNo);
-
-    if (index !== -1) {
-        // Update: Keep old photo if no new one provided
-        if (!data.studentPhoto && records[index].studentPhoto) {
-            data.studentPhoto = records[index].studentPhoto;
-        }
-        records[index] = data;
-    } else {
-        records.push(data);
-    }
-
-    localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Record Processed Successfully!");
-    
-    if (role === "HOI" || role === "INCHARGE") {
-        window.location.href = "admin/dashboard.html";
-    } else {
-        window.location.reload();
-    }
+    new Chart(document.getElementById('marksChart'), { type: 'bar', data: { labels: labels, datasets: [{ data: cData, backgroundColor: '#5a3d8c' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } } });
 }
 </script>
-
-  
 </body>
 </html>
-        
+                
