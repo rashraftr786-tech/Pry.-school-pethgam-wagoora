@@ -4,184 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admission Form - GPS Pethgam Wagoora</title>
-    <link rel="stylesheet" href="css/style.css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root { --primary: #1b5e20; --border: #333; }
-        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 10px; }
-        .form-page { max-width: 1000px; margin: auto; background: white; padding: 20px; border: 2px solid #000; }
+        :root { --primary: #1b5e20; --border: #000; }
+        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 20px; font-size: 13px; }
+        .form-page { max-width: 950px; margin: auto; background: white; padding: 30px; border: 2px solid #000; position: relative; }
         
-        /* Header styling based on */
-        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 10px; padding-bottom: 5px; }
-        .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .header p { margin: 2px 0; font-size: 14px; font-weight: bold; }
-        .form-title { text-align: center; font-size: 20px; font-weight: bold; text-decoration: underline; margin: 15px 0; }
+        /* Photo Upload Box */
+        .photo-upload { position: absolute; top: 120px; right: 40px; width: 120px; height: 150px; border: 1px solid #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #fafafa; }
+        .photo-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-        .field-group { margin-bottom: 12px; display: flex; align-items: center; flex-wrap: wrap; }
-        .label { font-weight: bold; margin-right: 10px; min-width: 150px; }
+        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 22px; text-transform: uppercase; }
         
-        /* Box grid for character input as seen in */
-        .box-grid { display: flex; gap: 0; border: 1px solid var(--border); width: fit-content; }
-        .box-grid input { width: 20px; height: 20px; border: 1px solid #999; text-align: center; font-family: monospace; text-transform: uppercase; border-radius: 0; border-top: none; border-left: none; }
+        .field-row { display: flex; align-items: center; margin-bottom: 10px; gap: 10px; }
+        .label { font-weight: bold; white-space: nowrap; }
+        .dotted-input { border: none; border-bottom: 1px dotted #000; flex: 1; padding: 2px; outline: none; }
         
-        input[type="text"].standard { border: none; border-bottom: 1px dotted #000; flex-grow: 1; padding: 2px; }
-        .declaration { border-top: 2px solid #000; margin-top: 20px; padding-top: 10px; font-size: 12px; }
-        .office-use { border: 1px solid #000; padding: 10px; margin-top: 20px; font-size: 12px; background: #f9f9f9; }
+        /* Character Boxes for Aadhaar/Names */
+        .box-container { display: flex; }
+        .char-box { width: 18px; height: 18px; border: 1px solid #666; display: inline-block; margin-right: -1px; }
+        .char-box input { width: 100%; height: 100%; border: none; text-align: center; text-transform: uppercase; font-size: 11px; }
 
-        .btn-container { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
-        .btn { padding: 10px 20px; border: none; cursor: pointer; color: white; font-weight: bold; border-radius: 5px; }
-        .btn-save { background: var(--primary); }
-        .btn-pdf { background: #d32f2f; }
+        .section-head { font-weight: bold; text-decoration: underline; margin: 15px 0 10px 0; background: #eee; padding: 5px; }
+        .doc-upload { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f9f9f9; padding: 15px; border: 1px solid #ccc; }
+        
+        .btn-footer { margin-top: 30px; display: flex; justify-content: flex-end; gap: 10px; }
+        .btn { padding: 12px 25px; border: none; cursor: pointer; color: white; font-weight: bold; border-radius: 4px; }
+        .btn-next { background: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="form-page">
     <div class="header">
-        <img src="logo.png" alt="Logo" style="width: 60px; float: left;"> <h1>Government Primary School Pethgam Wagoora</h1>
+        <h1>Government Primary School Pethgam Wagoora</h1>
         <p>Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
-        <p>Email ID: pspethgam@gmail.com | UDISE Code: 01022202207</p>
+        <p>UDISE Code: 01022202207 | Zone: Wagoora</p>
     </div>
 
-    <div class="form-title">ADMISSION FORM</div>
+    <div style="text-align: center; font-weight: bold; font-size: 18px; margin: 10px;">ADMISSION FORM</div>
+
+    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+        <span id="photoLabel">Upload Photo</span>
+        <img id="preview" class="photo-preview">
+        <input type="file" id="photoInput" hidden accept="image/*" onchange="previewImage(this)">
+    </div>
 
     <form id="admissionForm">
-        <div class="field-group">
-            <span class="label">Students Name:</span>
-            <div class="box-grid" id="snameBoxes"></div>
+        <div class="field-row">
+            <span class="label">Student's Name:</span>
+            <div class="box-container" id="nameBoxes"></div>
         </div>
-        <div style="font-size: 10px; margin-left: 160px; margin-bottom: 15px;">First Name | Middle Name | Last Name</div>
 
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Name As Per Aadhaar:</span>
-            <div class="box-grid" id="aadhaarNameBoxes"></div>
+            <div class="box-container" id="aadhaarNameBoxes"></div>
         </div>
 
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Father's Name:</span>
-            <input type="text" class="standard" name="fatherName">
+            <input type="text" class="dotted-input" name="fatherName">
         </div>
 
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Mother's Name:</span>
-            <input type="text" class="standard" name="motherName">
+            <input type="text" class="dotted-input" name="motherName">
         </div>
 
-        <div class="field-group">
-            <span class="label">Residence:</span>
-            <input type="text" class="standard" name="residence">
+        <div class="field-row">
+            <span class="label">Mohallah:</span>
+            <input type="text" class="dotted-input" name="mohallah">
+            <span class="label">Village:</span>
+            <input type="text" class="dotted-input" name="village">
         </div>
 
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Tehsil:</span>
-            <input type="text" class="standard" name="tehsil" style="flex-grow: 0; width: 200px;">
-            <span class="label" style="min-width: 80px; margin-left: 20px;">District:</span>
-            <input type="text" class="standard" name="district" value="Baramulla">
+            <input type="text" class="dotted-input" name="tehsil">
+            <span class="label">District:</span>
+            <input type="text" class="dotted-input" name="district" value="Baramulla">
+            <span class="label">PIN:</span>
+            <input type="text" class="dotted-input" name="pincode" value="193109" style="max-width: 80px;">
         </div>
 
-        <div class="field-group">
-            <span class="label">Father's Contact:</span>
-            <input type="text" class="standard" name="fContact" style="width: 200px; flex-grow: 0;">
-            <span class="label" style="min-width: 120px; margin-left: 20px;">Mother's Contact:</span>
-            <input type="text" class="standard" name="mContact">
-        </div>
-
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Aadhaar Number:</span>
-            <div class="box-grid" id="aadhaarNumBoxes"></div>
-            <span class="label" style="min-width: 100px; margin-left: 20px;">Date of Birth:</span>
-            <input type="date" name="dob">
+            <div class="box-container" id="aadhaarNumBoxes"></div>
+            <span class="label" style="margin-left:20px;">DOB:</span>
+            <input type="date" name="dob" style="border:1px solid #ccc;">
         </div>
 
-        <div class="field-group">
-            <span class="label">Bank Account Number:</span>
-            <input type="text" class="standard" name="bankAcc">
-            <span class="label" style="min-width: 100px; margin-left: 20px;">Bank Name:</span>
-            <input type="text" class="standard" name="bankName">
-        </div>
-
-        <div class="field-group">
-            <span class="label">Bank Branch:</span>
-            <input type="text" class="standard" name="branch">
-            <span class="label" style="min-width: 100px; margin-left: 20px;">IFSC Code:</span>
-            <input type="text" class="standard" name="ifsc">
-        </div>
-
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Category:</span>
-            <label><input type="radio" name="cat" value="SC"> SC</label> &nbsp;
-            <label><input type="radio" name="cat" value="ST"> ST</label> &nbsp;
-            <label><input type="radio" name="cat" value="OBC"> OBC</label> &nbsp;
-            <label><input type="radio" name="cat" value="GENERAL"> GENERAL</label>
+            <input type="radio" name="cat" value="SC"> SC 
+            <input type="radio" name="cat" value="ST"> ST 
+            <input type="radio" name="cat" value="OBC"> OBC 
+            <input type="radio" name="cat" value="General"> General
+            <span class="label" style="margin-left:20px;">Blood Group:</span>
+            <input type="text" class="dotted-input" name="bloodGroup" style="max-width: 60px;">
         </div>
 
-        <div class="field-group">
+        <div class="field-row">
             <span class="label">Class Joining:</span>
-            <select name="sclass" id="sclass">
-                <option value="Bal-Vatika">Bal-Vatika</option>
+            <select name="sclass" required>
+                <option value="">Select Class</option>
+                <option value="Pre-Primary 3">Pre-Primary 3</option>
+                <option value="Pre-Primary 2">Pre-Primary 2</option>
+                <option value="Balvatika">Balvatika</option>
                 <option value="1st">1st</option>
                 <option value="2nd">2nd</option>
                 <option value="3rd">3rd</option>
                 <option value="4th">4th</option>
                 <option value="5th">5th</option>
             </select>
+            <span class="label" style="margin-left:20px;">PEN Number:</span>
+            <input type="text" class="dotted-input" name="penNumber">
         </div>
 
-        <div class="declaration">
-            <strong>Parents Declaration:</strong><br>
-            I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school... I hereby declare that as the Parent of above mentioned student I am giving my consent to provide the AADHAAR for the demographic authentication of the student.
-            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-                <span>Signature of Parent</span>
-                <span>Sig. of Adm. Incharge</span>
-                <span>Sig. of Headmaster</span>
-            </div>
+        <div class="field-row">
+            <span class="label">APAAR ID:</span>
+            <input type="text" class="dotted-input" name="apaarId">
+        </div>
+
+        <div class="section-head">📎 UPLOAD DOCUMENTS (Fresh Admission)</div>
+        <div class="doc-upload">
+            <div><label>Birth Certificate:</label> <input type="file" name="docBirth" required></div>
+            <div><label>Blood Group Report:</label> <input type="file" name="docBlood" required></div>
+            <div class="full-width"><label>Aadhaar Card:</label> <input type="file" name="docAadhaar" required></div>
+        </div>
+
+        <div style="margin-top: 20px; border: 1px solid #000; padding: 10px; background: #fffde7;">
+            <input type="checkbox" id="declaration" required>
+            <label for="declaration" style="font-weight: bold; font-size: 11px;">
+                I hereby declare that the information provided is true to the best of my knowledge. I understand that I am giving consent to provide Aadhaar for demographic authentication and will abide by all school rules.
+            </label>
+        </div>
+
+        <div class="btn-footer">
+            <button type="button" class="btn btn-next" onclick="handleSubmit()">Submit & Proceed to APAAR Form</button>
         </div>
     </form>
 </div>
 
-<div class="btn-container">
-    <button type="button" class="btn btn-save" onclick="saveToRegister()">Submit to Register</button>
-    <button type="button" class="btn btn-pdf" onclick="generatePDF()">Generate PDF</button>
-</div>
-
-<script src="js/guard.js"></script> <script>
-    // Create character boxes for Name and Aadhaar as per
-    function createBoxes(containerId, count) {
-        const container = document.getElementById(containerId);
-        for (let i = 0; i < count; i++) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.maxLength = 1;
-            container.appendChild(input);
+<script>
+    // Generate Boxes for Name and Aadhaar
+    function createBoxes(id, count) {
+        const container = document.getElementById(id);
+        for(let i=0; i<count; i++) {
+            const div = document.createElement('div');
+            div.className = 'char-box';
+            div.innerHTML = '<input type="text" maxlength="1">';
+            container.appendChild(div);
         }
     }
 
     window.onload = () => {
-        createBoxes('snameBoxes', 35);
+        createBoxes('nameBoxes', 35);
         createBoxes('aadhaarNameBoxes', 35);
         createBoxes('aadhaarNumBoxes', 12);
     };
 
-    function saveToRegister() {
-        const form = document.getElementById('admissionForm');
-        const formData = new FormData(form);
-        const studentData = Object.fromEntries(formData.entries());
-        
-        // Logic to update adm-register.html data
-        let register = JSON.parse(localStorage.getItem('admissionData')) || [];
-        register.push(studentData);
-        localStorage.setItem('admissionData', JSON.stringify(register));
-        alert("Admission registered successfully!");
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('photoLabel').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
-    function generatePDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("Admission Form - GPS Pethgam Wagoora", 20, 20);
-        // Additional PDF formatting logic here
-        doc.save("Admission_Form.pdf");
+    function handleSubmit() {
+        const form = document.getElementById('admissionForm');
+        if(!form.checkValidity()) {
+            alert("Please fill all required fields and check the declaration.");
+            return;
+        }
+
+        // Logic to save data to register
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        let register = JSON.parse(localStorage.getItem('admissionData')) || [];
+        register.push(data);
+        localStorage.setItem('admissionData', JSON.stringify(register));
+
+        // Redirect to APAAR form
+        window.location.href = 'apaar-consent.html';
     }
 </script>
 
 </body>
 </html>
-                    
+            
