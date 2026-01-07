@@ -95,34 +95,58 @@
     };
 
     async function finalize() {
-        if(!document.getElementById('agree').checked) {
-            alert("Please check the consent declaration box.");
+    console.log("Button Clicked..."); // Check if button is even working
+
+    const agreeBox = document.getElementById('agree');
+    const idNum = document.getElementById('idNumber').value;
+
+    // 1. Validation Check
+    if(!agreeBox.checked) {
+        alert("Action Required: Please check the consent declaration box.");
+        return;
+    }
+    if(!idNum) {
+        alert("Action Required: Please enter the Parent's Identity Number.");
+        return;
+    }
+
+    try {
+        // 2. Data Retrieval Check
+        // IMPORTANT: Ensure this matches the key used in admission.html
+        const rawData = localStorage.getItem('temp_adm'); 
+        if (!rawData) {
+            alert("Error: No data found from Step 1. Please go back and fill the Admission Form again.");
             return;
         }
-
-        const step1 = JSON.parse(localStorage.getItem('temp_adm'));
         
-        // Combine all data
+        const step1 = JSON.parse(rawData);
+        console.log("Step 1 Data Loaded:", step1);
+
+        // 3. Combine Data
         const finalDossierData = {
             ...step1,
             parentConsentName: document.getElementById('parentName').value,
             parentRelation: document.getElementById('relation').value,
-            parentIdNumber: document.getElementById('idNumber').value,
+            parentIdNumber: idNum,
             consentDate: new Date().toLocaleDateString(),
             status: "Complete"
         };
 
-        // Save to permanent register
-        let register = JSON.parse(localStorage.getItem('admissionData')) || [];
-        register.push(finalDossierData);
-        localStorage.setItem('admissionData', JSON.stringify(register));
-        
-        // Final Save for the Dossier Generator
-        localStorage.setItem('temp_adm', JSON.stringify(finalDossierData));
+        // 4. Storage Check
+        localStorage.setItem('admissionData', JSON.stringify(finalDossierData));
+        localStorage.setItem('temp_adm', JSON.stringify(finalDossierData)); // Overwrite with full data
 
-        alert("All data submitted successfully!");
+        console.log("Redirecting to full-dossier.html...");
+        
+        // 5. Final Redirect
         window.location.href = 'full-dossier.html';
+
+    } catch (error) {
+        console.error("Execution Error:", error);
+        alert("A technical error occurred: " + error.message);
     }
+}
+
 </script>
 
 </body>
