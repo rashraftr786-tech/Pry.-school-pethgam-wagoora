@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Consolidated Master Record | GPS Pethgam Wagoora</title>
   <style>
-    /* Maintained styling from original template */
     @page { size: A4 landscape; margin: 5mm; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
     .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; border-radius: 4px; }
@@ -16,21 +15,18 @@
     
     .filter-bar { display: flex; gap: 20px; background: #e8f5e9; padding: 10px; margin: 15px 0; border-radius: 4px; align-items: center; }
     
-    /* Table styling for high density data matching the spreadsheet */
-    table { width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 8.5px; margin-top: 10px; }
     th, td { border: 1px solid #444; padding: 3px; text-align: center; }
     th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; }
     .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; }
     .header-group { background: #5a3d8c; color: white; }
-    
-    .pass { color: green; font-weight: bold; }
-    .fail { color: red; font-weight: bold; }
+    .summary-col { background: #fffde7; font-weight: bold; }
 
     @media print {
       .nav-header, .filter-bar, .no-print { display: none !important; }
       body { background: white; padding: 0; }
       .master-container { box-shadow: none; border: none; padding: 0; }
-      table { font-size: 8px; width: 100%; }
+      table { font-size: 7.5px; width: 100%; }
     }
   </style>
 </head>
@@ -64,40 +60,52 @@
   <table id="masterTable">
     <thead>
       <tr class="header-group">
-        <th colspan="7">Student Profile Details</th>
+        <th colspan="4">Basic Info</th>
         <th colspan="3">English</th>
         <th colspan="3">Math</th>
         <th colspan="3">EVS</th>
         <th colspan="3">Urdu</th>
         <th colspan="3">Kashmiri</th>
-        <th colspan="3">Final Assessment</th>
+        <th colspan="9">Final Result Summary (Overall)</th>
       </tr>
       <tr>
         <th>Adm No</th>
         <th>Roll No</th>
         <th>Student Name</th>
         <th>Father's Name</th>
-        <th>Mother's Name</th>
-        <th>DOB</th>
-        <th>Apaar ID / PEN</th>
         
-        <th>FA</th><th>SA</th><th>Total</th>
-        <th>FA</th><th>SA</th><th>Total</th>
-        <th>FA</th><th>SA</th><th>Total</th>
-        <th>FA</th><th>SA</th><th>Total</th>
-        <th>FA</th><th>SA</th><th>Total</th>
+        <th>FA</th><th>SA</th><th>T</th>
+        <th>FA</th><th>SA</th><th>T</th>
+        <th>FA</th><th>SA</th><th>T</th>
+        <th>FA</th><th>SA</th><th>T</th>
+        <th>FA</th><th>SA</th><th>T</th>
         
-        <th>G.Total</th>
-        <th>%</th>
-        <th>Result</th>
+        <th class="summary-col">G.Total (500)</th>
+        <th class="summary-col">Perc%</th>
+        <th class="summary-col">G.Points</th>
+        <th class="summary-col">Grade</th>
+        <th class="summary-col">Class Rank</th>
+        <th class="summary-col">School Rank</th>
+        <th class="summary-col">Remarks</th>
+        <th class="summary-col">APAAR ID</th>
+        <th class="summary-col">PEN Number</th>
       </tr>
     </thead>
-    <tbody id="masterBody">
-      </tbody>
+    <tbody id="masterBody"></tbody>
   </table>
 </div>
 
 <script>
+function calculateGrade(perc) {
+    if(perc >= 90) return {g:'A+', p:10};
+    if(perc >= 80) return {g:'A', p:9};
+    if(perc >= 70) return {g:'B+', p:8};
+    if(perc >= 60) return {g:'B', p:7};
+    if(perc >= 50) return {g:'C', p:6};
+    if(perc >= 40) return {g:'D', p:5};
+    return {g:'E', p:4};
+}
+
 function renderMasterTable() {
     const selectedClass = document.getElementById('classFilter').value;
     const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -105,7 +113,72 @@ function renderMasterTable() {
     const tbody = document.getElementById('masterBody');
     tbody.innerHTML = "";
 
-    const filteredStudents = admissions.filter(s => selectedClass === "All" || s.studentClass === selectedClass);
+    let dataRows = [];
+
+    admissions.forEach(s => {
+        if (selectedClass !== "All" && s.studentClass !== selectedClass) return;
+        const r = results.find(res => res.admNo === s.admNo);
+        if (!r) return;
+
+        let grandTotal = 0;
+        const subs = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
+        let subCells = "";
+        
+        subs.forEach(sub => {
+            const m = r.marks[sub] || { fa: [], cca: 0, sa: 0 };
+            const faAggregate = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0) + (Number(m.cca) || 0);
+            const saMarks = Number(m.sa) || 0;
+            const subTotal = faAggregate + saMarks;
+            grandTotal += subTotal;
+            subCells += `<td>${faAggregate}</td><td>${saMarks}</td><td>${subTotal}</td>`;
+        });
+
+        const perc = (grandTotal / 5).toFixed(1);
+        const gradeInfo = calculateGrade(perc);
+
+        dataRows.push({
+            adm: s.admNo,
+            roll: r.rollNo || '-',
+            name: s.studentName.toUpperCase(),
+            fname: s.fatherName,
+            subCells: subCells,
+            total: grandTotal,
+            perc: perc,
+            gp: gradeInfo.p,
+            grade: gradeInfo.g,
+            remarks: perc >= 33 ? "Promoted" : "Needs Improvement",
+            apaar: s.apaarId || '-',
+            pen: s.penNo || '-'
+        });
+    });
+
+    // Simple sorting for Class Rank calculation based on Percentage
+    dataRows.sort((a, b) => b.perc - a.perc);
+
+    dataRows.forEach((row, index) => {
+        tbody.innerHTML += `<tr>
+            <td>${row.adm}</td>
+            <td>${row.roll}</td>
+            <td class="student-info">${row.name}</td>
+            <td class="student-info">${row.fname}</td>
+            ${row.subCells}
+            <td class="summary-col">${row.total}</td>
+            <td class="summary-col">${row.perc}%</td>
+            <td class="summary-col">${row.gp}</td>
+            <td class="summary-col">${row.grade}</td>
+            <td class="summary-col">${index + 1}</td>
+            <td class="summary-col">-</td>
+            <td class="summary-col">${row.remarks}</td>
+            <td class="summary-col">${row.apaar}</td>
+            <td class="summary-col">${row.pen}</td>
+        </tr>`;
+    });
+}
+
+window.onload = renderMasterTable;
+</script>
+</body>
+</html>
 
     filteredStudents.forEach(s => {
         const r = results.find(res => res.admNo === s.admNo);
