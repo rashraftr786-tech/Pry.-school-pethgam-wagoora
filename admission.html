@@ -46,6 +46,34 @@
             localStorage.setItem('temp_admission', JSON.stringify(data));
             window.location.href = 'apaar-input.html';
         }
+        // Add this helper to your script to handle file uploads
+async function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function proceedToApaar() {
+    const form = document.getElementById('step1Form');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Convert all uploaded images to strings to store them temporarily
+    const files = ['docBirth', 'docBlood', 'docAadhaarChild', 'docAadhaarParent', 'docBank'];
+    for (let f of files) {
+        const fileInput = form.querySelector(`[name="${f}"]`);
+        if (fileInput && fileInput.files[0]) {
+            data[f] = await fileToBase64(fileInput.files[0]);
+        }
+    }
+
+    localStorage.setItem('temp_adm', JSON.stringify(data));
+    window.location.href = 'apaar-input.html';
+}
+        
     </script>
 </body>
 </html>
