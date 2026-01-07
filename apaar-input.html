@@ -90,19 +90,21 @@
       body { background: none; }
       .page-border { margin: 0; border: 2px solid darkgreen; }
       .no-print { display: none !important; }
-      input { border-bottom: none !important; }
+      /* Keep the bottom border of inputs visible when saving as PDF */
+      .input-line { border-bottom: 1px solid #000 !important; }
     }
   </style>
 </head>
 <body>
 
-<div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00;">
+<div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; border-bottom: 3px solid #ffcc00;">
     <a href="index.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">🏠 Home</a>
     <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 Admission Form</a>
-    <button onclick="window.print()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffcc00; color: #1a5d1a;">🖨️ Print Consent Form</button>
+    <button onclick="window.print()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffcc00; color: #1a5d1a;">🖨️ Print Form</button>
+    <button onclick="downloadPDF()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffffff; color: #1a5d1a; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📥 Download PDF</button>
 </div>
 
-<div class="page-border">
+<div class="page-border" id="printable-area">
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="header-text">
@@ -146,12 +148,12 @@
     <div class="hoi-section">
       <div class="hoi-title">******************** Consent by Head of the School ********************</div>
       <div class="consent-paragraph">
-        I <strong>Mohmad Ashraf Rather</strong> as Head of the School or any authorized teacher/staff hereby declare that the Father/Mother/Legal Guardian of <input type="text" class="input-line" style="width: 250px;"> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus Date.
+        I <strong>Mohmad Ashraf Rather</strong> as Head of the School or any authorized teacher/staff hereby declare that the Father/Mother/Legal Guardian of <input type="text" id="studentNameHOI" class="input-line" style="width: 250px;"> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus Date.
       </div>
       
       <div class="footer-section">
         <div class="sig-block">
-          Date: <input type="text" class="input-line" style="width: 150px;">
+          Date: <input type="text" id="todayDate" class="input-line" style="width: 150px;">
         </div>
         <div class="sig-line">Signature of HoI</div>
       </div>
@@ -165,16 +167,39 @@
         const params = new URLSearchParams(window.location.search);
         const studentId = params.get('id');
         
+        // Set today's date automatically
+        const today = new Date().toLocaleDateString();
+        if(document.getElementById("todayDate")) document.getElementById("todayDate").value = today;
+
         if (studentId) {
             const records = JSON.parse(localStorage.getItem("admissions")) || [];
             const student = records.find(r => r.admNo.trim() === studentId.trim());
-            if (student && document.getElementById("studentNameDisplay")) {
-                document.getElementById("studentNameDisplay").value = student.studentName;
+            if (student) {
+                if(document.getElementById("studentNameDisplay")) {
+                    document.getElementById("studentNameDisplay").value = student.studentName;
+                }
+                if(document.getElementById("studentNameHOI")) {
+                    document.getElementById("studentNameHOI").value = student.studentName;
+                }
             }
         }
     };
+
+    // Responding Download Button
+    function downloadPDF() {
+        const studentName = document.getElementById("studentNameDisplay").value || "Student";
+        const filename = "APAAR_Consent_" + studentName.replace(/\s+/g, '_') + ".pdf";
+        
+        // Temporarily change document title to name the file properly during print/save
+        const originalTitle = document.title;
+        document.title = filename;
+        
+        window.print();
+        
+        // Revert title
+        document.title = originalTitle;
+    }
 </script>
 
 </body>
 </html>
-        
