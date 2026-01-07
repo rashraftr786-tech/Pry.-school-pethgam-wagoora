@@ -2,79 +2,212 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Step 1: Admission Input</title>
+    <title>Step 1: Student Admission Input - GPS Pethgam</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        :root { --primary: #2e7d32; --accent: #ffeb3b; }
-        body { font-family: 'Segoe UI', sans-serif; background: #e8f5e9; padding: 20px; }
-        .input-card { max-width: 800px; margin: auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .banner { background: var(--primary); color: white; padding: 20px; text-align: center; position: relative; }
-        .banner img { width: 60px; position: absolute; left: 20px; top: 15px; }
-        .form-body { padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .full { grid-column: span 2; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; transition: 0.3s; }
-        input:focus { border-color: var(--primary); outline: none; }
-        .btn-proceed { grid-column: span 2; background: var(--primary); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; }
-        .btn-proceed:hover { background: #1b5e20; transform: translateY(-2px); }
+        :root { --primary: #2e7d32; --accent: #ffeb3b; --text: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e8f5e9; padding: 20px; color: var(--text); }
+        .input-card { max-width: 900px; margin: auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ccc; }
+        
+        .banner { background: var(--primary); color: white; padding: 25px; text-align: center; position: relative; }
+        .banner img.logo { width: 70px; position: absolute; left: 30px; top: 20px; }
+        
+        .form-body { padding: 30px; display: grid; grid-template-columns: 1fr 1fr 180px; gap: 15px; }
+        .full { grid-column: span 3; }
+        .half { grid-column: span 1; }
+        .two-thirds { grid-column: span 2; }
+        
+        .section-title { grid-column: span 3; background: #f1f1f1; padding: 10px; font-weight: bold; border-left: 5px solid var(--primary); margin-top: 10px; text-transform: uppercase; font-size: 14px; }
+
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        input:focus { border-color: var(--primary); outline: none; background: #f9fff9; }
+
+        /* Photo Upload Styling */
+        .photo-container { grid-column: 3; grid-row: 2 / span 4; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+        .photo-box { width: 150px; height: 180px; border: 2px dashed #aaa; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; background: #fafafa; overflow: hidden; position: relative; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .photo-box span { font-size: 12px; color: #777; padding: 10px; }
+
+        /* Declaration Box */
+        .declaration-box { grid-column: span 3; background: #fffde7; border: 1px solid #ffe082; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .declaration-box p { font-size: 12px; line-height: 1.6; margin: 0 0 15px 0; text-align: justify; }
+        .checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .checkbox-row input { width: auto; margin-top: 3px; }
+
+        .btn-proceed { grid-column: span 3; background: var(--primary); color: white; padding: 18px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-proceed:hover { background: #1b5e20; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
-    <div class="input-card">
-        <div class="banner">
-            <img src="logo.png" alt="Logo">
-            <h2>GPS PETHGAM WAGOORA</h2>
-            <p>Student Admission Portal - Session 2026</p>
-        </div>
-        <form id="admForm" class="form-body">
-            <div class="full"><label>Student Full Name</label><input type="text" name="sname" required></div>
-            <div><label>Father's Name</label><input type="text" name="fname" required></div>
-            <div><label>Mother's Name</label><input type="text" name="mname" required></div>
-            <div><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
-            <div><label>Date of Birth</label><input type="date" name="dob" required></div>
-            <div><label>Category</label><select name="cat"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-            <div><label>Class Joining</label><select name="sclass"><option>Pre-Primary 3</option><option>Pre-Primary 2</option><option>Balvatika</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option></select></div>
-            <div class="full"><label>Mohallah / Village</label><input type="text" name="village" required></div>
-            <div><label>Father's Contact</label><input type="text" name="fContact" required></div>
-            <div><label>Aadhaar Number</label><input type="text" name="aadhaar" maxlength="12" required></div>
-            <button type="button" class="btn-proceed" onclick="saveStep1()">Save & Next: APAAR Form ➔</button>
-        </form>
+
+<div class="input-card">
+    <div class="banner">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h2>GPS PETHGAM WAGOORA</h2>
+        <p>Official Digital Admission Portal - Session 2026</p>
     </div>
-    <script>
-        function saveStep1() {
-            const data = Object.fromEntries(new FormData(document.getElementById('admForm')));
-            localStorage.setItem('temp_admission', JSON.stringify(data));
-            window.location.href = 'apaar-input.html';
-        }
-        // Add this helper to your script to handle file uploads
-async function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
 
-async function proceedToApaar() {
-    const form = document.getElementById('step1Form');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    <form id="admForm" class="form-body">
+        <div class="section-title">Step 1: Student Identity & Photo</div>
+        
+        <div class="two-thirds">
+            <label>Student Name (Full Block Letters)</label>
+            <input type="text" name="sname" placeholder="As per Aadhaar/Birth Certificate" required>
+        </div>
+        
+        <div class="photo-container">
+            <label>Student Photo</label>
+            <div class="photo-box" onclick="document.getElementById('studentPhoto').click()">
+                <span id="photoLabel">Click to upload Passport Photo</span>
+                <img id="photoPreview">
+            </div>
+            <input type="file" id="studentPhoto" name="studentPhoto" hidden accept="image/*" onchange="previewImage(this)">
+        </div>
 
-    // Convert all uploaded images to strings to store them temporarily
-    const files = ['docBirth', 'docBlood', 'docAadhaarChild', 'docAadhaarParent', 'docBank'];
-    for (let f of files) {
-        const fileInput = form.querySelector(`[name="${f}"]`);
-        if (fileInput && fileInput.files[0]) {
-            data[f] = await fileToBase64(fileInput.files[0]);
+        <div class="two-thirds">
+            <label>Name As Per Aadhaar</label>
+            <input type="text" name="aadhaarName" required>
+        </div>
+
+        <div class="half">
+            <label>Father's Name</label>
+            <input type="text" name="fname" required>
+        </div>
+        <div class="half">
+            <label>Mother's Name</label>
+            <input type="text" name="mname" required>
+        </div>
+
+        <div class="half">
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required>
+        </div>
+        <div class="half">
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <div class="section-title">Step 2: Residence & Contact</div>
+        <div class="half"><label>Mohallah</label><input type="text" name="mohallah" required></div>
+        <div class="half"><label>Village</label><input type="text" name="village" required></div>
+        <div class="half"><label>Tehsil</label><input type="text" name="tehsil" required></div>
+        <div class="half"><label>District</label><input type="text" name="district" value="Baramulla" required></div>
+        <div class="half"><label>PIN Code</label><input type="text" name="pincode" value="193109" required></div>
+        <div class="half"><label>Contact Number (Parent)</label><input type="tel" name="fContact" required></div>
+
+        <div class="section-head section-title">Step 3: Academic & Category Details</div>
+        <div class="half">
+            <label>Class Joining</label>
+            <select name="sclass" required>
+                <option value="">-- Select Class --</option>
+                <option>Pre-Primary 3</option>
+                <option>Pre-Primary 2</option>
+                <option>Balvatika</option>
+                <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option>
+            </select>
+        </div>
+        <div class="half"><label>Category</label>
+            <select name="cat">
+                <option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>RBA</option>
+            </select>
+        </div>
+        <div class="half"><label>Aadhaar Number (Student)</label><input type="text" name="aadhaar" maxlength="12" required></div>
+        <div class="half"><label>Blood Group</label><input type="text" name="bloodGroup"></div>
+
+        <div class="section-title">Step 4: Bank Details</div>
+        <div class="half"><label>Account Number</label><input type="text" name="bankAcc"></div>
+        <div class="half"><label>Bank Name</label><input type="text" name="bankName"></div>
+        <div class="half"><label>IFSC Code</label><input type="text" name="ifsc"></div>
+        <div class="half"><label>Branch</label><input type="text" name="branch"></div>
+
+        <div class="section-title">Step 5: Document Uploads</div>
+        <div class="half"><label>Birth Certificate</label><input type="file" name="docBirth" required></div>
+        <div class="half"><label>Blood Group Report</label><input type="file" name="docBlood"></div>
+        <div class="half"><label>Aadhaar Card (Child)</label><input type="file" name="docAadhaarChild" required></div>
+        <div class="half"><label>Aadhaar Card (Parent)</label><input type="file" name="docAadhaarParent" required></div>
+        <div class="half"><label>Bank Passbook (Front)</label><input type="file" name="docBank"></div>
+
+        <div class="declaration-box">
+            <p>
+                <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time. If any information is found incorrect, the school has the right to cancel the admission. I hereby declare that as the Parent of above mentioned student I am giving my consent to provide the AADHAAR for the demographic authentication of the student for educational purposes and APAAR ID generation.
+            </p>
+            <label class="checkbox-row">
+                <input type="checkbox" name="declaration_agree" required>
+                <span>I have read the declaration and I agree to the terms and conditions.</span>
+            </label>
+        </div>
+
+        <button type="button" class="btn-proceed" onclick="proceedToApaar()">Submit Step 1 & Proceed to APAAR Form ➔</button>
+    </form>
+</div>
+
+<script>
+    // Preview Student Photograph
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('photoPreview').src = e.target.result;
+                document.getElementById('photoPreview').style.display = 'block';
+                document.getElementById('photoLabel').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
-    localStorage.setItem('temp_adm', JSON.stringify(data));
-    window.location.href = 'apaar-input.html';
-}
+    // Helper to convert files to Base64
+    async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Main Submit Function
+    async function proceedToApaar() {
+        const form = document.getElementById('admForm');
         
-    </script>
+        // Basic validation
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const formData = new FormData(form);
+        const data = {};
+        
+        // Handle normal inputs
+        formData.forEach((value, key) => {
+            if (!(value instanceof File)) {
+                data[key] = value;
+            }
+        });
+
+        // Handle File inputs (Photograph + Documents)
+        const fileFields = ['studentPhoto', 'docBirth', 'docBlood', 'docAadhaarChild', 'docAadhaarParent', 'docBank'];
+        for (let field of fileFields) {
+            const fileInput = form.querySelector(`[name="${field}"]`);
+            if (fileInput && fileInput.files[0]) {
+                data[field] = await fileToBase64(fileInput.files[0]);
+            }
+        }
+
+        // Save to temporary storage for the multi-page PDF generator
+        localStorage.setItem('temp_adm', JSON.stringify(data));
+        
+        // Redirect to Step 2 (APAAR Form)
+        window.location.href = 'apaar-input.html';
+    }
+</script>
+
 </body>
 </html>
-            
+
