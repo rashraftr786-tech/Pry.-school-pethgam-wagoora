@@ -8,34 +8,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root { --primary: #1b5e20; --border: #000; }
-        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 10px; font-size: 12px; }
-        .form-page { max-width: 950px; margin: auto; background: white; padding: 25px; border: 2px solid #000; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 10px; font-size: 11px; }
+        .form-page { max-width: 950px; margin: auto; background: white; padding: 25px; border: 2px solid #000; }
         
-        /* Layout Grid to prevent overlapping */
-        .header-container { display: grid; grid-template-columns: 1fr 150px; gap: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header-container { display: grid; grid-template-columns: 1fr 140px; gap: 10px; border-bottom: 2px solid #000; padding-bottom: 10px; }
         .header-text { text-align: center; }
-        .header-text h1 { margin: 0; font-size: 20px; text-transform: uppercase; }
+        .header-text h1 { margin: 0; font-size: 18px; text-transform: uppercase; }
         
-        .photo-box { width: 130px; height: 160px; border: 1px solid #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #f9f9f9; cursor: pointer; overflow: hidden; }
+        .photo-box { width: 120px; height: 140px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; text-align: center; background: #f9f9f9; cursor: pointer; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-        .field-row { display: flex; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
-        .label { font-weight: bold; white-space: nowrap; min-width: 130px; }
-        .dotted-input { border: none; border-bottom: 1px dotted #000; flex: 1; padding: 2px; outline: none; background: transparent; }
+        .field-row { display: flex; align-items: center; margin-bottom: 8px; gap: 5px; flex-wrap: wrap; }
+        .label { font-weight: bold; white-space: nowrap; min-width: 120px; }
+        .dotted-input { border: none; border-bottom: 1px dotted #000; flex: 1; padding: 1px; outline: none; font-size: 11px; }
         
-        /* Character Boxes */
         .box-container { display: flex; flex-wrap: wrap; }
-        .char-box { width: 18px; height: 18px; border: 1px solid #000; margin-right: -1px; margin-bottom: 2px; }
-        .char-box input { width: 100%; height: 100%; border: none; text-align: center; text-transform: uppercase; font-size: 11px; }
+        .char-box { width: 16px; height: 16px; border: 1px solid #000; margin-right: -1px; margin-bottom: 1px; }
+        .char-box input { width: 100%; height: 100%; border: none; text-align: center; text-transform: uppercase; font-size: 10px; }
 
-        .section-head { font-weight: bold; text-decoration: underline; margin: 20px 0 10px 0; background: #eee; padding: 5px; text-transform: uppercase; }
-        .doc-upload-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; background: #fafafa; padding: 15px; border: 1px dashed #666; }
+        .section-head { font-weight: bold; text-decoration: underline; margin: 12px 0 5px 0; background: #eee; padding: 3px; text-transform: uppercase; }
+        .doc-upload { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: #fafafa; padding: 10px; border: 1px solid #ccc; }
         
-        .apaar-consent-box { border: 1px solid #000; padding: 15px; margin-top: 20px; background: #fdfdfd; line-height: 1.5; }
+        .declaration-text { font-size: 10px; line-height: 1.3; margin-top: 10px; border: 1px solid #000; padding: 8px; }
+        .btn-footer { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
+        .btn { padding: 10px 20px; border: none; cursor: pointer; color: white; font-weight: bold; border-radius: 4px; }
+        .btn-save { background: var(--primary); }
+        .btn-pdf { background: #000; }
         
-        .btn-footer { margin-top: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .btn { padding: 12px 25px; border: none; cursor: pointer; color: white; font-weight: bold; border-radius: 4px; font-size: 14px; }
-        .btn-submit { background: var(--primary); }
+        @media print { .btn-footer, .doc-upload { display: none; } }
     </style>
 </head>
 <body>
@@ -45,11 +45,11 @@
         <div class="header-text">
             <h1>Government Primary School Pethgam Wagoora</h1>
             <p>Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
-            <p>UDISE Code: 01022202207 | Email: pspethgam@gmail.com</p>
-            <div style="font-size: 18px; font-weight: bold; margin-top: 10px; text-decoration: underline;">ADMISSION FORM</div>
+            <p>Email: pspethgam@gmail.com | UDISE Code: 01022202207</p>
+            <div style="font-size: 16px; font-weight: bold; margin-top: 5px; text-decoration: underline;">ADMISSION FORM</div>
         </div>
         <div class="photo-box" onclick="document.getElementById('photoInput').click()">
-            <span id="photoLabel">Affix Student <br> Passport Photo</span>
+            <span id="photoLabel">Affix Photo</span>
             <img id="preview">
             <input type="file" id="photoInput" hidden accept="image/*" onchange="previewImage(this)">
         </div>
@@ -61,10 +61,17 @@
             <span class="label">Student's Name:</span>
             <div class="box-container" id="nameBoxes"></div>
         </div>
-
         <div class="field-row">
             <span class="label">Name (As per Aadhaar):</span>
             <div class="box-container" id="aadhaarNameBoxes"></div>
+        </div>
+        <div class="field-row">
+            <span class="label">Gender:</span>
+            <input type="radio" name="gender" value="Male"> Male 
+            <input type="radio" name="gender" value="Female"> Female 
+            <input type="radio" name="gender" value="Other"> Other
+            <span class="label" style="min-width: 50px; margin-left:20px;">DOB:</span>
+            <input type="date" name="dob" style="border:1px solid #000;">
         </div>
 
         <div class="field-row">
@@ -74,7 +81,7 @@
             <input type="text" class="dotted-input" name="motherName">
         </div>
 
-        <div class="section-head">Residential Address</div>
+        <div class="section-head">Address & Contact</div>
         <div class="field-row">
             <span class="label">Mohallah/Village:</span>
             <input type="text" class="dotted-input" name="mohallah">
@@ -84,59 +91,71 @@
         <div class="field-row">
             <span class="label">District:</span>
             <input type="text" class="dotted-input" name="district" value="Baramulla">
-            <span class="label" style="min-width: 50px;">PIN Code:</span>
+            <span class="label" style="min-width: 50px;">PIN:</span>
             <input type="text" class="dotted-input" name="pincode" value="193109">
         </div>
+        <div class="field-row">
+            <span class="label">Father's Contact:</span>
+            <input type="text" class="dotted-input" name="fContact">
+            <span class="label" style="min-width: 100px;">Mother's Contact:</span>
+            <input type="text" class="dotted-input" name="mContact">
+        </div>
 
-        <div class="section-head">Contact & Identifiers</div>
+        <div class="section-head">Identifiers & Class</div>
         <div class="field-row">
             <span class="label">Aadhaar Number:</span>
             <div class="box-container" id="aadhaarNumBoxes"></div>
-            <span class="label" style="min-width: 80px; margin-left:10px;">DOB:</span>
-            <input type="date" name="dob" style="border:1px solid #000;">
         </div>
-
+        <div class="field-row">
+            <span class="label">Category:</span>
+            <input type="radio" name="cat" value="SC"> SC 
+            <input type="radio" name="cat" value="ST"> ST 
+            <input type="radio" name="cat" value="OBC"> OBC 
+            <input type="radio" name="cat" value="General"> General
+            <span class="label" style="min-width: 60px; margin-left:15px;">Blood Gr:</span>
+            <input type="text" class="dotted-input" name="bloodGroup" style="max-width: 40px;">
+        </div>
         <div class="field-row">
             <span class="label">Class Joining:</span>
-            <select name="sclass" required style="padding: 3px; border:1px solid #000;">
+            <select name="sclass" required>
                 <option value="">--Select--</option>
-                <option>Pre-Primary 3</option>
-                <option>Pre-Primary 2</option>
-                <option>Balvatika</option>
+                <option>Pre-Primary 3</option><option>Pre-Primary 2</option><option>Balvatika</option>
                 <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option>
             </select>
-            <span class="label" style="min-width: 80px; margin-left:10px;">PEN Number:</span>
-            <input type="text" class="dotted-input" name="penNumber" placeholder="For Transfer Cases">
+            <span class="label" style="min-width: 60px; margin-left:15px;">PEN:</span>
+            <input type="text" class="dotted-input" name="penNumber">
         </div>
 
+        <div class="section-head">Bank Account Details</div>
         <div class="field-row">
-            <span class="label">APAAR ID:</span>
-            <input type="text" class="dotted-input" name="apaarId">
-            <span class="label" style="min-width: 80px; margin-left:10px;">Blood Group:</span>
-            <input type="text" class="dotted-input" name="bloodGroup" style="max-width: 60px;">
+            <span class="label">Bank Account No:</span>
+            <input type="text" class="dotted-input" name="bankAcc">
+            <span class="label" style="min-width: 60px;">Bank Name:</span>
+            <input type="text" class="dotted-input" name="bankName">
+        </div>
+        <div class="field-row">
+            <span class="label">Bank Branch:</span>
+            <input type="text" class="dotted-input" name="branch">
+            <span class="label" style="min-width: 60px;">IFSC Code:</span>
+            <input type="text" class="dotted-input" name="ifsc">
         </div>
 
-        <div class="section-head">📎 Document Upload (Mandatory for Fresh)</div>
-        <div class="doc-upload-grid">
-            <div><label>1. Birth Certificate:</label><br><input type="file" name="docBirth" required></div>
-            <div><label>2. Blood Group Report:</label><br><input type="file" name="docBlood" required></div>
-            <div><label>3. Aadhaar Card (Student):</label><br><input type="file" name="docAadhaar" required></div>
+        <div class="section-head">📎 Document Upload</div>
+        <div class="doc-upload">
+            <div>Birth Cert: <input type="file" name="docBirth" required></div>
+            <div>Blood Gr: <input type="file" name="docBlood" required></div>
+            <div>Aadhaar: <input type="file" name="docAadhaar" required></div>
         </div>
 
-        <div class="apaar-consent-box">
-            <h3 style="text-align: center; margin-top: 0;">Consent for APAAR ID Generation</h3>
-            <p style="font-size: 11px;">
-                I hereby voluntarily give my consent to share the Aadhaar Number and demographic information of my child with the Ministry of Education for the sole purpose of creation of <strong>APAAR ID</strong> and opening of <strong>DIGILOCKER</strong> account. I understand that this information will be kept confidential as per the Aadhaar Act 2016.
-            </p>
-            <div style="margin-top: 10px;">
-                <input type="checkbox" id="consentCheck" required> 
-                <label for="consentCheck" style="font-weight: bold;">I Accept the terms and provide digital consent for APAAR ID generation.</label>
-            </div>
+        <div class="declaration-text">
+            <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time... I hereby declare that as the Parent of above mentioned student I am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+            <br><br>
+            <input type="checkbox" id="consent" required> <strong>I Agree to the Declaration and APAAR Consent.</strong>
         </div>
 
         <div class="btn-footer">
-            <p style="font-size: 10px; color: #666;">* Form will be saved to Online Register automatically.</p>
-            <button type="button" class="btn btn-submit" onclick="finalSubmit()">Final Submit & Save Admission</button>
+            <button type="button" class="btn btn-pdf" onclick="window.print()">Print / Download PDF</button>
+            <button type="button" class="btn btn-save" onclick="saveAndProceed()">Submit & Proceed to APAAR Form</button>
         </div>
     </form>
 </div>
@@ -153,8 +172,8 @@
     }
 
     window.onload = () => {
-        createBoxes('nameBoxes', 35);
-        createBoxes('aadhaarNameBoxes', 35);
+        createBoxes('nameBoxes', 32);
+        createBoxes('aadhaarNameBoxes', 32);
         createBoxes('aadhaarNumBoxes', 12);
     };
 
@@ -171,26 +190,31 @@
         }
     }
 
-    function finalSubmit() {
+    function saveAndProceed() {
         const form = document.getElementById('admissionForm');
         if(!form.checkValidity()) {
-            alert("Please fill all required fields and accept the APAAR consent.");
+            alert("Please fill all required fields and check the declaration.");
             return;
         }
 
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         
-        // Save to Register logic
+        // --- DATA SAVING LOGIC ---
+        // We use 'admissionData' key to sync with adm-register.html
         let register = JSON.parse(localStorage.getItem('admissionData')) || [];
-        register.push({ ...data, timestamp: new Date().toLocaleString(), status: "Submitted" });
+        register.push({
+            ...data,
+            sname: data.fatherName, // Placeholder for sorting if name boxes aren't read as one string
+            timestamp: new Date().toLocaleString(),
+            status: "Submitted"
+        });
         localStorage.setItem('admissionData', JSON.stringify(register));
 
-        alert("Admission & APAAR Consent saved successfully!");
-        window.location.href = 'adm-register.html';
+        alert("Data Saved to Register! Now proceeding to APAAR Consent Form.");
+        window.location.href = 'apaar-consent.html'; // Ensure this file exists
     }
 </script>
 </body>
 </html>
 
-        
