@@ -37,7 +37,7 @@
         .header-text { flex-grow: 1; text-align: center; }
         .header-text h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
 
-        /* Student Info Section */
+        /* Student Info Section - The alignment reference */
         .top-info-container { 
             display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 110px;
         }
@@ -59,28 +59,30 @@
         .subject-table th { background: #dcd0ff !important; font-size: 9.5px; height: 25px; }
         .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; width: 135px; }
 
-        /* FIXED: LEVELING SYSTEM USING FLEXBOX */
+        /* THE FIX: FLEXBOX WITH FIXED SIDE WIDTHS */
         .bottom-row-container { 
             display: flex; 
-            gap: 12px; 
+            gap: 10px; 
             margin-top: 10px; 
             flex-grow: 1;
             width: 100%; 
             align-items: stretch;
         }
 
-        /* Column 1 (Left) */
-        .col-left { width: 240px; display: flex; flex-direction: column; gap: 8px; }
-        /* Column 2 (Middle Chart) */
-        .col-mid { flex: 1.5; display: flex; flex-direction: column; border: 1px solid #444; }
-        /* Column 3 (Right Summary) - THIS STRETCHES TO LEVEL THE EDGE */
-        .col-right { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        /* Matches left side of table */
+        .col-left { width: 220px; display: flex; flex-direction: column; gap: 8px; }
+        
+        /* Middle expands to fill space */
+        .col-mid { flex: 1; display: flex; flex-direction: column; border: 1px solid #444; min-width: 0; }
+        
+        /* Matches Class Box (95) + Photo Box (110) + Gap (10) = 215px */
+        .col-right { width: 215px; display: flex; flex-direction: column; gap: 8px; }
 
         .section-box { border: 1px solid #444; display: flex; flex-direction: column; background: white; overflow: hidden; width: 100%; }
         .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 5px; text-align: center; font-size: 11px; }
         
         .remarks-content { padding: 8px; font-size: 11px; font-style: italic; flex-grow: 1; line-height: 1.3; }
-        .chart-wrap { flex: 1; padding: 5px; position: relative; width: 100%; height: 100%; }
+        .chart-wrap { flex: 1; padding: 5px; position: relative; width: 100%; }
 
         .prof-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #eee; font-size: 10.5px; }
         
@@ -90,10 +92,7 @@
             margin-top: auto;
         }
 
-        /* Signatures */
-        .footer-sigs { 
-            display: flex; justify-content: space-between; margin-top: auto; padding-top: 10px;
-        }
+        .footer-sigs { display: flex; justify-content: space-between; margin-top: auto; padding-top: 10px; }
         .sig-block { width: 23%; text-align: center; }
         .sig-space { height: 35px; }
         .sig-label { border-top: 1.5px solid #000; padding-top: 4px; font-size: 11px; font-weight: bold; }
@@ -146,7 +145,6 @@
     </table>
 
     <div class="bottom-row-container outer-boundary">
-        
         <div class="col-left">
             <div class="section-box" style="height: 110px;">
                 <div class="section-header" style="background:#b71c1c !important;">Co-Scholastic Record</div>
@@ -187,7 +185,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 
     <div class="footer-sigs outer-boundary">
@@ -201,6 +198,7 @@
 <button class="btn-download" onclick="window.print()">Print Marksheet / Save PDF</button>
 
 <script>
+// Logic remains unchanged to preserve data functionality
 const params = new URLSearchParams(window.location.search);
 const admNo = params.get("admNo");
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -269,6 +267,6 @@ if (sInfo && sMarks) {
 </script>
 </body>
 </html>
-        
+            
 
-    
+        
