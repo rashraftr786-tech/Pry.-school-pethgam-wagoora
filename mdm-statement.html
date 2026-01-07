@@ -19,7 +19,6 @@
             flex-direction: column;
         }
 
-        /* Updated Header as per specific request */
         .header-section { 
             display: flex; 
             align-items: center; 
@@ -37,35 +36,34 @@
             font-size: 13px; 
             line-height: 1.6; 
             font-weight: bold;
-            min-width: 250px;
+            min-width: 260px;
         }
 
         .form-title { 
             text-align: center; 
             font-weight: bold; 
             font-size: 18px; 
-            margin: 15px 0; 
+            margin: 12px 0; 
             text-decoration: underline; 
             text-transform: uppercase; 
         }
 
-        /* Table Optimization: Removed Month Column */
-        table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 6px 3px; text-align: center; word-wrap: break-word; }
-        th { background-color: #f5f5f5; font-weight: bold; height: 50px; vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; margin-top: 5px; }
+        th, td { border: 1px solid #000; padding: 5px 2px; text-align: center; word-wrap: break-word; }
+        th { background-color: #f5f5f5; font-weight: bold; height: 55px; vertical-align: middle; font-size: 10.5px; }
         
-        .scheme-cell { text-align: left; padding-left: 8px; font-weight: bold; }
+        .scheme-cell { text-align: left; padding-left: 8px; font-weight: bold; background: #fafafa; }
 
-        .account-section { margin-top: 20px; font-size: 14px; font-weight: bold; display: flex; justify-content: space-between; }
+        .account-section { margin-top: 15px; font-size: 13px; font-weight: bold; }
         
-        .cooks-table { width: 60%; margin-top: 15px; }
-        .cooks-table th { height: 30px; background: #eee; }
+        .cooks-table { width: 55%; margin-top: 10px; }
+        .cooks-table th { height: 25px; background: #eee; }
 
-        .footer-sigs { margin-top: auto; padding-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .sig-box { width: 250px; text-align: left; font-size: 13px; line-height: 1.8; }
+        .footer-sigs { margin-top: auto; padding-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .sig-box { width: 250px; text-align: left; font-size: 12px; line-height: 1.7; }
 
         .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
-        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 14px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 13px; }
         .btn-print { background: #333; }
         .btn-finalize { background: #b71c1c; }
 
@@ -80,11 +78,11 @@
         <div class="header-text">
             <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
             <div class="address-line">Address: Wagoora Babareshi Road Near Zonal Education Office</div>
-            <div class="address-line">Pethgam Wagoora Baramulla Jammu and Kashmir</div>
+            <div class="address-line">Pethgam Wagoora Baramulla Jammu and Kashmir - 193109</div>
         </div>
         <div class="header-details">
             <div>Udise Code: 01022202207</div>
-            <div>Contact: 959644988</div>
+            <div>Contact: 9596449881</div>
             <div>Email: pspethgam@gmail.com</div>
             <div>Month: <span id="reportMonth" style="text-decoration: underline;">__________</span></div>
         </div>
@@ -95,8 +93,8 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 140px;">Scheme</th>
-                <th>Total Roll</th>
+                <th style="width: 135px;">Scheme</th>
+                <th style="width: 50px;">Total Roll</th>
                 <th>No. of Working Days</th>
                 <th>No. of days MDM Served</th>
                 <th>No of Students Covered</th>
@@ -109,15 +107,15 @@
                 <th>Funds Utilized (Cooking Cost)</th>
                 <th>Funds Received</th>
                 <th>Closing Balance of Funds</th>
-                <th style="width: 60px;">No. of Cooks</th>
+                <th style="width: 55px;">No. of Cooks</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td class="scheme-cell">Pre-Primary (Bal Vatika)</td>
                 <td>21</td>
-                <td rowspan="3" id="workingDays">0</td>
-                <td rowspan="3" id="servedDays">0</td>
+                <td id="ppWorkDays">0</td>
+                <td id="ppServedDays">0</td>
                 <td id="ppCovered">0</td>
                 <td id="ppMeals">0</td>
                 <td id="ppOpenRice">0.000</td>
@@ -128,11 +126,13 @@
                 <td id="ppUtilFunds">0.00</td>
                 <td id="ppRecFunds">0.00</td>
                 <td id="ppCloseFunds">0.00</td>
-                <td rowspan="3">1</td>
+                <td>1</td>
             </tr>
             <tr>
                 <td class="scheme-cell">Primary</td>
                 <td>47</td>
+                <td id="pWorkDays">0</td>
+                <td id="pServedDays">0</td>
                 <td id="pCovered">0</td>
                 <td id="pMeals">0</td>
                 <td id="pOpenRice">0.000</td>
@@ -143,10 +143,13 @@
                 <td id="pUtilFunds">0.00</td>
                 <td id="pRecFunds">0.00</td>
                 <td id="pCloseFunds">0.00</td>
+                <td>0</td>
             </tr>
-            <tr style="font-weight: bold; background: #f9f9f9; font-size: 13px;">
+            <tr style="font-weight: bold; background: #f0f0f0;">
                 <td>TOTAL</td>
                 <td>68</td>
+                <td id="tWorkDays">-</td>
+                <td id="tServedDays">-</td>
                 <td id="tCovered">0</td>
                 <td id="tMeals">0</td>
                 <td id="tOpenRice">0.000</td>
@@ -157,16 +160,17 @@
                 <td id="tUtilFunds">0.00</td>
                 <td id="tRecFunds">0.00</td>
                 <td id="tCloseFunds">0.00</td>
+                <td>1</td>
             </tr>
         </tbody>
     </table>
 
     <div class="account-section">
-        <div>MDM A/C of School (16 digits): 0486040500000273</div>
+        MDM A/C of School (16 digits): <span style="text-decoration: underline;">0486040500000273</span>
     </div>
 
     <div class="cooks-table">
-        <div style="font-weight: bold; margin-bottom: 5px; font-size: 14px;">Account Number of Cooks:</div>
+        <div style="font-weight: bold; margin-bottom: 5px;">Account Number of Cooks:</div>
         <table>
             <tr><th style="width: 60px;">S No</th><th>Name of the Cook</th><th>A/C No (16 digits)</th></tr>
             <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
@@ -180,7 +184,7 @@
             Contact No: ________________<br>
             Sig: _____________________
         </div>
-        <div style="text-align: right; font-weight: bold; font-size: 16px;">
+        <div style="text-align: right; font-weight: bold; font-size: 15px;">
             Headmaster
         </div>
     </div>
@@ -212,12 +216,20 @@
             return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         });
 
-        let stats = { pp: 0, p: 0, lifted: 0, rec: 0 };
+        // Track stats and independent service days
+        let stats = { 
+            pp: 0, p: 0, lifted: 0, rec: 0,
+            ppDays: 0, pDays: 0 
+        };
+
         monthLogs.forEach(l => {
             stats.pp += parseInt(l.prePriCount || 0);
             stats.p += parseInt(l.priCount || 0);
             stats.lifted += parseFloat(l.grainsLifted || 0);
             stats.rec += parseFloat(l.fundsReceived || 0);
+            
+            if(parseInt(l.prePriCount) > 0) stats.ppDays++;
+            if(parseInt(l.priCount) > 0) stats.pDays++;
         });
 
         const ppRatio = 21/68; 
@@ -227,8 +239,10 @@
         updateRow('p', stats.p, openBal.rice * pRatio, openBal.funds * pRatio, stats.lifted * pRatio, stats.rec * pRatio, rate);
         updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.rec, rate);
 
-        document.getElementById('servedDays').innerText = monthLogs.length;
-        document.getElementById('workingDays').innerText = monthLogs.length; 
+        document.getElementById('ppWorkDays').innerText = stats.ppDays;
+        document.getElementById('ppServedDays').innerText = stats.ppDays;
+        document.getElementById('pWorkDays').innerText = stats.pDays;
+        document.getElementById('pServedDays').innerText = stats.pDays;
     }
 
     function updateRow(id, count, oRice, oFunds, lifted, rec, rate) {
@@ -260,10 +274,9 @@
         const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
         balances[`${nextY}-${nextM}`] = { rice, funds };
         localStorage.setItem("mdmBalances", JSON.stringify(balances));
-        alert("Balances Finalized successfully.");
+        alert("Success! Closing balances carried forward.");
     }
 </script>
 </body>
 </html>
-                
-        
+                                
