@@ -4,73 +4,89 @@
     <meta charset="UTF-8">
     <title>MDM Expenditure Statement - GPS Pethgam Wagoora</title>
     <style>
-        @page { size: A4 landscape; margin: 5mm; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10mm; background: #f0f0f0; }
+        @page { size: A4 landscape; margin: 8mm; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 5mm; background: #f0f0f0; }
         
         .report-container {
             width: 280mm; 
             background: white;
-            padding: 8mm;
+            padding: 10mm;
             margin: auto;
             border: 2px solid #000;
             box-sizing: border-box;
-            min-height: 190mm;
+            min-height: 195mm;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Updated Header to match Marks Sheet Style */
-        .school-header { 
+        /* Updated Header as per specific request */
+        .header-section { 
             display: flex; 
             align-items: center; 
             border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
         }
-        .school-logo { width: 70px; height: 70px; margin-right: 20px; }
+        .school-logo { width: 85px; height: 85px; margin-right: 25px; }
         .header-text { flex-grow: 1; text-align: left; }
-        .header-text h1 { margin: 0; font-size: 24px; color: #1a5d1a; text-transform: uppercase; }
-        .header-text p { margin: 2px 0; font-size: 11px; color: #333; font-weight: bold; }
-        .header-right { text-align: right; font-size: 10px; line-height: 1.4; border-left: 1px solid #ccc; padding-left: 15px; }
+        .header-text h1 { margin: 0; font-size: 26px; color: #1a5d1a; text-transform: uppercase; font-family: 'Arial Black', sans-serif; }
+        .header-text .address-line { margin: 2px 0; font-size: 14px; color: #000; font-weight: bold; }
 
-        .form-title { text-align: center; font-weight: bold; font-size: 16px; margin: 10px 0; text-decoration: underline; text-transform: uppercase; }
+        .header-details { 
+            text-align: right; 
+            font-size: 13px; 
+            line-height: 1.6; 
+            font-weight: bold;
+            min-width: 250px;
+        }
 
-        /* Table Optimization for Landscape */
-        table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
-        th, td { border: 1px solid #000; padding: 4px 2px; text-align: center; word-wrap: break-word; }
-        th { background-color: #f2f2f2; font-weight: bold; height: 45px; vertical-align: middle; }
+        .form-title { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 18px; 
+            margin: 15px 0; 
+            text-decoration: underline; 
+            text-transform: uppercase; 
+        }
+
+        /* Table Optimization: Removed Month Column */
+        table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 6px 3px; text-align: center; word-wrap: break-word; }
+        th { background-color: #f5f5f5; font-weight: bold; height: 50px; vertical-align: middle; }
         
-        .month-col { font-weight: bold; font-size: 12px; writing-mode: vertical-rl; transform: rotate(180deg); }
-        .scheme-cell { text-align: left; padding-left: 5px; font-weight: bold; }
+        .scheme-cell { text-align: left; padding-left: 8px; font-weight: bold; }
 
-        .account-section { display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px; font-weight: bold; }
+        .account-section { margin-top: 20px; font-size: 14px; font-weight: bold; display: flex; justify-content: space-between; }
         
-        .cooks-table { width: 50%; margin-top: 10px; }
-        .cooks-table th { height: 25px; background: #eee; }
+        .cooks-table { width: 60%; margin-top: 15px; }
+        .cooks-table th { height: 30px; background: #eee; }
 
-        .footer-sigs { margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .sig-box { width: 200px; text-align: left; font-size: 11px; line-height: 1.6; }
+        .footer-sigs { margin-top: auto; padding-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .sig-box { width: 250px; text-align: left; font-size: 13px; line-height: 1.8; }
 
         .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 14px; }
         .btn-print { background: #333; }
         .btn-finalize { background: #b71c1c; }
 
-        @media print { .no-print { display: none; } body { background: white; padding: 0; } .report-container { border: 1px solid #000; margin: 0; width: 100%; } }
+        @media print { .no-print { display: none; } body { background: white; padding: 0; } .report-container { border: 2px solid #000; margin: 0; width: 100%; } }
     </style>
 </head>
 <body>
 
 <div class="report-container">
-    <div class="school-header">
+    <div class="header-section">
         <img src="logo.png" class="school-logo" alt="Logo">
         <div class="header-text">
-            <h1>Government Primary School Pethgam Wagoora</h1>
-            <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora, Baramulla, J&K</p>
-            <p>Udise Code: 01022202207 | E-mail: pspethgam@gmail.com</p>
+            <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+            <div class="address-line">Address: Wagoora Babareshi Road Near Zonal Education Office</div>
+            <div class="address-line">Pethgam Wagoora Baramulla Jammu and Kashmir</div>
         </div>
-        <div class="header-right">
+        <div class="header-details">
+            <div>Udise Code: 01022202207</div>
             <div>Contact: 959644988</div>
-            <div>Session: 2026</div>
-            <div style="font-style: italic;">Office of the Headmaster</div>
+            <div>Email: pspethgam@gmail.com</div>
+            <div>Month: <span id="reportMonth" style="text-decoration: underline;">__________</span></div>
         </div>
     </div>
 
@@ -79,8 +95,7 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 35px;">Month</th>
-                <th style="width: 90px;">Scheme</th>
+                <th style="width: 140px;">Scheme</th>
                 <th>Total Roll</th>
                 <th>No. of Working Days</th>
                 <th>No. of days MDM Served</th>
@@ -94,12 +109,11 @@
                 <th>Funds Utilized (Cooking Cost)</th>
                 <th>Funds Received</th>
                 <th>Closing Balance of Funds</th>
-                <th style="width: 45px;">No. of Cooks</th>
+                <th style="width: 60px;">No. of Cooks</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td rowspan="3" class="month-col" id="displayMonth">JAN 2026</td>
                 <td class="scheme-cell">Pre-Primary (Bal Vatika)</td>
                 <td>21</td>
                 <td rowspan="3" id="workingDays">0</td>
@@ -130,8 +144,8 @@
                 <td id="pRecFunds">0.00</td>
                 <td id="pCloseFunds">0.00</td>
             </tr>
-            <tr style="font-weight: bold; background: #f9f9f9;">
-                <td>Total</td>
+            <tr style="font-weight: bold; background: #f9f9f9; font-size: 13px;">
+                <td>TOTAL</td>
                 <td>68</td>
                 <td id="tCovered">0</td>
                 <td id="tMeals">0</td>
@@ -152,9 +166,9 @@
     </div>
 
     <div class="cooks-table">
-        <div style="text-align: center; font-weight: bold; margin-bottom: 3px;">Account Number of Cooks</div>
+        <div style="font-weight: bold; margin-bottom: 5px; font-size: 14px;">Account Number of Cooks:</div>
         <table>
-            <tr><th style="width: 40px;">S No</th><th>Name of the Cook</th><th>A/C No (16 digits)</th></tr>
+            <tr><th style="width: 60px;">S No</th><th>Name of the Cook</th><th>A/C No (16 digits)</th></tr>
             <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
         </table>
     </div>
@@ -166,7 +180,7 @@
             Contact No: ________________<br>
             Sig: _____________________
         </div>
-        <div style="text-align: right; font-weight: bold; font-size: 14px; margin-bottom: 10px;">
+        <div style="text-align: right; font-weight: bold; font-size: 16px;">
             Headmaster
         </div>
     </div>
@@ -174,16 +188,14 @@
 
 <div class="no-print">
     <button class="btn btn-finalize" onclick="finalizeBalances()">Finalize Month</button>
-    <button class="btn btn-print" onclick="window.print()">Print A4 Landscape</button>
+    <button class="btn btn-print" onclick="window.print()">Print Statement</button>
 </div>
 
 <script>
-    // Integration logic from Dashboard
     window.onload = function() {
         const now = new Date();
-        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-        document.getElementById('displayMonth').innerText = monthNames[now.getMonth()] + " " + now.getFullYear();
-        
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('reportMonth').innerText = monthNames[now.getMonth()] + " " + now.getFullYear();
         loadData();
     };
 
@@ -208,8 +220,6 @@
             stats.rec += parseFloat(l.fundsReceived || 0);
         });
 
-        // Distribution logic (Split balances/receipts between PP and P)
-        // Adjust these ratios if your school data distribution is different
         const ppRatio = 21/68; 
         const pRatio = 47/68;
 
@@ -218,7 +228,7 @@
         updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.rec, rate);
 
         document.getElementById('servedDays').innerText = monthLogs.length;
-        document.getElementById('workingDays').innerText = monthLogs.length; // Can be manually set if needed
+        document.getElementById('workingDays').innerText = monthLogs.length; 
     }
 
     function updateRow(id, count, oRice, oFunds, lifted, rec, rate) {
@@ -250,9 +260,10 @@
         const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
         balances[`${nextY}-${nextM}`] = { rice, funds };
         localStorage.setItem("mdmBalances", JSON.stringify(balances));
-        alert("Closing balances saved as Opening Balance for next month!");
+        alert("Balances Finalized successfully.");
     }
 </script>
 </body>
 </html>
-                        
+                
+        
