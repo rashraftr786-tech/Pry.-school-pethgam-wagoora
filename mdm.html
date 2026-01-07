@@ -2,86 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Daily MDM Entry - GPS Pethgam Wagoora</title>
+    <title>MDM Dashboard - GPS Pethgam Wagoora</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .form-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-        h2 { color: darkgreen; text-align: center; margin-top: 0; }
+        :root { --primary: #1a5d1a; --secondary: #5a3d8c; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2, h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 8px; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: darkgreen; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .nav-links { text-align: center; margin-top: 20px; }
-        .nav-links a { color: #555; text-decoration: none; font-size: 13px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #444; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-save { background: var(--primary); }
+        .btn-settings { background: var(--secondary); margin-top: 10px; }
+        .btn:active { transform: scale(0.98); }
+        .stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .stat-item { flex: 1; background: #e8f5e9; padding: 10px; border-radius: 6px; text-align: center; }
+        .stat-label { font-size: 10px; color: #666; text-transform: uppercase; }
+        .stat-val { font-size: 18px; font-weight: bold; color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="form-card">
-    <h2>Daily MDM Log</h2>
-    <form id="mdmForm">
+<div class="container">
+    <div class="card">
+        <h2>Daily MDM Entry</h2>
         <div class="input-group">
-            <label>Date</label>
-            <input type="date" id="logDate" required>
+            <label>Reporting Date</label>
+            <input type="date" id="logDate">
+        </div>
+        <div class="stats-row">
+            <div class="input-group" style="flex:1">
+                <label>Pre-Primary</label>
+                <input type="number" id="prePriCount" placeholder="0">
+            </div>
+            <div class="input-group" style="flex:1">
+                <label>Primary</label>
+                <input type="number" id="priCount" placeholder="0">
+            </div>
         </div>
         <div class="input-group">
-            <label>Pre-Primary (Bal Vatika) Students</label>
-            <input type="number" id="prePriCount" placeholder="Number of students fed" required>
-        </div>
-        <div class="input-group">
-            <label>Primary Students (1st-5th)</label>
-            <input type="number" id="priCount" placeholder="Number of students fed" required>
-        </div>
-        <hr>
-        <div class="input-group">
-            <label>Grains Lifted (kg) - <small>If any today</small></label>
+            <label>Rice Lifted (in Kg)</label>
             <input type="number" id="grainsLifted" step="0.001" value="0">
         </div>
         <div class="input-group">
-            <label>Funds Received (₹) - <small>If any today</small></label>
+            <label>Funds Received (₹)</label>
             <input type="number" id="fundsReceived" step="0.01" value="0">
         </div>
-        <button type="button" onclick="saveDailyMDM()">Save Daily Record</button>
-    </form>
-    <div class="nav-links">
-        <a href="mdm-statement.html">View Monthly Statement →</a>
+        <button class="btn btn-save" onclick="saveMDM()">Save Daily Record</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid var(--secondary);">
+        <h3>Expenditure Settings</h3>
+        <div class="input-group">
+            <label>Current Cooking Cost (₹ per student)</label>
+            <input type="number" id="configRate" step="0.01">
+        </div>
+        <div class="input-group">
+            <label>Grain Scale (Fixed: 100g)</label>
+            <input type="text" value="0.100 Kg" disabled style="background: #f9f9f9;">
+        </div>
+        <button class="btn btn-settings" onclick="saveSettings()">Update Expenditure Rate</button>
+    </div>
+    
+    <div style="text-align: center;">
+        <a href="mdm-statement.html" style="text-decoration: none; color: var(--secondary); font-weight: bold;">📊 Generate Monthly Statement</a>
     </div>
 </div>
 
 <script>
-    // Set default date to today
+    // Initialize defaults
     document.getElementById('logDate').valueAsDate = new Date();
+    
+    window.onload = function() {
+        const currentRate = localStorage.getItem("mdmRate") || 5.45;
+        document.getElementById('configRate').value = currentRate;
+    };
 
-    function saveDailyMDM() {
+    function saveSettings() {
+        const rate = document.getElementById('configRate').value;
+        localStorage.setItem("mdmRate", rate);
+        alert("System updated. Expenditure will now be calculated at ₹" + rate + " per meal.");
+    }
+
+    function saveMDM() {
         const date = document.getElementById('logDate').value;
         const prePri = parseInt(document.getElementById('prePriCount').value) || 0;
         const pri = parseInt(document.getElementById('priCount').value) || 0;
         const lifted = parseFloat(document.getElementById('grainsLifted').value) || 0;
         const funds = parseFloat(document.getElementById('fundsReceived').value) || 0;
+        const currentRate = parseFloat(localStorage.getItem("mdmRate")) || 5.45;
 
-        const dailyRecord = {
+        const record = {
             date,
             prePriCount: prePri,
             priCount: pri,
             grainsLifted: lifted,
             fundsReceived: funds,
-            grainsUtilized: (prePri + pri) * 0.100 // 100g per student
+            // AUTOMATION: Calculating consumption on the fly
+            grainsUtilized: (prePri + pri) * 0.100,
+            fundsUtilized: (prePri + pri) * currentRate
         };
 
-        let mdmLogs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
+        let logs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
+        const idx = logs.findIndex(l => l.date === date);
         
-        // Update if date exists, else push
-        const index = mdmLogs.findIndex(l => l.date === date);
-        if (index > -1) mdmLogs[index] = dailyRecord;
-        else mdmLogs.push(dailyRecord);
+        if (idx > -1) logs[idx] = record;
+        else logs.push(record);
 
-        localStorage.setItem("mdmDailyLogs", JSON.stringify(mdmLogs));
-        alert("Data saved for " + date);
-        document.getElementById('mdmForm').reset();
-        document.getElementById('logDate').valueAsDate = new Date();
+        localStorage.setItem("mdmDailyLogs", JSON.stringify(logs));
+        alert("Data successfully synced for " + date);
+        
+        // Reset counts but keep date/lifted for convenience
+        document.getElementById('prePriCount').value = "";
+        document.getElementById('priCount').value = "";
     }
 </script>
 </body>
 </html>
-                
+
