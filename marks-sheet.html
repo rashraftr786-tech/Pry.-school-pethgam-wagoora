@@ -28,6 +28,7 @@
 
         .outer-boundary { width: 100%; box-sizing: border-box; }
 
+        /* UPDATED HEADER STYLE */
         .school-header { 
             background: #5a3d8c !important; color: white !important; 
             display: flex; align-items: center; padding: 12px 20px; border-radius: 4px;
@@ -37,7 +38,7 @@
         .header-text { flex-grow: 1; text-align: left; }
         .header-text h1 { 
             margin: 0; font-size: 32px; letter-spacing: 2px; 
-            font-family: 'Arial Black', Gadget, sans-serif; 
+            font-family: 'Arial Black', Gadget, sans-serif; /* Wide, bold professional font */
             line-height: 1.1;
         }
         .header-address { font-size: 13px; margin-top: 5px; font-weight: bold; opacity: 0.9; }
@@ -47,6 +48,7 @@
             border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px;
         }
 
+        /* Student Info Table */
         .top-info-container { 
             display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px;
         }
@@ -122,7 +124,7 @@
                 <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNo"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
                 <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
                 <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="session"></td></tr>
-                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="pen_field"></td></tr>
+                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PAN No:</td><td class="data-cell" id="pan"></td></tr>
             </table>
         </div>
         <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="classVal">--</div></div>
@@ -204,11 +206,6 @@
 <button class="btn-download" onclick="window.print()">Print Marksheet</button>
 
 <script>
-// Logic to protect from white screen
-window.onerror = function() {
-    document.body.innerHTML = "<div style='padding:20px; color:red; font-family:sans-serif;'><h3>Report Card Loading Error</h3>Please check if Admission Number is correct and data is synced.</div>";
-};
-
 const params = new URLSearchParams(window.location.search);
 const admNo = params.get("admNo");
 const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
@@ -227,65 +224,79 @@ function getGrade(score) {
     return 'D';
 }
 
-if (sInfo && sMarks) {
-    document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
-    document.getElementById('admNo').innerText = sInfo.admNo;
-    document.getElementById('fname').innerText = sInfo.fatherName || "";
-    document.getElementById('mname').innerText = sInfo.motherName || "";
-    document.getElementById('dob').innerText = sInfo.dob || "";
-    document.getElementById('session').innerText = sInfo.session || "2024-25";
-    document.getElementById('classVal').innerText = sInfo.studentClass || "--";
-    document.getElementById('rollNo').innerText = sMarks.rollNo || "";
-    
-    // NEW FIELDS FIX
-    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
-    document.getElementById('pen_field').innerText = sInfo.penNo || sInfo.panNo || "N/A";
+// RANKING CALCULATION LOGIC
+function calculateRank(targetAdmNo) {
+    if (!results || results.length === 0) return { school: '--', class: '--' };
 
-    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
+    // Get totals for everyone
+    let scoreList = results.map(r => {
+        let total = 0;
+        Object.values(r.marks).forEach(m => {
+            const faT = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
+            total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+        });
+        const profile = admissions.find(a => a.admNo === r.admNo);
+        return { 
+            admNo: r.admNo, 
+            total: total, 
+            stdClass: profile ? profile.studentClass : 'N/A' 
+        };
+    });
+
+    // School Rank
+    const schoolSorted = [...scoreList].sort((a, b) => b.total - a.total);
+    const sRank = schoolSorted.findIndex(s => s.admNo === targetAdmNo) + 1;
+
+    // Class Rank
+    const targetStudent = scoreList.find(s => s.admNo === targetAdmNo);
+    const classSorted = scoreList
+        .filter(s => s.stdClass === targetStudent.stdClass)
+        .sort((a, b) => b.total - a.total);
+    const cRank = classSorted.findIndex(s => s.admNo === targetAdmNo) + 1;
+
+    return { school: sRank, class: cRank };
+}
+
+if (sInfo && sMarks) {
+    document.getElementById('sname').innerText = sInfo.studentName.toUpperCase();
+    document.getElementById('admNo').innerText = sInfo.admNo;
+    document.getElementById('fname').innerText = sInfo.fatherName;
+    document.getElementById('mname').innerText = sInfo.motherName;
+    document.getElementById('dob').innerText = sInfo.dob;
+    document.getElementById('session').innerText = sInfo.session || "2024-25";
+    document.getElementById('classVal').innerText = sInfo.studentClass;
+    document.getElementById('rollNo').innerText = sMarks.rollNo;
+    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
+    document.getElementById('pan').innerText = sInfo.panNo || "N/A";
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Consistently demonstrates a positive attitude toward learning.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
     
     if (sInfo.studentPhoto) {
         document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
     }
 
-    // RANKING LOGIC
-    let scoreRecords = results.map(r => {
-        let studentTotal = 0;
-        if(r.marks){
-            Object.values(r.marks).forEach(m => {
-                const fSum = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
-                studentTotal += fSum + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-            });
-        }
-        const profile = admissions.find(a => a.admNo === r.admNo);
-        return { admNo: r.admNo, total: studentTotal, className: profile ? profile.studentClass : '' };
-    });
+    // Auto-calculate Ranks
+    const ranks = calculateRank(admNo);
+    document.getElementById('sRank').innerText = ranks.school;
+    document.getElementById('cRank').innerText = ranks.class;
 
-    const schoolSorted = [...scoreRecords].sort((a, b) => b.total - a.total);
-    document.getElementById('sRank').innerText = schoolSorted.findIndex(s => s.admNo === admNo) + 1;
-
-    const classSorted = scoreRecords
-        .filter(s => s.className === sInfo.studentClass)
-        .sort((a, b) => b.total - a.total);
-    document.getElementById('cRank').innerText = classSorted.findIndex(s => s.admNo === admNo) + 1;
-
-    let subjectLabels = [], chartDataValues = [];
-    let grandTotals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
+    let labels = [], data = [];
+    let totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
     
-    const subjects = Object.keys(sMarks.marks || {});
+    const subjects = Object.keys(sMarks.marks);
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
-        const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
+        const fa = m.fa.map(v => Number(v) || 0);
         const faT = fa.reduce((a, b) => a + b, 0);
         const cca = Number(m.cca) || 0;
         const sa = Number(m.sa) || 0;
         const rowTotal = faT + cca + sa;
 
-        grandTotals.fa1 += fa[0]; grandTotals.fa2 += fa[1]; grandTotals.fa3 += fa[2];
-        grandTotals.fa4 += fa[3]; grandTotals.fa5 += fa[4]; grandTotals.fa6 += fa[5];
-        grandTotals.t30 += faT; grandTotals.t20 += cca; grandTotals.t50 += sa; grandTotals.t100 += rowTotal;
+        totals.fa1 += fa[0]; totals.fa2 += fa[1]; totals.fa3 += fa[2];
+        totals.fa4 += fa[3]; totals.fa5 += fa[4]; totals.fa6 += fa[5];
+        totals.t30 += faT; totals.t20 += cca; totals.t50 += sa; totals.t100 += rowTotal;
 
-        subjectLabels.push(sub); chartDataValues.push(rowTotal);
+        labels.push(sub); data.push(rowTotal);
         const subGrade = getGrade(rowTotal);
         const subProf = rowTotal >= 80 ? 'Sky' : rowTotal >= 50 ? 'Mountain' : 'Stream';
 
@@ -299,24 +310,18 @@ if (sInfo && sMarks) {
             </tr>`;
     });
 
-    document.getElementById('gtFa1').innerText = grandTotals.fa1;
-    document.getElementById('gtFa2').innerText = grandTotals.fa2;
-    document.getElementById('gtFa3').innerText = grandTotals.fa3;
-    document.getElementById('gtFa4').innerText = grandTotals.fa4;
-    document.getElementById('gtFa5').innerText = grandTotals.fa5;
-    document.getElementById('gtFa6').innerText = grandTotals.fa6;
-    document.getElementById('gt30').innerText = grandTotals.t30;
-    document.getElementById('gt20').innerText = grandTotals.t20;
-    document.getElementById('gt50').innerText = grandTotals.t50;
-    document.getElementById('gt100').innerText = grandTotals.t100;
+    Object.keys(totals).forEach(key => {
+        const id = "gt" + key.charAt(0).toUpperCase() + key.slice(1);
+        if(document.getElementById(id)) document.getElementById(id).innerText = totals[key];
+    });
 
-    const avgScore = subjects.length > 0 ? grandTotals.t100 / subjects.length : 0;
+    const avgScore = totals.t100 / subjects.length;
     const finalGrade = getGrade(avgScore);
     const finalProf = avgScore >= 80 ? 'Sky' : avgScore >= 50 ? 'Mountain' : 'Stream';
 
     document.getElementById('finalGrade').innerText = finalGrade;
     document.getElementById('finalProf').innerText = finalProf;
-    document.getElementById('resTotal').innerText = grandTotals.t100 + " / " + (subjects.length * 100);
+    document.getElementById('resTotal').innerText = totals.t100 + " / " + (subjects.length * 100);
     document.getElementById('resPerc').innerText = Math.round(avgScore) + "%";
 
     document.getElementById('pSky').innerText = finalProf === 'Sky' ? "✓" : "";
@@ -325,11 +330,12 @@ if (sInfo && sMarks) {
 
     new Chart(document.getElementById('marksChart'), {
         type: 'bar',
-        data: { labels: subjectLabels, datasets: [{ data: chartDataValues, backgroundColor: '#5a3d8c', borderRadius: 4 }] },
+        data: { labels: labels, datasets: [{ data: data, backgroundColor: '#5a3d8c', borderRadius: 4 }] },
         options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
     });
 }
 </script>
 </body>
 </html>
-
+                                    
+        
