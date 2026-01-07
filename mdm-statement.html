@@ -2,46 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Automated MDM Statement - GPS Pethgam Wagoora</title>
+    <title>MDM Expenditure Statement - GPS Pethgam Wagoora</title>
     <style>
-        @page { size: A4 landscape; margin: 10mm; }
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
-        .report-container { width: 277mm; background: white; padding: 10px; margin: auto; border: 2px solid #000; box-sizing: border-box; position: relative; }
-        .header { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 10px; }
-        .school-logo { width: 80px; position: absolute; left: 10px; top: 0; }
-        .header-text { text-align: center; }
-        .header-text h4 { margin: 0; font-style: italic; font-size: 14px; }
-        .header-text h1 { margin: 5px 0; font-size: 26px; text-transform: uppercase; }
-        .header-text h2 { margin: 0; font-size: 16px; border-bottom: 2px solid #000; display: inline-block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; table-layout: fixed; }
+        @page { size: A4 landscape; margin: 5mm; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 10mm; background: #f0f0f0; }
+        
+        .report-container {
+            width: 280mm; 
+            background: white;
+            padding: 8mm;
+            margin: auto;
+            border: 2px solid #000;
+            box-sizing: border-box;
+            min-height: 190mm;
+        }
+
+        /* Updated Header to match Marks Sheet Style */
+        .school-header { 
+            display: flex; 
+            align-items: center; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .school-logo { width: 70px; height: 70px; margin-right: 20px; }
+        .header-text { flex-grow: 1; text-align: left; }
+        .header-text h1 { margin: 0; font-size: 24px; color: #1a5d1a; text-transform: uppercase; }
+        .header-text p { margin: 2px 0; font-size: 11px; color: #333; font-weight: bold; }
+        .header-right { text-align: right; font-size: 10px; line-height: 1.4; border-left: 1px solid #ccc; padding-left: 15px; }
+
+        .form-title { text-align: center; font-weight: bold; font-size: 16px; margin: 10px 0; text-decoration: underline; text-transform: uppercase; }
+
+        /* Table Optimization for Landscape */
+        table { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
         th, td { border: 1px solid #000; padding: 4px 2px; text-align: center; word-wrap: break-word; }
-        th { background-color: #f2f2f2; height: 50px; }
-        .month-cell { font-weight: bold; font-size: 14px; writing-mode: vertical-rl; transform: rotate(180deg); }
-        .account-info { margin-top: 10px; font-weight: bold; font-size: 13px; }
-        .footer-sigs { margin-top: 30px; display: flex; justify-content: space-between; }
-        .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
-        .btn { padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
-        .btn-print { background: #1a5d1a; }
+        th { background-color: #f2f2f2; font-weight: bold; height: 45px; vertical-align: middle; }
+        
+        .month-col { font-weight: bold; font-size: 12px; writing-mode: vertical-rl; transform: rotate(180deg); }
+        .scheme-cell { text-align: left; padding-left: 5px; font-weight: bold; }
+
+        .account-section { display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px; font-weight: bold; }
+        
+        .cooks-table { width: 50%; margin-top: 10px; }
+        .cooks-table th { height: 25px; background: #eee; }
+
+        .footer-sigs { margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .sig-box { width: 200px; text-align: left; font-size: 11px; line-height: 1.6; }
+
+        .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-print { background: #333; }
         .btn-finalize { background: #b71c1c; }
-        @media print { .no-print { display: none; } body { background: white; padding: 0; } }
+
+        @media print { .no-print { display: none; } body { background: white; padding: 0; } .report-container { border: 1px solid #000; margin: 0; width: 100%; } }
     </style>
 </head>
 <body>
 
 <div class="report-container">
-    <div class="header">
+    <div class="school-header">
         <img src="logo.png" class="school-logo" alt="Logo">
         <div class="header-text">
-            <h4>Office of the Headmaster</h4>
             <h1>Government Primary School Pethgam Wagoora</h1>
-            <h2>Month Wise/Department Wise Expenditure Statement under MDM Scheme</h2>
+            <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora, Baramulla, J&K</p>
+            <p>Udise Code: 01022202207 | E-mail: pspethgam@gmail.com</p>
+        </div>
+        <div class="header-right">
+            <div>Contact: 959644988</div>
+            <div>Session: 2026</div>
+            <div style="font-style: italic;">Office of the Headmaster</div>
         </div>
     </div>
+
+    <div class="form-title">Month Wise/Department Wise Expenditure Statement under MDM Scheme</div>
 
     <table>
         <thead>
             <tr>
-                <th style="width: 40px;">Month</th>
+                <th style="width: 35px;">Month</th>
                 <th style="width: 90px;">Scheme</th>
                 <th>Total Roll</th>
                 <th>No. of Working Days</th>
@@ -56,16 +94,16 @@
                 <th>Funds Utilized (Cooking Cost)</th>
                 <th>Funds Received</th>
                 <th>Closing Balance of Funds</th>
-                <th>No. of Cooks</th>
+                <th style="width: 45px;">No. of Cooks</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td rowspan="3" class="month-cell" id="displayMonth">JAN 2026</td>
-                <td style="text-align: left;">Pre-Primary (Bal Vatika)</td>
+                <td rowspan="3" class="month-col" id="displayMonth">JAN 2026</td>
+                <td class="scheme-cell">Pre-Primary (Bal Vatika)</td>
                 <td>21</td>
-                <td rowspan="3" id="servedDays">0</td>
                 <td rowspan="3" id="workingDays">0</td>
+                <td rowspan="3" id="servedDays">0</td>
                 <td id="ppCovered">0</td>
                 <td id="ppMeals">0</td>
                 <td id="ppOpenRice">0.000</td>
@@ -79,7 +117,7 @@
                 <td rowspan="3">1</td>
             </tr>
             <tr>
-                <td style="text-align: left;">Primary</td>
+                <td class="scheme-cell">Primary</td>
                 <td>47</td>
                 <td id="pCovered">0</td>
                 <td id="pMeals">0</td>
@@ -92,9 +130,9 @@
                 <td id="pRecFunds">0.00</td>
                 <td id="pCloseFunds">0.00</td>
             </tr>
-            <tr style="font-weight: bold; background: #eee;">
-                <td>Total (68)</td>
-                <td id="tRoll">68</td>
+            <tr style="font-weight: bold; background: #f9f9f9;">
+                <td>Total</td>
+                <td>68</td>
                 <td id="tCovered">0</td>
                 <td id="tMeals">0</td>
                 <td id="tOpenRice">0.000</td>
@@ -109,104 +147,112 @@
         </tbody>
     </table>
 
-    <div class="account-info">MDM A/C of School: 0486040500000273</div>
-    
-    <div style="width: 400px; margin-top: 10px;">
+    <div class="account-section">
+        <div>MDM A/C of School (16 digits): 0486040500000273</div>
+    </div>
+
+    <div class="cooks-table">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 3px;">Account Number of Cooks</div>
         <table>
-            <tr><th>S.No</th><th>Name of Cook</th><th>A/C No</th></tr>
+            <tr><th style="width: 40px;">S No</th><th>Name of the Cook</th><th>A/C No (16 digits)</th></tr>
             <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
         </table>
     </div>
 
     <div class="footer-sigs">
-        <div><strong>MDM I/C</strong><br>Name: ________________<br>Sig: ________________</div>
-        <div style="text-align: right; font-weight: bold;"><br><br>Headmaster</div>
+        <div class="sig-box">
+            <strong>MDM I/C</strong><br>
+            Name: ____________________<br>
+            Contact No: ________________<br>
+            Sig: _____________________
+        </div>
+        <div style="text-align: right; font-weight: bold; font-size: 14px; margin-bottom: 10px;">
+            Headmaster
+        </div>
     </div>
 </div>
 
 <div class="no-print">
-    <button class="btn btn-finalize" onclick="finalizeBalances()">Finalize & Carry Forward</button>
-    <button class="btn btn-print" onclick="window.print()">Print Statement</button>
+    <button class="btn btn-finalize" onclick="finalizeBalances()">Finalize Month</button>
+    <button class="btn btn-print" onclick="window.print()">Print A4 Landscape</button>
 </div>
 
 <script>
-    const now = new Date();
-    const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
-    
+    // Integration logic from Dashboard
     window.onload = function() {
-        loadStatementData();
+        const now = new Date();
+        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        document.getElementById('displayMonth').innerText = monthNames[now.getMonth()] + " " + now.getFullYear();
+        
+        loadData();
     };
 
-    function loadStatementData() {
+    function loadData() {
         const logs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
         const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
         const rate = parseFloat(localStorage.getItem("mdmRate")) || 5.45;
+        const now = new Date();
+        const currentKey = `${now.getFullYear()}-${now.getMonth()}`;
 
-        // 1. Get Opening Balances for this month
-        const openBal = balances[currentMonthKey] || { rice: 0, funds: 0 };
-        
-        // 2. Filter logs for current month
+        const openBal = balances[currentKey] || { rice: 0, funds: 0 };
         const monthLogs = logs.filter(l => {
             const d = new Date(l.date);
             return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
         });
 
-        let stats = { pp: 0, p: 0, lifted: 0, recFunds: 0, daysServed: monthLogs.length };
+        let stats = { pp: 0, p: 0, lifted: 0, rec: 0 };
         monthLogs.forEach(l => {
             stats.pp += parseInt(l.prePriCount || 0);
             stats.p += parseInt(l.priCount || 0);
             stats.lifted += parseFloat(l.grainsLifted || 0);
-            stats.recFunds += parseFloat(l.fundsReceived || 0);
+            stats.rec += parseFloat(l.fundsReceived || 0);
         });
 
-        // 3. Update Pre-Primary Row
-        updateRow('pp', stats.pp, openBal.rice * 0.3, openBal.funds * 0.3, stats.lifted * 0.3, stats.recFunds * 0.3, rate);
-        
-        // 4. Update Primary Row
-        updateRow('p', stats.p, openBal.rice * 0.7, openBal.funds * 0.7, stats.lifted * 0.7, stats.recFunds * 0.7, rate);
+        // Distribution logic (Split balances/receipts between PP and P)
+        // Adjust these ratios if your school data distribution is different
+        const ppRatio = 21/68; 
+        const pRatio = 47/68;
 
-        // 5. Update Totals
-        updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.recFunds, rate);
-        
-        document.getElementById('servedDays').innerText = stats.daysServed;
-        document.getElementById('workingDays').innerText = stats.daysServed; // Placeholder
+        updateRow('pp', stats.pp, openBal.rice * ppRatio, openBal.funds * ppRatio, stats.lifted * ppRatio, stats.rec * ppRatio, rate);
+        updateRow('p', stats.p, openBal.rice * pRatio, openBal.funds * pRatio, stats.lifted * pRatio, stats.rec * pRatio, rate);
+        updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.rec, rate);
+
+        document.getElementById('servedDays').innerText = monthLogs.length;
+        document.getElementById('workingDays').innerText = monthLogs.length; // Can be manually set if needed
     }
 
-    function updateRow(prefix, covered, openRice, openFunds, lifted, recFunds, rate) {
-        const utilizedRice = covered * 0.100;
-        const utilizedFunds = covered * rate;
-        const closingRice = (openRice + lifted) - utilizedRice;
-        const closingFunds = (openFunds + recFunds) - utilizedFunds;
+    function updateRow(id, count, oRice, oFunds, lifted, rec, rate) {
+        const utilizedRice = count * 0.100;
+        const utilizedFunds = count * rate;
+        const cRice = (oRice + lifted) - utilizedRice;
+        const cFunds = (oFunds + rec) - utilizedFunds;
 
-        document.getElementById(prefix + 'Covered').innerText = covered;
-        document.getElementById(prefix + 'Meals').innerText = covered;
-        document.getElementById(prefix + 'OpenRice').innerText = openRice.toFixed(3);
-        document.getElementById(prefix + 'Lifted').innerText = lifted.toFixed(3);
-        document.getElementById(prefix + 'Utilized').innerText = utilizedRice.toFixed(3);
-        document.getElementById(prefix + 'CloseRice').innerText = closingRice.toFixed(3);
-        document.getElementById(prefix + 'OpenFunds').innerText = openFunds.toFixed(2);
-        document.getElementById(prefix + 'UtilFunds').innerText = utilizedFunds.toFixed(2);
-        document.getElementById(prefix + 'RecFunds').innerText = recFunds.toFixed(2);
-        document.getElementById(prefix + 'CloseFunds').innerText = closingFunds.toFixed(2);
+        document.getElementById(id + 'Covered').innerText = count;
+        document.getElementById(id + 'Meals').innerText = count;
+        document.getElementById(id + 'OpenRice').innerText = oRice.toFixed(3);
+        document.getElementById(id + 'Lifted').innerText = lifted.toFixed(3);
+        document.getElementById(id + 'Utilized').innerText = utilizedRice.toFixed(3);
+        document.getElementById(id + 'CloseRice').innerText = cRice.toFixed(3);
+        document.getElementById(id + 'OpenFunds').innerText = oFunds.toFixed(2);
+        document.getElementById(id + 'UtilFunds').innerText = utilizedFunds.toFixed(2);
+        document.getElementById(id + 'RecFunds').innerText = rec.toFixed(2);
+        document.getElementById(id + 'CloseFunds').innerText = cFunds.toFixed(2);
     }
 
     function finalizeBalances() {
-        const closingRice = parseFloat(document.getElementById('tCloseRice').innerText);
-        const closingFunds = parseFloat(document.getElementById('tCloseFunds').innerText);
+        const rice = parseFloat(document.getElementById('tCloseRice').innerText);
+        const funds = parseFloat(document.getElementById('tCloseFunds').innerText);
+        const now = new Date();
+        let nextM = now.getMonth() + 1;
+        let nextY = now.getFullYear();
+        if(nextM > 11) { nextM = 0; nextY++; }
         
-        // Calculate next month key
-        let nextMonth = now.getMonth() + 1;
-        let nextYear = now.getFullYear();
-        if(nextMonth > 11) { nextMonth = 0; nextYear++; }
-        const nextKey = `${nextYear}-${nextMonth}`;
-
-        let balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
-        balances[nextKey] = { rice: closingRice, funds: closingFunds };
-        
+        const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
+        balances[`${nextY}-${nextM}`] = { rice, funds };
         localStorage.setItem("mdmBalances", JSON.stringify(balances));
-        alert("Success! Closing balances carried forward to " + nextKey);
+        alert("Closing balances saved as Opening Balance for next month!");
     }
 </script>
 </body>
-  </html>
-  
+</html>
+                        
