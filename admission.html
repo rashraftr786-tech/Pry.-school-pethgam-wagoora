@@ -54,7 +54,7 @@
     }
 
     .declaration-box {
-      font-size: 11.5px; /* Adjusted font for perfect 4-line flow */
+      font-size: 11.5px;
       line-height: 1.4;
       text-align: justify;
       margin-top: 10px;
@@ -80,6 +80,7 @@
   <div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00;">
     <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 New Admission</a>
     <a href="adm-register.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📋 View Register</a>
+    <a href="apaar-input.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
 </div>
 
 
@@ -99,9 +100,9 @@
     <div class="row" style="grid-template-columns: 1fr 1fr 115px;">
       <div class="field-group" style="grid-column: span 2;">
         <label>Full Name of Student</label>
-        <input type="text" name="studentName" required>
+        <input type="text" id="studentName" name="studentName" required>
         <label style="margin-top:6px">Name (As per Aadhaar Card)</label>
-        <input type="text" name="aadhaarName">
+        <input type="text" id="aadhaarName" name="aadhaarName">
         <div class="row" style="margin-top:6px">
             <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
             <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
@@ -115,45 +116,45 @@
     </div>
 
     <div class="row-4">
-      <div class="field-group"><label>Gender</label><select name="gender"><option>Male</option><option>Female</option></select></div>
-      <div class="field-group"><label>Blood Group</label><input type="text" name="bloodGroup"></div>
-      <div class="field-group"><label>Category</label><select name="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-      <div class="field-group"><label>Seeking Class</label><input type="text" name="studentClass"></div>
+      <div class="field-group"><label>Gender</label><select name="gender" id="gender"><option>Male</option><option>Female</option></select></div>
+      <div class="field-group"><label>Blood Group</label><input type="text" id="bloodGroup" name="bloodGroup"></div>
+      <div class="field-group"><label>Category</label><select name="category" id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+      <div class="field-group"><label>Seeking Class</label><input type="text" id="studentClass" name="studentClass"></div>
     </div>
 
     <div class="row">
-        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>APAAR ID (12 Digits)</label><input type="text" name="apaarId" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>PEN Number (12 Digits)</label><input type="text" name="penId" pattern="\d{12}" maxlength="12"></div>
+        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" id="aadhaarNo" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
+        <div class="field-group"><label>APAAR ID (12 Digits)</label><input type="text" id="apaarId" name="apaarId" pattern="\d{12}" maxlength="12"></div>
+        <div class="field-group"><label>PEN Number (12 Digits)</label><input type="text" id="penId" name="penId" pattern="\d{12}" maxlength="12"></div>
     </div>
 
     <h3>Parental & Contact Information</h3>
     <div class="row">
-        <div class="field-group"><label>Father's Name</label><input type="text" name="fatherName"></div>
-        <div class="field-group"><label>Mother's Name</label><input type="text" name="motherName"></div>
-        <div class="field-group"><label>Father's Contact No</label><input type="tel" name="fatherContact"></div>
+        <div class="field-group"><label>Father's Name</label><input type="text" id="fatherName" name="fatherName"></div>
+        <div class="field-group"><label>Mother's Name</label><input type="text" id="motherName" name="motherName"></div>
+        <div class="field-group"><label>Father's Contact No</label><input type="tel" id="fatherContact" name="fatherContact"></div>
     </div>
     <div class="row">
-        <div class="field-group"><label>Mother's Contact No</label><input type="tel" name="motherContact"></div>
-        <div class="field-group"><label>Bank Name & Branch</label><input type="text" name="bankName"></div>
-        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
+        <div class="field-group"><label>Mother's Contact No</label><input type="tel" id="motherContact" name="motherContact"></div>
+        <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName" name="bankName"></div>
+        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" id="ifsc" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
     </div>
 
     <div class="row">
-        <div class="field-group" style="grid-column: span 1;"><label>Account No (16 Digits)</label><input type="text" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
+        <div class="field-group" style="grid-column: span 1;"><label>Account No (16 Digits)</label><input type="text" id="bankAcc" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
         <div class="field-group" style="grid-column: span 2;"></div>
     </div>
 
     <h3>Residential Address</h3>
     <div class="row">
-        <div class="field-group"><label>Mohallah / House No</label><input type="text" name="mohallah"></div>
-        <div class="field-group"><label>Village / Ward</label><input type="text" name="village"></div>
-        <div class="field-group"><label>Tehsil</label><input type="text" name="tehsil" value="Wagoora"></div>
+        <div class="field-group"><label>Mohallah / House No</label><input type="text" id="mohallah" name="mohallah"></div>
+        <div class="field-group"><label>Village / Ward</label><input type="text" id="village" name="village"></div>
+        <div class="field-group"><label>Tehsil</label><input type="text" id="tehsil" name="tehsil" value="Wagoora"></div>
     </div>
     <div class="row">
-        <div class="field-group"><label>District</label><input type="text" name="dist" value="Baramulla"></div>
-        <div class="field-group"><label>Pin Code</label><input type="text" name="pincode" value="193109"></div>
-        <div class="field-group"><label>State</label><input type="text" name="state" value="Jammu & Kashmir"></div>
+        <div class="field-group"><label>District</label><input type="text" id="dist" name="dist" value="Baramulla"></div>
+        <div class="field-group"><label>Pin Code</label><input type="text" id="pincode" name="pincode" value="193109"></div>
+        <div class="field-group"><label>State</label><input type="text" id="state" name="state" value="Jammu & Kashmir"></div>
     </div>
 
     <div class="declaration-box">
@@ -169,10 +170,10 @@
       <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
       <div class="row" style="margin-bottom:0px">
         <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo"></div>
-        <div class="field-group"><label>Date of Admission</label><input type="date" name="admDate"></div>
+        <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate" name="admDate"></div>
         <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207" readonly></div>
       </div>
-      <div class="field-group" style="margin-top:8px;"><label>Remarks</label><textarea name="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
+      <div class="field-group" style="margin-top:8px;"><label>Remarks</label><textarea name="remarks" id="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
       <div class="sig-section" style="margin-top: 35px;">
         <div class="sig-placeholder">Admission Incharge</div>
         <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
@@ -187,7 +188,6 @@
 </div>
 
 <script>
-// 1. PHOTO PREVIEW (Base64)
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
   const txt = document.getElementById("photoTxt");
@@ -203,7 +203,6 @@ function previewPhoto(event) {
   }
 }
 
-// 2. DOB CONVERSION
 function convertDOB() {
     const dob = document.getElementById("dob").value;
     if (!dob) return;
@@ -212,29 +211,21 @@ function convertDOB() {
     document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
-// 3. INITIALIZATION (Fixes Blank Form)
 window.onload = function() {
     const role = localStorage.getItem("userRole");
     const params = new URLSearchParams(window.location.search);
-    const studentId = params.get('id'); // This catches the ID from the "View" button
+    const studentId = params.get('id');
 
-    // Show/Hide Office Section
     const officeSection = document.getElementById("officeSection");
     if (officeSection) {
         officeSection.style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
     }
 
     if (studentId) {
-        console.log("Attempting to load student ID:", studentId);
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
-        
-        // Find the student by matching the admNo string
         const student = records.find(r => r.admNo.trim() === studentId.trim());
 
         if (student) {
-            console.log("Student Found:", student);
-            // Manually map fields to HTML IDs
-            // Make sure your HTML IDs match these exactly!
             if(document.getElementById("admNo")) document.getElementById("admNo").value = student.admNo;
             if(document.getElementById("studentName")) document.getElementById("studentName").value = student.studentName || "";
             if(document.getElementById("fatherName")) document.getElementById("fatherName").value = student.fatherName || "";
@@ -244,7 +235,6 @@ window.onload = function() {
             if(document.getElementById("apaarId")) document.getElementById("apaarId").value = student.apaarId || "";
             if(document.getElementById("penId")) document.getElementById("penId").value = student.penId || "";
             
-            // Restore Photo
             if (student.studentPhoto) {
                 const img = document.getElementById("photoPreview");
                 const txt = document.getElementById("photoTxt");
@@ -256,11 +246,9 @@ window.onload = function() {
             }
             convertDOB();
         } else {
-            console.error("No student found in localStorage with ID:", studentId);
             alert("Error: Student record not found.");
         }
     } else {
-        // NEW FORM: Generate ID
         const admInput = document.getElementById("admNo");
         if (admInput && !admInput.value) {
             admInput.value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
@@ -268,7 +256,6 @@ window.onload = function() {
     }
 };
 
-// 4. SUBMISSION
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
     if(!form.checkValidity()) { form.reportValidity(); return; }
@@ -295,19 +282,17 @@ function submitAdmission() {
     const index = records.findIndex(r => r.admNo === admNoValue);
 
     if (index !== -1) {
-        // Preserve photo if no new one was uploaded
         if (!data.studentPhoto && records[index].studentPhoto) {
             data.studentPhoto = records[index].studentPhoto;
         }
-        records[index] = data; // Update existing
+        records[index] = data; 
     } else {
-        records.push(data); // Create new
+        records.push(data); 
     }
 
     localStorage.setItem("admissions", JSON.stringify(records));
     alert("Record Processed Successfully!");
     
-    // Redirect
     if (role === "HOI" || role === "INCHARGE") {
         window.location.href = "admin/dashboard.html";
     } else {
@@ -318,4 +303,5 @@ function submitAdmission() {
   
 </body>
 </html>
-                
+        
+            
