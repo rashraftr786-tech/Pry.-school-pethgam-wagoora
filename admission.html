@@ -4,201 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admission Form - GPS Pethgam Wagoora</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        :root { --primary: #1b5e20; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 20px; }
-        .form-container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary); }
-        .header-box { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
-        .section-title { background: #e8f5e9; color: var(--primary); padding: 10px; font-weight: bold; margin: 20px 0 15px 0; border-left: 5px solid var(--primary); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn-group { margin-top: 30px; display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
+        :root { --primary: #1b5e20; --border: #333; }
+        body { font-family: 'Arial', sans-serif; background: #f0f0f0; padding: 10px; }
+        .form-page { max-width: 1000px; margin: auto; background: white; padding: 20px; border: 2px solid #000; }
+        
+        /* Header styling based on */
+        .header { text-align: center; border-bottom: 2px solid #000; margin-bottom: 10px; padding-bottom: 5px; }
+        .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
+        .header p { margin: 2px 0; font-size: 14px; font-weight: bold; }
+        .form-title { text-align: center; font-size: 20px; font-weight: bold; text-decoration: underline; margin: 15px 0; }
+
+        .field-group { margin-bottom: 12px; display: flex; align-items: center; flex-wrap: wrap; }
+        .label { font-weight: bold; margin-right: 10px; min-width: 150px; }
+        
+        /* Box grid for character input as seen in */
+        .box-grid { display: flex; gap: 0; border: 1px solid var(--border); width: fit-content; }
+        .box-grid input { width: 20px; height: 20px; border: 1px solid #999; text-align: center; font-family: monospace; text-transform: uppercase; border-radius: 0; border-top: none; border-left: none; }
+        
+        input[type="text"].standard { border: none; border-bottom: 1px dotted #000; flex-grow: 1; padding: 2px; }
+        .declaration { border-top: 2px solid #000; margin-top: 20px; padding-top: 10px; font-size: 12px; }
+        .office-use { border: 1px solid #000; padding: 10px; margin-top: 20px; font-size: 12px; background: #f9f9f9; }
+
+        .btn-container { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; cursor: pointer; color: white; font-weight: bold; border-radius: 5px; }
         .btn-save { background: var(--primary); }
         .btn-pdf { background: #d32f2f; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <div class="header-box">
-        <img src="logo.png" alt="School Logo" style="width: 70px;">
-        <h2 style="margin: 5px 0;">Government Primary School Pethgam Wagoora</h2>
-        <p>Zone Wagoora · District Baramulla · Session 2026–2027</p>
+<div class="form-page">
+    <div class="header">
+        <img src="logo.png" alt="Logo" style="width: 60px; float: left;"> <h1>Government Primary School Pethgam Wagoora</h1>
+        <p>Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
+        <p>Email ID: pspethgam@gmail.com | UDISE Code: 01022202207</p>
     </div>
 
+    <div class="form-title">ADMISSION FORM</div>
+
     <form id="admissionForm">
-        <div class="section-title">🏫 SECTION 1: SCHOOL & ADMISSION DETAILS</div>
-        <div class="grid">
-            <div>
-                <label>Admission Type</label>
-                <select name="admType" required>
-                    <option value="Fresh">Fresh</option>
-                    <option value="Transfer">Transfer</option>
-                </select>
-            </div>
-            <div>
-                <label>Class Applied For</label>
-                <select name="sclass" id="sclass" required>
-                    <option value="1st">Class I</option>
-                    <option value="2nd">Class II</option>
-                    <option value="3rd">Class III</option>
-                    <option value="4th">Class IV</option>
-                    <option value="5th">Class V</option>
-                    <option value="Bal-Vatika">Bal-Vatika</option>
-                </select>
-            </div>
-            <div>
-                <label>Date of Application</label>
-                <input type="date" name="appDate" required>
-            </div>
-            <div>
-                <label>Admission Form No. (Office Use)</label>
-                <input type="text" name="formNo" placeholder="Leave blank if online">
-            </div>
+        <div class="field-group">
+            <span class="label">Students Name:</span>
+            <div class="box-grid" id="snameBoxes"></div>
+        </div>
+        <div style="font-size: 10px; margin-left: 160px; margin-bottom: 15px;">First Name | Middle Name | Last Name</div>
+
+        <div class="field-group">
+            <span class="label">Name As Per Aadhaar:</span>
+            <div class="box-grid" id="aadhaarNameBoxes"></div>
         </div>
 
-        <div class="section-title">👧🧒 SECTION 2: STUDENT PERSONAL DETAILS</div>
-        <div class="grid">
-            <div class="full-width">
-                <label>Student’s Full Name</label>
-                <input type="text" name="sname" id="sname" required>
-            </div>
-            <div>
-                <label>Gender</label>
-                <select name="gender" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div>
-                <label>Date of Birth</label>
-                <input type="date" name="dob" required>
-            </div>
-            <div>
-                <label>Aadhaar Number</label>
-                <input type="text" name="aadhaar" maxlength="12">
-            </div>
-            <div>
-                <label>Category</label>
-                <select name="category">
-                    <option value="General">General</option>
-                    <option value="SC">SC</option>
-                    <option value="ST">ST</option>
-                    <option value="OBC">OBC</option>
-                    <option value="EWS">EWS</option>
-                </select>
-            </div>
+        <div class="field-group">
+            <span class="label">Father's Name:</span>
+            <input type="text" class="standard" name="fatherName">
         </div>
 
-        <div class="section-title">🏠 SECTION 3: RESIDENTIAL ADDRESS</div>
-        <div class="grid">
-            <div class="full-width">
-                <label>Village / Mohalla / Panchayat</label>
-                <input type="text" name="address" required>
-            </div>
-            <div>
-                <label>PIN Code</label>
-                <input type="text" name="pincode" value="193109">
-            </div>
-            <div>
-                <label>Distance from School (km)</label>
-                <input type="number" step="0.1" name="distance">
-            </div>
+        <div class="field-group">
+            <span class="label">Mother's Name:</span>
+            <input type="text" class="standard" name="motherName">
         </div>
 
-        <div class="section-title">👨‍👩‍👧 SECTION 4: PARENT / GUARDIAN DETAILS</div>
-        <div class="grid">
-            <div>
-                <label>Father's Name</label>
-                <input type="text" name="fname" required>
-            </div>
-            <div>
-                <label>Father's Mobile</label>
-                <input type="text" name="fmobile" required>
-            </div>
-            <div>
-                <label>Mother's Name</label>
-                <input type="text" name="mname" required>
-            </div>
-            <div>
-                <label>Mother's Mobile</label>
-                <input type="text" name="mmobile">
-            </div>
+        <div class="field-group">
+            <span class="label">Residence:</span>
+            <input type="text" class="standard" name="residence">
         </div>
 
-        <div class="section-title">📚 SECTION 6: PREVIOUS SCHOOL DETAILS</div>
-        <div class="grid">
-            <div class="full-width">
-                <label>Previous School Name (If any)</label>
-                <input type="text" name="prevSchool">
-            </div>
+        <div class="field-group">
+            <span class="label">Tehsil:</span>
+            <input type="text" class="standard" name="tehsil" style="flex-grow: 0; width: 200px;">
+            <span class="label" style="min-width: 80px; margin-left: 20px;">District:</span>
+            <input type="text" class="standard" name="district" value="Baramulla">
         </div>
 
-        <div class="btn-group">
-            <button type="button" class="btn btn-save" onclick="saveAdmission()">Submit & Update Register</button>
-            <button type="button" class="btn btn-pdf" onclick="generatePDF()">Generate PDF Format</button>
+        <div class="field-group">
+            <span class="label">Father's Contact:</span>
+            <input type="text" class="standard" name="fContact" style="width: 200px; flex-grow: 0;">
+            <span class="label" style="min-width: 120px; margin-left: 20px;">Mother's Contact:</span>
+            <input type="text" class="standard" name="mContact">
+        </div>
+
+        <div class="field-group">
+            <span class="label">Aadhaar Number:</span>
+            <div class="box-grid" id="aadhaarNumBoxes"></div>
+            <span class="label" style="min-width: 100px; margin-left: 20px;">Date of Birth:</span>
+            <input type="date" name="dob">
+        </div>
+
+        <div class="field-group">
+            <span class="label">Bank Account Number:</span>
+            <input type="text" class="standard" name="bankAcc">
+            <span class="label" style="min-width: 100px; margin-left: 20px;">Bank Name:</span>
+            <input type="text" class="standard" name="bankName">
+        </div>
+
+        <div class="field-group">
+            <span class="label">Bank Branch:</span>
+            <input type="text" class="standard" name="branch">
+            <span class="label" style="min-width: 100px; margin-left: 20px;">IFSC Code:</span>
+            <input type="text" class="standard" name="ifsc">
+        </div>
+
+        <div class="field-group">
+            <span class="label">Category:</span>
+            <label><input type="radio" name="cat" value="SC"> SC</label> &nbsp;
+            <label><input type="radio" name="cat" value="ST"> ST</label> &nbsp;
+            <label><input type="radio" name="cat" value="OBC"> OBC</label> &nbsp;
+            <label><input type="radio" name="cat" value="GENERAL"> GENERAL</label>
+        </div>
+
+        <div class="field-group">
+            <span class="label">Class Joining:</span>
+            <select name="sclass" id="sclass">
+                <option value="Bal-Vatika">Bal-Vatika</option>
+                <option value="1st">1st</option>
+                <option value="2nd">2nd</option>
+                <option value="3rd">3rd</option>
+                <option value="4th">4th</option>
+                <option value="5th">5th</option>
+            </select>
+        </div>
+
+        <div class="declaration">
+            <strong>Parents Declaration:</strong><br>
+            I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school... I hereby declare that as the Parent of above mentioned student I am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <span>Signature of Parent</span>
+                <span>Sig. of Adm. Incharge</span>
+                <span>Sig. of Headmaster</span>
+            </div>
         </div>
     </form>
 </div>
 
-<script src="js/guard.js"></script>
-<script>
-    // 1. Save to Register (LocalStorage)
-    function saveAdmission() {
-        const form = document.getElementById('admissionForm');
-        const formData = new FormData(form);
-        const student = Object.fromEntries(formData.entries());
-        
-        // Add ERP fields
-        student.id = Date.now();
-        student.status = "Pending";
-        student.timestamp = new Date().toLocaleString();
+<div class="btn-container">
+    <button type="button" class="btn btn-save" onclick="saveToRegister()">Submit to Register</button>
+    <button type="button" class="btn btn-pdf" onclick="generatePDF()">Generate PDF</button>
+</div>
 
-        let register = JSON.parse(localStorage.getItem("admissionData")) || [];
-        register.push(student);
-        localStorage.setItem("admissionData", JSON.stringify(register));
-        
-        alert("Admission Submitted Successfully! Online Register Updated.");
+<script src="js/guard.js"></script> <script>
+    // Create character boxes for Name and Aadhaar as per
+    function createBoxes(containerId, count) {
+        const container = document.getElementById(containerId);
+        for (let i = 0; i < count; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.maxLength = 1;
+            container.appendChild(input);
+        }
     }
 
-    // 2. Generate PDF Format
-    async function generatePDF() {
+    window.onload = () => {
+        createBoxes('snameBoxes', 35);
+        createBoxes('aadhaarNameBoxes', 35);
+        createBoxes('aadhaarNumBoxes', 12);
+    };
+
+    function saveToRegister() {
+        const form = document.getElementById('admissionForm');
+        const formData = new FormData(form);
+        const studentData = Object.fromEntries(formData.entries());
+        
+        // Logic to update adm-register.html data
+        let register = JSON.parse(localStorage.getItem('admissionData')) || [];
+        register.push(studentData);
+        localStorage.setItem('admissionData', JSON.stringify(register));
+        alert("Admission registered successfully!");
+    }
+
+    function generatePDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const sname = document.getElementById('sname').value || "Student";
-        const sclass = document.getElementById('sclass').value;
-
-        doc.setFontSize(18);
-        doc.text("ADMISSION FORM - 2026", 105, 20, { align: "center" });
-        doc.setFontSize(12);
-        doc.text("Government Primary School Pethgam Wagoora", 105, 30, { align: "center" });
-        
-        doc.line(20, 35, 190, 35);
-        
-        let y = 50;
-        const inputs = document.querySelectorAll("#admissionForm input, #admissionForm select");
-        inputs.forEach(input => {
-            if(input.value && y < 270) {
-                doc.text(`${input.previousElementSibling.innerText}: ${input.value}`, 20, y);
-                y += 10;
-            }
-        });
-
-        doc.text("------------------------------------------------", 105, 250, { align: "center" });
-        doc.text("Signature of Parent", 20, 270);
-        doc.text("Seal & Sig of Headmaster", 140, 270);
-
-        doc.save(`Admission_${sname}_${sclass}.pdf`);
+        doc.text("Admission Form - GPS Pethgam Wagoora", 20, 20);
+        // Additional PDF formatting logic here
+        doc.save("Admission_Form.pdf");
     }
 </script>
 
 </body>
 </html>
-           
+                    
