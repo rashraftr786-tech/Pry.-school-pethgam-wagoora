@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Official Report Card - GPS Pethgam Wagoora</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         @page { size: A4 landscape; margin: 0; }
         body { 
@@ -28,7 +29,6 @@
 
         .outer-boundary { width: 100%; box-sizing: border-box; }
 
-        /* UPDATED HEADER STYLE */
         .school-header { 
             background: #5a3d8c !important; color: white !important; 
             display: flex; align-items: center; padding: 12px 20px; border-radius: 4px;
@@ -38,7 +38,7 @@
         .header-text { flex-grow: 1; text-align: left; }
         .header-text h1 { 
             margin: 0; font-size: 32px; letter-spacing: 2px; 
-            font-family: 'Arial Black', Gadget, sans-serif; /* Wide, bold professional font */
+            font-family: 'Arial Black', Gadget, sans-serif; 
             line-height: 1.1;
         }
         .header-address { font-size: 13px; margin-top: 5px; font-weight: bold; opacity: 0.9; }
@@ -48,7 +48,6 @@
             border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px;
         }
 
-        /* Student Info Table */
         .top-info-container { 
             display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px;
         }
@@ -57,6 +56,19 @@
         th, td { border: 1px solid #444; padding: 4px; text-align: center; }
         .label-cell { background: #e1f5fe !important; text-align: left; font-weight: bold; width: 105px; }
         .data-cell { text-align: left; padding-left: 8px; background: white; font-weight: bold;}
+
+        /* QR CODE STYLING */
+        .qr-box {
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            padding: 2px;
+            background: #fff;
+        }
+        .qr-label { font-size: 8px; font-weight: bold; margin-top: 2px; color: #5a3d8c; }
 
         .class-box { width: 95px; border: 1px solid #444; display: flex; flex-direction: column; text-align: center; }
         .class-label { background: #5a3d8c; color: white; font-weight: bold; padding: 3px; font-size: 10px; }
@@ -124,9 +136,15 @@
                 <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNo"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
                 <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
                 <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="session"></td></tr>
-                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PAN No:</td><td class="data-cell" id="pan"></td></tr>
+                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="pan"></td></tr>
             </table>
         </div>
+        
+        <div class="qr-box">
+            <div id="qrcode"></div>
+            <div class="qr-label">SCAN TO VERIFY</div>
+        </div>
+
         <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="classVal">--</div></div>
         <div class="photo-box" id="photoBox"><span>Photo</span></div>
     </div>
@@ -224,58 +242,53 @@ function getGrade(score) {
     return 'D';
 }
 
-// RANKING CALCULATION LOGIC
 function calculateRank(targetAdmNo) {
     if (!results || results.length === 0) return { school: '--', class: '--' };
-
-    // Get totals for everyone
     let scoreList = results.map(r => {
         let total = 0;
-        Object.values(r.marks).forEach(m => {
-            const faT = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
-            total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-        });
+        if(r.marks) {
+            Object.values(r.marks).forEach(m => {
+                const faT = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
+                total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+            });
+        }
         const profile = admissions.find(a => a.admNo === r.admNo);
-        return { 
-            admNo: r.admNo, 
-            total: total, 
-            stdClass: profile ? profile.studentClass : 'N/A' 
-        };
+        return { admNo: r.admNo, total: total, stdClass: profile ? profile.studentClass : 'N/A' };
     });
-
-    // School Rank
     const schoolSorted = [...scoreList].sort((a, b) => b.total - a.total);
     const sRank = schoolSorted.findIndex(s => s.admNo === targetAdmNo) + 1;
-
-    // Class Rank
     const targetStudent = scoreList.find(s => s.admNo === targetAdmNo);
-    const classSorted = scoreList
-        .filter(s => s.stdClass === targetStudent.stdClass)
-        .sort((a, b) => b.total - a.total);
+    const classSorted = scoreList.filter(s => s.stdClass === (targetStudent ? targetStudent.stdClass : '')).sort((a, b) => b.total - a.total);
     const cRank = classSorted.findIndex(s => s.admNo === targetAdmNo) + 1;
-
     return { school: sRank, class: cRank };
 }
 
 if (sInfo && sMarks) {
-    document.getElementById('sname').innerText = sInfo.studentName.toUpperCase();
-    document.getElementById('admNo').innerText = sInfo.admNo;
-    document.getElementById('fname').innerText = sInfo.fatherName;
-    document.getElementById('mname').innerText = sInfo.motherName;
-    document.getElementById('dob').innerText = sInfo.dob;
+    // Basic Info
+    document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
+    document.getElementById('admNo').innerText = sInfo.admNo || "";
+    document.getElementById('fname').innerText = sInfo.fatherName || "";
+    document.getElementById('mname').innerText = sInfo.motherName || "";
+    document.getElementById('dob').innerText = sInfo.dob || "";
     document.getElementById('session').innerText = sInfo.session || "2024-25";
-    document.getElementById('classVal').innerText = sInfo.studentClass;
-    document.getElementById('rollNo').innerText = sMarks.rollNo;
+    document.getElementById('classVal').innerText = sInfo.studentClass || "";
+    document.getElementById('rollNo').innerText = sMarks.rollNo || "";
     document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
-    document.getElementById('pan').innerText = sInfo.panNo || "N/A";
+    document.getElementById('pan').innerText = sInfo.panNo || sInfo.penNo || "N/A";
     document.getElementById('remarksText').innerText = sMarks.remarks || "Consistently demonstrates a positive attitude toward learning.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
     
+    // Generate QR Code
+    new QRCode(document.getElementById("qrcode"), {
+        text: window.location.href,
+        width: 85,
+        height: 85
+    });
+
     if (sInfo.studentPhoto) {
         document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
     }
 
-    // Auto-calculate Ranks
     const ranks = calculateRank(admNo);
     document.getElementById('sRank').innerText = ranks.school;
     document.getElementById('cRank').innerText = ranks.class;
@@ -283,10 +296,10 @@ if (sInfo && sMarks) {
     let labels = [], data = [];
     let totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
     
-    const subjects = Object.keys(sMarks.marks);
+    const subjects = Object.keys(sMarks.marks || {});
     subjects.forEach(sub => {
         const m = sMarks.marks[sub];
-        const fa = m.fa.map(v => Number(v) || 0);
+        const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
         const faT = fa.reduce((a, b) => a + b, 0);
         const cca = Number(m.cca) || 0;
         const sa = Number(m.sa) || 0;
@@ -310,12 +323,18 @@ if (sInfo && sMarks) {
             </tr>`;
     });
 
-    Object.keys(totals).forEach(key => {
-        const id = "gt" + key.charAt(0).toUpperCase() + key.slice(1);
-        if(document.getElementById(id)) document.getElementById(id).innerText = totals[key];
-    });
+    document.getElementById('gtFa1').innerText = totals.fa1;
+    document.getElementById('gtFa2').innerText = totals.fa2;
+    document.getElementById('gtFa3').innerText = totals.fa3;
+    document.getElementById('gtFa4').innerText = totals.fa4;
+    document.getElementById('gtFa5').innerText = totals.fa5;
+    document.getElementById('gtFa6').innerText = totals.fa6;
+    document.getElementById('gt30').innerText = totals.t30;
+    document.getElementById('gt20').innerText = totals.t20;
+    document.getElementById('gt50').innerText = totals.t50;
+    document.getElementById('gt100').innerText = totals.t100;
 
-    const avgScore = totals.t100 / subjects.length;
+    const avgScore = subjects.length > 0 ? totals.t100 / subjects.length : 0;
     const finalGrade = getGrade(avgScore);
     const finalProf = avgScore >= 80 ? 'Sky' : avgScore >= 50 ? 'Mountain' : 'Stream';
 
@@ -337,5 +356,5 @@ if (sInfo && sMarks) {
 </script>
 </body>
 </html>
-                                    
+                    
         
