@@ -135,7 +135,7 @@
                 <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNoDisplay"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
                 <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
                 <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="session"></td></tr>
-                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="penDisplay"></td></tr>
+                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="penNok"></td></tr>
             </table>
         </div>
         
@@ -263,7 +263,7 @@ if (sInfo && sMarks) {
 
     // FETCHING PEN NO FROM ADMISSIONS (Connects PEN with Admission data)
     // Checks for 'penNo' or the old 'panNo' field name in the object
-    document.getElementById('penDisplay').innerText = sInfo.penNo || sInfo.panNo || "N/A";
+    document.getElementById('pen').innerText = sInfo.penNo || sInfo.penNo || "N/A";
 
     document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
     document.getElementById('att').innerText = sMarks.attendance || "0";
