@@ -85,6 +85,33 @@
         localStorage.setItem("mdmRate", rate);
         alert("System updated. Expenditure will now be calculated at ₹" + rate + " per meal.");
     }
+    function syncRollFromAdmissions() {
+    // 1. Fetch your existing admission register
+    const students = JSON.parse(localStorage.getItem("admissionData")) || [];
+    
+    // 2. Filter and count based on Class
+    const prePrimaryRoll = students.filter(s => 
+        s.studentClass === "Bal-Vatika" || s.studentClass === "Pre-Primary"
+    ).length;
+
+    const primaryRoll = students.filter(s => 
+        ["1st", "2nd", "3rd", "4th", "5th"].includes(s.studentClass)
+    ).length;
+
+    // 3. Save these counts specifically for the MDM system
+    localStorage.setItem("mdmRollPP", prePrimaryRoll);
+    localStorage.setItem("mdmRollP", primaryRoll);
+
+    console.log(`Roll Synced: PP=${prePrimaryRoll}, P=${primaryRoll}`);
+    
+    // Optional: Update the UI if fields exist
+    if(document.getElementById('rollPP')) document.getElementById('rollPP').value = prePrimaryRoll;
+    if(document.getElementById('rollP')) document.getElementById('rollP').value = primaryRoll;
+}
+
+// Run this every time the Dashboard opens
+window.onload = syncRollFromAdmissions;
+    
 
     function saveMDM() {
         const date = document.getElementById('logDate').value;
