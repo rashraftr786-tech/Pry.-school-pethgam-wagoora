@@ -14,15 +14,20 @@
         }
 
         .printable-area {
-            width: 297mm; height: 210mm; background: white;
-            margin: 0 auto; padding: 8mm 10mm; box-sizing: border-box;
-            display: flex; flex-direction: column; border: 4px solid #5a3d8c;
+            width: 297mm; 
+            height: 210mm; 
+            background: white;
+            margin: 0 auto;
+            padding: 8mm 10mm; 
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid #5a3d8c;
             overflow: hidden;
         }
 
         .outer-boundary { width: 100%; box-sizing: border-box; }
 
-        /* HEADER REDESIGN */
         .school-header { 
             background: #5a3d8c !important; color: white !important; 
             display: flex; align-items: center; padding: 12px 20px; border-radius: 4px;
@@ -31,8 +36,8 @@
         
         .header-text { flex-grow: 1; text-align: left; }
         .header-text h1 { 
-            margin: 0; font-size: 30px; letter-spacing: 1px; 
-            font-family: 'Arial Black', sans-serif; 
+            margin: 0; font-size: 32px; letter-spacing: 2px; 
+            font-family: 'Arial Black', Gadget, sans-serif; 
             line-height: 1.1;
         }
         .header-address { font-size: 13px; margin-top: 5px; font-weight: bold; opacity: 0.9; }
@@ -42,7 +47,9 @@
             border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px;
         }
 
-        .top-info-container { display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px; }
+        .top-info-container { 
+            display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px;
+        }
         .details-table { flex: 1; }
         table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
         th, td { border: 1px solid #444; padding: 4px; text-align: center; }
@@ -60,7 +67,10 @@
         .subject-table th { background: #dcd0ff !important; font-size: 9.5px; height: 25px; }
         .subject-name { text-align: left; font-weight: bold; color: #b71c1c; padding-left: 8px; width: 135px; }
 
-        .bottom-row-container { display: flex; gap: 10px; margin-top: 10px; flex-grow: 1; width: 100%; align-items: stretch; }
+        .bottom-row-container { 
+            display: flex; gap: 10px; margin-top: 10px; flex-grow: 1; width: 100%; align-items: stretch;
+        }
+
         .col-left { width: 220px; display: flex; flex-direction: column; gap: 8px; }
         .col-mid { flex: 1; display: flex; flex-direction: column; border: 1px solid #444; min-width: 0; }
         .col-right { width: 215px; display: flex; flex-direction: column; gap: 8px; }
@@ -81,6 +91,7 @@
 
         .footer-sigs { display: flex; justify-content: space-between; margin-top: auto; padding-top: 10px; }
         .sig-block { width: 23%; text-align: center; }
+        .sig-space { height: 35px; }
         .sig-label { border-top: 1.5px solid #000; padding-top: 4px; font-size: 11px; font-weight: bold; }
 
         .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 100; }
@@ -89,208 +100,8 @@
 </head>
 <body>
 
-<div id="main-content" class="printable-area">
+<div class="printable-area">
     <div class="school-header outer-boundary">
-        <img src="logo.png" class="school-logo" alt="Logo">
-        <div class="header-text">
-            <h1>GOVERNMENT PRIMARY SCHOOL</h1>
-            <div class="header-address">Wagoora Babareshi Road Near ZEO Office Wagoora</div>
-            <div style="font-size: 11px;">PETHGAM WAGOORA – BARAMULLA, J&K (193109)</div>
-        </div>
-        <div class="header-right-contact">
-            <div>Contact No: +91 7006261694</div>
-            <div>UDISE Code: 01022202207</div>
-            <div>Email Id: pspathgam@gmail.com</div>
-        </div>
-    </div>
-
-    <div class="top-info-container outer-boundary">
-        <div class="details-table">
-            <table>
-                <tr><td class="label-cell">Student Name:</td><td class="data-cell" id="ui-name" colspan="3"></td></tr>
-                <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="ui-adm"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="ui-roll"></td></tr>
-                <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="ui-fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="ui-mname"></td></tr>
-                <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="ui-dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="ui-session"></td></tr>
-                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="ui-apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="ui-pen"></td></tr>
-            </table>
-        </div>
-        <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="ui-class">--</div></div>
-        <div class="photo-box" id="ui-photo"><span>Photo</span></div>
-    </div>
-
-    <table class="subject-table outer-boundary">
-        <thead>
-            <tr>
-                <th class="subject-name">Subject</th>
-                <th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th>
-                <th>Total(30)</th><th>CCA(20)</th><th>SA(50)</th>
-                <th>Total(100)</th><th>Grade</th><th>Proficiency</th>
-            </tr>
-        </thead>
-        <tbody id="ui-marks-body"></tbody>
-        <tr style="background:#f1f8e9 !important; font-weight:bold;">
-            <td style="text-align:right; padding-right:10px;">Grand Totals:</td>
-            <td id="gtFa1">0</td><td id="gtFa2">0</td><td id="gtFa3">0</td><td id="gtFa4">0</td><td id="gtFa5">0</td><td id="gtFa6">0</td>
-            <td id="gt30">0</td><td id="gt20">0</td><td id="gt50">0</td>
-            <td id="gt100">0</td>
-            <td id="ui-final-grade" style="color:#b71c1c;">-</td>
-            <td id="ui-final-prof" style="color:#b71c1c;">-</td>
-        </tr>
-    </table>
-
-    <div class="bottom-row-container outer-boundary">
-        <div class="col-left">
-            <div class="section-box" style="height: 125px;">
-                <div class="section-header" style="background:#b71c1c !important;">Co-Scholastic Record</div>
-                <table>
-                    <tr><td style="text-align:left;">Attendance %</td><td id="ui-att" width="55"></td></tr>
-                    <tr><td style="text-align:left;">Discipline</td><td>A</td></tr>
-                    <tr><td style="text-align:left;">Sports / Health</td><td>B</td></tr>
-                    <tr><td style="text-align:left;">Art and Craft</td><td>A</td></tr>
-                </table>
-            </div>
-            <div class="section-box" style="flex: 1;">
-                <div class="section-header">General Remarks</div>
-                <div class="remarks-content" id="ui-remarks"></div>
-            </div>
-        </div>
-
-        <div class="col-mid">
-            <div class="section-header" style="background:#ff9800 !important;">Performance Chart</div>
-            <div class="chart-wrap"><canvas id="marksChart"></canvas></div>
-        </div>
-
-        <div class="col-right">
-            <div class="section-box" style="height: 110px;">
-                <div class="section-header">Final Result Summary</div>
-                <table style="height: 100%;">
-                    <tr><td class="label-cell">Total Marks:</td><td id="ui-res-total" style="font-weight:bold;"></td></tr>
-                    <tr><td class="label-cell">Percentage:</td><td id="ui-res-perc"></td></tr>
-                    <tr><td class="label-cell">Result:</td><td id="ui-res-final" style="color:green; font-weight:bold;">PASS</td></tr>
-                </table>
-            </div>
-            <div class="section-box" style="flex: 1;">
-                <div class="section-header" style="background:#ef5350 !important;">Level of Proficiency</div>
-                <div class="prof-row"><span>Sky (Excellent)</span><b id="pSky"></b></div>
-                <div class="prof-row"><span>Mountain (Good)</span><b id="pMtn"></b></div>
-                <div class="prof-row"><span>Stream (Average)</span><b id="pStrm"></b></div>
-                <div class="rank-bar">
-                    <span>School Rank: <span id="ui-sRank">--</span></span>
-                    <span>Class Rank: <span id="ui-cRank">--</span></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer-sigs outer-boundary">
-        <div class="sig-block"><div style="height:35px;"></div><div class="sig-label">Class Teacher</div></div>
-        <div class="sig-block"><div style="height:35px;"></div><div class="sig-label">Exam In-Charge</div></div>
-        <div class="sig-block"><div style="height:35px;"></div><div class="sig-label">Parent/Guardian</div></div>
-        <div class="sig-block"><div style="height:35px;"></div><div class="sig-label">Headmaster Seal/Sign</div></div>
-    </div>
-</div>
-
-<button class="btn-download" onclick="window.print()">Print Marksheet</button>
-
-<script>
-(function() {
-    try {
-        const params = new URLSearchParams(window.location.search);
-        const admNo = params.get("admNo");
-        
-        const admissions = JSON.parse(localStorage.getItem("admissions") || "[]");
-        const results = JSON.parse(localStorage.getItem("results") || "[]");
-
-        const sInfo = admissions.find(x => x.admNo === admNo);
-        const sMarks = results.find(x => x.admNo === admNo);
-
-        if (!sInfo || !sMarks) {
-            document.body.innerHTML = `<div style="padding:50px; text-align:center;">
-                <h2>Data Not Found</h2>
-                <p>Admission No: ${admNo}</p>
-                <p>Please ensure you have saved the admission and marks for this student.</p>
-            </div>`;
-            return;
-        }
-
-        // 1. Basic Information
-        document.getElementById('ui-name').innerText = (sInfo.studentName || "").toUpperCase();
-        document.getElementById('ui-adm').innerText = sInfo.admNo || "";
-        document.getElementById('ui-fname').innerText = sInfo.fatherName || "";
-        document.getElementById('ui-mname').innerText = sInfo.motherName || "";
-        document.getElementById('ui-dob').innerText = sInfo.dob || "";
-        document.getElementById('ui-session').innerText = sInfo.session || "2024-25";
-        document.getElementById('ui-class').innerText = sInfo.studentClass || "";
-        document.getElementById('ui-roll').innerText = sMarks.rollNo || "";
-        document.getElementById('ui-apaar').innerText = sInfo.apaarId || "N/A";
-        
-        // ISSUE FIX: Look for PEN No in various possible field names
-        document.getElementById('ui-pen').innerText = sInfo.penNo || sInfo.pen || sInfo.panNo || "N/A";
-        
-        document.getElementById('ui-remarks').innerText = sMarks.remarks || "Good progress.";
-        document.getElementById('ui-att').innerText = sMarks.attendance || "0";
-        
-        if (sInfo.studentPhoto) {
-            document.getElementById('ui-photo').innerHTML = `<img src="${sInfo.studentPhoto}">`;
-        }
-
-        // 2. Ranking Logic (Safe approach)
-        let studentsRankList = results.map(r => {
-            let total = 0;
-            if (r.marks) {
-                Object.values(r.marks).forEach(m => {
-                    const faSum = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
-                    total += faSum + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-                });
-            }
-            const p = admissions.find(a => a.admNo === r.admNo);
-            return { admNo: r.admNo, total: total, className: p ? p.studentClass : '' };
-        });
-
-        const schoolSorted = [...studentsRankList].sort((a, b) => b.total - a.total);
-        document.getElementById('ui-sRank').innerText = schoolSorted.findIndex(s => s.admNo === admNo) + 1;
-
-        const classSorted = studentsRankList
-            .filter(s => s.className === sInfo.studentClass)
-            .sort((a, b) => b.total - a.total);
-        document.getElementById('ui-cRank').innerText = classSorted.findIndex(s => s.admNo === admNo) + 1;
-
-        // 3. Marks Rendering
-        let labels = [], dataVals = [];
-        let totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
-        
-        const subjects = Object.keys(sMarks.marks || {});
-        subjects.forEach(sub => {
-            const m = sMarks.marks[sub];
-            const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
-            const faT = fa.reduce((a, b) => a + b, 0);
-            const cca = Number(m.cca) || 0;
-            const sa = Number(m.sa) || 0;
-            const rowTotal = faT + cca + sa;
-
-            totals.fa1 += fa[0]; totals.fa2 += fa[1]; totals.fa3 += fa[2];
-            totals.fa4 += fa[3]; totals.fa5 += fa[4]; totals.fa6 += fa[5];
-            totals.t30 += faT; totals.t20 += cca; totals.t50 += sa; totals.t100 += rowTotal;
-
-            labels.push(sub); dataVals.push(rowTotal);
-            
-            const rowGrade = rowTotal >= 90 ? 'A+' : rowTotal >= 80 ? 'A' : rowTotal >= 70 ? 'B+' : rowTotal >= 60 ? 'B' : 'C';
-            const rowProf = rowTotal >= 80 ? 'Sky' : rowTotal >= 50 ? 'Mountain' : 'Stream';
-
-            document.getElementById('ui-marks-body').innerHTML += `
-                <tr>
-                    <td class="subject-name">${sub}</td>
-                    <td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td>
-                    <td>${faT}</td><td>${cca}</td><td>${sa}</td>
-                    <td style="font-weight:bold;">${rowTotal}</td>
-                    <td>${rowGrade}</td><td>${rowProf}</td>
-                </tr>`;
-        });
-
-        // Totals UI
-        document.getElementById('gtFa1').innerText = totals.fa1;
-        document.getElementById('gtFa2').innerText = totals.fa2;
-        document.getElementById('gtFa3').innerText = totals.fa3
         <img src="logo.png" class="school-logo" alt="Logo">
         <div class="header-text">
             <h1>GOVERNMENT PRIMARY SCHOOL</h1>
@@ -311,7 +122,7 @@
                 <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNo"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
                 <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
                 <tr><td class="label-cell">Date of Birth:</td><td class="data-cell" id="dob"></td><td class="label-cell">Session:</td><td class="data-cell" id="session"></td></tr>
-                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="pan"></td></tr>
+                <tr><td class="label-cell">Apaar Id:</td><td class="data-cell" id="apaar"></td><td class="label-cell">PEN No:</td><td class="data-cell" id="pen_field"></td></tr>
             </table>
         </div>
         <div class="class-box"><div class="class-label">CLASS</div><div class="class-val" id="classVal">--</div></div>
@@ -393,6 +204,132 @@
 <button class="btn-download" onclick="window.print()">Print Marksheet</button>
 
 <script>
+// Logic to protect from white screen
+window.onerror = function() {
+    document.body.innerHTML = "<div style='padding:20px; color:red; font-family:sans-serif;'><h3>Report Card Loading Error</h3>Please check if Admission Number is correct and data is synced.</div>";
+};
+
+const params = new URLSearchParams(window.location.search);
+const admNo = params.get("admNo");
+const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+const results = JSON.parse(localStorage.getItem("results")) || [];
+
+const sInfo = admissions.find(x => x.admNo === admNo);
+const sMarks = results.find(x => x.admNo === admNo);
+
+function getGrade(score) {
+    if (score >= 90) return 'A+';
+    if (score >= 80) return 'A';
+    if (score >= 70) return 'B+';
+    if (score >= 60) return 'B';
+    if (score >= 50) return 'C+';
+    if (score >= 40) return 'C';
+    return 'D';
+}
+
+if (sInfo && sMarks) {
+    document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
+    document.getElementById('admNo').innerText = sInfo.admNo;
+    document.getElementById('fname').innerText = sInfo.fatherName || "";
+    document.getElementById('mname').innerText = sInfo.motherName || "";
+    document.getElementById('dob').innerText = sInfo.dob || "";
+    document.getElementById('session').innerText = sInfo.session || "2024-25";
+    document.getElementById('classVal').innerText = sInfo.studentClass || "--";
+    document.getElementById('rollNo').innerText = sMarks.rollNo || "";
+    
+    // NEW FIELDS FIX
+    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
+    document.getElementById('pen_field').innerText = sInfo.penNo || sInfo.panNo || "N/A";
+
+    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
+    document.getElementById('att').innerText = sMarks.attendance || "0";
+    
+    if (sInfo.studentPhoto) {
+        document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
+    }
+
+    // RANKING LOGIC
+    let scoreRecords = results.map(r => {
+        let studentTotal = 0;
+        if(r.marks){
+            Object.values(r.marks).forEach(m => {
+                const fSum = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
+                studentTotal += fSum + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+            });
+        }
+        const profile = admissions.find(a => a.admNo === r.admNo);
+        return { admNo: r.admNo, total: studentTotal, className: profile ? profile.studentClass : '' };
+    });
+
+    const schoolSorted = [...scoreRecords].sort((a, b) => b.total - a.total);
+    document.getElementById('sRank').innerText = schoolSorted.findIndex(s => s.admNo === admNo) + 1;
+
+    const classSorted = scoreRecords
+        .filter(s => s.className === sInfo.studentClass)
+        .sort((a, b) => b.total - a.total);
+    document.getElementById('cRank').innerText = classSorted.findIndex(s => s.admNo === admNo) + 1;
+
+    let subjectLabels = [], chartDataValues = [];
+    let grandTotals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
+    
+    const subjects = Object.keys(sMarks.marks || {});
+    subjects.forEach(sub => {
+        const m = sMarks.marks[sub];
+        const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
+        const faT = fa.reduce((a, b) => a + b, 0);
+        const cca = Number(m.cca) || 0;
+        const sa = Number(m.sa) || 0;
+        const rowTotal = faT + cca + sa;
+
+        grandTotals.fa1 += fa[0]; grandTotals.fa2 += fa[1]; grandTotals.fa3 += fa[2];
+        grandTotals.fa4 += fa[3]; grandTotals.fa5 += fa[4]; grandTotals.fa6 += fa[5];
+        grandTotals.t30 += faT; grandTotals.t20 += cca; grandTotals.t50 += sa; grandTotals.t100 += rowTotal;
+
+        subjectLabels.push(sub); chartDataValues.push(rowTotal);
+        const subGrade = getGrade(rowTotal);
+        const subProf = rowTotal >= 80 ? 'Sky' : rowTotal >= 50 ? 'Mountain' : 'Stream';
+
+        document.getElementById('marksBody').innerHTML += `
+            <tr>
+                <td class="subject-name">${sub}</td>
+                <td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td>
+                <td>${faT}</td><td>${cca}</td><td>${sa}</td>
+                <td style="font-weight:bold;">${rowTotal}</td>
+                <td>${subGrade}</td><td>${subProf}</td>
+            </tr>`;
+    });
+
+    document.getElementById('gtFa1').innerText = grandTotals.fa1;
+    document.getElementById('gtFa2').innerText = grandTotals.fa2;
+    document.getElementById('gtFa3').innerText = grandTotals.fa3;
+    document.getElementById('gtFa4').innerText = grandTotals.fa4;
+    document.getElementById('gtFa5').innerText = grandTotals.fa5;
+    document.getElementById('gtFa6').innerText = grandTotals.fa6;
+    document.getElementById('gt30').innerText = grandTotals.t30;
+    document.getElementById('gt20').innerText = grandTotals.t20;
+    document.getElementById('gt50').innerText = grandTotals.t50;
+    document.getElementById('gt100').innerText = grandTotals.t100;
+
+    const avgScore = subjects.length > 0 ? grandTotals.t100 / subjects.length : 0;
+    const finalGrade = getGrade(avgScore);
+    const finalProf = avgScore >= 80 ? 'Sky' : avgScore >= 50 ? 'Mountain' : 'Stream';
+
+    document.getElementById('finalGrade').innerText = finalGrade;
+    document.getElementById('finalProf').innerText = finalProf;
+    document.getElementById('resTotal').innerText = grandTotals.t100 + " / " + (subjects.length * 100);
+    document.getElementById('resPerc').innerText = Math.round(avgScore) + "%";
+
+    document.getElementById('pSky').innerText = finalProf === 'Sky' ? "✓" : "";
+    document.getElementById('pMtn').innerText = finalProf === 'Mountain' ? "✓" : "";
+    document.getElementById('pStrm').innerText = finalProf === 'Stream' ? "✓" : "";
+
+    new Chart(document.getElementById('marksChart'), {
+        type: 'bar',
+        data: { labels: subjectLabels, datasets: [{ data: chartDataValues, backgroundColor: '#5a3d8c', borderRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
+    });
+}
+</script>
 </body>
 </html>
-        
+
