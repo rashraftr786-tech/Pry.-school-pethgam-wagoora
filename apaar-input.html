@@ -18,12 +18,26 @@
       position: relative;
     }
 
+    /* Reference Box for Admission No (Inside A4) */
+    .ref-box {
+      position: absolute;
+      top: 10mm;
+      right: 15mm;
+      border: 1px solid #333;
+      padding: 5px 10px;
+      text-align: right;
+      background: #f9f9f9;
+    }
+    .ref-box p { margin: 0; font-size: 11px; font-weight: bold; }
+    .ref-id { color: darkred; font-size: 13px; }
+
     .header-container {
       display: flex;
       align-items: center;
       border-bottom: 2px solid darkgreen;
       padding-bottom: 5px;
       margin-bottom: 10px;
+      margin-top: 10px; /* Space for ref box */
     }
     .school-logo { width: 75px; height: 75px; margin-right: 20px; }
     .header-text h1 { margin: 0; font-size: 20px; color: darkgreen; text-transform: uppercase; }
@@ -62,10 +76,6 @@
       gap: 40px;
     }
 
-    .sig-block {
-      margin-top: 10px;
-    }
-
     .sig-line {
       border-top: 1px solid #000;
       margin-top: 40px;
@@ -90,8 +100,8 @@
       body { background: none; }
       .page-border { margin: 0; border: 2px solid darkgreen; }
       .no-print { display: none !important; }
-      /* Keep the bottom border of inputs visible when saving as PDF */
       .input-line { border-bottom: 1px solid #000 !important; }
+      .ref-box { background: white !important; }
     }
   </style>
 </head>
@@ -104,7 +114,12 @@
     <button onclick="downloadPDF()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffffff; color: #1a5d1a; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📥 Download PDF</button>
 </div>
 
-<div class="page-border" id="printable-area">
+<div class="page-border">
+  <div class="ref-box">
+    <p>Admission No: <span class="ref-id" id="displayAdmNo">--------</span></p>
+    <p style="font-size: 9px; font-weight: normal; color: #555;">Linked to Admission Register 2026</p>
+  </div>
+
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="header-text">
@@ -118,7 +133,7 @@
 
   <div class="consent-body">
     <div class="consent-paragraph">
-      I <input type="text" class="input-line" style="width: 300px;"> as the <input type="text" class="input-line" style="width: 150px;"> (Father / Mother / Legal Guardian) of <input type="text" id="studentNameDisplay" class="input-line" style="width: 250px;"> with my identity proof as <input type="text" class="input-line" style="width: 280px;"> (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and identity Proof Number <input type="text" class="input-line" style="width: 250px;"> voluntarily give my consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the following intents and purposes.
+      I <input type="text" id="parentNameInput" class="input-line" style="width: 260px;"> as the <input type="text" value="Father" class="input-line" style="width: 100px;"> (Father / Mother / Legal Guardian) of <input type="text" id="studentNameDisplay" class="input-line" style="width: 250px;"> with my identity proof as <input type="text" value="Aadhaar" class="input-line" style="width: 150px;"> (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and identity Proof Number <input type="text" id="parentAadhaarInput" class="input-line" style="width: 220px;"> voluntarily give my consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the following intents and purposes.
     </div>
 
     <div class="consent-paragraph">
@@ -139,8 +154,8 @@
 
     <div class="footer-section">
       <div class="sig-block">
-        Place of Physical Consent: <input type="text" class="input-line" style="width: 150px;"><br><br>
-        Date of Physical Consent: <input type="text" class="input-line" style="width: 150px;">
+        Place of Physical Consent: <input type="text" value="Pethgam" class="input-line" style="width: 150px;"><br><br>
+        Date of Physical Consent: <input type="text" id="consentDate" class="input-line" style="width: 150px;">
       </div>
       <div class="sig-line">Signature of Parent Guardian</div>
     </div>
@@ -162,44 +177,45 @@
 </div>
 
 <script>
-    // Autofill student name if coming from Admission Form
     window.onload = function() {
         const params = new URLSearchParams(window.location.search);
         const studentId = params.get('id');
         
-        // Set today's date automatically
-        const today = new Date().toLocaleDateString();
+        const today = new Date().toLocaleDateString('en-GB');
         if(document.getElementById("todayDate")) document.getElementById("todayDate").value = today;
+        if(document.getElementById("consentDate")) document.getElementById("consentDate").value = today;
 
         if (studentId) {
             const records = JSON.parse(localStorage.getItem("admissions")) || [];
             const student = records.find(r => r.admNo.trim() === studentId.trim());
+            
             if (student) {
-                if(document.getElementById("studentNameDisplay")) {
-                    document.getElementById("studentNameDisplay").value = student.studentName;
-                }
-                if(document.getElementById("studentNameHOI")) {
-                    document.getElementById("studentNameHOI").value = student.studentName;
+                // Pre-fill the Admission ID Box
+                document.getElementById("displayAdmNo").innerText = student.admNo;
+
+                // Pre-fill Form Fields
+                if(document.getElementById("studentNameDisplay")) document.getElementById("studentNameDisplay").value = student.studentName;
+                if(document.getElementById("studentNameHOI")) document.getElementById("studentNameHOI").value = student.studentName;
+                if(document.getElementById("parentNameInput")) document.getElementById("parentNameInput").value = student.fatherName || "";
+                
+                // Fetching parent Aadhaar if available in your schema
+                if(document.getElementById("parentAadhaarInput") && student.aadhaarNo) {
+                    document.getElementById("parentAadhaarInput").value = student.aadhaarNo;
                 }
             }
         }
     };
 
-    // Responding Download Button
     function downloadPDF() {
         const studentName = document.getElementById("studentNameDisplay").value || "Student";
         const filename = "APAAR_Consent_" + studentName.replace(/\s+/g, '_') + ".pdf";
-        
-        // Temporarily change document title to name the file properly during print/save
         const originalTitle = document.title;
         document.title = filename;
-        
         window.print();
-        
-        // Revert title
         document.title = originalTitle;
     }
 </script>
 
 </body>
 </html>
+      
