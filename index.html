@@ -1,207 +1,312 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Government Primary School Pethgam Wagoora</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Pethgam Wagoora - Official Portal</title>
   <style>
-    .school-header {
-  display: flex;
-  align-items: center;
-  background: #e8f5e9;
-  padding: 10px;
-  border-bottom: 3px solid darkgreen;
-}
+    /* 🎨 Modern Variables & Reset */
+    :root {
+      --primary: #1b5e20;
+      --primary-gradient: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+      --accent: #ffeb3b;
+      --text-dark: #2c3e50;
+      --bg-light: #f4f7f6;
+      --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 
-.school-logo {
-  width: 80px;
-  height: auto;
-  margin-right: 15px;
-}
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
 
-.school-title h1 {
-  margin: 0;
-  color: darkgreen;
-  font-size: 22px;
-}
-
-.school-title h2 {
-  margin: 0;
-  color: #2e7d32;
-  font-size: 16px;
-}
-
-.school-title p {
-  margin: 0;
-  font-size: 13px;
-  color: #555;
-}
+    /* 🧭 Sticky Navigation */
     .menu {
-  background: darkgreen;
-  padding: 10px;
-  text-align: center;
-}
+      background: var(--primary);
+      padding: 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
 
-.menu a {
-  color: white;
-  text-decoration: none;
-  margin: 10px;
-  font-weight: bold;
-}
+    .menu a {
+      color: white;
+      text-decoration: none;
+      padding: 15px 20px;
+      display: inline-block;
+      font-weight: 600;
+      transition: 0.3s;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
 
-.menu a:hover {
-  text-decoration: underline;
-  color: #ffeb3b;
-}
-  .notice-board {
-    background: #fff8dc;
-    padding: 15px;
-    border-left: 5px solid darkgreen;
-  }
+    .menu a:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--accent);
+    }
 
-  .notice-board li {
-    margin-bottom: 8px;
-  }
-    .notice-scroll {
-  height: 120px;           /* visible area */
-  overflow: hidden;
-  position: relative;
-}
+    /* 🏫 Modern Header */
+    .school-header {
+      display: flex;
+      align-items: center;
+      background: white;
+      padding: 15px 5%;
+      border-bottom: 4px solid var(--primary);
+    }
 
-.notice-scroll ul {
-  position: absolute;
-  animation: scrollUp 10s linear infinite;
-  padding-left: 20px;
-}
+    .school-logo { width: 80px; height: auto; margin-right: 20px; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1)); }
+    .school-title h1 { margin: 0; color: var(--primary); font-size: 24px; letter-spacing: -0.5px; }
+    .school-title h2 { margin: 0; color: #555; font-size: 16px; font-weight: 400; }
 
-@keyframes scrollUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: -100%;
-  }
-}
-    table {
-  width: 100%;
-  border-collapse: collapse;
-}
+    /* 🖼️ Hero Banner Section */
+    .hero {
+      background: var(--primary-gradient), url('school-bg.jpg');
+      background-blend-mode: overlay;
+      background-size: cover;
+      color: white;
+      padding: 60px 5%;
+      text-align: center;
+      clip-path: ellipse(150% 100% at 50% 0%);
+    }
 
-th {
-  background: darkgreen;
-  color: white;
-  padding: 8px;
-}
+    .hero h2 { font-size: 36px; margin-bottom: 10px; }
+    .hero p { font-size: 18px; opacity: 0.9; max-width: 700px; margin: 0 auto 25px; }
+    
+    .btn-download {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: bold;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+    .btn-download:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
-td {
-  padding: 8px;
-  text-align: center;
-}
+    /* 🧱 Layout Containers */
+    .main-content {
+      max-width: 1200px;
+      margin: -40px auto 40px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
 
-tr:nth-child(even) {
-  background: #f2f2f2;
-}
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+      transition: 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card h3 { color: var(--primary); border-left: 5px solid var(--primary); padding-left: 15px; margin-top: 0; }
+
+    /* 🔔 Notice Board */
+    .notice-board { background: #fffdf0; border: 1px solid #ffeaa7; }
+    .notice-scroll { height: 180px; overflow: hidden; position: relative; }
+    .notice-scroll ul { animation: scrollUp 12s linear infinite; padding: 0; list-style: none; }
+    .notice-scroll ul li { padding: 10px; border-bottom: 1px dashed #ddd; font-size: 14px; }
+    .notice-scroll:hover ul { animation-play-state: paused; }
+
+    @keyframes scrollUp { 0% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
+
+    /* 📂 Quick Access Grid */
+    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .link-btn {
+      background: #eee;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+    .link-btn:hover { background: var(--primary); color: white; }
+
+    /* 📊 Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th { background: var(--primary); color: white; padding: 12px; text-align: left; }
+    td { padding: 12px; border-bottom: 1px solid #eee; }
+    tr:hover { background: #f9f9f9; }
+
+    /* 🟢 Stats Section */
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      padding: 30px;
+      margin-bottom: 40px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .stat-item h4 { font-size: 28px; margin: 0; color: var(--primary); }
+    .stat-item p { margin: 5px 0 0; color: #666; font-weight: 600; }
+
+    /* 📱 Mobile Responsive */
+    @media (max-width: 768px) {
+      .main-content { grid-template-columns: 1fr; margin-top: 20px; }
+      .school-header { flex-direction: column; text-align: center; }
+      .school-logo { margin-bottom: 10px; }
+      .hero h2 { font-size: 26px; }
+      .stats-bar { flex-direction: column; gap: 20px; }
+    }
+
+    /* 🌙 Footer */
     .school-footer {
-  background: #1b5e20;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  margin-top: 30px;
-}
-
-.school-footer p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.school-footer hr {
-  width: 60%;
-  margin: 10px auto;
-  border: 0;
-  border-top: 1px solid #a5d6a7;
-}
-
-.school-footer a {
-  color: #ffeb3b;
-  text-decoration: none;
-}
+      background: #102e12;
+      color: white;
+      text-align: center;
+      padding: 40px 5%;
+    }
+    .school-footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 
 <body>
-  <header class="school-header">
-  <img src="logo.png" alt="School Logo" class="school-logo">
 
-  <div class="school-title">
-    <h1>Government Primary School</h1>
-    <h2>Pethgam Wagoora – 193109</h2>
-    <p>Zone Wagoora · District Baramulla</p>
-  </div>
+  <header class="school-header">
+    <img src="logo.png" alt="School Logo" class="school-logo">
+    <div class="school-title">
+      <h1>Government Primary School Pethgam Wagoora</h1>
+      <h2>UDISE: 01022202207 | Estd: 1964</h2>
+    </div>
   </header>
+
   <nav class="menu">
-  <a href="index.html">Home</a>
-  <a href="admission.html">Admission</a>
-    <a href="results.html">Results</a>
-  <a href="mdm.html">MDM</a>
-  <a href="notice.html">Notice</a>
-  <a href="contact.html">Contact</a>
+    <a href="index.html">🏠 Home</a>
+    <a href="admission.html">📝 Admission</a>
+    <a href="results.html">📊 Results</a>
+    <a href="mdm-statement.html">🍽️ MDM</a>
+    <a href="notice.html">🔔 Notice</a>
+    <a href="contact.html">📞 Contact</a>
   </nav>
 
-<h2>Welcome to Government Primary School Pethgam Wagoora</h2>
-  <p>It gives us great pleasure to welcome you to the official website of Government Primary School Pethgam Wagoora. Our institution strives to provide holistic education that promotes academic excellence, moral values, and social responsibility. We aim to create a supportive learning environment where every child is encouraged to reach their full potential.</p>
-<hr>
-<div class="notice-board">
-  <h2>📢 School Notice Board</h2>
+  <section class="hero">
+    <h2>Empowering Minds, Shaping Futures</h2>
+    <p>Providing quality education and holistic development at Pethgam Wagoora. Admissions for Session 2026 are now open!</p>
+    <a href="#" class="btn-download">📥 Download School Prospectus</a>
+  </section>
 
-  <div class="notice-scroll">
-    <ul>
-      <li><strong>Winter Vacations:</strong> School will remain closed from 1st January to 10th January.</li>
-      <li><strong>MDM Update:</strong> Mid-Day Meal will resume after vacations.</li>
-      <li><strong>Admission Notice:</strong> New admissions are open for the academic session.</li>
-      <li><strong>Parents Meeting:</strong> PTM will be held on Saturday at 11:00 AM.</li>
-    </ul>
+  <div class="main-content">
+    
+    <div class="left-col">
+      <div class="card">
+        <h3>Welcome to our Institution</h3>
+        <p>It gives us great pleasure to welcome you to the official portal of <strong>GPS Pethgam Wagoora</strong>. Our institution strives to provide holistic education that promotes academic excellence, moral values, and social responsibility.</p>
+        <p>We aim to create a supportive learning environment where every child is encouraged to reach their full potential through modern teaching techniques and the Mid-Day Meal scheme.</p>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <h4 id="statStudents">68</h4>
+          <p>Students</p>
+        </div>
+        <div class="stat-item">
+          <h4>04</h4>
+          <p>Teachers</p>
+        </div>
+        <div class="stat-item">
+          <h4>06</h4>
+          <p>Classrooms</p>
+        </div>
+        <div class="stat-item">
+          <h4>100%</h4>
+          <p>MDM Coverage</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 Class Strength (Current Session)</h3>
+        <table id="strengthTable">
+          <thead>
+            <tr>
+              <th>Class Level</th>
+              <th>Enrolled Students</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Pre-Primary (Bal Vatika)</td><td id="countPP">21</td></tr>
+            <tr><td>Primary (1st - 5th)</td><td id="countP">47</td></tr>
+            <tr style="font-weight:bold; background:#e8f5e9;"><td>Total Strength</td><td id="countT">68</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card notice-board">
+        <h3>📢 Latest Notices</h3>
+        <div class="notice-scroll">
+          <ul id="noticeList">
+            <li><strong>Winter Vacations:</strong> School will remain closed from 1st Jan to 10th Jan.</li>
+            <li><strong>MDM Update:</strong> New menu implemented for Session 2026.</li>
+            <li><strong>Admissions:</strong> Verification of documents for Bal-Vatika on Monday.</li>
+            <li><strong>PTM Meeting:</strong> Monthly Parent-Teacher meeting this Saturday at 11 AM.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📂 Quick Access</h3>
+        <div class="quick-links">
+          <a href="admission.html" class="link-btn">New Admission</a>
+          <a href="mdm-statement.html" class="link-btn">MDM Reports</a>
+          <a href="results.html" class="link-btn">Exam Results</a>
+          <a href="contact.html" class="link-btn">Locate School</a>
+        </div>
+      </div>
+
+      <div class="card" style="background: var(--primary); color: white;">
+        <h3>🏫 School Motto</h3>
+        <p style="font-style: italic; font-size: 18px; text-align: center;">"Education for All, Excellence for Every Child."</p>
+      </div>
+    </div>
+
   </div>
-</div>
-  <h3>📋 School Facilities</h3>
 
-<ul>
-  <li>Free Education</li>
-  <li>Mid-Day Meal</li>
-  <li>Playground</li>
-</ul>
-
-<h3>📊 Class Strength</h3>
-
-<table>
-  <tr>
-    <th>Class</th>
-    <th>Students</th>
-  </tr>
-  <tr>
-    <td>Class 1</td>
-    <td>18</td>
-  </tr>
-</table>
   <footer class="school-footer">
+    <p><strong>Government Primary School Pethgam Wagoora</strong></p>
+    <p>
+      📍 Wagoora Babareshi Road Near Zonal Education Office<br>
+      Pethgam Wagoora Baramulla Jammu and Kashmir - 193109
+    </p>
+    <p>
+      📞 Contact: 9596449881 | 📧 Email: pspethgam@gmail.com
+    </p>
+    <hr style="width: 50%; border: 0; border-top: 1px solid #333; margin: 20px auto;">
+    <p>© 2026 GPS Pethgam Wagoora. Designed & Maintained by Mohammad Ashraf Rather.</p>
+  </footer>
 
-  <p><strong>Government Primary School Pethgam Wagoora</strong></p>
-
-  <p>
-    📍 Pethgam, Wagoora – 193109<br>
-    Zone Wagoora, District Baramulla
-  </p>
-
-  <p>
-    📞 Contact: 7006261694<br>
-    📧 Email: pspathgam@gmail.com
-  </p>
-
-  <hr>
-
-  <p class="copyright">
-    © 2026 Government Primary School Pethgam Wagoora.<br>
-    Website designed & maintained by Mohammad Ashraf Rather.
-  </p>
-
-</footer>
+  <script>
+    // 🧠 SMART ERP SYNC: Automatically update counts from local storage
+    window.onload = function() {
+        const students = JSON.parse(localStorage.getItem("admissionData")) || [];
+        
+        if(students.length > 0) {
+            const pp = students.filter(s => s.sclass === "Bal-Vatika" || s.sclass === "Pre-Primary").length;
+            const p = students.filter(s => ["1st", "2nd", "3rd", "4th", "5th"].includes(s.sclass)).length;
+            
+            document.getElementById('countPP').innerText = pp;
+            document.getElementById('countP').innerText = p;
+            document.getElementById('countT').innerText = pp + p;
+            document.getElementById('statStudents').innerText = pp + p;
+        }
+    };
+  </script>
 
 </body>
 </html>
+    
