@@ -28,7 +28,6 @@
 
         .outer-boundary { width: 100%; box-sizing: border-box; }
 
-        /* UPDATED HEADER STYLE */
         .school-header { 
             background: #5a3d8c !important; color: white !important; 
             display: flex; align-items: center; padding: 12px 20px; border-radius: 4px;
@@ -38,7 +37,7 @@
         .header-text { flex-grow: 1; text-align: left; }
         .header-text h1 { 
             margin: 0; font-size: 32px; letter-spacing: 2px; 
-            font-family: 'Arial Black', Gadget, sans-serif; /* Wide, bold professional font */
+            font-family: 'Arial Black', Gadget, sans-serif; 
             line-height: 1.1;
         }
         .header-address { font-size: 13px; margin-top: 5px; font-weight: bold; opacity: 0.9; }
@@ -48,7 +47,6 @@
             border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px;
         }
 
-        /* Student Info Table */
         .top-info-container { 
             display: flex; gap: 10px; margin-top: 10px; align-items: stretch; height: 125px;
         }
@@ -79,6 +77,47 @@
 
         .section-box { border: 1px solid #444; display: flex; flex-direction: column; background: white; overflow: hidden; width: 100%; }
         .section-header { background: #5a3d8c !important; color: white !important; font-weight: bold; padding: 5px; text-align: center; font-size: 11px; }
+        
+        .remarks-content { padding: 8px; font-size: 10.5px; font-style: italic; flex-grow: 1; line-height: 1.3; }
+        .chart-wrap { flex: 1; padding: 5px; position: relative; width: 100%; }
+
+        .prof-row { display: flex; justify-content: space-between; padding: 6px 10px; border-bottom: 1px solid #eee; font-size: 10.5px; }
+        
+        .rank-bar {
+            background: #37474f !important; color: white !important;
+            padding: 8px; display: flex; justify-content: space-around; font-size: 10.5px; font-weight: bold;
+            margin-top: auto;
+        }
+
+        .footer-sigs { display: flex; justify-content: space-between; margin-top: auto; padding-top: 10px; }
+        .sig-block { width: 23%; text-align: center; }
+        .sig-space { height: 35px; }
+        .sig-label { border-top: 1.5px solid #000; padding-top: 4px; font-size: 11px; font-weight: bold; }
+
+        .btn-download { position: fixed; bottom: 20px; right: 20px; padding: 12px 25px; background: #2e7d32; color: white; border: none; cursor: pointer; border-radius: 30px; font-weight: bold; z-index: 100; }
+        @media print { .btn-download { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="printable-area">
+    <div class="school-header outer-boundary">
+        <img src="logo.png" class="school-logo" alt="Logo">
+        <div class="header-text">
+            <h1>GOVERNMENT PRIMARY SCHOOL</h1>
+            <div class="header-address">Wagoora Babareshi Road Near ZEO Office Wagoora</div>
+            <div style="font-size: 11px;">PETHGAM WAGOORA – BARAMULLA, J&K (193109)</div>
+        </div>
+        <div class="header-right-contact">
+            <div>Contact No: +91 7006261694</div>
+            <div>UDISE Code: 01022202207</div>
+            <div>Email Id: pspathgam@gmail.com</div>
+        </div>
+    </div>
+
+    <div class="top-info-container outer-boundary">
+        <div class="details-table">
+            <table>
                 <tr><td class="label-cell">Student Name:</td><td class="data-cell" id="sname" colspan="3"></td></tr>
                 <tr><td class="label-cell">Adm. No:</td><td class="data-cell" id="admNo"></td><td class="label-cell">Roll No:</td><td class="data-cell" id="rollNo"></td></tr>
                 <tr><td class="label-cell">Father's Name:</td><td class="data-cell" id="fname"></td><td class="label-cell">Mother's Name:</td><td class="data-cell" id="mname"></td></tr>
@@ -123,7 +162,7 @@
             </div>
             <div class="section-box" style="flex: 1;">
                 <div class="section-header">General Remarks</div>
-                <div id="remarksText" style="padding:10px; font-size:11px; font-style:italic;"></div>
+                <div class="remarks-content" id="remarksText"></div>
             </div>
         </div>
 
@@ -155,83 +194,83 @@
     </div>
 
     <div class="footer-sigs outer-boundary">
-        <div class="sig-block"><div style="height:40px;"></div><div class="sig-label">Class Teacher</div></div>
-        <div class="sig-block"><div style="height:40px;"></div><div class="sig-label">Exam In-Charge</div></div>
-        <div class="sig-block"><div style="height:40px;"></div><div class="sig-label">Parent/Guardian</div></div>
-        <div class="sig-block"><div style="height:40px;"></div><div class="sig-label">Headmaster Seal/Sign</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Class Teacher</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Exam In-Charge</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Parent/Guardian</div></div>
+        <div class="sig-block"><div class="sig-space"></div><div class="sig-label">Headmaster Seal/Sign</div></div>
     </div>
 </div>
 
 <button class="btn-download" onclick="window.print()">Print Marksheet</button>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const admNo = params.get("admNo");
-const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
-const results = JSON.parse(localStorage.getItem("results")) || [];
+try {
+    const params = new URLSearchParams(window.location.search);
+    const admNo = params.get("admNo");
+    const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+    const results = JSON.parse(localStorage.getItem("results")) || [];
 
-// AUTO-RANKING LOGIC
-function calculateRanks(currentAdmNo) {
-    // 1. Calculate total for every student in results
-    const studentsWithTotals = results.map(res => {
-        let sum = 0;
-        Object.values(res.marks).forEach(m => {
-            const fa = m.fa.reduce((a, b) => a + (Number(b) || 0), 0);
-            sum += fa + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-        });
-        // Find class for this student
-        const profile = admissions.find(a => a.admNo === res.admNo);
-        return { admNo: res.admNo, total: sum, class: profile ? profile.studentClass : '' };
-    });
-
-    // 2. School Rank (Sort all)
-    const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
-    const sRank = schoolSorted.findIndex(s => s.admNo === currentAdmNo) + 1;
-
-    // 3. Class Rank (Filter same class then sort)
-    const currentStudent = studentsWithTotals.find(s => s.admNo === currentAdmNo);
-    const classSorted = studentsWithTotals
-        .filter(s => s.class === currentStudent.class)
-        .sort((a, b) => b.total - a.total);
-    const cRank = classSorted.findIndex(s => s.admNo === currentAdmNo) + 1;
-
-    return { school: sRank, class: cRank };
-}
-
-if (admNo && results.length > 0) {
     const sInfo = admissions.find(x => x.admNo === admNo);
     const sMarks = results.find(x => x.admNo === admNo);
 
+    function getGrade(score) {
+        if (score >= 90) return 'A+';
+        if (score >= 80) return 'A';
+        if (score >= 70) return 'B+';
+        if (score >= 60) return 'B';
+        if (score >= 50) return 'C+';
+        if (score >= 40) return 'C';
+        return 'D';
+    }
+
     if (sInfo && sMarks) {
-        document.getElementById('sname').innerText = sInfo.studentName.toUpperCase();
-        document.getElementById('admNo').innerText = sInfo.admNo;
-        document.getElementById('fname').innerText = sInfo.fatherName;
-        document.getElementById('mname').innerText = sInfo.motherName;
-        document.getElementById('dob').innerText = sInfo.dob;
+        // Basic Info
+        document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
+        document.getElementById('admNo').innerText = sInfo.admNo || "";
+        document.getElementById('fname').innerText = sInfo.fatherName || "";
+        document.getElementById('mname').innerText = sInfo.motherName || "";
+        document.getElementById('dob').innerText = sInfo.dob || "";
         document.getElementById('session').innerText = sInfo.session || "2024-25";
-        document.getElementById('classVal').innerText = sInfo.studentClass;
-        document.getElementById('rollNo').innerText = sMarks.rollNo;
+        document.getElementById('classVal').innerText = sInfo.studentClass || "";
+        document.getElementById('rollNo').innerText = sMarks.rollNo || "";
         document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
         document.getElementById('pan').innerText = sInfo.panNo || "N/A";
         document.getElementById('remarksText').innerText = sMarks.remarks || "Consistently demonstrates a positive attitude toward learning.";
         document.getElementById('att').innerText = sMarks.attendance || "0";
         
         if (sInfo.studentPhoto) {
-            document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`;
+            document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
         }
 
-        // Apply Ranks
-        const ranks = calculateRanks(admNo);
-        document.getElementById('sRank').innerText = ranks.school;
-        document.getElementById('cRank').innerText = ranks.class;
+        // RANKING LOGIC
+        let scoreList = results.map(r => {
+            let total = 0;
+            if(r.marks) {
+                Object.values(r.marks).forEach(m => {
+                    const faT = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
+                    total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
+                });
+            }
+            const profile = admissions.find(a => a.admNo === r.admNo);
+            return { admNo: r.admNo, total: total, stdClass: profile ? profile.studentClass : 'N/A' };
+        });
 
-        // Populate Table and Calculate Totals (logic from previous step)
-        let labels = [], data = [], totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
-        const subjects = Object.keys(sMarks.marks);
+        const schoolSorted = [...scoreList].sort((a, b) => b.total - a.total);
+        document.getElementById('sRank').innerText = schoolSorted.findIndex(s => s.admNo === admNo) + 1;
+
+        const classSorted = scoreList
+            .filter(s => s.stdClass === sInfo.studentClass)
+            .sort((a, b) => b.total - a.total);
+        document.getElementById('cRank').innerText = classSorted.findIndex(s => s.admNo === admNo) + 1;
+
+        // Marks Table
+        let labels = [], chartData = [];
+        let totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
         
+        const subjects = Object.keys(sMarks.marks || {});
         subjects.forEach(sub => {
             const m = sMarks.marks[sub];
-            const fa = m.fa.map(v => Number(v) || 0);
+            const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
             const faT = fa.reduce((a, b) => a + b, 0);
             const cca = Number(m.cca) || 0;
             const sa = Number(m.sa) || 0;
@@ -241,14 +280,21 @@ if (admNo && results.length > 0) {
             totals.fa4 += fa[3]; totals.fa5 += fa[4]; totals.fa6 += fa[5];
             totals.t30 += faT; totals.t20 += cca; totals.t50 += sa; totals.t100 += rowTotal;
 
-            labels.push(sub); data.push(rowTotal);
-            const grade = rowTotal >= 90 ? 'A+' : rowTotal >= 80 ? 'A' : rowTotal >= 70 ? 'B+' : rowTotal >= 60 ? 'B' : 'C';
-            const prof = rowTotal >= 80 ? 'Sky' : rowTotal >= 50 ? 'Mountain' : 'Stream';
+            labels.push(sub); chartData.push(rowTotal);
+            const subGrade = getGrade(rowTotal);
+            const subProf = rowTotal >= 80 ? 'Sky' : rowTotal >= 50 ? 'Mountain' : 'Stream';
 
-            document.getElementById('marksBody').innerHTML += `<tr><td class="subject-name">${sub}</td><td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${faT}</td><td>${cca}</td><td>${sa}</td><td style="font-weight:bold;">${rowTotal}</td><td>${grade}</td><td>${prof}</td></tr>`;
+            document.getElementById('marksBody').innerHTML += `
+                <tr>
+                    <td class="subject-name">${sub}</td>
+                    <td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td>
+                    <td>${faT}</td><td>${cca}</td><td>${sa}</td>
+                    <td style="font-weight:bold;">${rowTotal}</td>
+                    <td>${subGrade}</td><td>${subProf}</td>
+                </tr>`;
         });
 
-        // Set Grand Totals UI
+        // Update Grand Totals
         document.getElementById('gtFa1').innerText = totals.fa1;
         document.getElementById('gtFa2').innerText = totals.fa2;
         document.getElementById('gtFa3').innerText = totals.fa3;
@@ -260,19 +306,30 @@ if (admNo && results.length > 0) {
         document.getElementById('gt50').innerText = totals.t50;
         document.getElementById('gt100').innerText = totals.t100;
 
-        const perc = Math.round(totals.t100 / subjects.length);
+        const avgScore = subjects.length > 0 ? totals.t100 / subjects.length : 0;
+        const finalGrade = getGrade(avgScore);
+        const finalProf = avgScore >= 80 ? 'Sky' : avgScore >= 50 ? 'Mountain' : 'Stream';
+
+        document.getElementById('finalGrade').innerText = finalGrade;
+        document.getElementById('finalProf').innerText = finalProf;
         document.getElementById('resTotal').innerText = totals.t100 + " / " + (subjects.length * 100);
-        document.getElementById('resPerc').innerText = perc + "%";
-        document.getElementById('pSky').innerText = perc >= 80 ? "✓" : "";
-        document.getElementById('pMtn').innerText = (perc >= 50 && perc < 80) ? "✓" : "";
-        document.getElementById('pStrm').innerText = perc < 50 ? "✓" : "";
+        document.getElementById('resPerc').innerText = Math.round(avgScore) + "%";
+
+        document.getElementById('pSky').innerText = finalProf === 'Sky' ? "✓" : "";
+        document.getElementById('pMtn').innerText = finalProf === 'Mountain' ? "✓" : "";
+        document.getElementById('pStrm').innerText = finalProf === 'Stream' ? "✓" : "";
 
         new Chart(document.getElementById('marksChart'), {
             type: 'bar',
-            data: { labels: labels, datasets: [{ data: data, backgroundColor: '#5a3d8c', borderRadius: 4 }] },
+            data: { labels: labels, datasets: [{ data: chartData, backgroundColor: '#5a3d8c', borderRadius: 4 }] },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
         });
+    } else {
+        document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>Error: Student or Result data not found. Please ensure the Admission Number is correct.</h2>";
     }
+} catch (e) {
+    console.error(e);
+    document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>A system error occurred. Please check the browser console (F12).</h2>";
 }
 </script>
 </body>
