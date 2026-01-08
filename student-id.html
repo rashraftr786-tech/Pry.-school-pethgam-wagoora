@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Modern ID Card Generator | GPS Pethgam Wagoora</title>
+  <title>Landscape ID Generator | GPS Pethgam Wagoora</title>
   <style>
     :root {
       --navy: #1a2a44;
@@ -70,21 +70,20 @@
     }
     #generateBtn:disabled { background: #ccc; cursor: not-allowed; }
 
-    /* --- ID Card Design Based on Picture --- */
+    /* --- ID Card Design --- */
     #printArea {
       display: none;
       flex-wrap: wrap;
-      justify-content: flex-start; /* Better alignment for printing */
+      justify-content: flex-start;
       background: white;
-      padding: 3.3mm; /* Reduced by 1/3 from 10mm */
     }
 
     .id-card {
       width: 54mm;
       height: 86mm;
-      border: 0.5px solid #ccc; /* Thinner border for cleaner print */
+      border: 0.5px solid #ccc;
       border-radius: 12px;
-      margin: 1.6mm; /* Reduced by 1/3 from 5mm */
+      margin: 1.6mm; /* Keeps 1/3 spacing */
       position: relative;
       overflow: hidden;
       background: #fff;
@@ -209,17 +208,18 @@
     }
 
     @media print {
-      @page { size: A4; margin: 5mm; }
+      /* Force Landscape Orientation */
+      @page { size: A4 landscape; margin: 5mm; }
       .no-print { display: none !important; }
       #printArea { display: flex !important; margin: 0; padding: 0; }
-      .id-card { page-break-inside: avoid; border: 1px solid #eee; }
+      .id-card { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body>
 
 <div class="control-panel no-print">
-  <h2>Modern ID Card Generator</h2>
+  <h2>Modern ID Card Generator (Landscape Print)</h2>
   <div class="dropdown-container">
     <button class="dropdown-btn">Select Students ▼</button>
     <div class="dropdown-content" id="studentList"></div>
@@ -237,7 +237,7 @@
     <tbody id="previewBody"></tbody>
   </table>
 
-  <button id="generateBtn" disabled onclick="window.print()">Print Batch</button>
+  <button id="generateBtn" disabled onclick="window.print()">Print Batch (Landscape)</button>
 </div>
 
 <div id="printArea"></div>
@@ -322,3 +322,5 @@
 
 </body>
 </html>
+          
+              
