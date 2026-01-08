@@ -6,9 +6,9 @@
   <style>
     :root {
       --navy: #1a2a44;
-      --gold: #d49a44;
+      --gold: #c59d5f;
+      --accent-blue: #7fb3d5;
       --bg-white: #ffffff;
-      --text-gray: #555;
     }
 
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #e0e0e0; margin: 0; padding: 0; }
@@ -24,226 +24,174 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    h2 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
-
-    .dropdown-container { position: relative; margin-bottom: 20px; }
-    .dropdown-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--navy);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      text-align: left;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background: white;
-      width: 100%;
-      max-height: 250px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      z-index: 100;
-    }
-    .dropdown-content label { display: block; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
-    .dropdown-content label:hover { background: #fff4e6; }
-    .dropdown-container:hover .dropdown-content { display: block; }
-
-    #generateBtn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: var(--navy);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-    }
-    #generateBtn:disabled { background: #ccc; cursor: not-allowed; }
-
-    /* --- Horizontal Staff ID Card Design --- */
+    /* --- Vertical ID Card Design (Internal Layout) --- */
     #printArea {
       display: none;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       background: white;
-      padding: 5mm;
     }
 
-    /* Standard Landscape PVC Size: 86mm x 54mm */
+    /* Card dimensions: 54mm wide x 86mm high */
     .id-card {
-      width: 86mm;
-      height: 54mm;
-      border-radius: 10px;
-      margin: 3mm;
+      width: 54mm;
+      height: 86mm;
+      border-radius: 12px;
+      margin: 1.6mm;
       position: relative;
       overflow: hidden;
       background: var(--bg-white);
       display: flex;
+      flex-direction: column;
       box-sizing: border-box;
       border: 1px solid #ddd;
       -webkit-print-color-adjust: exact;
     }
 
-    /* Left Design Bar (Navy with Gold Curve) */
-    .card-left {
-      width: 35%;
+    /* Navy Background with Geometric Overlays */
+    .card-header-bg {
       background-color: var(--navy);
+      height: 38%;
+      width: 100%;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 10px;
-      z-index: 1;
+      overflow: hidden;
     }
 
-    .card-left::after {
-      content: "";
+    .overlay-left {
       position: absolute;
-      right: -25px;
-      top: 0;
-      height: 100%;
-      width: 50px;
-      background: var(--navy);
-      border-radius: 50%;
-      z-index: -1;
+      width: 130%;
+      height: 100px;
+      background: var(--accent-blue);
+      top: 30px;
+      left: -40px;
+      transform: rotate(-25deg);
+      opacity: 0.5;
     }
 
-    .school-logo-top {
-      width: 35px;
-      height: 35px;
-      border: 1.5px solid var(--gold);
-      border-radius: 50%;
-      margin-bottom: 5px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 7px;
-      font-weight: bold;
-      color: var(--navy);
-    }
-
+    /* Circular Photo Frame centered horizontally */
     .photo-frame {
-      width: 60px;
-      height: 60px;
+      position: absolute;
+      top: 45px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 75px;
+      height: 75px;
+      background: var(--navy);
       border: 3px solid var(--gold);
       border-radius: 50%;
-      background: white;
+      z-index: 10;
       overflow: hidden;
-      margin-top: 5px;
     }
     .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* Right Content Area */
-    .card-right {
-      width: 65%;
-      padding: 10px 10px 10px 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .school-name-header {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--navy);
-      text-transform: uppercase;
-      margin-bottom: 2px;
+    /* Name and Designation below photo */
+    .card-body {
+      padding: 10px;
+      margin-top: 25px;
+      text-align: center;
     }
 
     .staff-name {
+      color: var(--gold);
       font-size: 14px;
-      font-weight: 900;
-      color: var(--navy);
+      font-weight: 800;
       text-transform: uppercase;
-      margin: 5px 0 2px 0;
+      margin: 0;
     }
 
     .staff-designation {
       font-size: 10px;
-      color: var(--gold);
-      font-weight: bold;
-      margin-bottom: 8px;
+      color: #333;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
-    .details-list {
-      font-size: 9px;
-      border-top: 1px solid #eee;
-      padding-top: 5px;
-    }
-    .details-row {
-      display: flex;
-      margin-bottom: 3px;
-    }
-    .label { font-weight: bold; width: 65px; color: var(--text-gray); }
-    .value { color: #000; }
-
-    .qr-code-small {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      width: 35px;
-      height: 35px;
-      border: 1px solid #eee;
-    }
-
-    .gold-accent-bottom {
-      position: absolute;
-      bottom: 0;
-      right: 0;
+    /* Details Table */
+    .details-table {
       width: 100%;
-      height: 8px;
-      background: var(--gold);
+      font-size: 9px;
+      text-align: left;
+      line-height: 1.8;
+      margin-top: 5px;
+    }
+    .details-table td:first-child { font-weight: bold; width: 60px; color: #444; }
+
+    /* Footer Cluster: QR Code and Logo Side-by-Side */
+    .card-footer {
+      margin-top: auto;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .qr-container {
+      width: 45px;
+      height: 45px;
+      border: 1.5px solid var(--gold);
+      padding: 2px;
+    }
+
+    .logo-container { text-align: right; }
+    .circular-logo {
+      width: 30px;
+      height: 30px;
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      margin: 0 0 0 auto;
+      color: white;
+      font-size: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .school-label {
+      font-size: 7px;
+      font-weight: 800;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-top: 4px;
+      width: 80px;
     }
 
     @media print {
-      @page { size: A4; margin: 5mm; }
+      @page { size: A4 portrait; margin: 5mm; }
       .no-print { display: none !important; }
       #printArea { display: flex !important; }
-      .id-card { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body>
 
 <div class="control-panel no-print">
-  <h2>Staff ID Generator</h2>
-  <p>Select staff members to generate horizontal landscape ID cards.</p>
-  
+  <h2>Staff ID Card Batch Generator</h2>
   <div class="dropdown-container">
-    <button class="dropdown-btn">Select Staff Members ▼</button>
+    <button class="dropdown-btn" onclick="document.getElementById('staffList').style.display='block'">Select Staff ▼</button>
     <div class="dropdown-content" id="staffList"></div>
   </div>
 
   <table id="previewTable" style="width:100%; border-collapse: collapse; margin-top: 20px;">
     <thead>
       <tr style="background: #f4f4f4;">
-        <th style="padding:10px; border:1px solid #ddd; text-align:left;">CPIS/ID</th>
-        <th style="padding:10px; border:1px solid #ddd; text-align:left;">Name</th>
-        <th style="padding:10px; border:1px solid #ddd; text-align:left;">Designation</th>
-        <th style="padding:10px; border:1px solid #ddd; text-align:center;">Action</th>
+        <th style="padding:10px; border:1px solid #ddd;">Name</th>
+        <th style="padding:10px; border:1px solid #ddd;">Action</th>
       </tr>
     </thead>
     <tbody id="previewBody"></tbody>
   </table>
 
-  <button id="generateBtn" disabled onclick="window.print()">Print Batch ID Cards</button>
+  <button id="generateBtn" disabled onclick="window.print()" style="margin-top:20px; padding:15px; width:100%; background:var(--navy); color:white; border:none; cursor:pointer; font-weight:bold;">Print ID Cards</button>
 </div>
 
 <div id="printArea"></div>
 
 <script>
-  // Note: This expects a 'staff_members' key in localStorage
-  // Or you can point it to your existing 'admissions' if testing
-  const staffData = JSON.parse(localStorage.getItem("staff_members")) || [
-    { id: "101", name: "Peerzada Danish", design: "Sr. Teacher", phone: "9906XXXXXX", blood: "O+", doj: "2012-05-10" },
-    { id: "102", name: "Aijaz Ahmad", design: "Teacher", phone: "7006XXXXXX", blood: "B+", doj: "2015-03-22" }
+  // Placeholder data - replace with your actual staff object
+  const staffData = [
+    { id: "T-001", name: "Peerzada Danish", design: "Sr. Teacher", phone: "9906XXXXXX", blood: "O+" },
+    { id: "T-002", name: "Aijaz Ahmad", design: "Teacher", phone: "7006XXXXXX", blood: "B+" }
   ];
 
   let selectedSet = new Set();
@@ -252,8 +200,7 @@
     const list = document.getElementById('staffList');
     staffData.forEach(s => {
       const label = document.createElement('label');
-      label.innerHTML = `<input type="checkbox" value="${s.id}" onchange="toggleStaff('${s.id}')"> 
-                         ${s.id} – ${s.name} (${s.design})`;
+      label.innerHTML = `<input type="checkbox" onchange="toggleStaff('${s.id}')"> ${s.name}`;
       list.appendChild(label);
     });
   }
@@ -263,65 +210,41 @@
     updateUI();
   }
 
-  function removeStaff(id) {
-    selectedSet.delete(id);
-    const cb = document.querySelector(`.dropdown-content input[value="${id}"]`);
-    if (cb) cb.checked = false;
-    updateUI();
-  }
-
   function updateUI() {
     const previewBody = document.getElementById('previewBody');
     const printArea = document.getElementById('printArea');
-    const generateBtn = document.getElementById('generateBtn');
-    
+    document.getElementById('generateBtn').disabled = selectedSet.size === 0;
+
     previewBody.innerHTML = "";
     printArea.innerHTML = "";
-    generateBtn.disabled = selectedSet.size === 0;
 
     selectedSet.forEach(id => {
       const s = staffData.find(item => item.id === id);
-      
-      previewBody.innerHTML += `<tr>
-        <td style="padding:10px; border:1px solid #ddd;">${s.id}</td>
-        <td style="padding:10px; border:1px solid #ddd;">${s.name}</td>
-        <td style="padding:10px; border:1px solid #ddd;">${s.design}</td>
-        <td style="padding:10px; border:1px solid #ddd; text-align:center;">
-            <button onclick="removeStaff('${s.id}')" style="color:red; cursor:pointer; background:none; border:none; font-weight:bold;">X</button>
-        </td>
-      </tr>`;
+      previewBody.innerHTML += `<tr><td style="padding:10px; border:1px solid #ddd;">${s.name}</td><td style="padding:10px; border:1px solid #ddd; text-align:center;">Selected</td></tr>`;
 
       printArea.innerHTML += `
         <div class="id-card">
-          <div class="card-left">
-            <div class="school-logo-top">LOGO</div>
-            <div class="photo-frame">
-              <img src="https://via.placeholder.com/100?text=Staff" alt="Staff">
-            </div>
+          <div class="card-header-bg"><div class="overlay-left"></div></div>
+          <div class="photo-frame"><img src="https://via.placeholder.com/150" alt="Staff"></div>
+          <div class="card-body">
+            <h1 class="staff-name">${s.name}</h1>
+            <p class="staff-designation">${s.design}</p>
+            <table class="details-table">
+              <tr><td>Employee ID</td><td>: ${s.id}</td></tr>
+              <tr><td>Phone No</td><td>: ${s.phone}</td></tr>
+              <tr><td>Blood Grp</td><td>: ${s.blood}</td></tr>
+            </table>
           </div>
-          
-          <div class="card-right">
-            <div class="school-name-header">GPS PETHGAM WAGOORA</div>
-            <h2 class="staff-name">${s.name}</h2>
-            <div class="staff-designation">${s.design}</div>
-            
-            <div class="details-list">
-              <div class="details-row"><span class="label">Employee ID</span><span class="value">: ${s.id}</span></div>
-              <div class="details-row"><span class="label">Phone</span><span class="value">: ${s.phone}</span></div>
-              <div class="details-row"><span class="label">Blood Group</span><span class="value">: ${s.blood}</span></div>
-              <div class="details-row"><span class="label">Valid Upto</span><span class="value">: March 2027</span></div>
-            </div>
-            
-            <img class="qr-code-small" src="https://api.qrserver.com/v1/create-qr-code/?size=40x40&data=${s.id}">
+          <div class="card-footer">
+            <div class="qr-container"><img src="https://api.qrserver.com/v1/create-qr-code/?size=45x45&data=${s.id}" style="width:100%"></div>
+            <div class="logo-container"><div class="circular-logo">LOGO</div><div class="school-label">GPS Pethgam Wagoora</div></div>
           </div>
-          <div class="gold-accent-bottom"></div>
         </div>`;
     });
   }
-
   window.onload = init;
 </script>
 
 </body>
 </html>
-
+                    
