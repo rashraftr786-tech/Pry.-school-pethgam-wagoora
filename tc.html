@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer Certificate Generator | GPS Pethgam Wagoora</title>
+  <style>
+    :root {
+      --navy: #1a2a44;
+      --gold: #c59d5f;
+    }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #e0e0e0; margin: 0; padding: 0; color: #333; }
+
+    /* --- Dashboard Header --- */
+    .header {
+      background: var(--navy);
+      color: white;
+      padding: 15px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .dashboard-logo { width: 50px; height: 50px; background: white; border-radius: 50%; border: 2px solid var(--gold); }
+    .header h1 { font-size: 1.4rem; margin: 0; flex-grow: 1; text-align: center; }
+    nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: bold; font-size: 0.9rem; }
+
+    .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
+    section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
+
+    select, input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; margin-bottom: 10px; box-sizing: border-box; font-family: inherit; }
+
+    /* --- TC A4 Design --- */
+    .certificate-preview {
+      display: none; 
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 15mm;
+      box-sizing: border-box;
+      border: 2px solid #000;
+      background: white;
+      position: relative;
+      color: #000;
+    }
+
+    .outer-border { border: 6px double var(--navy); height: 100%; padding: 10mm; box-sizing: border-box; position: relative; }
+
+    .watermark {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      opacity: 0.05;
+      width: 400px; height: 400px;
+      z-index: 0;
+    }
+
+    .cert-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--navy); padding-bottom: 10px; }
+    .cert-logo { width: 70px; height: 70px; }
+
+    .tc-title { background: var(--navy); color: white; display: inline-block; padding: 5px 20px; border-radius: 20px; margin: 15px 0; font-weight: bold; letter-spacing: 1px; }
+
+    /* Table for Student Info */
+    .info-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .info-table td { padding: 8px 5px; border-bottom: 1px dotted #888; font-size: 1.05rem; }
+    .info-table td.label { width: 40%; font-weight: bold; color: #222; }
+
+    .signature-row { margin-top: 60px; display: flex; justify-content: space-between; text-align: center; font-weight: bold; }
+
+    .actions { text-align: center; padding: 20px; }
+    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+    #generateBtn { background: var(--navy); color: white; }
+    #printBtn { background: #1a5d1a; color: white; display: none; }
+
+    @media print {
+      @page { size: A4 portrait; margin: 0; }
+      body { background: white; }
+      .no-print { display: none !important; }
+      .certificate-preview { display: block !important; border: none; width: 210mm; height: 297mm; }
+      * { -webkit-print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header no-print">
+  <img src="logo.png" class="dashboard-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50'">
+  <h1>Transfer Certificate (T.C.) Portal</h1>
+  <nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="bonafide.html">📄 Bonafide</a>
+    <a href="tc-generator.html" style="color: var(--gold);">🎓 Transfer Cert</a>
+  </nav>
+</header>
+
+<div class="container no-print">
+  <section>
+    <h2>1. Select Student</h2>
+    <select id="studentSelect" onchange="loadStudentData()">
+        <option value="">-- Select Student to Generate TC --</option>
+    </select>
+  </section>
+
+  <section id="inputSection" style="display: none;">
+    <h2>2. Leaving Details</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <input id="slcNo" placeholder="TC/SLC Serial Number">
+      <input id="dateOfLeaving" type="date">
+      <input id="lastClass" placeholder="Class Last Studied">
+      <input id="reason" placeholder="Reason for Leaving">
+      <input id="conduct" value="Good" placeholder="General Conduct">
+      <input id="dateOfIssue" type="date">
+    </div>
+    <textarea id="remarks" placeholder="Any special remarks (optional)"></textarea>
+    
+    <div class="actions">
+        <button id="generateBtn" onclick="generateTC()">Generate Transfer Certificate</button>
+        <button id="printBtn" onclick="window.print()">Print A4 TC</button>
+    </div>
+  </section>
+</div>
+
+<div class="certificate-preview" id="certificate">
+  <div class="outer-border">
+    <img src="logo.png" class="watermark" onerror="this.style.display='none'">
+    
+    <div class="cert-header">
+      <img src="logo.png" class="cert-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/70'">
+      <h3 style="margin:0; font-size: 1.1rem; color: var(--navy);">SCHOOL EDUCATION DEPARTMENT</h3>
+      <h1 style="margin:5px 0; font-size: 1.8rem;">Government Primary School Pethgam Wagoora</h1>
+      <p style="margin:0; font-weight: bold;">Zone: Wagoora | District: Baramulla | U-DISE: 01080XXXXXX</p>
+      <div class="tc-title">TRANSFER CERTIFICATE</div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px;">
+      <span>SLC/TC No: <span id="p_slcNo">____</span></span>
+      <span>Admission No: <span id="p_adm">____</span></span>
+    </div>
+
+    <table class="info-table">
+      <tr><td class="label">1. Name of the Student</td><td>: <span id="p_name"></span></td></tr>
+      <tr><td class="label">2. Father's Name</td><td>: <span id="p_fname"></span></td></tr>
+      <tr><td class="label">3. Mother's Name</td><td>: <span id="p_mname">____________________</span></td></tr>
+      <tr><td class="label">4. Date of Birth (In Figures)</td><td>: <span id="p_dob"></span></td></tr>
+      <tr><td class="label">5. Category (Gen/SC/ST/RBA)</td><td>: <span id="p_cat">____________________</span></td></tr>
+      <tr><td class="label">6. Date of Admission</td><td>: <span id="p_doa">____________________</span></td></tr>
+      <tr><td class="label">7. Class in which last studied</td><td>: <span id="p_lastClass"></span></td></tr>
+      <tr><td class="label">8. School/Board Annual Result</td><td>: <span>PASSED</span></td></tr>
+      <tr><td class="label">9. Date of leaving the school</td><td>: <span id="p_dol"></span></td></tr>
+      <tr><td class="label">10. Reason for leaving the school</td><td>: <span id="p_reason"></span></td></tr>
+      <tr><td class="label">11. General Conduct/Behaviour</td><td>: <span id="p_conduct"></span></td></tr>
+      <tr><td class="label">12. Total Working days attended</td><td>: <span>________ / ________</span></td></tr>
+      <tr><td class="label">13. Any other remarks</td><td>: <span id="p_remarks"></span></td></tr>
+    </table>
+
+    <p style="margin-top: 20px; font-size: 0.95rem;">
+        Certified that the above information is in accordance with the school admission register.
+    </p>
+
+    <div class="signature-row">
+      <div>
+        <br><br>
+        <p>Class Teacher</p>
+      </div>
+      <div>
+        <br><br>
+        <p>Checked By</p>
+      </div>
+      <div style="min-width: 180px;">
+        <br><br>
+        <p style="border-top: 2px solid #000; padding-top: 5px;">Head Teacher<br>GPS Pethgam Wagoora</p>
+      </div>
+    </div>
+
+    <div style="position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.8rem; color: #555;">
+        Note: No change in this certificate shall be made except by the authority issuing it.
+    </div>
+  </div>
+</div>
+
+<script>
+  const students = JSON.parse(localStorage.getItem("admissions")) || [];
+  let selectedStudent = null;
+
+  window.onload = () => {
+      const select = document.getElementById('studentSelect');
+      students.sort((a, b) => a.studentName.localeCompare(b.studentName)).forEach(s => {
+          const option = document.createElement('option');
+          option.value = s.admNo;
+          option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
+          select.appendChild(option);
+      });
+      document.getElementById('dateOfIssue').valueAsDate = new Date();
+      document.getElementById('dateOfLeaving').valueAsDate = new Date();
+  };
+
+  function loadStudentData() {
+      const admNo = document.getElementById('studentSelect').value;
+      if (!admNo) return;
+      selectedStudent = students.find(s => s.admNo == admNo);
+      document.getElementById('inputSection').style.display = "block";
+      document.getElementById('lastClass').value = selectedStudent.studentClass;
+      document.getElementById('slcNo').value = `GPS/PW/${new Date().getFullYear()}/${selectedStudent.admNo}`;
+  }
+
+  function generateTC() {
+    if (!selectedStudent) return;
+    
+    // Transfer Data to TC Preview
+    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
+    document.getElementById('p_fname').innerText = selectedStudent.fatherName;
+    document.getElementById('p_adm').innerText = selectedStudent.admNo;
+    document.getElementById('p_dob').innerText = selectedStudent.dob;
+    
+    document.getElementById('p_slcNo').innerText = document.getElementById('slcNo').value;
+    document.getElementById('p_lastClass').innerText = document.getElementById('lastClass').value;
+    document.getElementById('p_dol').innerText = document.getElementById('dateOfLeaving').value;
+    document.getElementById('p_reason').innerText = document.getElementById('reason').value || "On Parent's Request";
+    document.getElementById('p_conduct').innerText = document.getElementById('conduct').value;
+    document.getElementById('p_remarks').innerText = document.getElementById('remarks').value || "NIL";
+
+    document.getElementById('certificate').style.display = "block";
+    document.getElementById('printBtn').style.display = "inline-block";
+    document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
+
