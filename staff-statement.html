@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Statement | GPS Pethgam Wagoora</title>
+  <style>
+    @page { size: A4 landscape; margin: 10mm; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+
+    /* Navigation Bar */
+    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; }
+    .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid white; padding: 4px 10px; border-radius: 4px; }
+
+    /* Main Report Container */
+    .report-paper {
+      background: white;
+      width: 277mm; /* Landscape A4 width */
+      min-height: 190mm;
+      margin: 20px auto;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
+
+    /* Logo Watermark */
+    .watermark-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .watermark-container img { width: 450px; height: auto; }
+
+    /* Header Styling */
+    .header-section { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        border-bottom: 2px solid #002366; 
+        padding-bottom: 15px; 
+        margin-bottom: 20px; 
+    }
+    .header-logo { width: 70px; height: 70px; margin-right: 20px; }
+    .header-text { text-align: center; }
+    .school-name { color: #002366; font-size: 24px; margin: 0; font-weight: 800; text-transform: uppercase; }
+    .header-sub { font-size: 13px; font-weight: bold; margin: 5px 0; color: #333; }
+
+    /* Meta Info */
+    .meta-container { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; }
+    .field-label { font-weight: bold; color: #002366; }
+    .underline { border-bottom: 1px solid #000; display: inline-block; min-width: 140px; }
+
+    /* Staff Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 1; table-layout: fixed; }
+    th, td { border: 1.5px solid #000; padding: 8px; text-align: center; font-size: 13px; word-wrap: break-word; }
+    th { background: #002366 !important; color: white !important; text-transform: uppercase; font-size: 11px; height: 35px; }
+    
+    .staff-name { text-align: left; padding-left: 10px; font-weight: bold; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+
+    /* Signatures */
+    .footer-section { margin-top: 50px; display: flex; justify-content: space-between; position: relative; z-index: 1; }
+    .sig-box { text-align: center; width: 200px; border-top: 1.5px solid #000; padding-top: 8px; font-weight: bold; font-size: 13px; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+      .report-paper { margin: 0; box-shadow: none; width: 100%; }
+      th { -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-header no-print">
+    <a href="reports-hub.html">⬅️ Reports Hub</a>
+    <a href="#" onclick="window.print()">📥 Download Staff PDF</a>
+</div>
+
+<div class="report-paper">
+  <div class="watermark-container">
+      <img src="logo.png" alt="School Watermark" onerror="this.style.display='none'">
+  </div>
+
+  <div class="header-section">
+    <img src="logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/70?text=LOGO'">
+    <div class="header-text">
+        <h1 class="school-name">Government Primary School Pethgam Wagoora</h1>
+        <div class="header-sub">Zone: Wagoora | District: Baramulla | UDISE Code: 01022202207</div>
+    </div>
+  </div>
+
+  <div class="meta-container">
+    <div><span class="field-label">Ref No:</span> <span class="underline">GPS/W/STAFF/2026/____</span></div>
+    <div style="text-align: right;"><span class="field-label">Date of Issue:</span> <span class="underline" id="currentDate"></span></div>
+  </div>
+
+  <h3 style="text-align:center; text-decoration: underline; color: #002366; margin: 0 0 15px 0;">STAFF STATEMENT (TEACHING & NON-TEACHING)</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 40px;">S.No</th>
+        <th style="width: 160px;">Staff Name</th>
+        <th style="width: 120px;">Designation</th>
+        <th>Subjects Taught</th>
+        <th style="width: 120px;">Qualification</th>
+        <th style="width: 100px;">DOJ</th>
+        <th style="width: 110px;">Contact No</th>
+        <th style="width: 100px;">Remarks</th>
+      </tr>
+    </thead>
+    <tbody id="staffBody">
+        </tbody>
+  </table>
+
+  <div class="footer-section">
+    <div class="sig-box">Dealing Assistant</div>
+    <div class="sig-box">Headmaster / Seal</div>
+  </div>
+</div>
+
+<script>
+  function renderStaffStatement() {
+    // Assuming staff data is stored in 'staffRecords' in localStorage
+    const staff = JSON.parse(localStorage.getItem("staffRecords")) || [];
+    const tbody = document.getElementById('staffBody');
+    tbody.innerHTML = "";
+
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB');
+
+    if (staff.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="padding: 20px;">No staff records found. Please add staff in the Staff Management page.</td></tr>`;
+        return;
+    }
+
+    staff.forEach((member, index) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td class="staff-name">${member.name.toUpperCase()}</td>
+          <td>${member.designation}</td>
+          <td>${member.subjects || '-'}</td>
+          <td>${member.qualification}</td>
+          <td>${member.doj || '-'}</td>
+          <td>${member.contact || '-'}</td>
+          <td>${member.remarks || ''}</td>
+        </tr>
+      `;
+    });
+  }
+
+  window.onload = renderStaffStatement;
+</script>
+
+</body>
+</html>
+
