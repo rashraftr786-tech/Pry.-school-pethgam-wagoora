@@ -1,168 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PDF Generator - Student Records | GPS Pethgam Wagoora</title>
-    <style>
-        /* A4 Portrait/Landscape Print Setup */
-        @page { size: A4 landscape; margin: 10mm; }
-        
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
-        
-        /* Navigation & Controls */
-        .no-print {
-            background: #1a5d1a;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .no-print select, .no-print input { padding: 8px; border-radius: 4px; border: none; }
-        .btn-print { 
-            background: #ffcc00; color: #000; font-weight: bold; 
-            padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer;
-        }
+  <meta charset="UTF-8">
+  <title>Class-wise Roll Summary | GPS Pethgam Wagoora</title>
+  <style>
+    @page { size: A4 portrait; margin: 15mm; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
 
-        /* Printable Paper Styling */
-        .printable-area {
-            background: white;
-            width: 277mm; /* A4 Landscape width minus margins */
-            margin: 20px auto;
-            padding: 15px;
-            min-height: 190mm;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
+    /* Navigation */
+    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; }
+    .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid white; padding: 4px 10px; border-radius: 4px; }
 
-        .school-header {
-            text-align: center;
-            border-bottom: 2px solid #002366;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
+    /* Report Paper */
+    .report-paper {
+      background: white;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
 
-        .school-header h1 { color: #002366; margin: 0; font-size: 22px; text-transform: uppercase; }
-        .school-header p { margin: 5px 0; font-size: 12px; font-weight: bold; color: #555; }
+    /* Logo Watermark */
+    .watermark {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 60px;
+      color: rgba(0, 35, 102, 0.05);
+      font-weight: bold;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
 
-        /* High Contrast Table */
-        table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
-        
-        /* Deep Navy Headers */
-        th { 
-            background: #002366 !important; 
-            color: white !important; 
-            text-transform: uppercase; 
-            font-size: 10px;
-        }
+    /* School Header */
+    .header-section { text-align: center; border-bottom: 2px solid #002366; padding-bottom: 10px; margin-bottom: 20px; }
+    .school-name { color: #002366; font-size: 26px; margin: 0; font-weight: 800; text-transform: uppercase; }
+    .header-sub { font-size: 14px; font-weight: bold; margin: 5px 0; color: #333; }
 
-        tr:nth-child(even) { background: #f9f9f9; }
+    /* Meta Details */
+    .meta-container { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px; line-height: 1.8; }
+    .meta-left, .meta-right { width: 48%; }
+    .field-label { font-weight: bold; color: #002366; }
+    .underline { border-bottom: 1px solid #000; display: inline-block; min-width: 150px; }
 
-        /* Watermark */
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 70px;
-            color: rgba(0, 35, 102, 0.04);
-            z-index: 0;
-            pointer-events: none;
-            white-space: nowrap;
-        }
+    /* High Contrast Summary Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 1; }
+    th, td { border: 1.5px solid #000; padding: 12px; text-align: center; font-size: 15px; }
+    th { background: #002366 !important; color: white !important; text-transform: uppercase; }
+    .total-row { background: #e8f5e9; font-weight: 900; font-size: 16px; }
+    .class-col { text-align: left; padding-left: 20px; font-weight: bold; }
 
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; }
-            .printable-area { margin: 0; box-shadow: none; width: 100%; }
-            tr { page-break-inside: avoid; }
-        }
-    </style>
+    /* Footer Signatures */
+    .footer-section { margin-top: 80px; display: flex; justify-content: space-between; }
+    .sig-box { text-align: center; width: 220px; border-top: 1.5px solid #000; padding-top: 10px; font-weight: bold; font-size: 14px; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+      .report-paper { margin: 0; box-shadow: none; width: 100%; }
+      th { -webkit-print-color-adjust: exact; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="no-print">
-    <label style="color:white; font-weight:bold;">Filter by Class:</label>
-    <select id="classFilter" onchange="generateTable()">
-        <option value="All">All Students</option>
-        <option value="1st">1st Class</option>
-        <option value="2nd">2nd Class</option>
-        <option value="3rd">3rd Class</option>
-        <option value="4th">4th Class</option>
-        <option value="5th">5th Class</option>
-    </select>
-    <button class="btn-print" onclick="window.print()">📥 Download PDF / Print</button>
+<div class="nav-header no-print">
+    <a href="reports-hub.html">⬅️ Reports Hub</a>
+    <a href="#" onclick="window.print()">📥 Download PDF / Print</a>
 </div>
 
-<div class="printable-area">
-    <div class="watermark">GPS PETHGAM WAGOORA</div>
-    
-    <div class="school-header">
-        <h1>Government Primary School Pethgam Wagoora</h1>
-        <p>Comprehensive Admission Record | Session 2024-25</p>
-        <p>UDISE CODE: 01022202207 | Cluster: Wagoora</p>
-    </div>
+<div class="report-paper">
+  <div class="watermark">GPS PETHGAM WAGOORA</div>
 
-    <table id="admissionTable">
-        <thead>
-            <tr>
-                <th style="width: 40px;">Adm No</th>
-                <th style="width: 50px;">Roll No</th>
-                <th>Student Name</th>
-                <th>Father's Name</th>
-                <th>Mother's Name</th>
-                <th style="width: 70px;">D.O.B</th>
-                <th style="width: 90px;">APAAR ID</th>
-                <th style="width: 90px;">PEN Number</th>
-                <th style="width: 40px;">Class</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            </tbody>
-    </table>
+  <div class="header-section">
+    <h1 class="school-name">Government Primary School Pethgam Wagoora</h1>
+    <div class="header-sub">Cluster: Wagoora | Zone: Wagoora | UDISE Code: <span class="underline">01022202207</span></div>
+  </div>
+
+  <div class="meta-container">
+    <div class="meta-left">
+      <div><span class="field-label">Reference No:</span> <span class="underline">GPS/W/2026/____</span></div>
+      <div><span class="field-label">Date:</span> <span class="underline" id="currentDate"></span></div>
+    </div>
+    <div class="meta-right">
+      <div><span class="field-label">Month / Year:</span> <span class="underline">January 2026</span></div>
+      <div><span class="field-label">Prepared By:</span> <span class="underline">________________</span></div>
+    </div>
+  </div>
+
+  <h3 style="text-align:center; text-decoration: underline; color: #002366;">CLASS-WISE ROLL SUMMARY STATEMENT</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 8%;">S.No</th>
+        <th>Class</th>
+        <th style="width: 15%;">Boys</th>
+        <th style="width: 15%;">Girls</th>
+        <th style="width: 20%;">Total Students</th>
+        <th style="width: 20%;">Remarks</th>
+      </tr>
+    </thead>
+    <tbody id="summaryBody">
+      </tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td colspan="2">GRAND TOTAL</td>
+        <td id="grandBoys">0</td>
+        <td id="grandGirls">0</td>
+        <td id="grandTotal">0</td>
+        <td>-</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="footer-section">
+    <div class="sig-box">Dealing Assistant</div>
+    <div class="sig-box">Headmaster / Seal</div>
+  </div>
 </div>
 
 <script>
-    function generateTable() {
-        const filterValue = document.getElementById('classFilter').value;
-        const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
-        const results = JSON.parse(localStorage.getItem("results")) || [];
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = "";
+  // Exact class sequence requested
+  const classStructure = [
+    "Pre Primary – 3 (PP-3)",
+    "Pre Primary – 2 (PP-2)",
+    "Balvatika",
+    "1st Class",
+    "2nd Class",
+    "3rd Class",
+    "4th Class",
+    "5th Class"
+  ];
 
-        admissions.forEach(s => {
-            // Apply Class Filter
-            if (filterValue !== "All" && s.studentClass !== filterValue) return;
+  function calculateSummary() {
+    const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+    const tbody = document.getElementById('summaryBody');
+    tbody.innerHTML = "";
 
-            // Try to find Roll No from results if not in admission
-            const resultData = results.find(r => r.admNo === s.admNo);
-            const rollNo = resultData ? resultData.rollNo : (s.rollNo || '-');
+    let totalB = 0, totalG = 0, totalS = 0;
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB');
 
-            const row = `
-                <tr>
-                    <td>${s.admNo}</td>
-                    <td>${rollNo}</td>
-                    <td style="font-weight:bold;">${s.studentName.toUpperCase()}</td>
-                    <td>${s.fatherName}</td>
-                    <td>${s.motherName || '-'}</td>
-                    <td>${s.dob || '-'}</td>
-                    <td>${s.apaarId || '-'}</td>
-                    <td>${s.penNo || '-'}</td>
-                    <td>${s.studentClass}</td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
+    classStructure.forEach((className, index) => {
+      // Logic: Filter admissions by matching class names
+      // Note: You may need to adjust the string comparison to match exactly how you save classes in your admission form
+      const studentsInClass = admissions.filter(s => s.studentClass === className || s.studentClass === (index + 1) + "th");
+      
+      const boys = studentsInClass.filter(s => s.gender?.toLowerCase() === 'boy' || s.gender?.toLowerCase() === 'male').length;
+      const girls = studentsInClass.filter(s => s.gender?.toLowerCase() === 'girl' || s.gender?.toLowerCase() === 'female').length;
+      const sum = boys + girls;
 
-        if (tbody.innerHTML === "") {
-            tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>No records found for the selected class.</td></tr>";
-        }
-    }
+      totalB += boys;
+      totalG += girls;
+      totalS += sum;
 
-    // Run on load
-    window.onload = generateTable;
+      tbody.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td class="class-col">${className}</td>
+          <td>${boys}</td>
+          <td>${girls}</td>
+          <td style="font-weight:900;">${sum}</td>
+          <td></td>
+        </tr>
+      `;
+    });
+
+    // Update Totals
+    document.getElementById('grandBoys').innerText = totalB;
+    document.getElementById('grandGirls').innerText = totalG;
+    document.getElementById('grandTotal').innerText = totalS;
+  }
+
+  window.onload = calculateSummary;
 </script>
 
 </body>
 </html>
+        
