@@ -34,11 +34,16 @@
     section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     h2, h3 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
 
-    /* --- 2️⃣ Search Section --- */
-    .search-area input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
-    #results { background: white; border: 1px solid #ddd; border-top: none; max-height: 150px; overflow-y: auto; display: none; }
-    .result-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
-    .result-item:hover { background: #f0f7ff; }
+    /* --- 2️⃣ Dropdown Section --- */
+    .search-area select { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #ddd; 
+        border-radius: 4px; 
+        font-size: 1rem; 
+        cursor: pointer;
+        background-color: #fff;
+    }
 
     /* --- 3️⃣ & 4️⃣ Details & Inputs --- */
     .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.95rem; }
@@ -47,9 +52,9 @@
     .inputs label { display: block; margin: 10px 0 5px; font-weight: bold; font-size: 0.85rem; }
     .inputs input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
 
-    /* --- 5️⃣ Bonafide Certificate Preview (Print Layout) --- */
+    /* --- 5️⃣ Bonafide Certificate Preview --- */
     .certificate-preview {
-      display: none; /* Hidden until generated */
+      display: none; 
       border: 10px double var(--navy);
       padding: 40px;
       position: relative;
@@ -59,24 +64,25 @@
       color: #000;
     }
     .cert-header { text-align: center; margin-bottom: 30px; }
-    .cert-header h2 { border: none; font-size: 2rem; text-decoration: underline; margin-bottom: 10px; }
+    .cert-header h2 { border: none; font-size: 1.8rem; text-decoration: underline; margin-bottom: 10px; }
     .certificate-preview p { font-size: 1.1rem; text-align: justify; }
     .signature-section { margin-top: 60px; display: flex; justify-content: space-between; }
     
     /* --- 6️⃣ Actions --- */
     .actions { text-align: center; }
-    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; font-size: 1rem; }
+    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; font-size: 1rem; transition: 0.3s; }
     #generateBtn { background: var(--navy); color: white; }
+    #generateBtn:hover { opacity: 0.9; }
     #printBtn { background: #1a5d1a; color: white; display: none; }
 
     /* --- 7️⃣ Footer --- */
     footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #666; }
 
-    /* --- Print Styles --- */
     @media print {
+      @page { size: A4; margin: 10mm; }
       body { background: white; }
       .no-print { display: none !important; }
-      .certificate-preview { display: block !important; border: 5px solid #000; margin: 0; width: 100%; box-shadow: none; }
+      .certificate-preview { display: block !important; border: 5px solid #000; margin: 0; padding: 30px; width: 100%; box-shadow: none; }
       .container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
     }
   </style>
@@ -96,13 +102,14 @@
 <div class="container">
   
   <section class="search-area no-print">
-    <h2>Select Student</h2>
-    <input type="text" id="searchInput" placeholder="Search by Name / Admission No / Class..." onkeyup="searchStudent()">
-    <div id="results"></div>
+    <h2>Select Student from Register</h2>
+    <select id="studentSelect" onchange="loadStudentData()">
+        <option value="">-- Click to Select Student --</option>
+    </select>
   </section>
 
   <section class="student-details no-print" id="detailsSection" style="display: none;">
-    <h3>Student Information</h3>
+    <h3>Auto-Filled Information</h3>
     <div class="details-grid">
       <p><strong>Name:</strong> <span id="disp_name"></span></p>
       <p><strong>Father:</strong> <span id="disp_fname"></span></p>
@@ -114,11 +121,11 @@
   </section>
 
   <section class="inputs no-print" id="inputSection" style="display: none;">
-    <h3>Certificate Details</h3>
+    <h3>Certificate Parameters</h3>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
       <div>
         <label>Purpose of Certificate:</label>
-        <input id="purpose" placeholder="e.g. Scholarship / Bank Account">
+        <input id="purpose" placeholder="e.g. Scholarship / Bank Account / SMC">
       </div>
       <div>
         <label>Academic Session:</label>
@@ -126,34 +133,34 @@
       </div>
       <div>
         <label>Reference No:</label>
-        <input id="refNo" placeholder="Manual or Auto">
+        <input id="refNo" placeholder="GPS/PETH/...">
       </div>
       <div>
         <label>Issue Date:</label>
         <input id="date" type="date">
       </div>
     </div>
-    <label>Issued By (Title):</label>
+    <label>Issued By (Signature Title):</label>
     <input id="signedBy" value="Head Teacher">
   </section>
 
   <section class="actions no-print">
-    <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
-    <button id="printBtn" onclick="window.print()">Print Now</button>
+    <button id="generateBtn" onclick="generateCertificate()">Generate Bonafide</button>
+    <button id="printBtn" onclick="window.print()">Print Certificate</button>
   </section>
 
   <section class="certificate-preview" id="certificate">
     <div class="cert-header">
-      <h3 style="margin:0; font-size: 1.4rem;">OFFICE OF THE HEAD TEACHER</h3>
+      <h3 style="margin:0; font-size: 1.3rem;">OFFICE OF THE HEAD TEACHER</h3>
       <h2 style="margin:5px 0;">Government Primary School Pethgam Wagoora</h2>
       <p style="text-align: center; margin:0;">Zone: Wagoora | District: Baramulla</p>
-      <hr style="border: 1px solid var(--navy);">
-      <h2 style="text-decoration: underline; margin-top: 20px;">BONAFIDE CERTIFICATE</h2>
+      <hr style="border: 1px solid var(--navy); margin-top:10px;">
+      <h2 style="text-decoration: underline; margin-top: 25px; letter-spacing: 2px;">BONAFIDE CERTIFICATE</h2>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-      <span><strong>Ref No:</strong> <span id="p_ref"></span></span>
-      <span><strong>Date:</strong> <span id="p_date"></span></span>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-weight: bold;">
+      <span>Ref No: <span id="p_ref"></span></span>
+      <span>Date: <span id="p_date"></span></span>
     </div>
 
     <p>
@@ -176,10 +183,11 @@
     <div class="signature-section">
       <div style="text-align: center;">
         <br><br>
-        <p>Student's Signature</p>
+        <p>(Student Signature)</p>
       </div>
-      <div style="text-align: center; border-top: 1px solid #000; min-width: 200px;">
-        <p><strong><span id="p_signedBy"></span></strong><br>
+      <div style="text-align: center; min-width: 220px;">
+        <br><br>
+        <p style="border-top: 1px solid #000;"><strong><span id="p_signedBy"></span></strong><br>
         GPS Pethgam Wagoora</p>
       </div>
     </div>
@@ -188,75 +196,69 @@
 </div>
 
 <footer class="no-print">
-  Government Primary School Pethgam Wagoora | School Education Department | Zone Wagoora
+  Government Primary School Pethgam Wagoora | Official Bonafide Portal
 </footer>
 
 <script>
-  // Assuming students data is stored in LocalStorage from your admission module
+  // 1. Fetch data from the Admission Register storage
   const students = JSON.parse(localStorage.getItem("admissions")) || [];
   let selectedStudent = null;
 
-  // Set default date to today
-  document.getElementById('date').valueAsDate = new Date();
+  // Initialize page
+  window.onload = () => {
+      populateDropdown();
+      document.getElementById('date').valueAsDate = new Date();
+  };
 
-  function searchStudent() {
-    const input = document.getElementById('searchInput').value.toLowerCase();
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = "";
-    
-    if (input.length < 1) {
-      resultsDiv.style.display = "none";
-      return;
-    }
-
-    const filtered = students.filter(s => 
-      s.studentName.toLowerCase().includes(input) || 
-      s.admNo.toString().includes(input) || 
-      s.studentClass.toLowerCase().includes(input)
-    );
-
-    if (filtered.length > 0) {
-      resultsDiv.style.display = "block";
-      filtered.forEach(s => {
-        const div = document.createElement('div');
-        div.className = 'result-item';
-        div.innerHTML = `<strong>${s.studentName}</strong> (Adm: ${s.admNo}, Class: ${s.studentClass})`;
-        div.onclick = () => selectStudent(s);
-        resultsDiv.appendChild(div);
+  // Populate Select Menu with students from adm-register.html
+  function populateDropdown() {
+      const select = document.getElementById('studentSelect');
+      // Sort students by name
+      students.sort((a, b) => a.studentName.localeCompare(b.studentName));
+      
+      students.forEach(s => {
+          const option = document.createElement('option');
+          option.value = s.admNo;
+          option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
+          select.appendChild(option);
       });
-    } else {
-      resultsDiv.style.display = "none";
-    }
   }
 
-  function selectStudent(student) {
-    selectedStudent = student;
-    document.getElementById('results').style.display = "none";
-    document.getElementById('searchInput').value = student.studentName;
-    
-    // Show UI sections
-    document.getElementById('detailsSection').style.display = "block";
-    document.getElementById('inputSection').style.display = "block";
+  // Load selected student data into the UI
+  function loadStudentData() {
+      const admNo = document.getElementById('studentSelect').value;
+      if (!admNo) {
+          document.getElementById('detailsSection').style.display = "none";
+          document.getElementById('inputSection').style.display = "none";
+          return;
+      }
 
-    // Fill Display details
-    document.getElementById('disp_name').innerText = student.studentName;
-    document.getElementById('disp_fname').innerText = student.fatherName;
-    document.getElementById('disp_adm').innerText = student.admNo;
-    document.getElementById('disp_class').innerText = student.studentClass;
-    document.getElementById('disp_dob').innerText = student.dob;
-    document.getElementById('disp_address').innerText = student.village || 'Pethgam';
-    
-    // Auto-generate Ref No (Year/AdmNo)
-    document.getElementById('refNo').value = `GPS/PETH/${new Date().getFullYear()}/${student.admNo}`;
+      selectedStudent = students.find(s => s.admNo == admNo);
+      
+      if (selectedStudent) {
+          document.getElementById('detailsSection').style.display = "block";
+          document.getElementById('inputSection').style.display = "block";
+
+          // UI Display
+          document.getElementById('disp_name').innerText = selectedStudent.studentName;
+          document.getElementById('disp_fname').innerText = selectedStudent.fatherName;
+          document.getElementById('disp_adm').innerText = selectedStudent.admNo;
+          document.getElementById('disp_class').innerText = selectedStudent.studentClass;
+          document.getElementById('disp_dob').innerText = selectedStudent.dob;
+          document.getElementById('disp_address').innerText = selectedStudent.village || 'Pethgam';
+          
+          // Auto Ref No
+          document.getElementById('refNo').value = `GPS/PETH/${new Date().getFullYear()}/${selectedStudent.admNo}`;
+      }
   }
 
   function generateCertificate() {
     if (!selectedStudent) {
-      alert("Please select a student first!");
+      alert("Please select a student from the dropdown!");
       return;
     }
 
-    // Map inputs to preview
+    // Fill the Certificate Preview fields
     document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
     document.getElementById('p_fname').innerText = selectedStudent.fatherName;
     document.getElementById('p_adm').innerText = selectedStudent.admNo;
@@ -273,11 +275,11 @@
     document.getElementById('certificate').style.display = "block";
     document.getElementById('printBtn').style.display = "inline-block";
     
-    // Scroll to preview
+    // Auto scroll to view the certificate
     document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
   }
 </script>
 
 </body>
 </html>
-
+    
