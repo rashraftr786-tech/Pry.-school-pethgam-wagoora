@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Work & Behaviour Certificate | GPS Pethgam Wagoora</title>
+  <title>Staff Work & Behaviour Certificate | GPS Pethgam Wagoora</title>
   <style>
     :root {
       --dark-green: #1a5d1a;
@@ -13,9 +13,9 @@
 
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #e0e0e0; margin: 0; padding: 0; color: #333; }
 
-    /* --- Page Header (Dashboard) --- */
+    /* --- Page Header --- */
     .header {
-      background: var(--dark-green);
+      background: var(--navy);
       color: white;
       padding: 15px 5%;
       display: flex;
@@ -34,7 +34,7 @@
     .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
 
     section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h2 { color: var(--dark-green); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
+    h2 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
 
     select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; margin-bottom: 10px; box-sizing: border-box; }
 
@@ -46,7 +46,7 @@
       margin: 0 auto;
       padding: 20mm;
       box-sizing: border-box;
-      border: 12px double var(--dark-green);
+      border: 12px double var(--navy);
       background: white;
       position: relative;
       color: #000;
@@ -57,7 +57,7 @@
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%) rotate(-30deg);
-      opacity: 0.07;
+      opacity: 0.06;
       width: 450px; height: 450px;
       z-index: 0;
       pointer-events: none;
@@ -67,16 +67,16 @@
 
     .cert-header { text-align: center; margin-bottom: 40px; }
     .cert-logo { width: 85px; height: 85px; margin-bottom: 10px; }
-    .cert-header h2 { border: none; font-size: 2rem; text-decoration: underline; margin-top: 20px; color: #000; }
+    .cert-header h2 { border: none; font-size: 1.8rem; text-decoration: underline; margin-top: 20px; color: #000; letter-spacing: 1px; }
 
-    .certificate-preview p { font-size: 1.25rem; line-height: 2.2; text-align: justify; margin-top: 35px; }
+    .certificate-preview p { font-size: 1.2rem; line-height: 2; text-align: justify; margin-top: 30px; }
 
-    .signature-section { margin-top: 120px; display: flex; justify-content: space-between; }
+    .signature-section { margin-top: 100px; display: flex; justify-content: space-between; }
     
     .actions { text-align: center; margin-bottom: 50px; }
-    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
-    #generateBtn { background: var(--dark-green); color: white; }
-    #printBtn { background: var(--navy); color: white; display: none; }
+    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; transition: 0.3s; }
+    #generateBtn { background: var(--navy); color: white; }
+    #printBtn { background: var(--dark-green); color: white; display: none; }
 
     @media print {
       @page { size: A4 portrait; margin: 0; }
@@ -97,39 +97,39 @@
 
 <header class="header no-print">
   <img src="logo.png" class="dashboard-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50?text=GPS'">
-  <h1>Work & Behaviour Certificate Portal</h1>
+  <h1>Staff Experience & Conduct Portal</h1>
   <nav>
     <a href="index.html">🏠 Dashboard</a>
-    <a href="bonafide.html">📄 Bonafide</a>
-    <a href="character.html" style="color: var(--gold);">📜 Character</a>
+    <a href="staff-id.html">🪪 Staff IDs</a>
+    <a href="staff-cert.html" style="color: var(--gold);">📜 Staff Certificate</a>
   </nav>
 </header>
 
 <div class="container no-print">
   <section>
-    <h2>1. Select Student</h2>
-    <select id="studentSelect" onchange="loadStudentData()">
-        <option value="">-- Select Student from Register --</option>
+    <h2>1. Select Staff Member</h2>
+    <select id="staffSelect" onchange="loadStaffData()">
+        <option value="">-- Select Member from Staff List --</option>
     </select>
   </section>
 
   <section id="inputSection" style="display: none;">
-    <h2>2. Performance & Certificate Details</h2>
+    <h2>2. Professional Assessment Details</h2>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
       <div>
-        <label style="font-size: 0.8rem; font-weight: bold;">Character Rating:</label>
-        <input id="behavior" value="Excellent" placeholder="e.g. Excellent / Good">
+        <label style="font-size: 0.8rem; font-weight: bold;">Work Conduct:</label>
+        <input id="behavior" value="Exemplary" placeholder="e.g. Exemplary / Satisfactory">
       </div>
       <div>
-        <label style="font-size: 0.8rem; font-weight: bold;">Work/Academic Rating:</label>
-        <input id="work" value="Satisfactory" placeholder="e.g. Very Good / Outstanding">
+        <label style="font-size: 0.8rem; font-weight: bold;">Professional Skill:</label>
+        <input id="work" value="Highly Diligent" placeholder="e.g. Efficient / Outstanding">
       </div>
-      <input id="refNo" placeholder="Reference Number">
+      <input id="refNo" placeholder="Reference Number (Manual or Auto)">
       <input id="date" type="date">
     </div>
     <input id="signedBy" value="Head Teacher">
     <div class="actions">
-        <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
+        <button id="generateBtn" onclick="generateCertificate()">Generate Staff Certificate</button>
         <button id="printBtn" onclick="window.print()">Print A4 Certificate</button>
     </div>
   </section>
@@ -141,11 +141,11 @@
   <div class="cert-content">
     <div class="cert-header">
       <img src="logo.png" class="cert-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/85?text=LOGO'">
-      <h3 style="margin:0; letter-spacing: 2px; color: var(--dark-green);">OFFICE OF THE HEAD TEACHER</h3>
-      <h1 style="margin:5px 0; font-size: 2.2rem;">Government Primary School Pethgam Wagoora</h1>
-      <p style="text-align: center; margin:0; font-weight: bold; font-size: 1.1rem;">Zone: Wagoora | District: Baramulla</p>
-      <hr style="border: 1px solid var(--dark-green); margin-top:15px;">
-      <h2>CHARACTER & CONDUCT CERTIFICATE</h2>
+      <h3 style="margin:0; letter-spacing: 2px; color: var(--navy);">OFFICE OF THE HEAD TEACHER</h3>
+      <h1 style="margin:5px 0; font-size: 2rem;">Government Primary School Pethgam Wagoora</h1>
+      <p style="text-align: center; margin:0; font-weight: bold;">Zone: Wagoora | District: Baramulla</p>
+      <hr style="border: 1px solid var(--navy); margin-top:15px;">
+      <h2>WORK & CONDUCT CERTIFICATE</h2>
     </div>
 
     <div style="display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; font-size: 1.1rem;">
@@ -154,33 +154,31 @@
     </div>
 
     <p>
-      This is to certify that <strong><span id="p_name">________________</span></strong>, 
-      Son/Daughter of <strong><span id="p_fname">________________</span></strong>, 
-      bearing Admission No <strong><span id="p_adm">________</span></strong>, 
-      is a regular student of this school.
+      This is to certify that <strong>Mr/Ms/Mrs. <span id="p_name">________________</span></strong>, 
+      bearing Employee ID <strong><span id="p_id">________</span></strong>, 
+      has been serving in this institution as <strong><span id="p_design">________________</span></strong>.
     </p>
     
     <p>
-      According to the school records, his/her work has been found to be 
-      <strong><span id="p_work">________________</span></strong> and his/her 
-      general behaviour and conduct has been 
-      <strong><span id="p_behavior">________________</span></strong> 
-      during his/her stay in this institution.
+      During his/her tenure, his/her professional work and contribution to the school has been found 
+      <strong><span id="p_work">________________</span></strong>. He/She possesses a 
+      <strong><span id="p_behavior">________________</span></strong> character and conduct. 
+      He/She is hardworking, honest, and maintains a professional relationship with colleagues and students.
     </p>
 
     <p>
-      To the best of my knowledge, he/she bears a good moral character. I wish him/her 
-      every success in his/her future academic endevours.
+      This certificate is issued on his/her request for official purposes. I wish him/her 
+      the very best in all his/her future professional endevours.
     </p>
 
     <div class="signature-section">
       <div style="text-align: center; min-width: 200px;">
         <br><br><br>
-        <p style="border-top: 1px solid #ccc; padding-top: 5px;">Student's Signature</p>
+        <p style="border-top: 1px solid #ccc; padding-top: 5px;">Employee Signature</p>
       </div>
       <div style="text-align: center; min-width: 250px;">
         <br><br><br>
-        <p style="border-top: 2.5px solid #000; padding-top: 5px; font-weight: bold; font-size: 1.2rem;">
+        <p style="border-top: 2.5px solid #000; padding-top: 5px; font-weight: bold;">
             <span id="p_signedBy"></span><br>
             GPS Pethgam Wagoora
         </p>
@@ -190,36 +188,38 @@
 </div>
 
 <script>
-  // Data fetch from LocalStorage
-  const students = JSON.parse(localStorage.getItem("admissions")) || [];
-  let selectedStudent = null;
+  // Fetches data from the Staff Register storage
+  const staffMembers = JSON.parse(localStorage.getItem("staff_members")) || [];
+  let selectedStaff = null;
 
   window.onload = () => {
-      const select = document.getElementById('studentSelect');
-      students.sort((a, b) => a.studentName.localeCompare(b.studentName)).forEach(s => {
+      const select = document.getElementById('staffSelect');
+      // Sort staff by name
+      staffMembers.sort((a, b) => a.name.localeCompare(b.name)).forEach(s => {
           const option = document.createElement('option');
-          option.value = s.admNo;
-          option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
+          option.value = s.id;
+          option.textContent = `${s.name} (${s.design})`;
           select.appendChild(option);
       });
       document.getElementById('date').valueAsDate = new Date();
   };
 
-  function loadStudentData() {
-      const admNo = document.getElementById('studentSelect').value;
-      if (!admNo) return;
-      selectedStudent = students.find(s => s.admNo == admNo);
+  function loadStaffData() {
+      const staffId = document.getElementById('staffSelect').value;
+      if (!staffId) return;
+      selectedStaff = staffMembers.find(s => s.id == staffId);
       document.getElementById('inputSection').style.display = "block";
-      document.getElementById('refNo').value = `GPS/PW/CC/${new Date().getFullYear()}/${selectedStudent.admNo}`;
+      // Auto-generate a Staff-specific reference number
+      document.getElementById('refNo').value = `GPS/PW/STF/${new Date().getFullYear()}/${selectedStaff.id}`;
   }
 
   function generateCertificate() {
-    if (!selectedStudent) return;
+    if (!selectedStaff) return;
     
-    // Transfer Data to Certificate
-    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
-    document.getElementById('p_fname').innerText = selectedStudent.fatherName;
-    document.getElementById('p_adm').innerText = selectedStudent.admNo;
+    // Transfer Data to Certificate Preview
+    document.getElementById('p_name').innerText = selectedStaff.name.toUpperCase();
+    document.getElementById('p_id').innerText = selectedStaff.id;
+    document.getElementById('p_design').innerText = selectedStaff.design;
     
     document.getElementById('p_work').innerText = document.getElementById('work').value;
     document.getElementById('p_behavior').innerText = document.getElementById('behavior').value;
@@ -227,7 +227,7 @@
     document.getElementById('p_date').innerText = document.getElementById('date').value;
     document.getElementById('p_signedBy').innerText = document.getElementById('signedBy').value;
 
-    // Display & Scroll
+    // Show Preview and Print button
     document.getElementById('certificate').style.display = "block";
     document.getElementById('printBtn').style.display = "inline-block";
     document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
