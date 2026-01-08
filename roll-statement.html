@@ -27,7 +27,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0.06; /* Very faint for watermark effect */
+      opacity: 0.06;
       pointer-events: none;
       z-index: 0;
     }
@@ -58,7 +58,7 @@
     .class-col { text-align: left; padding-left: 15px; font-weight: bold; }
 
     /* Note Styling */
-    .note-section { margin-top: 20px; font-size: 12px; font-style: italic; color: #444; position: relative; z-index: 1; }
+    .note-section { margin-top: 20px; font-size: 13px; font-weight: bold; color: #000; position: relative; z-index: 1; }
 
     .footer-section { margin-top: 60px; display: flex; justify-content: space-between; position: relative; z-index: 1; }
     .sig-box { text-align: center; width: 220px; border-top: 1.5px solid #000; padding-top: 10px; font-weight: bold; font-size: 13px; }
@@ -128,7 +128,7 @@
   </table>
 
   <div class="note-section">
-    <strong>Note:</strong> This roll statement is auto-generated based on the current Admission Records as of <span id="noteDate"></span>. Any manual corrections must be verified with the Admission Register.
+    Submitted in original to ZEO Wagoora/Cluster Head Wagoora for information.
   </div>
 
   <div class="footer-section">
@@ -150,6 +150,7 @@
   ];
 
   function calculateSummary() {
+    // Fetches data specifically from the 'admissions' key used by your register
     const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
     const tbody = document.getElementById('summaryBody');
     tbody.innerHTML = "";
@@ -157,9 +158,9 @@
     let totalB = 0, totalG = 0;
     const today = new Date().toLocaleDateString('en-GB');
     document.getElementById('currentDate').innerText = today;
-    document.getElementById('noteDate').innerText = today;
 
     classStructure.forEach((className, index) => {
+      // Filters students based on the class saved in adm-register.html
       const studentsInClass = admissions.filter(s => s.studentClass === className);
       
       const boys = studentsInClass.filter(s => s.gender?.toLowerCase() === 'boy' || s.gender?.toLowerCase() === 'male').length;
@@ -191,5 +192,6 @@
 
 </body>
 </html>
-        
-      
+  
+
+    
