@@ -3,152 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unified ERP | GPS Pethgam Wagoora</title>
+  <title>GPS Pethgam ERP | Unified Portal</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
     :root {
-      --primary: #1b5e20; /* School Green */
-      --clerical: #0277bd; /* Clerical Blue */
-      --admin: #c62828; /* Admin Red */
-      --accent: #fbc02d; /* Gold */
-      --white: #ffffff;
+      --primary: #1b5e20;
+      --clerical: #0277bd;
+      --admin: #c62828;
+      --accent: #fbc02d;
       --shadow-3d: 0 6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
     }
 
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-    /* --- 1. Tinker Scrolling Notification --- */
+    /* --- Tinker Scrolling Notification --- */
     .tinker-news {
-      background: #222;
-      color: var(--accent);
-      padding: 10px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-bottom: 2px solid var(--accent);
+      background: #222; color: var(--accent); padding: 10px 0; overflow: hidden; white-space: nowrap; border-bottom: 2px solid var(--accent);
     }
     .tinker-news marquee { font-weight: bold; font-size: 14px; }
 
-    /* --- 2. Header --- */
+    /* --- Professional Header --- */
     .hero-header {
       background: linear-gradient(135deg, var(--primary), #2e7d32);
-      color: white;
-      padding: 40px 5%;
-      text-align: center;
-      clip-path: ellipse(150% 100% at 50% 0%);
+      color: white; padding: 40px 5% 80px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
     }
 
-    /* --- 3. Professional 3D Buttons --- */
+    /* --- 3D Buttons --- */
     .btn-3d {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px 12px;
-      font-weight: bold;
-      color: white;
-      text-decoration: none;
-      border-radius: 12px;
-      transition: all 0.1s;
-      cursor: pointer;
-      border: none;
-      font-size: 13px;
-      gap: 8px;
-      text-transform: uppercase;
-      box-shadow: var(--shadow-3d);
+      display: inline-flex; align-items: center; justify-content: center; padding: 15px 12px;
+      font-weight: bold; color: white; text-decoration: none; border-radius: 12px;
+      transition: all 0.1s; cursor: pointer; border: none; font-size: 13px; gap: 8px;
+      text-transform: uppercase; box-shadow: var(--shadow-3d);
     }
-
     .btn-admin { background: var(--admin); }
     .btn-clerical { background: var(--clerical); }
     .btn-general { background: var(--primary); }
-
     .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
 
-    /* --- 4. Tiered Grid Layout --- */
+    /* --- Dashboard Grid --- */
     .main-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 25px;
-      padding: 40px 5%;
-      margin-top: -50px; /* Overlap with hero */
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px; padding: 0 5%; margin-top: -60px;
     }
 
     .tier-card {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      border: 1px solid #ddd;
+      background: white; border-radius: 20px; padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd;
     }
-
     .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
     .tier-header h2 { margin: 0; font-size: 1.1rem; color: #333; }
-
     .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-    /* --- 5. Heroes & Gallery Section --- */
-    .section-title { text-align: center; margin: 40px 0 20px; color: var(--primary); font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    
-    .heroes-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 5%; scroll-behavior: smooth; }
+    /* --- Heroes & Gallery --- */
+    .section-title { text-align: center; margin: 40px 0 20px; color: var(--primary); font-size: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .heroes-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 5%; }
     .hero-card {
-      min-width: 180px;
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      text-align: center;
-      border-bottom: 4px solid var(--accent);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      min-width: 160px; background: white; padding: 20px; border-radius: 15px;
+      text-align: center; border-bottom: 4px solid var(--accent); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-    .hero-avatar { width: 80px; height: 80px; background: #eee; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); overflow: hidden; }
+    .hero-avatar { width: 70px; height: 70px; background: #eee; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); }
 
-    /* --- 6. Modal Login --- */
+    /* --- Login Modal --- */
     .login-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 2000;
-      justify-content: center; align-items: center;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
     }
     .login-box { background: white; padding: 30px; border-radius: 20px; width: 320px; text-align: center; }
 
-    @media (max-width: 768px) { .link-list { grid-template-columns: 1fr; } .main-grid { margin-top: 20px; } }
+    @media (max-width: 768px) { .link-list { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
   <div class="tinker-news">
-    <marquee scrollamount="4">
-      🚀 Session 2026 Admissions are now OPEN! | 🏆 Congratulations to Class 5th for 100% Results! | 🍎 MDM Today: Nutritious Mixed Veg & Rice | 📌 APAAR IDs mandatory for all students.
-    </marquee>
+    <marquee scrollamount="5">📢 Important: Daily Attendance must be marked before 11:00 AM | 🎓 Roll Statements for Session 2026 are now available in Admin Panel | 🏆 GPS Pethgam: Best Primary School Award 2025</marquee>
   </div>
 
   <header class="hero-header">
-    <img src="logo.png" style="width: 90px;" alt="GPS Logo" onerror="this.src='https://via.placeholder.com/90'">
-    <h1>GPS Pethgam Wagoora</h1>
-    <p>Integrated School Management & Learning Portal</p>
+    <img src="logo.png" style="width: 80px;" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
+    <h1>GPS Pethgam Wagoora ERP</h1>
+    <p>Session 2026 | Administration & Clerical Management</p>
   </header>
 
   <main class="main-grid">
     
     <section class="tier-card">
       <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--primary)">groups</span>
+        <span class="material-icons-outlined" style="color:var(--primary)">public</span>
         <h2>General (Public)</h2>
       </div>
       <div class="link-list">
         <a href="results.html" class="btn-3d btn-general">View Results</a>
-        <a href="mdm-statement.html" class="btn-3d btn-general">MDM Reports</a>
-        <a href="#gallery" class="btn-3d btn-general">School Gallery</a>
-        <a href="master-profile.html" class="btn-3d btn-general">School Profile</a>
+        <a href="mdm-statement.html" class="btn-3d btn-general">MDM Report</a>
+        <a href="gallery.html" class="btn-3d btn-general">Gallery</a>
+        <a href="master-profile.html" class="btn-3d btn-general">Profile</a>
       </div>
     </section>
 
     <section class="tier-card">
       <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--clerical)">history_edu</span>
+        <span class="material-icons-outlined" style="color:var(--clerical)">assignment_turned_in</span>
         <h2>Clerical (Staff)</h2>
       </div>
       <div class="link-list">
-        <button onclick="requestLogin('clerical', 'roll-statement.html')" class="btn-3d btn-clerical">Attendance</button>
+        <button onclick="requestLogin('clerical', 'attendance.html')" class="btn-3d btn-clerical">Daily Attendance</button>
         <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM Log</button>
         <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
         <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
@@ -157,14 +115,14 @@
 
     <section class="tier-card">
       <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--admin)">admin_panel_settings</span>
+        <span class="material-icons-outlined" style="color:var(--admin)">security</span>
         <h2>Administration</h2>
       </div>
       <div class="link-list">
+        <button onclick="requestLogin('admin', 'roll-statement.html')" class="btn-3d btn-admin">Roll Statement</button>
         <button onclick="requestLogin('admin', 'bonafide.html')" class="btn-3d btn-admin">Bonafide</button>
         <button onclick="requestLogin('admin', 'tc.html')" class="btn-3d btn-admin">Transfer Cert</button>
         <button onclick="requestLogin('admin', 'staff-statement.html')" class="btn-3d btn-admin">Staff Records</button>
-        <button onclick="requestLogin('admin', 'reports-hub.html')" class="btn-3d btn-admin">Reports Hub</button>
       </div>
     </section>
 
@@ -174,35 +132,34 @@
   <div class="heroes-grid">
     <div class="hero-card">
       <div class="hero-avatar"></div>
-      <strong>Student Name</strong>
-      <p style="font-size: 12px; color: #666;">Academic Excellence</p>
+      <strong>Zubair Ahmad</strong>
+      <p style="font-size: 11px; color: #666;">Top Performer 2025</p>
     </div>
     <div class="hero-card">
       <div class="hero-avatar"></div>
-      <strong>Student Name</strong>
-      <p style="font-size: 12px; color: #666;">Sports Champion</p>
+      <strong>Snober Jan</strong>
+      <p style="font-size: 11px; color: #666;">Science Exhibition Winner</p>
     </div>
     <div class="hero-card">
       <div class="hero-avatar"></div>
-      <strong>Student Name</strong>
-      <p style="font-size: 12px; color: #666;">Best Discipline</p>
+      <strong>Arsalan Khan</strong>
+      <p style="font-size: 11px; color: #666;">Inter-School Sports Pro</p>
     </div>
   </div>
 
   <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
-      <h3 id="loginTitle">Security Check</h3>
-      <p id="loginPrompt" style="font-size: 13px; color: #666;">Please enter authorization code</p>
-      <input type="password" id="passCode" placeholder="••••" style="width: 80%; padding: 12px; font-size: 20px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin: 15px 0;">
+      <h3 id="loginTitle">Dashboard Login</h3>
+      <input type="password" id="passCode" placeholder="Enter PIN" style="width: 80%; padding: 12px; font-size: 18px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin: 15px 0;">
       <br>
-      <button onclick="validate()" class="btn-3d btn-general" style="width: 100%;">Unlock Dashboard</button>
+      <button onclick="validate()" class="btn-3d btn-general" style="width: 100%;">Authorize</button>
       <button onclick="hideLogin()" style="background:none; border:none; color:red; margin-top:15px; cursor:pointer;">Cancel</button>
     </div>
   </div>
 
   <footer style="background: #102e12; color: white; text-align: center; padding: 30px 5%; margin-top: 50px;">
-    <p>© 2026 GPS Pethgam Wagoora | All Systems Integrated</p>
-  </header>
+    <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
+  </footer>
 
   <script>
     let targetPage = "";
@@ -211,8 +168,9 @@
     function requestLogin(role, page) {
       targetPage = page;
       requiredRole = role;
-      document.getElementById('loginTitle').innerText = role.toUpperCase() + " ACCESS";
+      document.getElementById('loginTitle').innerText = role.toUpperCase() + " LOGIN";
       document.getElementById('loginOverlay').style.display = 'flex';
+      document.getElementById('passCode').focus();
     }
 
     function hideLogin() {
@@ -222,8 +180,6 @@
 
     function validate() {
       const pin = document.getElementById('passCode').value;
-      
-      // Define your passwords here
       const ADMIN_PIN = "2026"; 
       const STAFF_PIN = "1234";
 
@@ -232,10 +188,10 @@
       } else if (requiredRole === 'clerical' && pin === STAFF_PIN) {
         window.location.href = targetPage;
       } else {
-        alert("Incorrect Authorization Code!");
+        alert("Unauthorized Access!");
       }
     }
   </script>
 </body>
 </html>
-      
+            
