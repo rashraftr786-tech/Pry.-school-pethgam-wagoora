@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work & Behaviour Certificate | GPS Pethgam Wagoora</title>
+  <style>
+    :root {
+      --dark-green: #1a5d1a;
+      --gold: #c59d5f;
+      --navy: #1a2a44;
+    }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #e0e0e0; margin: 0; padding: 0; color: #333; }
+
+    /* --- Page Header (Dashboard) --- */
+    .header {
+      background: var(--dark-green);
+      color: white;
+      padding: 15px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .dashboard-logo { 
+      width: 50px; height: 50px; 
+      background: white; border-radius: 50%; 
+      object-fit: cover; border: 2px solid var(--gold);
+    }
+    .header h1 { font-size: 1.4rem; margin: 0; flex-grow: 1; text-align: center; }
+    nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: bold; font-size: 0.9rem; }
+
+    .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
+
+    section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { color: var(--dark-green); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
+
+    select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; margin-bottom: 10px; box-sizing: border-box; }
+
+    /* --- Certificate (A4 Portrait Design) --- */
+    .certificate-preview {
+      display: none; 
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 20mm;
+      box-sizing: border-box;
+      border: 12px double var(--dark-green);
+      background: white;
+      position: relative;
+      color: #000;
+      overflow: hidden;
+    }
+
+    .watermark {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      opacity: 0.07;
+      width: 450px; height: 450px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .cert-content { position: relative; z-index: 1; }
+
+    .cert-header { text-align: center; margin-bottom: 40px; }
+    .cert-logo { width: 85px; height: 85px; margin-bottom: 10px; }
+    .cert-header h2 { border: none; font-size: 2rem; text-decoration: underline; margin-top: 20px; color: #000; }
+
+    .certificate-preview p { font-size: 1.25rem; line-height: 2.2; text-align: justify; margin-top: 35px; }
+
+    .signature-section { margin-top: 120px; display: flex; justify-content: space-between; }
+    
+    .actions { text-align: center; margin-bottom: 50px; }
+    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+    #generateBtn { background: var(--dark-green); color: white; }
+    #printBtn { background: var(--navy); color: white; display: none; }
+
+    @media print {
+      @page { size: A4 portrait; margin: 0; }
+      body { background: white; }
+      .no-print { display: none !important; }
+      .certificate-preview { 
+        display: block !important; 
+        border: none;
+        margin: 0; padding: 20mm;
+        width: 210mm; height: 297mm;
+        box-shadow: none;
+      }
+      * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header no-print">
+  <img src="logo.png" class="dashboard-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50?text=GPS'">
+  <h1>Work & Behaviour Certificate Portal</h1>
+  <nav>
+    <a href="index.html">🏠 Dashboard</a>
+    <a href="bonafide.html">📄 Bonafide</a>
+    <a href="character.html" style="color: var(--gold);">📜 Character</a>
+  </nav>
+</header>
+
+<div class="container no-print">
+  <section>
+    <h2>1. Select Student</h2>
+    <select id="studentSelect" onchange="loadStudentData()">
+        <option value="">-- Select Student from Register --</option>
+    </select>
+  </section>
+
+  <section id="inputSection" style="display: none;">
+    <h2>2. Performance & Certificate Details</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <div>
+        <label style="font-size: 0.8rem; font-weight: bold;">Character Rating:</label>
+        <input id="behavior" value="Excellent" placeholder="e.g. Excellent / Good">
+      </div>
+      <div>
+        <label style="font-size: 0.8rem; font-weight: bold;">Work/Academic Rating:</label>
+        <input id="work" value="Satisfactory" placeholder="e.g. Very Good / Outstanding">
+      </div>
+      <input id="refNo" placeholder="Reference Number">
+      <input id="date" type="date">
+    </div>
+    <input id="signedBy" value="Head Teacher">
+    <div class="actions">
+        <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
+        <button id="printBtn" onclick="window.print()">Print A4 Certificate</button>
+    </div>
+  </section>
+</div>
+
+<div class="certificate-preview" id="certificate">
+  <img src="logo.png" class="watermark" onerror="this.style.display='none'">
+  
+  <div class="cert-content">
+    <div class="cert-header">
+      <img src="logo.png" class="cert-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/85?text=LOGO'">
+      <h3 style="margin:0; letter-spacing: 2px; color: var(--dark-green);">OFFICE OF THE HEAD TEACHER</h3>
+      <h1 style="margin:5px 0; font-size: 2.2rem;">Government Primary School Pethgam Wagoora</h1>
+      <p style="text-align: center; margin:0; font-weight: bold; font-size: 1.1rem;">Zone: Wagoora | District: Baramulla</p>
+      <hr style="border: 1px solid var(--dark-green); margin-top:15px;">
+      <h2>CHARACTER & CONDUCT CERTIFICATE</h2>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; font-size: 1.1rem;">
+      <span>Ref No: <span id="p_ref"></span></span>
+      <span>Date: <span id="p_date"></span></span>
+    </div>
+
+    <p>
+      This is to certify that <strong><span id="p_name">________________</span></strong>, 
+      Son/Daughter of <strong><span id="p_fname">________________</span></strong>, 
+      bearing Admission No <strong><span id="p_adm">________</span></strong>, 
+      is a regular student of this school.
+    </p>
+    
+    <p>
+      According to the school records, his/her work has been found to be 
+      <strong><span id="p_work">________________</span></strong> and his/her 
+      general behaviour and conduct has been 
+      <strong><span id="p_behavior">________________</span></strong> 
+      during his/her stay in this institution.
+    </p>
+
+    <p>
+      To the best of my knowledge, he/she bears a good moral character. I wish him/her 
+      every success in his/her future academic endevours.
+    </p>
+
+    <div class="signature-section">
+      <div style="text-align: center; min-width: 200px;">
+        <br><br><br>
+        <p style="border-top: 1px solid #ccc; padding-top: 5px;">Student's Signature</p>
+      </div>
+      <div style="text-align: center; min-width: 250px;">
+        <br><br><br>
+        <p style="border-top: 2.5px solid #000; padding-top: 5px; font-weight: bold; font-size: 1.2rem;">
+            <span id="p_signedBy"></span><br>
+            GPS Pethgam Wagoora
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Data fetch from LocalStorage
+  const students = JSON.parse(localStorage.getItem("admissions")) || [];
+  let selectedStudent = null;
+
+  window.onload = () => {
+      const select = document.getElementById('studentSelect');
+      students.sort((a, b) => a.studentName.localeCompare(b.studentName)).forEach(s => {
+          const option = document.createElement('option');
+          option.value = s.admNo;
+          option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
+          select.appendChild(option);
+      });
+      document.getElementById('date').valueAsDate = new Date();
+  };
+
+  function loadStudentData() {
+      const admNo = document.getElementById('studentSelect').value;
+      if (!admNo) return;
+      selectedStudent = students.find(s => s.admNo == admNo);
+      document.getElementById('inputSection').style.display = "block";
+      document.getElementById('refNo').value = `GPS/PW/CC/${new Date().getFullYear()}/${selectedStudent.admNo}`;
+  }
+
+  function generateCertificate() {
+    if (!selectedStudent) return;
+    
+    // Transfer Data to Certificate
+    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
+    document.getElementById('p_fname').innerText = selectedStudent.fatherName;
+    document.getElementById('p_adm').innerText = selectedStudent.admNo;
+    
+    document.getElementById('p_work').innerText = document.getElementById('work').value;
+    document.getElementById('p_behavior').innerText = document.getElementById('behavior').value;
+    document.getElementById('p_ref').innerText = document.getElementById('refNo').value;
+    document.getElementById('p_date').innerText = document.getElementById('date').value;
+    document.getElementById('p_signedBy').innerText = document.getElementById('signedBy').value;
+
+    // Display & Scroll
+    document.getElementById('certificate').style.display = "block";
+    document.getElementById('printBtn').style.display = "inline-block";
+    document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
