@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Generator - Student Records | GPS Pethgam Wagoora</title>
+    <style>
+        /* A4 Portrait/Landscape Print Setup */
+        @page { size: A4 landscape; margin: 10mm; }
+        
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        
+        /* Navigation & Controls */
+        .no-print {
+            background: #1a5d1a;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .no-print select, .no-print input { padding: 8px; border-radius: 4px; border: none; }
+        .btn-print { 
+            background: #ffcc00; color: #000; font-weight: bold; 
+            padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer;
+        }
+
+        /* Printable Paper Styling */
+        .printable-area {
+            background: white;
+            width: 277mm; /* A4 Landscape width minus margins */
+            margin: 20px auto;
+            padding: 15px;
+            min-height: 190mm;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .school-header {
+            text-align: center;
+            border-bottom: 2px solid #002366;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .school-header h1 { color: #002366; margin: 0; font-size: 22px; text-transform: uppercase; }
+        .school-header p { margin: 5px 0; font-size: 12px; font-weight: bold; color: #555; }
+
+        /* High Contrast Table */
+        table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+        
+        /* Deep Navy Headers */
+        th { 
+            background: #002366 !important; 
+            color: white !important; 
+            text-transform: uppercase; 
+            font-size: 10px;
+        }
+
+        tr:nth-child(even) { background: #f9f9f9; }
+
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 70px;
+            color: rgba(0, 35, 102, 0.04);
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .printable-area { margin: 0; box-shadow: none; width: 100%; }
+            tr { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <label style="color:white; font-weight:bold;">Filter by Class:</label>
+    <select id="classFilter" onchange="generateTable()">
+        <option value="All">All Students</option>
+        <option value="1st">1st Class</option>
+        <option value="2nd">2nd Class</option>
+        <option value="3rd">3rd Class</option>
+        <option value="4th">4th Class</option>
+        <option value="5th">5th Class</option>
+    </select>
+    <button class="btn-print" onclick="window.print()">📥 Download PDF / Print</button>
+</div>
+
+<div class="printable-area">
+    <div class="watermark">GPS PETHGAM WAGOORA</div>
+    
+    <div class="school-header">
+        <h1>Government Primary School Pethgam Wagoora</h1>
+        <p>Comprehensive Admission Record | Session 2024-25</p>
+        <p>UDISE CODE: 01022202207 | Cluster: Wagoora</p>
+    </div>
+
+    <table id="admissionTable">
+        <thead>
+            <tr>
+                <th style="width: 40px;">Adm No</th>
+                <th style="width: 50px;">Roll No</th>
+                <th>Student Name</th>
+                <th>Father's Name</th>
+                <th>Mother's Name</th>
+                <th style="width: 70px;">D.O.B</th>
+                <th style="width: 90px;">APAAR ID</th>
+                <th style="width: 90px;">PEN Number</th>
+                <th style="width: 40px;">Class</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    function generateTable() {
+        const filterValue = document.getElementById('classFilter').value;
+        const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
+        const results = JSON.parse(localStorage.getItem("results")) || [];
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+
+        admissions.forEach(s => {
+            // Apply Class Filter
+            if (filterValue !== "All" && s.studentClass !== filterValue) return;
+
+            // Try to find Roll No from results if not in admission
+            const resultData = results.find(r => r.admNo === s.admNo);
+            const rollNo = resultData ? resultData.rollNo : (s.rollNo || '-');
+
+            const row = `
+                <tr>
+                    <td>${s.admNo}</td>
+                    <td>${rollNo}</td>
+                    <td style="font-weight:bold;">${s.studentName.toUpperCase()}</td>
+                    <td>${s.fatherName}</td>
+                    <td>${s.motherName || '-'}</td>
+                    <td>${s.dob || '-'}</td>
+                    <td>${s.apaarId || '-'}</td>
+                    <td>${s.penNo || '-'}</td>
+                    <td>${s.studentClass}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        if (tbody.innerHTML === "") {
+            tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>No records found for the selected class.</td></tr>";
+        }
+    }
+
+    // Run on load
+    window.onload = generateTable;
+</script>
+
+</body>
+</html>
