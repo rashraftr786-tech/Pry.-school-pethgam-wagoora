@@ -74,29 +74,26 @@
     #printArea {
       display: none;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start; /* Better alignment for printing */
       background: white;
-      padding: 10mm;
+      padding: 3.3mm; /* Reduced by 1/3 from 10mm */
     }
 
-    /* Vertical Orientation to match image */
     .id-card {
       width: 54mm;
       height: 86mm;
-      border: 1px solid #ddd;
+      border: 0.5px solid #ccc; /* Thinner border for cleaner print */
       border-radius: 12px;
-      margin: 5mm;
+      margin: 1.6mm; /* Reduced by 1/3 from 5mm */
       position: relative;
       overflow: hidden;
       background: #fff;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       box-sizing: border-box;
       -webkit-print-color-adjust: exact;
     }
 
-    /* Navy Header with Curve */
     .card-top {
       background: var(--navy);
       height: 35%;
@@ -105,7 +102,6 @@
       z-index: 1;
     }
 
-    /* Light Blue Diagonal Shapes */
     .card-top::after {
       content: "";
       position: absolute;
@@ -119,7 +115,6 @@
       opacity: 0.6;
     }
 
-    /* Profile Photo Circle */
     .photo-container {
       position: absolute;
       top: 15%;
@@ -156,7 +151,6 @@
       margin-bottom: 10px;
     }
 
-    /* Details Grid */
     .details-grid {
       text-align: left;
       font-size: 9px;
@@ -170,7 +164,6 @@
     }
     .details-grid b { width: 45px; display: inline-block; color: #555; }
 
-    /* Footer Section */
     .card-bottom {
       margin-top: auto;
       padding: 10px;
@@ -187,9 +180,7 @@
       border-radius: 4px;
     }
 
-    .school-info {
-      text-align: right;
-    }
+    .school-info { text-align: right; }
     .school-logo-small {
       width: 20px;
       height: 20px;
@@ -218,8 +209,10 @@
     }
 
     @media print {
+      @page { size: A4; margin: 5mm; }
       .no-print { display: none !important; }
-      #printArea { display: flex !important; }
+      #printArea { display: flex !important; margin: 0; padding: 0; }
+      .id-card { page-break-inside: avoid; border: 1px solid #eee; }
     }
   </style>
 </head>
@@ -329,6 +322,3 @@
 
 </body>
 </html>
-
-    
-  
