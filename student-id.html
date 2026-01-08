@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ID Card Generator | GPS Pethgam Wagoora</title>
+  <title>Modern ID Card Generator | GPS Pethgam Wagoora</title>
   <style>
     :root {
-      --navy: #002366;
+      --navy: #1a2a44;
+      --gold: #d4af37;
+      --light-blue: #a0d2eb;
       --green: #1a5d1a;
-      --light-grey: #f4f4f4;
     }
 
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e0e0e0; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #e0e0e0; margin: 0; padding: 0; }
 
     /* --- UI Panel Styles (No-Print) --- */
     .control-panel {
@@ -25,7 +26,6 @@
 
     h2 { color: var(--navy); border-bottom: 2px solid var(--green); padding-bottom: 10px; }
 
-    /* Custom Multi-Select Dropdown */
     .dropdown-container { position: relative; margin-bottom: 20px; }
     .dropdown-btn {
       width: 100%;
@@ -48,21 +48,13 @@
       overflow-y: auto;
       border: 1px solid #ccc;
       z-index: 10;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
-    .dropdown-content label {
-      display: block;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-    }
+    .dropdown-content label { display: block; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
     .dropdown-content label:hover { background: #f0f7f0; }
     .dropdown-container:hover .dropdown-content { display: block; }
 
-    /* Preview Table */
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-    th { background: var(--light-grey); }
     .remove-btn { color: red; cursor: pointer; font-weight: bold; border: none; background: none; }
 
     #generateBtn {
@@ -78,90 +70,168 @@
     }
     #generateBtn:disabled { background: #ccc; cursor: not-allowed; }
 
-    /* --- ID Card Print Styles --- */
+    /* --- ID Card Design Based on Picture --- */
     #printArea {
-      display: none; /* Hidden during selection */
+      display: none;
       flex-wrap: wrap;
       justify-content: center;
       background: white;
       padding: 10mm;
     }
 
-    /* Standard CR-80 Size: 86mm x 54mm */
+    /* Vertical Orientation to match image */
     .id-card {
-      width: 86mm;
-      height: 54mm;
-      border: 1px solid #000;
-      border-radius: 8px;
+      width: 54mm;
+      height: 86mm;
+      border: 1px solid #ddd;
+      border-radius: 12px;
       margin: 5mm;
       position: relative;
       overflow: hidden;
+      background: #fff;
       display: flex;
       flex-direction: column;
-      background: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       box-sizing: border-box;
       -webkit-print-color-adjust: exact;
     }
 
-    .card-header {
+    /* Navy Header with Curve */
+    .card-top {
       background: var(--navy);
-      color: white;
-      padding: 5px;
+      height: 35%;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Light Blue Diagonal Shapes */
+    .card-top::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      left: -20px;
+      width: 120%;
+      height: 60px;
+      background: var(--light-blue);
+      transform: rotate(-10deg);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    /* Profile Photo Circle */
+    .photo-container {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      background: #eee;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      overflow: hidden;
+      z-index: 5;
+    }
+    .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+    .card-content {
+      margin-top: 25px;
       text-align: center;
+      padding: 10px;
+      z-index: 2;
+    }
+
+    .student-name {
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .student-class-label {
       font-size: 10px;
+      color: #333;
+      margin-bottom: 10px;
     }
-    .card-header h3 { margin: 0; font-size: 11px; }
 
-    .card-body {
-      display: flex;
-      padding: 8px;
-      flex-grow: 1;
-    }
-    .photo-box {
-      width: 65px;
-      height: 75px;
-      border: 1px solid #444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 8px;
-      color: #999;
-    }
-    .details {
-      padding-left: 10px;
-      font-size: 11px;
-      line-height: 1.4;
-    }
-    .details b { color: var(--navy); }
-
-    .card-footer {
-      background: var(--green);
-      color: white;
-      text-align: center;
+    /* Details Grid */
+    .details-grid {
+      text-align: left;
       font-size: 9px;
-      padding: 3px;
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+    .details-grid div {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 2px;
+    }
+    .details-grid b { width: 45px; display: inline-block; color: #555; }
+
+    /* Footer Section */
+    .card-bottom {
+      margin-top: auto;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .qr-box {
+      width: 35px;
+      height: 35px;
+      border: 1.5px solid var(--gold);
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .school-info {
+      text-align: right;
+    }
+    .school-logo-small {
+      width: 20px;
+      height: 20px;
+      background: var(--navy);
+      border-radius: 50%;
+      margin-left: auto;
+      border: 1px solid var(--gold);
+    }
+    .school-name-text {
+      font-size: 7px;
       font-weight: bold;
+      color: var(--gold);
+      width: 80px;
+      line-height: 1;
+      margin-top: 3px;
+    }
+
+    .slogan {
+      position: absolute;
+      bottom: 5px;
+      width: 100%;
+      text-align: center;
+      font-size: 8px;
+      color: var(--navy);
+      font-style: italic;
     }
 
     @media print {
       .no-print { display: none !important; }
-      #printArea { display: flex !important; margin: 0; padding: 0; }
-      body { background: white; }
+      #printArea { display: flex !important; }
     }
   </style>
 </head>
 <body>
 
 <div class="control-panel no-print">
-  <h2>ID Card Batch Generator</h2>
-  
+  <h2>Modern ID Card Generator</h2>
   <div class="dropdown-container">
-    <button class="dropdown-btn">Select Admission Numbers ▼</button>
-    <div class="dropdown-content" id="studentList">
-      </div>
+    <button class="dropdown-btn">Select Students ▼</button>
+    <div class="dropdown-content" id="studentList"></div>
   </div>
 
-  <h3>Preview Table</h3>
   <table id="previewTable">
     <thead>
       <tr>
@@ -174,13 +244,12 @@
     <tbody id="previewBody"></tbody>
   </table>
 
-  <button id="generateBtn" disabled onclick="window.print()">Print Generated ID Cards</button>
+  <button id="generateBtn" disabled onclick="window.print()">Print Batch</button>
 </div>
 
-<div id="printArea" id="idCardContainer"></div>
+<div id="printArea"></div>
 
 <script>
-  // Data Source from LocalStorage (adm-register.html)
   const students = JSON.parse(localStorage.getItem("admissions")) || [];
   let selectedSet = new Set();
 
@@ -189,25 +258,20 @@
     students.forEach(s => {
       const label = document.createElement('label');
       label.innerHTML = `<input type="checkbox" value="${s.admNo}" onchange="toggleStudent('${s.admNo}')"> 
-                         ${s.admNo} – ${s.studentName} (Class ${s.studentClass})`;
+                         ${s.admNo} – ${s.studentName}`;
       list.appendChild(label);
     });
   }
 
   function toggleStudent(admNo) {
-    if (selectedSet.has(admNo)) {
-      selectedSet.delete(admNo);
-    } else {
-      selectedSet.add(admNo);
-    }
+    selectedSet.has(admNo) ? selectedSet.delete(admNo) : selectedSet.add(admNo);
     updateUI();
   }
 
   function removeStudent(admNo) {
     selectedSet.delete(admNo);
-    // Uncheck the checkbox in the dropdown
-    const checkbox = document.querySelector(`.dropdown-content input[value="${admNo}"]`);
-    if (checkbox) checkbox.checked = false;
+    const cb = document.querySelector(`.dropdown-content input[value="${admNo}"]`);
+    if (cb) cb.checked = false;
     updateUI();
   }
 
@@ -218,48 +282,45 @@
     
     previewBody.innerHTML = "";
     printArea.innerHTML = "";
-
-    if (selectedSet.size > 0) {
-      generateBtn.disabled = false;
-      document.getElementById('printArea').style.display = "flex";
-    } else {
-      generateBtn.disabled = true;
-      document.getElementById('printArea').style.display = "none";
-    }
+    generateBtn.disabled = selectedSet.size === 0;
 
     selectedSet.forEach(admNo => {
       const s = students.find(item => item.admNo === admNo);
       
-      // Update Preview Table
-      const row = `<tr>
+      previewBody.innerHTML += `<tr>
         <td>${s.admNo}</td>
         <td>${s.studentName}</td>
         <td>${s.studentClass}</td>
         <td><button class="remove-btn" onclick="removeStudent('${s.admNo}')">X</button></td>
       </tr>`;
-      previewBody.innerHTML += row;
 
-      // Update ID Card Generation
-      const card = `
+      printArea.innerHTML += `
         <div class="id-card">
-          <div class="card-header">
-            <h3>GPS PETHGAM WAGOORA</h3>
-            <span>Session 2024-25</span>
+          <div class="card-top"></div>
+          <div class="photo-container">
+            <img src="https://via.placeholder.com/150?text=Student" alt="Photo">
           </div>
-          <div class="card-body">
-            <div class="photo-box">PHOTO</div>
-            <div class="details">
-              <div><b>Name:</b> ${s.studentName.toUpperCase()}</div>
-              <div><b>F. Name:</b> ${s.fatherName}</div>
-              <div><b>Class:</b> ${s.studentClass}</div>
-              <div><b>Adm No:</b> ${s.admNo}</div>
-              <div><b>DOB:</b> ${s.dob}</div>
+          <div class="card-content">
+            <p class="student-name">${s.studentName}</p>
+            <p class="student-class-label">Class: ${s.studentClass}</p>
+            <div class="details-grid">
+              <div><b>ID No</b>: ${s.admNo}</div>
+              <div><b>Parent</b>: ${s.fatherName}</div>
+              <div><b>DOB</b>: ${s.dob}</div>
+              <div><b>PEN</b>: ${s.penNo || 'N/A'}</div>
             </div>
           </div>
-          <div class="card-footer">PEN: ${s.penNo || 'N/A'} | APAAR: ${s.apaarId || 'N/A'}</div>
-        </div>
-      `;
-      printArea.innerHTML += card;
+          <div class="card-bottom">
+            <div class="qr-box">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=30x30&data=${s.admNo}" style="width:100%">
+            </div>
+            <div class="school-info">
+              <div class="school-logo-small"></div>
+              <div class="school-name-text">GPS PETHGAM WAGOORA</div>
+            </div>
+          </div>
+          <div class="slogan">Excellence in Education</div>
+        </div>`;
     });
   }
 
@@ -268,3 +329,6 @@
 
 </body>
 </html>
+
+    
+  
