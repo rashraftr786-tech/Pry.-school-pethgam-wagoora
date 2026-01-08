@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance & MDM | GPS Pethgam Wagoora</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1b5e20;
+      --accent: #fbc02d;
+      --light-bg: #f4f7f6;
+      --white: #ffffff;
+      --border: #ddd;
+    }
+
+    body { font-family: 'Segoe UI', sans-serif; background: var(--light-bg); margin: 0; color: #333; }
+
+    /* --- 1. Header & Nav --- */
+    header {
+      background: var(--primary); color: white;
+      padding: 15px 5%; display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .logo { width: 50px; height: 50px; background: white; border-radius: 50%; padding: 2px; }
+    nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: 600; font-size: 14px; }
+    nav a:hover { color: var(--accent); }
+
+    /* --- 2. Filters & Section Styling --- */
+    .container { max-width: 1000px; margin: 20px auto; padding: 0 20px; }
+    section { background: var(--white); padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    h2, h3 { color: var(--primary); margin-top: 0; border-bottom: 2px solid var(--accent); padding-bottom: 8px; display: inline-block; }
+
+    .filters { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    select, input { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+
+    /* --- 3. Attendance Table --- */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th { background: #f8f9fa; text-align: left; padding: 12px; border-bottom: 2px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); }
+    
+    .status-select { padding: 5px; border-radius: 4px; border: 1px solid var(--primary); font-weight: bold; }
+    .mdm-check { transform: scale(1.3); cursor: pointer; }
+
+    /* --- 4. MDM Summary & Actions --- */
+    .mdm-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
+    .summary-box { background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px solid #c8e6c9; }
+    .summary-box span { display: block; font-size: 24px; font-weight: bold; color: var(--primary); }
+
+    .actions { text-align: center; padding: 20px; }
+    .btn { padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin: 5px; }
+    #saveBtn { background: var(--primary); color: white; box-shadow: 0 4px #0d3b14; }
+    #printBtn { background: #444; color: white; box-shadow: 0 4px #222; }
+    .btn:active { transform: translateY(3px); box-shadow: none; }
+
+    /* --- 5. Print Summary Section (Hidden on Screen) --- */
+    #summaryPreview { display: none; border: 2px solid #000; padding: 40px; margin-top: 30px; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #summaryPreview, #summaryPreview * { visibility: visible; }
+      #summaryPreview { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+      header, .filters, .student-list, .actions, footer { display: none !important; }
+    }
+
+    footer { text-align: center; padding: 30px; color: #666; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<header class="no-print">
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <img src="logo.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50'">
+    <h1 style="font-size: 1.2rem; margin: 0;">GPS Pethgam Wagoora</h1>
+  </div>
+  <nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="admission.html">📝 Admission</a>
+    <a href="mdm.html">🍽️ MDM</a>
+  </nav>
+</header>
+
+<div class="container no-print">
+  <section class="filters">
+    <h2><span class="material-icons-outlined" style="vertical-align: middle;">calendar_today</span> Daily Attendance</h2>
+    <div style="flex-grow: 1;"></div>
+    <label>Class:</label>
+    <select id="classSelect" onchange="loadStudents()">
+      <option value="">-- Select --</option>
+      <option value="1st">1st</option>
+      <option value="2nd">2nd</option>
+      <option value="3rd">3rd</option>
+      <option value="4th">4th</option>
+      <option value="5th">5th</option>
+    </select>
+
+    <label>Date:</label>
+    <input type="date" id="attendanceDate">
+  </section>
+
+  <section class="student-list">
+    <h3>Student Roll List</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Adm No</th>
+          <th>Status (P/A/L/HD)</th>
+          <th>MDM?</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTable">
+        <tr><td colspan="6" style="text-align:center; color:#999;">Please select a class to load students...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="mdm-summary">
+    <div class="summary-box">Present<span id="presentCount">0</span></div>
+    <div class="summary-box">MDM Served<span id="mdmAvailed">0</span></div>
+    <div class="summary-box" style="background:#ffebee;">Absent<span id="absentCount">0</span></div>
+    <div class="summary-box" style="background:#fff8e1;">Leave/HD<span id="leaveCount">0</span></div>
+    <div class="summary-box">Total Roll<span id="totalStudents">0</span></div>
+  </section>
+
+  <div class="actions">
+    <button id="saveBtn" class="btn" onclick="saveAttendance()">💾 SAVE TO RECORDS</button>
+    <button id="printBtn" class="btn" onclick="preparePrint()">🖨️ PRINT DAILY SUMMARY</button>
+  </div>
+</div>
+
+<section id="summaryPreview" class="print-area">
+  <div style="text-align: center;">
+    <h2>Government Primary School Pethgam Wagoora</h2>
+    <p>Daily Attendance & MDM Consumption Report</p>
+    <hr>
+  </div>
+  <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+    <p><strong>Date:</strong> <span id="summaryDate"></span></p>
+    <p><strong>Class:</strong> <span id="summaryClass"></span></p>
+  </div>
+  
+  <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <thead>
+      <tr style="background: #eee;">
+        <th>Total Roll</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Leave/HD</th>
+        <th>MDM Served</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="sp_total"></td>
+        <td id="sp_present"></td>
+        <td id="sp_absent"></td>
+        <td id="sp_leave"></td>
+        <td id="sp_mdm"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+    <p>___________________<br>Class Teacher</p>
+    <p>___________________<br>MDM Incharge</p>
+    <p>___________________<br>Head Teacher (Seal)</p>
+  </div>
+</section>
+
+<footer>
+  Government Primary School Pethgam Wagoora | Session 2026 ERP Module
+</footer>
+
+<script>
+  // Load Date
+  document.getElementById('attendanceDate').valueAsDate = new Date();
+
+  function loadStudents() {
+    const selectedClass = document.getElementById('classSelect').value;
+    const students = JSON.parse(localStorage.getItem("admissions")) || [];
+    const filtered = students.filter(s => s.studentClass === selectedClass);
+    
+    const tableBody = document.getElementById('attendanceTable');
+    tableBody.innerHTML = "";
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in ${selectedClass}</td></tr>`;
+      updateSummary();
+      return;
+    }
+
+    filtered.forEach((s, index) => {
+      const row = `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${s.studentName}</td>
+          <td>${s.admNo}</td>
+          <td>
+            <select class="status-select" onchange="handleStatusChange(this)">
+              <option value="P">Present</option>
+              <option value="A">Absent</option>
+              <option value="L">Leave</option>
+              <option value="HD">Half Day</option>
+            </select>
+          </td>
+          <td style="text-align:center;">
+            <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
+          </td>
+          <td><input placeholder="Remarks" style="width: 100px; padding:5px;"></td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+    updateSummary();
+  }
+
+  function handleStatusChange(select) {
+    const mdmCheck = select.parentElement.nextElementSibling.querySelector('.mdm-check');
+    // Auto-uncheck MDM if Absent or Leave
+    if (select.value === "A" || select.value === "L") {
+      mdmCheck.checked = false;
+    } else {
+      mdmCheck.checked = true;
+    }
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const rows = document.querySelectorAll('#attendanceTable tr');
+    let total = 0, p = 0, a = 0, l = 0, mdm = 0;
+
+    rows.forEach(row => {
+      const status = row.querySelector('.status-select')?.value;
+      const mdmChecked = row.querySelector('.mdm-check')?.checked;
+
+      if (status) {
+        total++;
+        if (status === "P") p++;
+        if (status === "A") a++;
+        if (status === "L" || status === "HD") l++;
+        if (mdmChecked) mdm++;
+      }
+    });
+
+    document.getElementById('totalStudents').innerText = total;
+    document.getElementById('presentCount').innerText = p;
+    document.getElementById('absentCount').innerText = a;
+    document.getElementById('leaveCount').innerText = l;
+    document.getElementById('mdmAvailed').innerText = mdm;
+  }
+
+  function saveAttendance() {
+    alert("Attendance data for " + document.getElementById('attendanceDate').value + " has been saved to the Database.");
+    // In a real app, you would push this object to Firebase or LocalStorage here.
+  }
+
+  function preparePrint() {
+    document.getElementById('summaryDate').innerText = document.getElementById('attendanceDate').value;
+    document.getElementById('summaryClass').innerText = document.getElementById('classSelect').value;
+    
+    document.getElementById('sp_total').innerText = document.getElementById('totalStudents').innerText;
+    document.getElementById('sp_present').innerText = document.getElementById('presentCount').innerText;
+    document.getElementById('sp_absent').innerText = document.getElementById('absentCount').innerText;
+    document.getElementById('sp_leave').innerText = document.getElementById('leaveCount').innerText;
+    document.getElementById('sp_mdm').innerText = document.getElementById('mdmAvailed').innerText;
+    
+    window.print();
+  }
+</script>
+
+</body>
+</html>
+
