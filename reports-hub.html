@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Downloads Hub | GPS Pethgam Wagoora</title>
+  <style>
+    :root {
+      --primary-green: #1a5d1a;
+      --navy-blue: #002366;
+      --light-bg: #f4f7f6;
+      --white: #ffffff;
+      --accent-yellow: #ffcc00;
+    }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light-bg); margin: 0; padding: 0; }
+    
+    /* Navigation Bar */
+    .admin-nav { background: var(--primary-green); padding: 15px; display: flex; gap: 20px; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .admin-nav a { color: white; text-decoration: none; font-weight: bold; font-size: 14px; transition: 0.3s; }
+    .admin-nav a:hover { color: var(--accent-yellow); }
+
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+    
+    .header-section { text-align: center; margin-bottom: 40px; }
+    .header-section h1 { color: var(--navy-blue); margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+    .header-section p { color: #555; margin-top: 5px; font-weight: 500; }
+
+    /* Filter Bar */
+    .filter-bar { background: var(--white); padding: 20px; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #ddd; }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-group label { font-size: 12px; font-weight: bold; color: var(--navy-blue); }
+    .filter-bar input, .filter-bar select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-width: 180px; }
+
+    /* Dashboard Grid */
+    .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+    
+    .category-card { background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-green); }
+    .category-card.staff { border-top-color: var(--navy-blue); }
+    
+    .card-header { padding: 15px; background: #f9f9f9; border-bottom: 1px solid #eee; }
+    .card-header h3 { margin: 0; font-size: 16px; color: #333; display: flex; align-items: center; gap: 10px; }
+
+    .doc-list { list-style: none; padding: 0; margin: 0; }
+    .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: #444; font-size: 13px; font-weight: 600; transition: 0.2s; }
+    .doc-item:hover { background: #f0f7f0; color: var(--primary-green); padding-left: 20px; }
+    .doc-item.staff-link:hover { background: #f0f3f7; color: var(--navy-blue); }
+    
+    .icon-badge { background: #eee; padding: 4px 8px; border-radius: 4px; font-size: 10px; text-transform: uppercase; color: #666; }
+
+    @media (max-width: 768px) { .filter-bar { flex-direction: column; align-items: stretch; } }
+  </style>
+</head>
+<body>
+
+<div class="admin-nav">
+    <a href="index.html">🏠 Dashboard</a>
+    <a href="admission.html">📝 Admission</a>
+    <a href="upload-results.html">📤 Upload Marks</a>
+    <a href="master-profile.html">📊 Master Profile</a>
+    <a href="reports-hub.html" style="color: var(--accent-yellow);">📥 Downloads</a>
+</div>
+
+<div class="container">
+  <div class="header-section">
+    <h1>GPS Pethgam Wagoora</h1>
+    <p>Reports & Document Generation Hub (Session 2024-25)</p>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Global Student Search</label>
+      <input type="text" id="studentSearch" placeholder="Enter Adm No or Name...">
+    </div>
+    <div class="filter-group">
+      <label>Target Class</label>
+      <select id="classSelect">
+        <option value="All">All Classes</option>
+        <option value="1st">1st Primary</option>
+        <option value="2nd">2nd Primary</option>
+        <option value="3rd">3rd Primary</option>
+        <option value="4th">4th Primary</option>
+        <option value="5th">5th Primary</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Session</label>
+      <select id="sessionSelect">
+        <option>2024-25</option>
+        <option>2025-26</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="hub-grid">
+    
+    <div class="category-card">
+      <div class="card-header"><h3>🎓 Academic Results</h3></div>
+      <div class="doc-list">
+        <a href="master-profile.html" class="doc-item">Consolidated Award Roll <span class="icon-badge">Table</span></a>
+        <a href="#" class="doc-item">Class-wise Result Summary <span class="icon-badge">Stats</span></a>
+        <a href="#" class="doc-item">Promotion Register <span class="icon-badge">PDF</span></a>
+      </div>
+    </div>
+
+    <div class="category-card">
+      <div class="card-header"><h3>📜 Student Certificates</h3></div>
+      <div class="doc-list">
+        <a href="bonafide.html" class="doc-item">Bonafide Certificate <span class="icon-badge">Auto</span></a>
+        <a href="#" class="doc-item">Transfer Certificate (T.C.) <span class="icon-badge">Official</span></a>
+        <a href="#" class="doc-item">Character Certificate <span class="icon-badge">Print</span></a>
+      </div>
+    </div>
+
+    <div class="category-card">
+      <div class="card-header"><h3>🆔 Identity Cards</h3></div>
+      <div class="doc-list">
+        <a href="#" class="doc-item">Student ID Cards (Batch) <span class="icon-badge">PVC Size</span></a>
+        <a href="#" class="doc-item">Teaching Staff IDs <span class="icon-badge">Blue</span></a>
+        <a href="#" class="doc-item">Non-Teaching Staff IDs <span class="icon-badge">Grey</span></a>
+      </div>
+    </div>
+
+    <div class="category-card staff">
+      <div class="card-header"><h3>👨‍🏫 Staff Records & Welfare</h3></div>
+      <div class="doc-list">
+        <a href="staff-statement.html" class="doc-item staff-link">Staff Position Statement <span class="icon-badge">Report</span></a>
+        <a href="#" class="doc-item staff-link">Teacher's Result Analysis <span class="icon-badge">APR</span></a>
+        <a href="#" class="doc-item staff-link">Leave Statement <span class="icon-badge">Service</span></a>
+        <a href="#" class="doc-item staff-link">Work & Behaviour Cert. <span class="icon-badge">Award</span></a>
+      </div>
+    </div>
+
+    <div class="category-card staff">
+      <div class="card-header"><h3>📋 Admin Statements</h3></div>
+      <div class="doc-list">
+        <a href="roll-statement.html" class="doc-item staff-link">Roll Statement (Enrolment) <span class="icon-badge">Govt</span></a>
+        <a href="mdm-statement.html" class="doc-item staff-link">MDM Monthly Statement <span class="icon-badge">Daily</span></a>
+        <a href="#" class="doc-item staff-link">Attendance Register Summary <span class="icon-badge">Stats</span></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Search logic to pass Admin No to individual generators
+  document.getElementById('studentSearch').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      const val = this.value;
+      alert("Search context set for Adm No: " + val + ". Now click on any certificate to generate.");
+      // You can implement localStorage.setItem('currentSearch', val) here
+    }
+  });
+</script>
+
+</body>
+</html>
+
