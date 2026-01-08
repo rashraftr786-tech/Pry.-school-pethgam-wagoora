@@ -13,19 +13,27 @@
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    /* Structural Fix: Widths set to 'auto' to prevent text clipping */
-    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1200px; }
+    /* Search Bar Styling */
+    .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; }
+    .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
+
+    /* High-Contrast Header Styling */
+    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1400px; }
     th, td { border: 1px solid #444; padding: 2px; text-align: center; }
-    th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; }
-    .header-group { background: #5a3d8c !important; color: white; font-size: 8px; }
-    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; }
-    .summary-col { background: #fffde7; font-weight: bold; }
-    .sub-total { background: #eeeeee; font-weight: bold; }
+    
+    /* Deep Navy Background with Pure White Text for maximum contrast */
+    th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; }
+    .header-group { background: #001a4d !important; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; color: #000; }
+    .summary-col { background: #fffde7; font-weight: bold; color: #000; }
+    .sub-total { background: #eeeeee; font-weight: bold; color: #000; }
 
     @media print {
-      .nav-header, .no-print { display: none !important; }
+      .nav-header, .filter-section, .no-print { display: none !important; }
       body { background: white; padding: 0; }
       table { font-size: 5.5px; min-width: 100%; }
+      th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -41,25 +49,47 @@
 
 <div class="master-container">
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
-  <div class="sub-title">Full Consolidated Award Roll (Detailed Assessment) - Session 2024-25</div>
+  <div class="sub-title">Detailed Award Roll / Consolidated Master Sheet</div>
+
+  <div class="filter-section no-print">
+    <label><b>Session:</b></label>
+    <select id="sessionSearch" onchange="renderMasterTable()">
+        <option value="2024-25">2024-25</option>
+        <option value="2025-26">2025-26</option>
+    </select>
+    
+    <label style="margin-left: 10px;"><b>Class:</b></label>
+    <select id="classSearch" onchange="renderMasterTable()">
+        <option value="All">All Classes</option>
+        <option value="1st">1st Primary</option>
+        <option value="2nd">2nd Primary</option>
+        <option value="3rd">3rd Primary</option>
+        <option value="4th">4th Primary</option>
+        <option value="5th">5th Primary</option>
+    </select>
+    
+    <button onclick="window.print()" style="margin-left: 20px; background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print Sheet</button>
+  </div>
 
   <table id="masterTable">
     <thead>
       <tr class="header-group">
-        <th colspan="7">Student Information</th>
+        <th colspan="9">Student Profile Details</th>
         <th colspan="9">English</th>
         <th colspan="9">Mathematics</th>
         <th colspan="9">EVS</th>
         <th colspan="9">Urdu</th>
         <th colspan="9">Kashmiri</th>
-        <th colspan="7">Final Result Summary</th>
+        <th colspan="7">Final Summary</th>
       </tr>
       <tr id="dynamicHeaderRow">
-        <th>Adm</th>
-        <th>Roll</th>
+        <th>Adm No</th>
+        <th>Roll No</th>
+        <th>Class</th>
         <th>Name</th>
         <th>Father's Name</th>
         <th>Mother's Name</th>
+        <th>D.O.B</th>
         <th>APAAR ID</th>
         <th>PEN No</th>
         </tr>
@@ -69,10 +99,10 @@
 </div>
 
 <script>
-// Structural Fix: Generating the repeating subject headers dynamically
 const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const dynamicHeaderRow = document.getElementById('dynamicHeaderRow');
 
+// Inject repeating subject headers
 let subjectHtml = "";
 subjects.forEach(() => {
     subjectHtml += '<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>';
@@ -101,13 +131,16 @@ function calculateGrade(perc) {
 }
 
 function renderMasterTable() {
-    // Data mapping from spreadsheet logic
+    const selectedClass = document.getElementById('classSearch').value;
     const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
     const results = JSON.parse(localStorage.getItem("results")) || [];
     const tbody = document.getElementById('masterBody');
     tbody.innerHTML = "";
 
     admissions.forEach(s => {
+        // Filter by Class
+        if (selectedClass !== "All" && s.studentClass !== selectedClass) return;
+
         const r = results.find(res => res.admNo === s.admNo);
         if (!r) return;
 
@@ -135,9 +168,11 @@ function renderMasterTable() {
         tbody.innerHTML += `<tr>
             <td>${s.admNo}</td>
             <td>${r.rollNo || '-'}</td>
+            <td>${s.studentClass || '-'}</td>
             <td class="student-info">${(s.studentName || '').toUpperCase()}</td>
             <td class="student-info">${s.fatherName || '-'}</td>
             <td class="student-info">${s.motherName || '-'}</td>
+            <td>${s.dob || '-'}</td>
             <td>${s.apaarId || '-'}</td>
             <td>${s.penNo || '-'}</td>
             ${subCells}
@@ -156,5 +191,4 @@ document.addEventListener('DOMContentLoaded', renderMasterTable);
 </script>
 </body>
 </html>
-        
-        
+    
