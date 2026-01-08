@@ -42,7 +42,7 @@
     .card-header h3 { margin: 0; font-size: 16px; color: #333; display: flex; align-items: center; gap: 10px; }
 
     .doc-list { list-style: none; padding: 0; margin: 0; }
-    .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: #444; font-size: 13px; font-weight: 600; transition: 0.2s; }
+    .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: #444; font-size: 13px; font-weight: 600; transition: 0.2s; cursor: pointer; }
     .doc-item:hover { background: #f0f7f0; color: var(--primary-green); padding-left: 20px; }
     .doc-item.staff-link:hover { background: #f0f3f7; color: var(--navy-blue); }
     
@@ -56,6 +56,7 @@
 <div class="admin-nav">
     <a href="index.html">🏠 Dashboard</a>
     <a href="admission.html">📝 Admission</a>
+    <a href="adm-register.html">📋 Register</a>
     <a href="upload-results.html">📤 Upload Marks</a>
     <a href="master-profile.html">📊 Master Profile</a>
     <a href="reports-hub.html" style="color: var(--accent-yellow);">📥 Downloads</a>
@@ -115,23 +116,16 @@
     <div class="category-card">
       <div class="card-header"><h3>🆔 Identity Cards</h3></div>
       <div class="doc-list">
-        <a href="student-id.html" class="doc-item">
-    Student ID Cards (Batch) <span class="icon-badge">PVC Size</span>
-</a>
-<a href="teaching-id.html" class="doc-item staff-link">
-    Teaching Staff IDs <span class="icon-badge">Blue</span>
-</a>
-<a href="nt-id.html" class="doc-item staff-link">
-    Non-Teaching Staff IDs <span class="icon-badge">Grey</span>
-</a>
-
+        <a href="./student-id.html" class="doc-item" target="_blank">Student ID Cards (Batch) <span class="icon-badge">PVC Size</span></a>
+        <a href="./teaching-id.html" class="doc-item staff-link" target="_blank">Teaching Staff IDs <span class="icon-badge">Blue</span></a>
+        <a href="./nt-id.html" class="doc-item staff-link" target="_blank">Non-Teaching Staff IDs <span class="icon-badge">Grey</span></a>
       </div>
     </div>
 
     <div class="category-card staff">
       <div class="card-header"><h3>👨‍🏫 Staff Records & Welfare</h3></div>
       <div class="doc-list">
-        <a href="staff-statement.html" class="doc-item staff-link">Staff Position Statement <span class="icon-badge">Report</span></a>
+        <a href="staff-statement.html" class="doc-item staff-link" target="_blank">Staff Position Statement <span class="icon-badge">Report</span></a>
         <a href="#" class="doc-item staff-link">Teacher's Result Analysis <span class="icon-badge">APR</span></a>
         <a href="#" class="doc-item staff-link">Leave Statement <span class="icon-badge">Service</span></a>
         <a href="#" class="doc-item staff-link">Work & Behaviour Cert. <span class="icon-badge">Award</span></a>
@@ -141,7 +135,7 @@
     <div class="category-card staff">
       <div class="card-header"><h3>📋 Admin Statements</h3></div>
       <div class="doc-list">
-        <a href="roll-statement.html" class="doc-item staff-link">Roll Statement (Enrolment) <span class="icon-badge">Govt</span></a>
+        <a href="roll-statement.html" class="doc-item staff-link" target="_blank">Roll Statement (Enrolment) <span class="icon-badge">Govt</span></a>
         <a href="mdm-statement.html" class="doc-item staff-link">MDM Monthly Statement <span class="icon-badge">Daily</span></a>
         <a href="#" class="doc-item staff-link">Attendance Register Summary <span class="icon-badge">Stats</span></a>
       </div>
@@ -151,12 +145,14 @@
 </div>
 
 <script>
-  // Search logic to pass Admin No to individual generators
+  // Search logic
   document.getElementById('studentSearch').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-      const val = this.value;
-      alert("Search context set for Adm No: " + val + ". Now click on any certificate to generate.");
-      // You can implement localStorage.setItem('currentSearch', val) here
+      const val = this.value.trim();
+      if(val !== "") {
+          localStorage.setItem('hub_search_context', val);
+          alert("Search context set for Adm No: " + val + ". Now click on any certificate to generate.");
+      }
     }
   });
 </script>
