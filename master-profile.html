@@ -13,19 +13,19 @@
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    /* Optimized for extreme horizontal width */
-    table { width: 100%; border-collapse: collapse; font-size: 6.5px; table-layout: fixed; }
-    th, td { border: 1px solid #444; padding: 1px; text-align: center; overflow: hidden; }
-    th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; height: 25px; }
+    /* Structural Fix: Widths set to 'auto' to prevent text clipping */
+    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1200px; }
+    th, td { border: 1px solid #444; padding: 2px; text-align: center; }
+    th { background: #dcd0ff; position: sticky; top: 0; z-index: 10; }
     .header-group { background: #5a3d8c !important; color: white; font-size: 8px; }
-    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; font-size: 7px; }
+    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; }
     .summary-col { background: #fffde7; font-weight: bold; }
     .sub-total { background: #eeeeee; font-weight: bold; }
 
     @media print {
       .nav-header, .no-print { display: none !important; }
       body { background: white; padding: 0; }
-      table { font-size: 5.5px; }
+      table { font-size: 5.5px; min-width: 100%; }
     }
   </style>
 </head>
@@ -46,7 +46,7 @@
   <table id="masterTable">
     <thead>
       <tr class="header-group">
-        <th colspan="7" style="width: 250px;">Student Information</th>
+        <th colspan="7">Student Information</th>
         <th colspan="9">English</th>
         <th colspan="9">Mathematics</th>
         <th colspan="9">EVS</th>
@@ -54,31 +54,42 @@
         <th colspan="9">Kashmiri</th>
         <th colspan="7">Final Result Summary</th>
       </tr>
-      <tr>
-        <th style="width:30px;">Adm</th>
-        <th style="width:25px;">Roll</th>
-        <th style="width:80px;">Name</th>
-        <th style="width:80px;">Father's Name</th>
-        <th style="width:80px;">Mother's Name</th>
-        <th style="width:70px;">APAAR ID</th>
-        <th style="width:70px;">PEN No</th>
-
-        ${Array(5).fill('<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>').join('')}
-
-        <th class="summary-col">G.Tot</th>
-        <th class="summary-col">%</th>
-        <th class="summary-col">GP</th>
-        <th class="summary-col">Grd</th>
-        <th class="summary-col">C.Rk</th>
-        <th class="summary-col">S.Rk</th>
-        <th class="summary-col">Result</th>
-      </tr>
+      <tr id="dynamicHeaderRow">
+        <th>Adm</th>
+        <th>Roll</th>
+        <th>Name</th>
+        <th>Father's Name</th>
+        <th>Mother's Name</th>
+        <th>APAAR ID</th>
+        <th>PEN No</th>
+        </tr>
     </thead>
     <tbody id="masterBody"></tbody>
   </table>
 </div>
 
 <script>
+// Structural Fix: Generating the repeating subject headers dynamically
+const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
+const dynamicHeaderRow = document.getElementById('dynamicHeaderRow');
+
+let subjectHtml = "";
+subjects.forEach(() => {
+    subjectHtml += '<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>';
+});
+
+// Summary Headers
+subjectHtml += `
+    <th class="summary-col">G.Tot</th>
+    <th class="summary-col">%</th>
+    <th class="summary-col">GP</th>
+    <th class="summary-col">Grd</th>
+    <th class="summary-col">C.Rk</th>
+    <th class="summary-col">S.Rk</th>
+    <th class="summary-col">Result</th>`;
+
+dynamicHeaderRow.innerHTML += subjectHtml;
+
 function calculateGrade(perc) {
     if(perc >= 90) return {g:'A+', p:10};
     if(perc >= 80) return {g:'A', p:9};
@@ -90,6 +101,7 @@ function calculateGrade(perc) {
 }
 
 function renderMasterTable() {
+    // Data mapping from spreadsheet logic
     const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
     const results = JSON.parse(localStorage.getItem("results")) || [];
     const tbody = document.getElementById('masterBody');
@@ -100,8 +112,50 @@ function renderMasterTable() {
         if (!r) return;
 
         let grandTotal = 0;
-        const subs = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
         let subCells = "";
+        
+        subjects.forEach(sub => {
+            const m = r.marks[sub] || { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
+            const fa = m.fa || [0,0,0,0,0,0];
+            const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
+            const cc = Number(m.cca) || 0;
+            const sa = Number(m.sa) || 0;
+            const subTotal = faSum + cc + sa;
+            grandTotal += subTotal;
+            
+            subCells += `
+                <td>${fa[0]||0}</td><td>${fa[1]||0}</td><td>${fa[2]||0}</td>
+                <td>${fa[3]||0}</td><td>${fa[4]||0}</td><td>${fa[5]||0}</td>
+                <td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
+        });
+
+        const perc = (grandTotal / 5).toFixed(1);
+        const gradeInfo = calculateGrade(perc);
+
+        tbody.innerHTML += `<tr>
+            <td>${s.admNo}</td>
+            <td>${r.rollNo || '-'}</td>
+            <td class="student-info">${(s.studentName || '').toUpperCase()}</td>
+            <td class="student-info">${s.fatherName || '-'}</td>
+            <td class="student-info">${s.motherName || '-'}</td>
+            <td>${s.apaarId || '-'}</td>
+            <td>${s.penNo || '-'}</td>
+            ${subCells}
+            <td class="summary-col">${grandTotal}</td>
+            <td class="summary-col">${perc}%</td>
+            <td class="summary-col">${gradeInfo.p}</td>
+            <td class="summary-col">${gradeInfo.g}</td>
+            <td class="summary-col">-</td>
+            <td class="summary-col">-</td>
+            <td class="summary-col">${perc >= 33 ? "Promoted" : "Needs Imp."}</td>
+        </tr>`;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', renderMasterTable);
+</script>
+</body>
+</html>
         
         subs.forEach(sub => {
             const m = r.marks[sub] || { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
