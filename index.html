@@ -3,207 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPS Pethgam Wagoora - School ERP Portal</title>
+  <title>ERP Dashboard | GPS Pethgam Wagoora</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
     :root {
       --primary: #1b5e20;
-      --primary-gradient: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
-      --accent: #ffeb3b;
-      --shadow: 0 4px 15px rgba(0,0,0,0.1);
+      --secondary: #2e7d32;
+      --accent: #fbc02d;
+      --bg-light: #f0f2f5;
+      --white: #ffffff;
+      --text-dark: #333;
+      --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      background-color: #f4f7f6;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
     }
 
-    /* Navigation Menu */
-    .menu {
+    /* --- Side Navigation --- */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
       background: var(--primary);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .menu a {
       color: white;
-      text-decoration: none;
-      padding: 15px 18px;
-      display: inline-block;
-      font-weight: 600;
-      font-size: 13px;
-      text-transform: uppercase;
+      position: fixed;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
     }
 
-    .menu a:hover { color: var(--accent); background: rgba(255,255,255,0.1); }
+    .sidebar-brand {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
 
-    /* Header Section */
-    .school-header {
+    .sidebar a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      padding: 12px 25px;
       display: flex;
       align-items: center;
-      background: white;
-      padding: 15px 5%;
-      border-bottom: 4px solid var(--primary);
+      gap: 10px;
+      transition: 0.3s;
     }
 
-    .school-logo { width: 80px; height: auto; margin-right: 20px; }
-    .school-title h1 { margin: 0; color: var(--primary); font-size: 24px; }
-    .school-title p { margin: 5px 0 0; color: #666; font-size: 14px; }
-
-    /* Hero Section */
-    .hero {
-      background: var(--primary-gradient);
-      color: white;
-      padding: 60px 5%;
-      text-align: center;
-      clip-path: ellipse(150% 100% at 50% 0%);
+    .sidebar a:hover, .sidebar a.active {
+      background: rgba(255,255,255,0.1);
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
     }
 
-    /* Dashboard Grid */
-    .main-content {
-      max-width: 1200px;
-      margin: -40px auto 40px;
-      padding: 0 20px;
+    /* --- Main Content Area --- */
+    .main-wrapper {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+    }
+
+    .top-nav {
+      background: var(--white);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* --- Stats Cards --- */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      padding: 30px 40px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .stat-icon {
+      background: #e8f5e9;
+      color: var(--primary);
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    .stat-val { font-size: 24px; font-weight: bold; margin: 0; }
+    .stat-label { font-size: 14px; color: #777; margin: 0; }
+
+    /* --- Dashboard Grid --- */
+    .dashboard-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 25px;
+      gap: 30px;
+      padding: 0 40px 40px;
     }
 
     .card {
-      background: white;
+      background: var(--white);
+      border-radius: 15px;
       padding: 25px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      margin-bottom: 25px;
+      box-shadow: var(--card-shadow);
     }
 
-    .quick-links { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 12px; 
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    .link-btn {
-      background: #f8f9fa;
-      padding: 15px 10px;
-      text-align: center;
-      border-radius: 8px;
-      text-decoration: none;
+    .btn-outline {
+      border: 1.5px solid var(--primary);
       color: var(--primary);
-      font-weight: bold;
-      transition: 0.3s;
-      border: 1px solid #e0e0e0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
       font-size: 13px;
-    }
-    
-    .link-btn:hover { 
-      background: var(--primary); 
-      color: white; 
-      transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-weight: 600;
     }
 
-    .school-footer { background: #102e12; color: white; text-align: center; padding: 40px 5%; }
-    
-    @media (max-width: 768px) {
-      .main-content { grid-template-columns: 1fr; }
-      .menu a { padding: 10px; font-size: 11px; }
+    @media (max-width: 992px) {
+      .sidebar { display: none; }
+      .main-wrapper { margin-left: 0; width: 100%; }
+      .dashboard-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <header class="school-header">
-    <img src="logo.png" alt="Logo" class="school-logo">
-    <div class="school-title">
-      <h1>Government Primary School Pethgam Wagoora</h1>
-      <p>UDISE: 01022202207 | Wagoora, Baramulla, J&K</p>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h3 style="margin:0; font-size: 16px; color: var(--accent);">GPS PETHGAM</h3>
+      <p style="margin:0; font-size: 10px; opacity: 0.7;">UDISE: 01022202207</p>
     </div>
-  </header>
+    <a href="index.html" class="active"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
+    <a href="admission.html"><span class="material-icons-outlined">person_add</span> Admissions</a>
+    <a href="adm-register.html"><span class="material-icons-outlined">list_alt</span> Register</a>
+    <a href="results.html"><span class="material-icons-outlined">grading</span> Academics</a>
+    <a href="mdm.html"><span class="material-icons-outlined">restaurant</span> MDM Tracker</a>
+    <a href="reports-hub.html"><span class="material-icons-outlined">download</span> Reports Hub</a>
+  </aside>
 
-  <nav class="menu">
-    <a href="index.html">🏠 Home</a>
-    <a href="admission.html">📝 Admission</a>
-    <a href="adm-register.html">📋 Register</a>
-    <a href="upload-results.html">📤 Upload Results</a>
-    <a href="results.html">📊 View Results</a>
-    <a href="mdm.html">🍽️ Daily MDM</a>
-    <a href="mdm-statement.html">📜 MDM Report</a>
-    <a href="reports-hub.html" style="background: #ffcc00; color: #000; padding: 5px 10px; border-radius: 4px;">📥 Reports Hub</a>
-  </nav>
-
-  <section class="hero">
-    <h2>School Management System (Session 2026)</h2>
-    <p>Centralized platform for Student Records, Academic Results, and MDM Tracking.</p>
-  </section>
-
-  <div class="main-content">
-    <div class="left-col">
-      <div class="card">
-        <h3>📢 System Overview</h3>
-        <p>This ERP portal serves as the primary interface for GPS Pethgam Wagoora staff to manage student lifecycles, from admission to result certification.</p>
+  <div class="main-wrapper">
+    <header class="top-nav">
+      <div><h2 style="margin:0; font-size: 20px;">School ERP Overview</h2></div>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span class="material-icons-outlined" style="color:#777;">notifications</span>
+        <div style="text-align: right;">
+          <p style="margin:0; font-weight: bold; font-size: 14px;">Session 2026</p>
+          <p style="margin:0; font-size: 12px; color: #777;">Admin Panel</p>
+        </div>
       </div>
+    </header>
 
-      <div class="card">
-        <h3>📊 Current Enrollment</h3>
-        <div style="display:flex; justify-content: space-around; text-align:center;">
-          <div><h2 id="totalStudents" style="color:var(--primary); font-size: 40px;">0</h2><p>Total Students</p></div>
-          <div><h2 style="color:var(--primary); font-size: 40px;">100%</h2><p>MDM Coverage</p></div>
-          <div><h2 style="color:var(--primary); font-size: 40px;">04</h2><p>Active Faculty</p></div>
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon"><span class="material-icons-outlined">groups</span></div>
+        <div>
+          <p class="stat-val" id="totalStudents">0</p>
+          <p class="stat-label">Total Enrollment</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff8e1; color:#fbc02d;"><span class="material-icons-outlined">history_edu</span></div>
+        <div>
+          <p class="stat-val">100%</p>
+          <p class="stat-label">Results Uploaded</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#e3f2fd; color:#1e88e5;"><span class="material-icons-outlined">badge</span></div>
+        <div>
+          <p class="stat-val">04</p>
+          <p class="stat-label">Active Staff</p>
+        </div>
+      </div>
+    </div>
+
+    <main class="dashboard-grid">
+      <div class="left-col">
+        <div class="card">
+          <div class="card-header">
+            <h3 style="margin:0;">Quick Actions</h3>
+            <span style="font-size: 12px; color: #999;">Frequently Used Tasks</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            <a href="admission.html" class="btn-outline" style="text-align: center;">New Admission</a>
+            <a href="mdm.html" class="btn-outline" style="text-align: center;">MDM Entry</a>
+            <a href="upload-results.html" class="btn-outline" style="text-align: center;">Marks Entry</a>
+            <a href="bonafide.html" class="btn-outline" style="text-align: center;">Bonafide</a>
+            <a href="tc-generator.html" class="btn-outline" style="text-align: center;">Issue TC</a>
+            <a href="apaar-input.html" class="btn-outline" style="text-align: center;">APAAR Sync</a>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <h3>🆔 APAAR / Pen ID Management</h3>
-        <div class="quick-links" style="grid-template-columns: 1fr 1fr;">
-          <a href="apaar-input.html" class="link-btn">Input APAAR Data</a>
-          <a href="apaar-pdf.html" class="link-btn">Generate ID Cards</a>
+      <div class="right-col">
+        <div class="card" style="border-top: 4px solid var(--accent);">
+          <h3>Notice Board</h3>
+          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+            <li>Admission drive for 2026 active.</li>
+            <li>Quarterly MDM audit next Monday.</li>
+            <li>Update Pen IDs for Class 5th.</li>
+          </ul>
         </div>
       </div>
-    </div>
-
-    <div class="right-col">
-      <div class="card">
-        <h3>📂 Administrative Tasks</h3>
-        <div class="quick-links">
-          <a href="admission.html" class="link-btn">New Admission</a>
-          <a href="adm-register.html" class="link-btn">Admission Register</a>
-          <a href="upload-results.html" class="link-btn">Upload Marks</a>
-          <a href="results.html" class="link-btn">View Results</a>
-          <a href="mdm.html" class="link-btn">Daily MDM Log</a>
-          <a href="mdm-statement.html" class="link-btn">MDM Statement</a>
-        </div>
-      </div>
-      
-      <div class="card" style="background: #fff8dc; border-left: 5px solid #fbc02d;">
-        <h3>🔔 Notice Board</h3>
-        <marquee direction="up" scrollamount="2" style="height: 100px;">
-          • Session 2026-27 Admissions started.<br><br>
-          • Ensure all Result Co-Scholastic data is uploaded.<br><br>
-          • APAAR IDs must be linked to Admission Register.
-        </marquee>
-      </div>
-    </div>
+    </main>
   </div>
-
-  <footer class="school-footer">
-    <p>📍 Wagoora Babareshi Road, Baramulla - 193109</p>
-    <p>📞 9596449881 | 📧 pspethgam@gmail.com</p>
-    <hr style="width: 50%; border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px auto;">
-    <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
-  </footer>
 
   <script>
     window.onload = function() {
-        // Updated to check both common key names used in admission forms
-        const students = JSON.parse(localStorage.getItem("admissions")) || 
-                         JSON.parse(localStorage.getItem("admissionData")) || [];
+        const students = JSON.parse(localStorage.getItem("admissions")) || [];
         document.getElementById('totalStudents').innerText = students.length;
     };
   </script>
 </body>
 </html>
-      
+
+  
