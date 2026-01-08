@@ -3,233 +3,239 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ERP Dashboard | GPS Pethgam Wagoora</title>
+  <title>Unified ERP | GPS Pethgam Wagoora</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
     :root {
-      --primary: #1b5e20;
-      --secondary: #2e7d32;
-      --accent: #fbc02d;
-      --bg-light: #f0f2f5;
+      --primary: #1b5e20; /* School Green */
+      --clerical: #0277bd; /* Clerical Blue */
+      --admin: #c62828; /* Admin Red */
+      --accent: #fbc02d; /* Gold */
       --white: #ffffff;
-      --text-dark: #333;
-      --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      --shadow-3d: 0 6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: var(--bg-light);
-      color: var(--text-dark);
-      display: flex;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-    /* --- Side Navigation --- */
-    .sidebar {
-      width: 260px;
-      height: 100vh;
-      background: var(--primary);
-      color: white;
-      position: fixed;
-      padding-top: 20px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-brand {
-      padding: 0 20px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 20px;
-    }
-
-    .sidebar a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      padding: 12px 25px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: 0.3s;
-    }
-
-    .sidebar a:hover, .sidebar a.active {
-      background: rgba(255,255,255,0.1);
+    /* --- 1. Tinker Scrolling Notification --- */
+    .tinker-news {
+      background: #222;
       color: var(--accent);
-      border-left: 4px solid var(--accent);
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-bottom: 2px solid var(--accent);
+    }
+    .tinker-news marquee { font-weight: bold; font-size: 14px; }
+
+    /* --- 2. Header --- */
+    .hero-header {
+      background: linear-gradient(135deg, var(--primary), #2e7d32);
+      color: white;
+      padding: 40px 5%;
+      text-align: center;
+      clip-path: ellipse(150% 100% at 50% 0%);
     }
 
-    /* --- Main Content Area --- */
-    .main-wrapper {
-      margin-left: 260px;
-      width: calc(100% - 260px);
-      min-height: 100vh;
-    }
-
-    .top-nav {
-      background: var(--white);
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
+    /* --- 3. Professional 3D Buttons --- */
+    .btn-3d {
+      display: inline-flex;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      justify-content: center;
+      padding: 15px 12px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      transition: all 0.1s;
+      cursor: pointer;
+      border: none;
+      font-size: 13px;
+      gap: 8px;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-3d);
     }
 
-    /* --- Stats Cards --- */
-    .stats-container {
+    .btn-admin { background: var(--admin); }
+    .btn-clerical { background: var(--clerical); }
+    .btn-general { background: var(--primary); }
+
+    .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+
+    /* --- 4. Tiered Grid Layout --- */
+    .main-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      padding: 30px 40px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+      padding: 40px 5%;
+      margin-top: -50px; /* Overlap with hero */
     }
 
-    .stat-card {
+    .tier-card {
       background: var(--white);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
+    }
+
+    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    .tier-header h2 { margin: 0; font-size: 1.1rem; color: #333; }
+
+    .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* --- 5. Heroes & Gallery Section --- */
+    .section-title { text-align: center; margin: 40px 0 20px; color: var(--primary); font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    
+    .heroes-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 5%; scroll-behavior: smooth; }
+    .hero-card {
+      min-width: 180px;
+      background: white;
       padding: 20px;
       border-radius: 15px;
-      box-shadow: var(--card-shadow);
-      display: flex;
-      align-items: center;
-      gap: 15px;
+      text-align: center;
+      border-bottom: 4px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
+    .hero-avatar { width: 80px; height: 80px; background: #eee; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); overflow: hidden; }
 
-    .stat-icon {
-      background: #e8f5e9;
-      color: var(--primary);
-      padding: 15px;
-      border-radius: 12px;
+    /* --- 6. Modal Login --- */
+    .login-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 2000;
+      justify-content: center; align-items: center;
     }
+    .login-box { background: white; padding: 30px; border-radius: 20px; width: 320px; text-align: center; }
 
-    .stat-val { font-size: 24px; font-weight: bold; margin: 0; }
-    .stat-label { font-size: 14px; color: #777; margin: 0; }
-
-    /* --- Dashboard Grid --- */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-      padding: 0 40px 40px;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: var(--card-shadow);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .btn-outline {
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-      padding: 8px 16px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    @media (max-width: 992px) {
-      .sidebar { display: none; }
-      .main-wrapper { margin-left: 0; width: 100%; }
-      .dashboard-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 768px) { .link-list { grid-template-columns: 1fr; } .main-grid { margin-top: 20px; } }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <h3 style="margin:0; font-size: 16px; color: var(--accent);">GPS PETHGAM</h3>
-      <p style="margin:0; font-size: 10px; opacity: 0.7;">UDISE: 01022202207</p>
-    </div>
-    <a href="index.html" class="active"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
-    <a href="admission.html"><span class="material-icons-outlined">person_add</span> Admissions</a>
-    <a href="adm-register.html"><span class="material-icons-outlined">list_alt</span> Register</a>
-    <a href="results.html"><span class="material-icons-outlined">grading</span> Academics</a>
-    <a href="mdm.html"><span class="material-icons-outlined">restaurant</span> MDM Tracker</a>
-    <a href="reports-hub.html"><span class="material-icons-outlined">download</span> Reports Hub</a>
-  </aside>
-
-  <div class="main-wrapper">
-    <header class="top-nav">
-      <div><h2 style="margin:0; font-size: 20px;">School ERP Overview</h2></div>
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <span class="material-icons-outlined" style="color:#777;">notifications</span>
-        <div style="text-align: right;">
-          <p style="margin:0; font-weight: bold; font-size: 14px;">Session 2026</p>
-          <p style="margin:0; font-size: 12px; color: #777;">Admin Panel</p>
-        </div>
-      </div>
-    </header>
-
-    <div class="stats-container">
-      <div class="stat-card">
-        <div class="stat-icon"><span class="material-icons-outlined">groups</span></div>
-        <div>
-          <p class="stat-val" id="totalStudents">0</p>
-          <p class="stat-label">Total Enrollment</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#fff8e1; color:#fbc02d;"><span class="material-icons-outlined">history_edu</span></div>
-        <div>
-          <p class="stat-val">100%</p>
-          <p class="stat-label">Results Uploaded</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#e3f2fd; color:#1e88e5;"><span class="material-icons-outlined">badge</span></div>
-        <div>
-          <p class="stat-val">04</p>
-          <p class="stat-label">Active Staff</p>
-        </div>
-      </div>
-    </div>
-
-    <main class="dashboard-grid">
-      <div class="left-col">
-        <div class="card">
-          <div class="card-header">
-            <h3 style="margin:0;">Quick Actions</h3>
-            <span style="font-size: 12px; color: #999;">Frequently Used Tasks</span>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-            <a href="admission.html" class="btn-outline" style="text-align: center;">New Admission</a>
-            <a href="mdm.html" class="btn-outline" style="text-align: center;">MDM Entry</a>
-            <a href="upload-results.html" class="btn-outline" style="text-align: center;">Marks Entry</a>
-            <a href="bonafide.html" class="btn-outline" style="text-align: center;">Bonafide</a>
-            <a href="tc-generator.html" class="btn-outline" style="text-align: center;">Issue TC</a>
-            <a href="apaar-input.html" class="btn-outline" style="text-align: center;">APAAR Sync</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="right-col">
-        <div class="card" style="border-top: 4px solid var(--accent);">
-          <h3>Notice Board</h3>
-          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
-            <li>Admission drive for 2026 active.</li>
-            <li>Quarterly MDM audit next Monday.</li>
-            <li>Update Pen IDs for Class 5th.</li>
-          </ul>
-        </div>
-      </div>
-    </main>
+  <div class="tinker-news">
+    <marquee scrollamount="4">
+      🚀 Session 2026 Admissions are now OPEN! | 🏆 Congratulations to Class 5th for 100% Results! | 🍎 MDM Today: Nutritious Mixed Veg & Rice | 📌 APAAR IDs mandatory for all students.
+    </marquee>
   </div>
 
+  <header class="hero-header">
+    <img src="logo.png" style="width: 90px;" alt="GPS Logo" onerror="this.src='https://via.placeholder.com/90'">
+    <h1>GPS Pethgam Wagoora</h1>
+    <p>Integrated School Management & Learning Portal</p>
+  </header>
+
+  <main class="main-grid">
+    
+    <section class="tier-card">
+      <div class="tier-header">
+        <span class="material-icons-outlined" style="color:var(--primary)">groups</span>
+        <h2>General (Public)</h2>
+      </div>
+      <div class="link-list">
+        <a href="results.html" class="btn-3d btn-general">View Results</a>
+        <a href="mdm-statement.html" class="btn-3d btn-general">MDM Reports</a>
+        <a href="#gallery" class="btn-3d btn-general">School Gallery</a>
+        <a href="master-profile.html" class="btn-3d btn-general">School Profile</a>
+      </div>
+    </section>
+
+    <section class="tier-card">
+      <div class="tier-header">
+        <span class="material-icons-outlined" style="color:var(--clerical)">history_edu</span>
+        <h2>Clerical (Staff)</h2>
+      </div>
+      <div class="link-list">
+        <button onclick="requestLogin('clerical', 'roll-statement.html')" class="btn-3d btn-clerical">Attendance</button>
+        <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM Log</button>
+        <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
+        <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
+      </div>
+    </section>
+
+    <section class="tier-card">
+      <div class="tier-header">
+        <span class="material-icons-outlined" style="color:var(--admin)">admin_panel_settings</span>
+        <h2>Administration</h2>
+      </div>
+      <div class="link-list">
+        <button onclick="requestLogin('admin', 'bonafide.html')" class="btn-3d btn-admin">Bonafide</button>
+        <button onclick="requestLogin('admin', 'tc.html')" class="btn-3d btn-admin">Transfer Cert</button>
+        <button onclick="requestLogin('admin', 'staff-statement.html')" class="btn-3d btn-admin">Staff Records</button>
+        <button onclick="requestLogin('admin', 'reports-hub.html')" class="btn-3d btn-admin">Reports Hub</button>
+      </div>
+    </section>
+
+  </main>
+
+  <h2 class="section-title"><span class="material-icons-outlined">military_tech</span> Our Heroes</h2>
+  <div class="heroes-grid">
+    <div class="hero-card">
+      <div class="hero-avatar"></div>
+      <strong>Student Name</strong>
+      <p style="font-size: 12px; color: #666;">Academic Excellence</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-avatar"></div>
+      <strong>Student Name</strong>
+      <p style="font-size: 12px; color: #666;">Sports Champion</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-avatar"></div>
+      <strong>Student Name</strong>
+      <p style="font-size: 12px; color: #666;">Best Discipline</p>
+    </div>
+  </div>
+
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <h3 id="loginTitle">Security Check</h3>
+      <p id="loginPrompt" style="font-size: 13px; color: #666;">Please enter authorization code</p>
+      <input type="password" id="passCode" placeholder="••••" style="width: 80%; padding: 12px; font-size: 20px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin: 15px 0;">
+      <br>
+      <button onclick="validate()" class="btn-3d btn-general" style="width: 100%;">Unlock Dashboard</button>
+      <button onclick="hideLogin()" style="background:none; border:none; color:red; margin-top:15px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+
+  <footer style="background: #102e12; color: white; text-align: center; padding: 30px 5%; margin-top: 50px;">
+    <p>© 2026 GPS Pethgam Wagoora | All Systems Integrated</p>
+  </header>
+
   <script>
-    window.onload = function() {
-        const students = JSON.parse(localStorage.getItem("admissions")) || [];
-        document.getElementById('totalStudents').innerText = students.length;
-    };
+    let targetPage = "";
+    let requiredRole = "";
+
+    function requestLogin(role, page) {
+      targetPage = page;
+      requiredRole = role;
+      document.getElementById('loginTitle').innerText = role.toUpperCase() + " ACCESS";
+      document.getElementById('loginOverlay').style.display = 'flex';
+    }
+
+    function hideLogin() {
+      document.getElementById('loginOverlay').style.display = 'none';
+      document.getElementById('passCode').value = "";
+    }
+
+    function validate() {
+      const pin = document.getElementById('passCode').value;
+      
+      // Define your passwords here
+      const ADMIN_PIN = "2026"; 
+      const STAFF_PIN = "1234";
+
+      if (requiredRole === 'admin' && pin === ADMIN_PIN) {
+        window.location.href = targetPage;
+      } else if (requiredRole === 'clerical' && pin === STAFF_PIN) {
+        window.location.href = targetPage;
+      } else {
+        alert("Incorrect Authorization Code!");
+      }
+    }
   </script>
 </body>
 </html>
-
-  
+      
