@@ -4,23 +4,50 @@
   <meta charset="UTF-8">
   <title>Staff Statement | GPS Pethgam Wagoora</title>
   <style>
-    @page { size: A4 landscape; margin: 10mm; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    /* 1. PAGE & PRINT SETTINGS */
+    @page { 
+      size: A4 landscape; 
+      margin: 8mm; /* Reduced slightly to give more room for columns */
+    }
+    
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      background: #f4f4f4; 
+      margin: 0; 
+      padding: 0; 
+    }
 
-    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; }
-    .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid white; padding: 4px 10px; border-radius: 4px; }
+    /* 2. NAVIGATION (HIDDEN ON PRINT) */
+    .nav-header { 
+      background: #1a5d1a; 
+      padding: 10px; 
+      display: flex; 
+      gap: 15px; 
+      justify-content: center; 
+    }
+    .nav-header a { 
+      color: white; 
+      text-decoration: none; 
+      font-weight: bold; 
+      font-size: 13px; 
+      border: 1px solid white; 
+      padding: 4px 10px; 
+      border-radius: 4px; 
+    }
 
+    /* 3. REPORT PAPER CONTAINER */
     .report-paper {
       background: white;
-      width: 277mm;
+      width: 277mm; /* Standard A4 Landscape width */
       min-height: 190mm;
       margin: 20px auto;
-      padding: 25px;
+      padding: 20px;
       position: relative;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       box-sizing: border-box;
     }
 
+    /* 4. WATERMARK */
     .watermark-container {
       position: absolute;
       top: 50%;
@@ -30,8 +57,9 @@
       pointer-events: none;
       z-index: 0;
     }
-    .watermark-container img { width: 400px; height: auto; }
+    .watermark-container img { width: 350px; height: auto; }
 
+    /* 5. HEADER LOGO & TEXT */
     .header-section { 
         display: flex; 
         align-items: center; 
@@ -40,34 +68,69 @@
         padding-bottom: 10px; 
         margin-bottom: 15px; 
     }
-    .header-logo { width: 65px; height: 65px; margin-right: 15px; }
+    .header-logo { width: 60px; height: 60px; margin-right: 15px; }
     .header-text { text-align: center; }
-    .school-name { color: #002366; font-size: 22px; margin: 0; font-weight: 800; text-transform: uppercase; }
-    .header-sub { font-size: 12px; font-weight: bold; margin: 3px 0; color: #333; }
+    .school-name { color: #002366; font-size: 20px; margin: 0; font-weight: 800; text-transform: uppercase; }
+    .header-sub { font-size: 11px; font-weight: bold; margin: 3px 0; color: #333; }
 
+    /* 6. META DATA (REF NO / DATE) */
     .meta-container { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 12px; }
     .field-label { font-weight: bold; color: #002366; }
     .underline { border-bottom: 1px solid #000; display: inline-block; min-width: 120px; }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 5px; position: relative; z-index: 1; table-layout: fixed; }
-    th, td { border: 1.2px solid #000; padding: 6px 4px; text-align: center; font-size: 11px; word-wrap: break-word; }
-    th { background: #002366 !important; color: white !important; text-transform: uppercase; font-size: 9.5px; height: 50px; vertical-align: middle; }
+    /* 7. TABLE DESIGN */
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 5px; 
+      position: relative; 
+      z-index: 1; 
+      table-layout: fixed; /* Keeps column widths strict */
+    }
+    th, td { 
+      border: 1.1px solid #000; 
+      padding: 4px 2px; 
+      text-align: center; 
+      font-size: 10.5px; 
+      word-wrap: break-word; 
+      vertical-align: middle;
+    }
+    th { 
+      background: #002366 !important; 
+      color: white !important; 
+      text-transform: uppercase; 
+      font-size: 9px; 
+      height: 45px; 
+    }
+
+    /* 8. PHOTO SPECIFIC STYLES */
+    .staff-photo {
+      width: 42px;
+      height: 52px;
+      object-fit: cover; /* Crops image to fit without stretching */
+      border: 0.5px solid #333;
+      display: block;
+      margin: auto;
+    }
     
-    .staff-name { text-align: left; padding-left: 5px; font-weight: bold; }
-    tr:nth-child(even) { background-color: #f9f9f9; }
+    .staff-name { text-align: left; padding-left: 5px; font-weight: bold; font-size: 10px; }
+    tr:nth-child(even) { background-color: #fcfcfc; }
 
-    .note-section { margin-top: 15px; font-size: 12.5px; font-weight: bold; color: #333; position: relative; z-index: 1; }
+    /* 9. FOOTER & SIGNATURES */
+    .note-section { margin-top: 12px; font-size: 11px; font-weight: bold; color: #333; position: relative; z-index: 1; }
+    .footer-section { margin-top: 40px; display: flex; justify-content: space-between; position: relative; z-index: 1; }
+    .sig-box { text-align: center; width: 180px; border-top: 1.2px solid #000; padding-top: 5px; font-weight: bold; font-size: 11px; }
 
-    .footer-section { margin-top: 50px; display: flex; justify-content: space-between; position: relative; z-index: 1; }
-    .sig-box { text-align: center; width: 180px; border-top: 1.2px solid #000; padding-top: 5px; font-weight: bold; font-size: 12px; }
-
+    /* 10. PRINT OPTIMIZATION */
     @media print {
       .no-print { display: none !important; }
       body { background: white; }
-      .report-paper { margin: 0; box-shadow: none; width: 100%; }
-      th { -webkit-print-color-adjust: exact; }
+      .report-paper { margin: 0; box-shadow: none; width: 100%; padding: 5mm; }
+      th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .staff-photo { border: 1px solid #000; }
     }
-  </style>
+</style>
+
 </head>
 <body>
 
@@ -97,22 +160,23 @@
   <h3 style="text-align:center; text-decoration: underline; color: #002366; margin: 0 0 10px 0; font-size: 16px;">STAFF STATEMENT (DETAILED RECORD)</h3>
 
   <table>
-    <thead>
-      <tr>
-        <th style="width: 30px;">S.No</th>
-        <th style="width: 140px;">Staff Name</th>
-        <th style="width: 100px;">Designation</th>
-        <th style="width: 100px;">Qualification</th>
-        <th style="width: 100px;">Subject in P.G</th>
-        <th style="width: 85px;">Date of 1st Appointment</th>
-        <th style="width: 85px;">D.O.J (Present School)</th>
-        <th style="width: 120px;">Actual Place of Posting (if Deployed)</th>
-        <th style="width: 90px;">Contact No</th>
-        <th>Remarks</th>
-      </tr>
-    </thead>
-    <tbody id="staffBody"></tbody>
-  </table>
+  <thead>
+    <tr>
+      <th style="width: 30px;">S.No</th>
+      <th style="width: 55px;">Photo</th> <th style="width: 140px;">Staff Name</th>
+      <th style="width: 100px;">Designation</th>
+      <th style="width: 100px;">Qualification</th>
+      <th style="width: 100px;">Subject in P.G</th>
+      <th style="width: 85px;">Date of 1st Appointment</th>
+      <th style="width: 85px;">D.O.J (Present School)</th>
+      <th style="width: 120px;">Actual Place of Posting</th>
+      <th style="width: 90px;">Contact No</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody id="staffBody"></tbody>
+</table>
+
 
   <div class="note-section">
     Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
@@ -124,38 +188,70 @@
   </div>
 </div>
 
-<script>
-  function renderStaffStatement() {
-    // Ensure this key matches your staff entry data storage key
-    const staff = JSON.parse(localStorage.getItem("staffRecords")) || [];
+<script type="module">
+  // 1. Import Firebase dependencies
+  import { db } from './init-firebase.js';
+  import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  async function renderStaffStatement() {
     const tbody = document.getElementById('staffBody');
-    tbody.innerHTML = "";
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-GB');
+    const dateElement = document.getElementById('currentDate');
+    
+    // Set current date
+    if(dateElement) dateElement.innerText = new Date().toLocaleDateString('en-GB');
+    
+    // Show loading state
+    tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px;">Fetching staff records from Cloud...</td></tr>`;
 
-    if (staff.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px;">No staff records found.</td></tr>`;
-        return;
+    try {
+      // 2. Reference the same "staffRecords" collection used in staff-entry.html
+      const staffRef = collection(db, "staffRecords");
+      const q = query(staffRef, orderBy("name", "asc")); // Sort alphabetically by name
+      const querySnapshot = await getDocs(q);
+      
+      tbody.innerHTML = "";
+
+      if (querySnapshot.empty) {
+          tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px;">No staff records found in Database.</td></tr>`;
+          return;
+      }
+
+      let index = 1;
+      querySnapshot.forEach((doc) => {
+        const member = doc.data();
+        
+        // 3. Handle Photo Display
+        // If no photo exists, show a placeholder or "No Photo" text
+        const photoHtml = member.photo 
+          ? `<img src="${member.photo}" style="width: 45px; height: 55px; object-fit: cover; border: 1px solid #333; border-radius: 2px;">` 
+          : `<span style="font-size: 8px; color: #999;">NO PHOTO</span>`;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${index++}</td>
+            <td style="padding: 2px;">${photoHtml}</td>
+            <td class="staff-name">${(member.name || '').toUpperCase()}</td>
+            <td>${member.designation || '-'}</td>
+            <td>${member.qualification || '-'}</td>
+            <td>${member.subjectPG || '-'}</td>
+            <td>${member.doFirstAppt || '-'}</td>
+            <td>${member.dojPresentSchool || '-'}</td>
+            <td>${member.actualPosting || 'N.A.'}</td>
+            <td>${member.contact || '-'}</td>
+            <td>${member.remarks || ''}</td>
+          </tr>
+        `;
+      });
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+      tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px; color: red;">Database Connection Error. Check console.</td></tr>`;
     }
-
-    staff.forEach((member, index) => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${index + 1}</td>
-          <td class="staff-name">${member.name.toUpperCase()}</td>
-          <td>${member.designation || '-'}</td>
-          <td>${member.qualification || '-'}</td>
-          <td>${member.subjectPG || '-'}</td>
-          <td>${member.doFirstAppt || '-'}</td>
-          <td>${member.dojPresentSchool || '-'}</td>
-          <td>${member.actualPosting || 'N.A.'}</td>
-          <td>${member.contact || '-'}</td>
-          <td>${member.remarks || ''}</td>
-        </tr>
-      `;
-    });
   }
-  window.onload = renderStaffStatement;
+
+  // Use DOMContentLoaded for Module scripts
+  window.addEventListener('DOMContentLoaded', renderStaffStatement);
 </script>
+
 </body>
 </html>
     
