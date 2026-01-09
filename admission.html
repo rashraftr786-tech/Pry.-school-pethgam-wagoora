@@ -146,7 +146,7 @@
     </div>
 
     <div class="declaration-box">
-        <input type="checkbox" required> <strong>Declaration:</strong> I hereby declare that the information provided is true. I consent to provide Aadhaar for authentication.
+        <input type="checkbox" required> <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
     </div>
 
     <div class="sig-section">
@@ -154,17 +154,22 @@
         <div class="sig-placeholder" style="margin-left: auto;">Signature of Student</div>
     </div>
 
-    <div id="officeSection" style="display:none;">
+    <div id="officeSection">
       <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
-      <div class="row" style="margin-bottom:0px">
-        <div class="field-group"><label>Admission No</label><input type="text" id="admNo"></div>
-        <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate"></div>
-        <div class="field-group"><label>Udise Code</label><input type="text" value="01022202207" readonly></div>
+      <div class="row">
+        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo" placeholder="GPSPW/2026/001"></div>
+        <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate" name="admDate"></div>
+        <div class="field-group"><label>Registration Status</label><input type="text" value="Verified & Active" readonly style="background:#eee"></div>
       </div>
-      <div class="field-group" style="margin-top:5px;"><label>Remarks</label><input type="text" id="remarks"></div>
-      <div class="sig-section" style="margin-top: 25px;">
+      <div class="field-group" style="margin-top:8px;">
+          <label>Remarks / Recommendations</label>
+          <textarea name="remarks" id="remarks" rows="2"></textarea>
+      </div>
+      <div class="sig-section" style="margin-top: 40px;">
         <div class="sig-placeholder">Admission Incharge</div>
-        <div class="sig-placeholder" style="margin-left: auto;">Head of Institution</div>
+        <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
+      </div>
+    </div>
       </div>
     </div>
 
