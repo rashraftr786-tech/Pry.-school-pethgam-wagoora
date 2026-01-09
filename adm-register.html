@@ -108,47 +108,68 @@
   </div>
 </div>
 
-<script>
-function loadData() {
-    const records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const tbody = document.getElementById("tableContent");
-    document.getElementById("recordCount").innerText = records.length;
-    tbody.innerHTML = "";
+  <script type="module">
+  // 1. Import db AND the functions needed to read data
+  import { db } from './init-firebase.js';
+  import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    records.forEach(student => {
-        const row = document.createElement("tr");
-        const photoSrc = student.studentPhoto || 'https://via.placeholder.com/45x50?text=NA';
+  // 2. Modified loadData to use Firebase
+  async function loadData() {
+      const tbody = document.getElementById("tableContent");
+      tbody.innerHTML = "<tr><td colspan='11'>Loading from Cloud...</td></tr>";
 
-        row.innerHTML = `
-            <td><img src="${photoSrc}" class="student-thumb"></td>
-            <td class="adm-no">${student.admNo || '---'}</td>
-            <td><strong>${student.studentName}</strong><br><small>${student.gender} | ${student.bloodGroup || 'O+'}</small></td>
-            <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
-            <td><strong>${student.studentClass}</strong></td>
-            <td>${student.dob}</td>
-            <td><small>AAD: ${student.aadhaarNo}</small><br><small>PEN: ${student.penId || '---'}</small></td>
-            <td>${student.fatherContact}<br><small>Res: ${student.motherContact}</small></td>
-            <td><small>${student.bankAcc} (${student.ifsc})</small><br><em>${student.village}</em></td>
-            <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
-            <td class="no-print">
-                <a href="admission.html?id=${student.admNo}" style="color:#1a5d1a; text-decoration:none; font-weight:bold;">📝 Edit</a>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
+      try {
+          // Fetch from your "admissions" collection in Firebase
+          const querySnapshot = await getDocs(collection(db, "admissions"));
+          const records = [];
+          querySnapshot.forEach((doc) => {
+              records.push({ id: doc.id, ...doc.data() });
+          });
 
-function searchTable() {
-    let input = document.getElementById("searchInput").value.toUpperCase();
-    let rows = document.getElementById("regTable").getElementsByTagName("tr");
-    for (let i = 1; i < rows.length; i++) {
-        let text = rows[i].textContent || rows[i].innerText;
-        rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
-    }
-}
+          document.getElementById("recordCount").innerText = records.length;
+          tbody.innerHTML = "";
 
-window.onload = loadData;
+          records.forEach(student => {
+              const row = document.createElement("tr");
+              const photoSrc = student.studentPhoto || 'https://via.placeholder.com/45x50?text=NA';
+
+              row.innerHTML = `
+                  <td><img src="${photoSrc}" class="student-thumb"></td>
+                  <td class="adm-no">${student.admNo || '---'}</td>
+                  <td><strong>${student.studentName}</strong><br><small>${student.gender} | ${student.bloodGroup || 'O+'}</small></td>
+                  <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
+                  <td><strong>${student.studentClass}</strong></td>
+                  <td>${student.dob}</td>
+                  <td><small>AAD: ${student.aadhaarNo}</small><br><small>PEN: ${student.penId || '---'}</small></td>
+                  <td>${student.fatherContact}<br><small>Res: ${student.motherContact}</small></td>
+                  <td><small>${student.bankAcc} (${student.ifsc})</small><br><em>${student.village}</em></td>
+                  <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
+                  <td class="no-print">
+                      <a href="admission.html?id=${student.id}" style="color:#1a5d1a; text-decoration:none; font-weight:bold;">📝 Edit</a>
+                  </td>
+              `;
+              tbody.appendChild(row);
+          });
+      } catch (error) {
+          console.error("Error fetching Firebase data:", error);
+          tbody.innerHTML = "<tr><td colspan='11'>Error loading data. Check console.</td></tr>";
+      }
+  }
+
+  // 3. Search function attached to 'window' so HTML can see it
+  window.searchTable = function() {
+      let input = document.getElementById("searchInput").value.toUpperCase();
+      let rows = document.getElementById("regTable").getElementsByTagName("tr");
+      for (let i = 1; i < rows.length; i++) {
+          let text = rows[i].textContent || rows[i].innerText;
+          rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+      }
+  };
+
+  // 4. Initialize
+  window.addEventListener('load', loadData);
 </script>
+
 
 </body>
 </html>
