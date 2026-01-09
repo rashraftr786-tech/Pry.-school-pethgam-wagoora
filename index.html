@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PS Pethgam ERP | Unified Portal</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     :root {
       --primary: #1b5e20;
@@ -14,7 +15,15 @@
       --shadow-3d: 0 6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
     }
 
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
+
+    /* --- Animations --- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-card { animation: fadeInUp 0.6s ease backwards; }
 
     /* --- Tinker Scrolling Notification --- */
     .tinker-news {
@@ -22,86 +31,103 @@
     }
     .tinker-news marquee { font-weight: bold; font-size: 14px; }
 
+    /* --- Navigation Bar --- */
+    nav {
+      background: white; padding: 10px 5%; display: flex; justify-content: space-between; 
+      align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
+    }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { text-decoration: none; color: var(--primary); font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .nav-links a:hover { color: var(--accent); }
+
     /* --- Professional Header --- */
     .hero-header {
       background: linear-gradient(135deg, var(--primary), #2e7d32);
-      color: white; padding: 40px 5% 80px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
+      color: white; padding: 60px 5% 100px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
     }
+
+    /* --- Dashboard Section Logic --- */
+    .page-section { display: none; padding-bottom: 50px; }
+    .active { display: block; animation: animate__fadeIn 0.5s; }
 
     /* --- 3D Buttons --- */
     .btn-3d {
       display: inline-flex; align-items: center; justify-content: center; padding: 15px 12px;
       font-weight: bold; color: white; text-decoration: none; border-radius: 12px;
-      transition: all 0.1s; cursor: pointer; border: none; font-size: 13px; gap: 8px;
+      transition: all 0.1s; cursor: pointer; border: none; font-size: 12px; gap: 8px;
       text-transform: uppercase; box-shadow: var(--shadow-3d);
     }
     .btn-admin { background: var(--admin); }
     .btn-clerical { background: var(--clerical); }
     .btn-general { background: var(--primary); }
+    .btn-3d:hover { filter: brightness(1.1); }
     .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
 
     /* --- Dashboard Grid --- */
     .main-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 25px; padding: 0 5%; margin-top: -60px;
     }
 
     .tier-card {
       background: white; border-radius: 20px; padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd; transition: 0.3s;
     }
+    .tier-card:hover { transform: translateY(-5px); }
     .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
     .tier-header h2 { margin: 0; font-size: 1.1rem; color: #333; }
     .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-    /* --- Heroes & Gallery --- */
-    .section-title { text-align: center; margin: 40px 0 20px; color: var(--primary); font-size: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .heroes-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 5%; }
-    .hero-card {
-      min-width: 160px; background: white; padding: 20px; border-radius: 15px;
-      text-align: center; border-bottom: 4px solid var(--accent); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-    .hero-avatar { width: 70px; height: 70px; background: #eee; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); }
+    /* --- Gallery Grid --- */
+    .gallery-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; padding: 20px 5%; }
+    .img-card { height: 200px; background: #ddd; border-radius: 15px; overflow: hidden; position: relative; cursor: pointer; }
+    .img-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .img-card:hover img { transform: scale(1.1); }
+
+    /* --- Contact Us Form --- */
+    .contact-wrapper { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .contact-info { background: var(--primary); color: white; padding: 20px; border-radius: 15px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
 
     /* --- Login Modal --- */
     .login-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
     }
-    .login-box { background: white; padding: 30px; border-radius: 20px; width: 320px; text-align: center; }
+    .login-box { background: white; padding: 30px; border-radius: 20px; width: 320px; text-align: center; animation: animate__zoomIn 0.3s; }
 
-    @media (max-width: 768px) { .link-list { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .link-list { grid-template-columns: 1fr; } .contact-wrapper { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
   <div class="tinker-news">
-    <marquee scrollamount="5">📢 Important: Daily Attendance must be marked before 11:00 AM | 🎓 Roll Statements for Session 2026 are now available in Admin Panel | 🏆 GPS Pethgam: Best Primary School Award 2025</marquee>
+    <marquee scrollamount="5">📢 Important: Daily Attendance must be marked before 11:00 AM | 🎓 Roll Statements for Session 2026 are now available | 🏆 GPS Pethgam: Excellence in Education Award 2025</marquee>
   </div>
 
-  <header class="hero-header">
-    <img src="logo.png" style="width: 80px;" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
-    <h1>Government Primary School Pethgam Wagoora ERP</h1>
-    <p>Session 2026 | Administration & Clerical Management</p>
-  </header>
+  <nav class="no-print">
+    <div style="font-weight: bold; color: var(--primary);">GPS PETHGAM</div>
+    <div class="nav-links">
+      <a onclick="showPage('dashboard')">Dashboard</a>
+      <a onclick="showPage('gallery')">Gallery</a>
+      <a onclick="showPage('contact')">Contact Us</a>
+    </div>
+  </nav>
 
-  <main class="main-grid">
-    
-    <section class="tier-card">
-      <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--primary)">public</span>
-        <h2>General (Public)</h2>
-      </div>
-      <div class="link-list">
-        <a href="results.html" class="btn-3d btn-general">View Results</a>
-        <a href="gallery.html" class="btn-3d btn-general">Gallery</a>
-        <a href="master-profile.html" class="btn-3d btn-general">Profile</a>
-      </div>
-    </section>
+  <div id="dashboard" class="page-section active">
+    <header class="hero-header">
+      <img src="logo.png" style="width: 80px;" alt="Logo" class="animate__animated animate__bounceIn">
+      <h1 class="animate__animated animate__fadeInDown">GPS Pethgam Unified ERP</h1>
+      <p class="animate__animated animate__fadeInUp">Modern Management for Modern Education</p>
+    </header>
 
-    <section class="tier-card">
-      <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--clerical)">assignment_turned_in</span>
+    <main class="main-grid">
+      <section class="tier-card animate-card" style="animation-delay: 0.1s;">
+        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--primary)">public</span><h2>General</h2></div>
+        <div class="link-list">
+          <a href="results.html" class="btn-3d btn-general">Results</a>
+          <a onclick="showPage('gallery')" class="btn-3d btn-general">Gallery</a>
+          <a href="profile.
         <h2>Clerical (Staff)</h2>
       </div>
       <div class="link-list">
