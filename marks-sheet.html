@@ -158,76 +158,59 @@
 
 <button class="btn-download" onclick="window.print()">Print Marksheet</button>
 
-<script>
-const params = new URLSearchParams(window.location.search);
-const admNo = params.get("admNo");
-const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
-const results = JSON.parse(localStorage.getItem("results")) || [];
-const sInfo = admissions.find(x => x.admNo === admNo);
-const sMarks = results.find(x => x.admNo === admNo);
+<script type="module">
+    // 1. Import Firebase dependencies
+    import { db } from './init-firebase.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-if (sInfo && sMarks) {
-    document.getElementById('sname').innerText = (sInfo.studentName || "").toUpperCase();
-    document.getElementById('admNoDisplay').innerText = sInfo.admNo || "";
-    document.getElementById('fname').innerText = sInfo.fatherName || "";
-    document.getElementById('mname').innerText = sInfo.motherName || "";
-    document.getElementById('dob').innerText = sInfo.dob || "";
-    document.getElementById('session').innerText = sInfo.session || "2024-25";
-    document.getElementById('classVal').innerText = sInfo.studentClass || "";
-    document.getElementById('rollNo').innerText = sMarks.rollNo || "";
-    document.getElementById('apaar').innerText = sInfo.apaarId || "N/A";
+    // 2. Main Logic on Load
+    window.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const studentId = params.get('id');
+        
+        // Set dates
+        const today = new Date().toLocaleDateString('en-GB');
+        if(document.getElementById("todayDate")) document.getElementById("todayDate").value = today;
+        if(document.getElementById("consentDate")) document.getElementById("consentDate").value = today;
 
-    // --- SMART FETCH FIX FOR PEN NO ---
-    // This checks every possible field name that might exist in your Admission Data
-    const penValue = sInfo.penNo || sInfo.pen || sInfo.panNo || sInfo.pan || sInfo.PEN || sInfo.PEN_No;
-    document.getElementById('penDisplay').innerText = penValue || "N/A";
-    // ---------------------------------
+        if (studentId) {
+            try {
+                // Fetch specific student document from the "admissions" collection
+                const docRef = doc(db, "admissions", studentId.trim());
+                const docSnap = await getDoc(docRef);
 
-    document.getElementById('remarksText').innerText = sMarks.remarks || "Performance is satisfactory.";
-    document.getElementById('att').innerText = sMarks.attendance || "0";
-    
-    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 85, height: 85 });
-    if (sInfo.studentPhoto) { document.getElementById('photoBox').innerHTML = `<img src="${sInfo.studentPhoto}">`; }
-
-    // Ranks and Marks Calculation (standard)
-    let scoreRecords = results.map(r => {
-        let total = 0;
-        if(r.marks){ Object.values(r.marks).forEach(m => {
-            const faT = (m.fa || []).reduce((a, b) => a + (Number(b) || 0), 0);
-            total += faT + (Number(m.cca) || 0) + (Number(m.sa) || 0);
-        }); }
-        const p = admissions.find(a => a.admNo === r.admNo);
-        return { admNo: r.admNo, total: total, className: p ? p.studentClass : '' };
+                if (docSnap.exists()) {
+                    const student = docSnap.data();
+                    
+                    // Fill display elements
+                    if(document.getElementById("displayAdmNo")) document.getElementById("displayAdmNo").innerText = student.admNo;
+                    if(document.getElementById("studentNameDisplay")) document.getElementById("studentNameDisplay").value = student.studentName;
+                    if(document.getElementById("studentNameHOI")) document.getElementById("studentNameHOI").value = student.studentName;
+                    if(document.getElementById("parentNameInput")) document.getElementById("parentNameInput").value = student.fatherName || "";
+                    
+                    // Specific logic for Aadhaar
+                    if(document.getElementById("parentAadhaarInput") && student.aadhaarNo) {
+                        document.getElementById("parentAadhaarInput").value = student.aadhaarNo;
+                    }
+                } else {
+                    console.error("No such student record found in Firebase!");
+                }
+            } catch (error) {
+                console.error("Error fetching student data:", error);
+            }
+        }
     });
-    const sSorted = [...scoreRecords].sort((a, b) => b.total - a.total);
-    document.getElementById('sRank').innerText = sSorted.findIndex(s => s.admNo === admNo) + 1;
-    const cSorted = scoreRecords.filter(s => s.className === sInfo.studentClass).sort((a, b) => b.total - a.total);
-    document.getElementById('cRank').innerText = cSorted.findIndex(s => s.admNo === admNo) + 1;
 
-    let labels = [], cData = [], totals = { fa1:0, fa2:0, fa3:0, fa4:0, fa5:0, fa6:0, t30:0, t20:0, t50:0, t100:0 };
-    Object.keys(sMarks.marks || {}).forEach(sub => {
-        const m = sMarks.marks[sub];
-        const fa = (m.fa || [0,0,0,0,0,0]).map(v => Number(v) || 0);
-        const faT = fa.reduce((a, b) => a + b, 0);
-        const cca = Number(m.cca) || 0, sa = Number(m.sa) || 0, rT = faT + cca + sa;
-        totals.fa1 += fa[0]; totals.fa2 += fa[1]; totals.fa3 += fa[2]; totals.fa4 += fa[3]; totals.fa5 += fa[4]; totals.fa6 += fa[5];
-        totals.t30 += faT; totals.t20 += cca; totals.t50 += sa; totals.t100 += rT;
-        labels.push(sub); cData.push(rT);
-        const g = rT>=90?'A+':rT>=80?'A':rT>=70?'B+':rT>=60?'B':rT>=50?'C+':'C';
-        document.getElementById('marksBody').innerHTML += `<tr><td class="subject-name">${sub}</td><td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${faT}</td><td>${cca}</td><td>${sa}</td><td style="font-weight:bold;">${rT}</td><td>${g}</td><td>${rT>=80?'Sky':rT>=50?'Mountain':'Stream'}</td></tr>`;
-    });
-    ['Fa1','Fa2','Fa3','Fa4','Fa5','Fa6','30','20','50','100'].forEach(k => document.getElementById('gt'+k).innerText = totals[k.toLowerCase()] || totals['t'+k]);
-    const avg = totals.t100 / Object.keys(sMarks.marks).length;
-    document.getElementById('finalGrade').innerText = avg>=90?'A+':avg>=80?'A':'B';
-    document.getElementById('resTotal').innerText = totals.t100 + " / " + (Object.keys(sMarks.marks).length * 100);
-    document.getElementById('resPerc').innerText = Math.round(avg) + "%";
-    const fP = avg>=80?'Sky':avg>=50?'Mountain':'Stream';
-    document.getElementById('finalProf').innerText = fP;
-    document.getElementById('pSky').innerText = fP === 'Sky' ? "✓" : "";
-    document.getElementById('pMtn').innerText = fP === 'Mountain' ? "✓" : "";
-    document.getElementById('pStrm').innerText = fP === 'Stream' ? "✓" : "";
-    new Chart(document.getElementById('marksChart'), { type: 'bar', data: { labels: labels, datasets: [{ data: cData, backgroundColor: '#5a3d8c' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-}
+    // 3. Attach Download function to window so the button can still find it
+    window.downloadPDF = function() {
+        const studentName = document.getElementById("studentNameDisplay")?.value || "Student";
+        const filename = "APAAR_Consent_" + studentName.replace(/\s+/g, '_') + ".pdf";
+        const originalTitle = document.title;
+        document.title = filename;
+        window.print();
+        document.title = originalTitle;
+    };
 </script>
+
 </body>
 </html>
