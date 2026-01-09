@@ -134,9 +134,9 @@
         <div class="link-list">
           <button onclick="requestLogin('clerical', 'attendance.html')" class="btn-3d btn-clerical">Attendance</button>
           <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
+          <button onclick="requestLogin('clerical', 'staff-entry.html')" class="btn-3d btn-clerical">Staff Entry</button>
           <button onclick="requestLogin('clerical', 'apaar-input.html')" class="btn-3d btn-clerical">APAAR Input</button>
           <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM</button>
-          <button onclick="requestLogin('clerical', 'mdm-statement.html')" class="btn-3d btn-clerical">MDM Statement</button>
           <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
         </div>
       </section>
@@ -172,7 +172,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-    // Firebase Config from User
     const firebaseConfig = {
       apiKey: "AIzaSyCzxHme_3hrztrDuD7wupGwNilDtYLfENI",
       authDomain: "studio-2729610945-4684b.firebaseapp.com",
@@ -182,22 +181,18 @@
       appId: "1:711147405574:web:7b5597955b676a3e4d1e87"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Update Status on Load
     window.addEventListener('load', () => {
       document.getElementById('cloudStatus').innerText = "✅ Cloud Synchronized (Studio-2729)";
     });
 
-    // Make functions globally accessible for the button onclicks
     window.showPage = (id) => {
       document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     };
 
-    // Export for use in older validation script
     window.db = db;
   </script>
 
@@ -205,7 +200,6 @@
     let targetPage = "";
     let requiredRole = "";
 
-    // Live Clock Function
     function updateClock() {
         const now = new Date();
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -238,4 +232,3 @@
   </script>
 </body>
 </html>
-            
