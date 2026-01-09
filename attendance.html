@@ -174,52 +174,116 @@
   Government Primary School Pethgam Wagoora | Session 2026 ERP Module
 </footer>
 
-<script>
-  // Load Date
+<script type="module">
+  // 1. Firebase Imports
+  import { db } from './init-firebase.js';
+  import { collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // Set default date
   document.getElementById('attendanceDate').valueAsDate = new Date();
 
-  function loadStudents() {
+  // 2. Load Students from Firebase Admissions Collection
+  async function loadStudents() {
     const selectedClass = document.getElementById('classSelect').value;
-    const students = JSON.parse(localStorage.getItem("admissions")) || [];
-    const filtered = students.filter(s => s.studentClass === selectedClass);
-    
     const tableBody = document.getElementById('attendanceTable');
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Searching Cloud Records...</td></tr>";
 
-    if (filtered.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in ${selectedClass}</td></tr>`;
+    try {
+      // Create a query to find students in the selected class
+      const q = query(collection(db, "admissions"), where("studentClass", "==", selectedClass));
+      const querySnapshot = await getDocs(q);
+      
+      tableBody.innerHTML = "";
+      let students = [];
+      querySnapshot.forEach((doc) => {
+        students.push(doc.data());
+      });
+
+      if (students.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in ${selectedClass}</td></tr>`;
+        updateSummary();
+        return;
+      }
+
+      // Sort students by name
+      students.sort((a, b) => a.studentName.localeCompare(b.studentName));
+
+      students.forEach((s, index) => {
+        const row = `
+          <tr data-admno="${s.admNo}" data-name="${s.studentName}">
+            <td>${index + 1}</td>
+            <td>${s.studentName}</td>
+            <td>${s.admNo}</td>
+            <td>
+              <select class="status-select" onchange="handleStatusChange(this)">
+                <option value="P">Present</option>
+                <option value="A">Absent</option>
+                <option value="L">Leave</option>
+                <option value="HD">Half Day</option>
+              </select>
+            </td>
+            <td style="text-align:center;">
+              <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
+            </td>
+            <td><input class="remarks-input" placeholder="Remarks" style="width: 100px; padding:5px;"></td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
       updateSummary();
-      return;
+    } catch (error) {
+      console.error("Error loading students:", error);
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error connecting to Cloud.</td></tr>`;
     }
-
-    filtered.forEach((s, index) => {
-      const row = `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${s.studentName}</td>
-          <td>${s.admNo}</td>
-          <td>
-            <select class="status-select" onchange="handleStatusChange(this)">
-              <option value="P">Present</option>
-              <option value="A">Absent</option>
-              <option value="L">Leave</option>
-              <option value="HD">Half Day</option>
-            </select>
-          </td>
-          <td style="text-align:center;">
-            <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
-          </td>
-          <td><input placeholder="Remarks" style="width: 100px; padding:5px;"></td>
-        </tr>
-      `;
-      tableBody.innerHTML += row;
-    });
-    updateSummary();
   }
 
-  function handleStatusChange(select) {
+  // 3. Save Attendance to Cloud
+  async function saveAttendance() {
+    const classVal = document.getElementById('classSelect').value;
+    const dateVal = document.getElementById('attendanceDate').value;
+    
+    if(!classVal) return alert("Please select a class first");
+
+    const rows = document.querySelectorAll('#attendanceTable tr');
+    const attendanceData = [];
+
+    rows.forEach(row => {
+      if(row.dataset.admno) {
+        attendanceData.push({
+          admNo: row.dataset.admno,
+          name: row.dataset.name,
+          status: row.querySelector('.status-select').value,
+          mdm: row.querySelector('.mdm-check').checked,
+          remarks: row.querySelector('.remarks-input').value
+        });
+      }
+    });
+
+    const reportId = `${classVal}_${dateVal}`; // Unique ID per class per day
+
+    try {
+      await setDoc(doc(db, "attendance", reportId), {
+        date: dateVal,
+        class: classVal,
+        summary: {
+          total: document.getElementById('totalStudents').innerText,
+          present: document.getElementById('presentCount').innerText,
+          absent: document.getElementById('absentCount').innerText,
+          mdm: document.getElementById('mdmAvailed').innerText
+        },
+        records: attendanceData,
+        timestamp: new Date().toISOString()
+      });
+      alert("Attendance saved to Cloud successfully!");
+    } catch (error) {
+      console.error("Save error:", error);
+      alert("Failed to save to Cloud.");
+    }
+  }
+
+  // 4. Global helper functions
+  window.handleStatusChange = function(select) {
     const mdmCheck = select.parentElement.nextElementSibling.querySelector('.mdm-check');
-    // Auto-uncheck MDM if Absent or Leave
     if (select.value === "A" || select.value === "L") {
       mdmCheck.checked = false;
     } else {
@@ -228,15 +292,15 @@
     updateSummary();
   }
 
-  function updateSummary() {
+  window.updateSummary = function() {
     const rows = document.querySelectorAll('#attendanceTable tr');
     let total = 0, p = 0, a = 0, l = 0, mdm = 0;
 
     rows.forEach(row => {
-      const status = row.querySelector('.status-select')?.value;
-      const mdmChecked = row.querySelector('.mdm-check')?.checked;
-
-      if (status) {
+      const statusSelect = row.querySelector('.status-select');
+      if (statusSelect) {
+        const status = statusSelect.value;
+        const mdmChecked = row.querySelector('.mdm-check').checked;
         total++;
         if (status === "P") p++;
         if (status === "A") a++;
@@ -252,12 +316,7 @@
     document.getElementById('mdmAvailed').innerText = mdm;
   }
 
-  function saveAttendance() {
-    alert("Attendance data for " + document.getElementById('attendanceDate').value + " has been saved to the Database.");
-    // In a real app, you would push this object to Firebase or LocalStorage here.
-  }
-
-  function preparePrint() {
+  window.preparePrint = function() {
     document.getElementById('summaryDate').innerText = document.getElementById('attendanceDate').value;
     document.getElementById('summaryClass').innerText = document.getElementById('classSelect').value;
     
@@ -269,7 +328,13 @@
     
     window.print();
   }
+
+  // Bind buttons
+  window.loadStudents = loadStudents;
+  window.saveAttendance = saveAttendance;
+
 </script>
+
 
 </body>
 </html>
