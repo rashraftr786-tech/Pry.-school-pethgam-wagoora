@@ -49,6 +49,7 @@
     }
 
     #liveClock { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--accent); }
+    #cloudStatus { font-size: 0.8rem; opacity: 0.8; margin-top: 5px; display: block; }
 
     .floating-logo {
       width: 80px; animation: floating 3s ease-in-out infinite;
@@ -114,6 +115,7 @@
       <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
       <h1>Unified ERP Portal</h1>
       <p>Session 2026 | Administration & Management</p>
+      <span id="cloudStatus">☁️ Connecting to School Cloud...</span>
     </header>
 
     <main class="main-grid">
@@ -166,6 +168,39 @@
     <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
   </footer>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    // Firebase Config from User
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzxHme_3hrztrDuD7wupGwNilDtYLfENI",
+      authDomain: "studio-2729610945-4684b.firebaseapp.com",
+      projectId: "studio-2729610945-4684b",
+      storageBucket: "studio-2729610945-4684b.firebasestorage.app",
+      messagingSenderId: "711147405574",
+      appId: "1:711147405574:web:7b5597955b676a3e4d1e87"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Update Status on Load
+    window.addEventListener('load', () => {
+      document.getElementById('cloudStatus').innerText = "✅ Cloud Synchronized (Studio-2729)";
+    });
+
+    // Make functions globally accessible for the button onclicks
+    window.showPage = (id) => {
+      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    };
+
+    // Export for use in older validation script
+    window.db = db;
+  </script>
+
   <script>
     let targetPage = "";
     let requiredRole = "";
@@ -203,5 +238,4 @@
   </script>
 </body>
 </html>
-
-          
+            
