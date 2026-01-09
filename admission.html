@@ -2,138 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
     @page { size: A4; margin: 0; }
-    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; color: #222; }
     
+    .no-print { 
+      background: #1a5d1a; 
+      padding: 12px; 
+      display: flex; 
+      gap: 20px; 
+      justify-content: center; 
+      border-bottom: 3px solid #ffcc00; 
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .no-print a { color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1); font-size: 13px; }
+    .no-print a:hover { background: rgba(255,255,255,0.2); }
+
     .page-border {
       background: white;
       width: 210mm;
-      height: 297mm;
-      margin: auto;
+      min-height: 297mm;
+      margin: 20px auto;
       padding: 10mm 15mm;
       box-sizing: border-box;
       border: 3px double darkgreen;
       position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
 
     .header-container {
       display: flex;
       align-items: center;
       border-bottom: 2px solid darkgreen;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
-    .school-logo { width: 75px; height: 75px; margin-right: 20px; }
-    .header-text h1 { margin: 0; font-size: 21px; color: darkgreen; text-transform: uppercase; }
-    .header-text p { margin: 1px 0; font-size: 10px; color: #333; }
+    .school-logo { width: 80px; height: 80px; margin-right: 20px; object-fit: contain; }
+    .header-text h1 { margin: 0; font-size: 22px; color: darkgreen; text-transform: uppercase; letter-spacing: 0.5px; }
+    .header-text p { margin: 2px 0; font-size: 11px; color: #333; font-weight: 500; }
 
-    .form-title { text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 12px; text-decoration: underline; }
+    .form-title { text-align: center; font-weight: bold; font-size: 17px; margin: 15px 0; text-decoration: underline; text-transform: uppercase; }
 
-    h3 { font-size: 12px; margin: 10px 0 6px 0; background: #f0f9f0; padding: 4px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; }
+    h3 { font-size: 12px; margin: 12px 0 8px 0; background: #f0f9f0; padding: 5px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; letter-spacing: 1px; }
 
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
-    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 6px; }
+    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 8px; }
     .field-group { display: flex; flex-direction: column; }
     
-    label { font-weight: bold; font-size: 10.5px; margin-bottom: 2px; color: #222; }
-    input, select { padding: 4px; font-size: 12.5px; border: 1px solid #777; border-radius: 2px; }
+    label { font-weight: bold; font-size: 10px; margin-bottom: 3px; color: #444; text-transform: uppercase; }
+    input, select, textarea { 
+      padding: 6px; 
+      font-size: 12px; 
+      border: 1px solid #888; 
+      border-radius: 3px; 
+      box-sizing: border-box;
+    }
+    input:focus { border-color: darkgreen; background: #fffdf5; outline: none; }
 
     .photo-box {
-      width: 105px;
-      height: 125px;
+      width: 110px;
+      height: 130px;
       border: 1px solid #000;
       text-align: center;
-      font-size: 8px;
-      background: #fff;
+      background: #f9f9f9;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
+    .photo-box p { font-size: 9px; color: #666; margin: 0; padding: 5px; }
 
     .declaration-box {
-      font-size: 11.5px;
-      line-height: 1.4;
+      font-size: 11px;
+      line-height: 1.5;
       text-align: justify;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background: #fafafa;
+      margin-top: 15px;
+      border: 1px solid #ddd;
+      padding: 12px;
+      background: #fcfcfc;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
     }
 
-    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 30px; }
-    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 11px; font-weight: bold; padding-top: 4px; width: 190px; }
+    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; }
+    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 11px; font-weight: bold; padding-top: 5px; width: 200px; }
 
-    #officeSection { border: 2px dashed darkred; padding: 10px; margin-top: 15px; background: #fffcfc; }
+    #officeSection { border: 2px dashed darkred; padding: 15px; margin-top: 20px; background: #fffafa; border-radius: 5px; }
 
     @media print {
-      body { background: none; }
-      .page-border { margin: 0; border: 2px solid darkgreen; }
+      body { background: none; padding: 0; }
       .no-print { display: none !important; }
+      .page-border { margin: 0; border: 2px solid darkgreen; box-shadow: none; width: 100%; height: 100%; }
+      input, select, textarea { border: 1px solid #000; }
       #officeSection { display: block !important; }
     }
   </style>
 </head>
 <body>
-  <div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00;">
-    <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 New Admission</a>
-    <a href="adm-register.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📋 View Register</a>
-    <a href="apaar-input.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
-</div>
 
+<div class="no-print">
+    <a href="admission.html">📝 New Admission</a>
+    <a href="adm-register.html">📋 View Register</a>
+    <a href="apaar-input.html" style="background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
+</div>
 
 <div class="page-border">
   <div class="header-container">
-    <img src="logo.png" alt="Logo" class="school-logo">
+    <img src="logo.png" alt="School Logo" class="school-logo">
     <div class="header-text">
       <h1>Government Primary School Pethgam Wagoora</h1>
-      <p>Udise Code: 01022202207 | E-mail: pspethgam@gmail.com | Contact: 959644988</p>
-      <p>Address: Wagoora Babareshi Road Near ZEO Office Wagoora, Baramulla, J&K</p>
+      <p>UDISE CODE: 01022202207 | E-mail: pspethgam@gmail.com | Phone: +91 959644988x</p>
+      <p>Address: Wagoora Babareshi Road, Near ZEO Office Wagoora, Baramulla, J&K - 193109</p>
     </div>
   </div>
 
-  <div class="form-title">STUDENT ADMISSION FORM (Session 2026)</div>
+  <div class="form-title">Student Admission Form (Session 2026)</div>
 
   <form id="admissionForm">
-    <div class="row" style="grid-template-columns: 1fr 1fr 115px;">
+    <div class="row" style="grid-template-columns: 1fr 1fr 110px;">
       <div class="field-group" style="grid-column: span 2;">
-        <label>Full Name of Student</label>
-        <input type="text" id="studentName" name="studentName" required>
-        <label style="margin-top:6px">Name (As per Aadhaar Card)</label>
-        <input type="text" id="aadhaarName" name="aadhaarName">
-        <div class="row" style="margin-top:6px">
-            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()"></div>
-            <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" name="dobWords" readonly></div>
-        </div>
-      </div>
-      <div class="photo-box">
-        <img id="photoPreview" style="max-width:100%; max-height:100px; display:none;">
-        <p id="photoTxt">Passport Photograph</p>
-        <input type="file" onchange="previewPhoto(event)" class="no-print" style="width:95px; font-size:7px; margin-top:5px;">
-      </div>
-    </div>
-
-    <div class="row-4">
-      <div class="field-group"><label>Gender</label><select name="gender" id="gender"><option>Male</option><option>Female</option></select></div>
-      <div class="field-group"><label>Blood Group</label><input type="text" id="bloodGroup" name="bloodGroup"></div>
-      <div class="field-group"><label>Category</label><select name="category" id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-      <div class="field-group"><label>Seeking Class</label><input type="text" id="studentClass" name="studentClass"></div>
-    </div>
-
-    <div class="row">
-        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" id="aadhaarNo" name="aadhaarNo" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>APAAR ID (12 Digits)</label><input type="text" id="apaarId" name="apaarId" pattern="\d{12}" maxlength="12"></div>
-        <div class="field-group"><label>PEN Number (12 Digits)</label><input type="text" id="penId" name="penId" pattern="\d{12}" maxlength="12"></div>
-    </div>
-
-    <h3>Parental & Contact Information</h3>
-    <div class="row">
-        <div class="field-group"><label>Father's Name</label><input type="text" id="fatherName" name="fatherName"></div>
-        <div class="field-group"><label>Mother's Name</label><input type="text" id="motherName" name="motherName"></div>
-        <div class="field-group"><label>Father's Contact No</label><input type="tel" id="fatherContact" name="fatherContact"></div>
-    </div>
     <div class="row">
         <div class="field-group"><label>Mother's Contact No</label><input type="tel" id="motherContact" name="motherContact"></div>
         <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName" name="bankName"></div>
