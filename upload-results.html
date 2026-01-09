@@ -95,10 +95,15 @@
   <button class="btn-save" onclick="saveData()">Save Assessment Record</button>
 </div>
 
-<script>
+<script type="module">
+// 1. Firebase Imports
+import { db } from './init-firebase.js';
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const tbody = document.getElementById('marksBody');
 
+// Generate table rows
 subjects.forEach(sub => {
     let row = `<tr>
         <td class="subject-label">${sub}</td>
@@ -109,15 +114,32 @@ subjects.forEach(sub => {
     tbody.innerHTML += row;
 });
 
-function lookupStudent() {
-    const adm = document.getElementById('admNo').value;
-    const records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const s = records.find(x => x.admNo === adm);
-    document.getElementById('studentName').innerText = s ? "Editing: " + s.studentName : "Student not found";
+// 2. Lookup Student from "admissions" collection
+window.lookupStudent = async function() {
+    const adm = document.getElementById('admNo').value.trim();
+    if(!adm) return;
+
+    try {
+        const docRef = doc(db, "admissions", adm);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const s = docSnap.data();
+            document.getElementById('studentName').innerText = "Editing: " + s.studentName;
+            
+            // Optional: Try to auto-load existing marks if they exist
+            loadExistingMarks(adm);
+        } else {
+            document.getElementById('studentName').innerText = "Student not found in admissions";
+        }
+    } catch (error) {
+        console.error("Lookup error:", error);
+    }
 }
 
-function saveData() {
-    const adm = document.getElementById('admNo').value;
+// 3. Save Data to "results" collection
+window.saveData = async function() {
+    const adm = document.getElementById('admNo').value.trim();
     if(!adm) return alert("Enter Adm No");
 
     const marks = {};
@@ -131,22 +153,49 @@ function saveData() {
         };
     });
 
-    const results = JSON.parse(localStorage.getItem("results")) || [];
     const data = {
         admNo: adm,
         rollNo: document.getElementById('rollNo').value,
         attendance: document.getElementById('att').value,
         remarks: document.getElementById('remarks').value,
-        marks: marks
+        marks: marks,
+        updatedAt: new Date().toISOString()
     };
 
-    const idx = results.findIndex(r => r.admNo === adm);
-    if(idx > -1) results[idx] = data; else results.push(data);
+    try {
+        // Use adm as the document ID for easy lookup
+        await setDoc(doc(db, "results", adm), data);
+        alert("Record Saved to Cloud Successfully");
+    } catch (error) {
+        console.error("Save error:", error);
+        alert("Error saving marks. Check console.");
+    }
+}
 
-    localStorage.setItem("results", JSON.stringify(results));
-    alert("Record Saved Successfully");
+// Helper: Load marks if they already exist
+async function loadExistingMarks(adm) {
+    const docSnap = await getDoc(doc(db, "results", adm));
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById('rollNo').value = data.rollNo || "";
+        document.getElementById('att').value = data.attendance || "";
+        document.getElementById('remarks').value = data.remarks || "";
+        
+        // Fill the marks inputs
+        subjects.forEach(sub => {
+            if(data.marks[sub]) {
+                const faInputs = document.querySelectorAll(`.${sub}-fa`);
+                faInputs.forEach((input, i) => {
+                    input.value = data.marks[sub].fa[i] || 0;
+                });
+                document.getElementById(`${sub}-cca`).value = data.marks[sub].cca || 0;
+                document.getElementById(`${sub}-sa`).value = data.marks[sub].sa || 0;
+            }
+        });
+    }
 }
 </script>
+
 </body>
 </html>
     
