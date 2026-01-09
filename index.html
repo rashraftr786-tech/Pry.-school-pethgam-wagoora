@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PS Pethgam ERP | Continuous Animation Edition</title>
+  <title>PS Pethgam ERP | Unified Portal</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
     :root {
@@ -16,7 +16,7 @@
 
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
 
-    /* --- CONTINUOUS KEYFRAMES --- */
+    /* --- CONTINUOUS ANIMATIONS --- */
     @keyframes floating {
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
@@ -40,105 +40,80 @@
     }
     .nav-links a { text-decoration: none; color: var(--primary); font-weight: bold; margin-left: 20px; cursor: pointer; }
 
-    /* --- Header --- */
+    /* --- Header & Live Clock --- */
     .hero-header {
       background: linear-gradient(-45deg, #1b5e20, #2e7d32, #1565c0, #222);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
-      color: white; padding: 60px 5% 100px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
+      color: white; padding: 40px 5% 80px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
     }
 
+    #liveClock { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--accent); }
+
     .floating-logo {
-      width: 90px; animation: floating 3s ease-in-out infinite;
+      width: 80px; animation: floating 3s ease-in-out infinite;
       filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
     }
 
-    /* --- Dashboard Grid --- */
+    /* --- Grid System --- */
     .main-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 25px; padding: 0 5%; margin-top: -60px;
     }
 
     .tier-card {
-      background: white; border-radius: 20px; padding: 25px;
+      background: white; border-radius: 20px; padding: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd;
     }
 
-    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-    
-    .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    /* --- 3D Buttons --- */
+    /* --- 3D Interactive Buttons --- */
     .btn-3d {
-      display: inline-flex; align-items: center; justify-content: center; padding: 12px;
-      font-weight: bold; color: white; text-decoration: none; border-radius: 12px;
-      cursor: pointer; border: none; font-size: 11px; gap: 8px;
+      display: inline-flex; align-items: center; justify-content: center; padding: 12px 8px;
+      font-weight: bold; color: white; text-decoration: none; border-radius: 10px;
+      cursor: pointer; border: none; font-size: 11px; gap: 6px;
       text-transform: uppercase; box-shadow: var(--shadow-3d);
       position: relative; overflow: hidden; transition: 0.1s;
     }
     .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
     .btn-3d::after {
       content: ''; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%;
-      background: rgba(255,255,255,0.2); transform: rotate(45deg); animation: shine 4s infinite;
+      background: rgba(255,255,255,0.2); transform: rotate(45deg); animation: shine 5s infinite;
     }
 
     .btn-admin { background: var(--admin); }
     .btn-clerical { background: var(--clerical); }
     .btn-general { background: var(--primary); }
 
-    /* --- Heroes Section --- */
-    .heroes-grid { display: flex; gap: 20px; overflow-x: auto; padding: 20px 5%; }
-    .hero-card {
-      min-width: 160px; background: white; padding: 20px; border-radius: 15px;
-      text-align: center; border-bottom: 4px solid var(--accent);
-      animation: floating 4s ease-in-out infinite;
-    }
-    .hero-avatar { width: 60px; height: 60px; background: #eee; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--accent); }
-
-    /* --- Login Overlay --- */
     .login-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
     }
     .login-box { background: white; padding: 30px; border-radius: 20px; width: 300px; text-align: center; }
 
-    .tinker-news { background: #222; color: var(--accent); padding: 10px 0; }
     .page-section { display: none; }
     .active { display: block; }
-
-    @media (max-width: 600px) { .link-list { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <div class="tinker-news">
-    <marquee>📢 Attendance: Mark before 11 AM | 🏆 GPS Pethgam: Excellence Award 2025 | Session 2026 ERP Active</marquee>
-  </div>
-
   <nav>
-  <div class="nav-links">
-    <a onclick="showPage('dashboard')">Dashboard</a>
-    <a onclick="showPage('admissions')">Admissions</a>
-    <a onclick="showPage('students')">Students</a>
-    <a onclick="showPage('staff')">Staff</a>
-    <a onclick="showPage('academics')">Academics</a>
-    <a onclick="showPage('examination')">Examination</a>
-    <a onclick="showPage('mdm')">MDM</a>
-    <a onclick="showPage('inventory')">Inventory</a>
-    <a onclick="showPage('library')">Library</a>
-    <a onclick="showPage('downloads')">Downloads</a>
-    <a onclick="showPage('gallery')">Gallery</a>
-    <a onclick="showPage('reports')">Reports</a>
-    <a onclick="showPage('settings')">Settings / Admin Panel</a>
-  </div>
+    <div style="font-weight: bold; color: var(--primary);">GPS PETHGAM ERP</div>
+    <div class="nav-links">
+      <a onclick="showPage('dashboard')">Home</a>
+      <a href="wb.html">Whiteboard</a>
+      <a href="README.txt">Docs</a>
+    </div>
   </nav>
 
   <div id="dashboard" class="page-section active">
     <header class="hero-header">
-      <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/100'">
-      <h1>Govt. Primary School</h1>
-      <h3>Pethgam Wagoora 193109</h3>
-      <p><strong>UDISE Code<strong/> 01022202207 | <strong>Email<strong/>  pspethgam@gmail.com</p>
+      <div id="liveClock">Loading Clock...</div>
+      <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
+      <h1>Unified ERP Portal</h1>
+      <p>Session 2026 | Administration & Management</p>
     </header>
 
     <main class="main-grid">
@@ -146,212 +121,63 @@
         <div class="tier-header"><span class="material-icons-outlined" style="color:var(--primary)">public</span><h2>General</h2></div>
         <div class="link-list">
           <a href="results.html" class="btn-3d btn-general">Results</a>
-          <a onclick="showPage('gallery')" class="btn-3d btn-general">Gallery</a>
+          <a href="marks-sheet.html" class="btn-3d btn-general">Marks Sheet</a>
+          <a href="student-id.html" class="btn-3d btn-general">Student ID</a>
+          <a href="master-profile.html" class="btn-3d btn-general">Master Profile</a>
         </div>
       </section>
 
       <section class="tier-card">
-        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--clerical)">assignment_turned_in</span><h2>Clerical</h2></div>
+        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--clerical)">assignment</span><h2>Clerical</h2></div>
         <div class="link-list">
           <button onclick="requestLogin('clerical', 'attendance.html')" class="btn-3d btn-clerical">Attendance</button>
-          <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">MDM Log</button>
-          <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">Admission</button>
+          <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
+          <button onclick="requestLogin('clerical', 'apaar-input.html')" class="btn-3d btn-clerical">APAAR Input</button>
+          <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM</button>
+          <button onclick="requestLogin('clerical', 'mdm-statement.html')" class="btn-3d btn-clerical">MDM Statement</button>
+          <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
         </div>
       </section>
 
       <section class="tier-card">
-        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--admin)">security</span><h2>Admin</h2></div>
+        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--admin)">admin_panel_settings</span><h2>Admin</h2></div>
         <div class="link-list">
           <button onclick="requestLogin('admin', 'roll-statement.html')" class="btn-3d btn-admin">Roll Statement</button>
+          <button onclick="requestLogin('admin', 'staff-statement.html')" class="btn-3d btn-admin">Staff Statement</button>
+          <button onclick="requestLogin('admin', 'bonafide.html')" class="btn-3d btn-admin">Bonafide</button>
           <button onclick="requestLogin('admin', 'tc.html')" class="btn-3d btn-admin">Transfer Cert</button>
+          <button onclick="requestLogin('admin', 'teaching-id.html')" class="btn-3d btn-admin">Teaching ID</button>
+          <button onclick="requestLogin('admin', 'reports-hub.html')" class="btn-3d btn-admin">Reports Hub</button>
         </div>
       </section>
     </main>
-
-    <h2 style="text-align:center; color: var(--primary); margin-top: 40px;">Our Heroes</h2>
-    <div class="heroes-grid">
-      <div class="hero-card"><div class="hero-avatar"></div><strong>Zubair Ahmad</strong><p>Top Performer</p></div>
-      <div class="hero-card" style="animation-delay: 0.5s;"><div class="hero-avatar"></div><strong>Snober Jan</strong><p>Science Winner</p></div>
-      <div class="hero-card" style="animation-delay: 1s;"><div class="hero-avatar"></div><strong>Arsalan Khan</strong><p>Sports Pro</p></div>
-    </div>
-  </div>
-
-  <div id="gallery" class="page-section">
-    <div style="padding: 50px; text-align: center;">
-      <h2>School Gallery</h2>
-      <p>Continuous Animation Edition - Images Loading...</p>
-      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-        <div style="height:200px; background:#ccc; border-radius:10px; animation: floating 5s infinite;"></div>
-        <div style="height:200px; background:#ccc; border-radius:10px; animation: floating 6s infinite;"></div>
-      </div>
-    </div>
   </div>
 
   <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
-      <h3 id="loginTitle">Dashboard Login</h3>
-      <input type="password" id="passCode" placeholder="Enter PIN" style="width: 80%; padding: 12px; text-align: center
-    nav {
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
-      padding: 15px 5%; display: flex; justify-content: space-between; 
-      position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .page-section { display: none; }
-    .active { display: block; }
-
-    /* --- Simple Ticker --- */
-    .tinker-news { background: #222; color: var(--accent); padding: 10px 0; }
-  </style>
-</head>
-<body>
-
-  <div class="tinker-news">
-    <marquee>🎓 GPS Pethgam ERP Portal v2.0 | Continuous Syncing Enabled | Welcome Mohammad Ashraf Rather</marquee>
-  </div>
-
-  <nav>
-    <div style="font-weight: bold; color: var(--primary); font-size: 1.2rem;">PS PETHGAM ERP</div>
-    <div style="display: flex; gap: 20px;">
-      <a onclick="showPage('dashboard')" style="cursor:pointer; font-weight:bold;">Home</a>
-      <a onclick="showPage('gallery')" style="cursor:pointer; font-weight:bold;">Gallery</a>
-    </div>
-  </nav>
-
-  <div id="dashboard" class="page-section active">
-    <header class="hero-header">
-      <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/100'">
-      <h1>Unified Management Portal</h1>
-      <p>Continuous Integration | Session 2026</p>
-    </header>
-
-    <main class="main-grid">
-      <section class="tier-card">
-        <div style="display:flex; align-items:center; gap:10px; border-bottom:2px solid #eee; margin-bottom:15px;">
-          <span class="material-icons-outlined" style="color:var(--primary)">groups</span>
-          <h2>General</h2>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <a href="#" class="btn-3d btn-general">Results</a>
-          <a onclick="showPage('gallery')" class="btn-3d btn-general">Gallery</a>
-        </div>
-      </section>
-
-      <section class="tier-card">
-        <div style="display:flex; align-items:center; gap:10px; border-bottom:2px solid #eee; margin-bottom:15px;">
-          <span class="material-icons-outlined" style="color:var(--clerical)">edit_note</span>
-          <h2>Clerical</h2>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <button class="btn-3d btn-clerical">Attendance</button>
-          <button class="btn-3d btn-clerical">MDM Log</button>
-        </div>
-      </section>
-
-      <section class="tier-card">
-        <div style="display:flex; align-items:center; gap:10px; border-bottom:2px solid #eee; margin-bottom:15px;">
-          <span class="material-icons-outlined" style="color:var(--admin)">admin_panel_settings</span>
-          <h2>Admin</h2>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <button class="btn-3d btn-admin">Reports</button>
-          <button class="btn-3d btn-admin">Staff</button>
-        </div>
-      </section>
-    </main>
-
-    <h2 style="text-align:center; margin-top:50px; color:var(--primary);">Top Achievers</h2>
-    <div style="display:flex; gap:20px; overflow-x:auto; padding:20px 5%;">
-      <div class="hero-card"><strong>Zubair Ahmad</strong><br><small>Roll No: 01</small></div>
-      <div class="hero-card" style="animation-delay: 0.5s;"><strong>Snober Jan</strong><br><small>Roll
-    <marquee scrollamount="5">📢 Important: Daily Attendance must be marked before 11:00 AM | 🎓 Roll Statements for Session 2026 are now available | 🏆 GPS Pethgam: Excellence in Education Award 2025</marquee>
-  </div>
-
-  <nav class="no-print">
-    <div style="font-weight: bold; color: var(--primary);">GPS PETHGAM</div>
-    <div class="nav-links">
-      <a onclick="showPage('dashboard')">Dashboard</a>
-      <a onclick="showPage('gallery')">Gallery</a>
-      <a onclick="showPage('contact')">Contact Us</a>
-    </div>
-  </nav>
-
-  <div id="dashboard" class="page-section active">
-    <header class="hero-header">
-      <img src="logo.png" style="width: 80px;" alt="Logo" class="animate__animated animate__bounceIn">
-      <h1 class="animate__animated animate__fadeInDown">GPS Pethgam Unified ERP</h1>
-      <p class="animate__animated animate__fadeInUp">Modern Management for Modern Education</p>
-    </header>
-
-    <main class="main-grid">
-      <section class="tier-card animate-card" style="animation-delay: 0.1s;">
-        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--primary)">public</span><h2>General</h2></div>
-        <div class="link-list">
-          <a href="results.html" class="btn-3d btn-general">Results</a>
-          <a onclick="showPage('gallery')" class="btn-3d btn-general">Gallery</a>
-          <a href="profile.
-        <h2>Clerical (Staff)</h2>
-      </div>
-      <div class="link-list">
-        <button onclick="requestLogin('clerical', 'attendance.html')" class="btn-3d btn-clerical">Daily Attendance</button>
-        <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM Log</button>
-        <button onclick="requestLogin('clerical', 'mdm-statement.html')" class="btn-3d btn-clerical">Monthly MDM Statement</button>
-        <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
-        <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
-      </div>
-    </section>
-
-    <section class="tier-card">
-      <div class="tier-header">
-        <span class="material-icons-outlined" style="color:var(--admin)">security</span>
-        <h2>Administration</h2>
-      </div>
-      <div class="link-list">
-        <button onclick="requestLogin('admin', 'roll-statement.html')" class="btn-3d btn-admin">Roll Statement</button>
-        <button onclick="requestLogin('admin', 'bonafide.html')" class="btn-3d btn-admin">Bonafide</button>
-        <button onclick="requestLogin('admin', 'tc.html')" class="btn-3d btn-admin">Transfer Cert</button>
-        <button onclick="requestLogin('admin', 'staff-statement.html')" class="btn-3d btn-admin">Staff Records</button>
-      </div>
-    </section>
-
-  </main>
-
-  <h2 class="section-title"><span class="material-icons-outlined">military_tech</span> Our Heroes</h2>
-  <div class="heroes-grid">
-    <div class="hero-card">
-      <div class="hero-avatar"></div>
-      <strong>Zubair Ahmad</strong>
-      <p style="font-size: 11px; color: #666;">Top Performer 2025</p>
-    </div>
-    <div class="hero-card">
-      <div class="hero-avatar"></div>
-      <strong>Snober Jan</strong>
-      <p style="font-size: 11px; color: #666;">Science Exhibition Winner</p>
-    </div>
-    <div class="hero-card">
-      <div class="hero-avatar"></div>
-      <strong>Arsalan Khan</strong>
-      <p style="font-size: 11px; color: #666;">Inter-School Sports Pro</p>
-    </div>
-  </div>
-
-  <div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-      <h3 id="loginTitle">Dashboard Login</h3>
-      <input type="password" id="passCode" placeholder="Enter PIN" style="width: 80%; padding: 12px; font-size: 18px; text-align: center; border: 2px solid #ddd; border-radius: 10px; margin: 15px 0;">
-      <br>
+      <h3 id="loginTitle">System Login</h3>
+      <input type="password" id="passCode" placeholder="Enter PIN" style="width: 80%; padding: 12px; text-align: center; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd;">
       <button onclick="validate()" class="btn-3d btn-general" style="width: 100%;">Authorize</button>
       <button onclick="hideLogin()" style="background:none; border:none; color:red; margin-top:15px; cursor:pointer;">Cancel</button>
     </div>
   </div>
 
-  <footer style="background: #102e12; color: white; text-align: center; padding: 30px 5%; margin-top: 50px;">
+  <footer style="background: #102e12; color: white; text-align: center; padding: 20px; margin-top: 50px;">
     <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
   </footer>
 
   <script>
     let targetPage = "";
     let requiredRole = "";
+
+    // Live Clock Function
+    function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('liveClock').innerText = now.toLocaleString('en-IN', options);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     function requestLogin(role, page) {
       targetPage = page;
@@ -368,18 +194,14 @@
 
     function validate() {
       const pin = document.getElementById('passCode').value;
-      const ADMIN_PIN = "2026"; 
-      const STAFF_PIN = "1234";
-
-      if (requiredRole === 'admin' && pin === ADMIN_PIN) {
-        window.location.href = targetPage;
-      } else if (requiredRole === 'clerical' && pin === STAFF_PIN) {
+      if ((requiredRole === 'admin' && pin === "2026") || (requiredRole === 'clerical' && pin === "1234")) {
         window.location.href = targetPage;
       } else {
-        alert("Unauthorized Access!");
+        alert("Access Denied!");
       }
     }
   </script>
 </body>
 </html>
-            
+
+          
