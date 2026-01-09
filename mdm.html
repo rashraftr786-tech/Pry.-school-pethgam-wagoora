@@ -71,55 +71,73 @@
     </div>
 </div>
 
-<script>
-    // Initialize defaults
+<script type="module">
+    // 1. Firebase Imports
+    import { db } from './init-firebase.js';
+    import { doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Initialize date
     document.getElementById('logDate').valueAsDate = new Date();
-    
-    window.onload = function() {
-        const currentRate = localStorage.getItem("mdmRate") || 5.45;
-        document.getElementById('configRate').value = currentRate;
+
+    // 2. Fetch Configuration and Sync Roll on Load
+    window.addEventListener('DOMContentLoaded', async () => {
+        // Fetch MDM Rate from a "settings" collection
+        try {
+            const configRef = doc(db, "settings", "mdm_config");
+            const configSnap = await configDoc(configRef);
+            if (configSnap.exists()) {
+                document.getElementById('configRate').value = configSnap.data().rate || 5.45;
+            }
+        } catch (e) { console.error("Config fetch error:", e); }
+
+        await syncRollFromAdmissions();
+    });
+
+    // 3. Save Settings (Meal Rate) to Cloud
+    window.saveSettings = async function() {
+        const rate = document.getElementById('configRate').value;
+        try {
+            await setDoc(doc(db, "settings", "mdm_config"), { 
+                rate: parseFloat(rate),
+                updatedAt: new Date().toISOString()
+            });
+            alert("System updated in Cloud. Expenditure set to ₹" + rate);
+        } catch (e) { alert("Error updating settings."); }
     };
 
-    function saveSettings() {
-        const rate = document.getElementById('configRate').value;
-        localStorage.setItem("mdmRate", rate);
-        alert("System updated. Expenditure will now be calculated at ₹" + rate + " per meal.");
+    // 4. Sync Roll from Admissions Collection
+    async function syncRollFromAdmissions() {
+        try {
+            const q = collection(db, "admissions");
+            const querySnapshot = await getDocs(q);
+            let students = [];
+            querySnapshot.forEach(doc => students.push(doc.data()));
+
+            const prePrimaryRoll = students.filter(s => 
+                s.studentClass === "Bal-Vatika" || s.studentClass === "Pre-Primary"
+            ).length;
+
+            const primaryRoll = students.filter(s => 
+                ["1st", "2nd", "3rd", "4th", "5th"].includes(s.studentClass)
+            ).length;
+
+            if(document.getElementById('rollPP')) document.getElementById('rollPP').value = prePrimaryRoll;
+            if(document.getElementById('rollP')) document.getElementById('rollP').value = primaryRoll;
+            
+            console.log(`Cloud Roll Synced: PP=${prePrimaryRoll}, P=${primaryRoll}`);
+        } catch (e) { console.error("Roll sync error:", e); }
     }
-    function syncRollFromAdmissions() {
-    // 1. Fetch your existing admission register
-    const students = JSON.parse(localStorage.getItem("admissionData")) || [];
-    
-    // 2. Filter and count based on Class
-    const prePrimaryRoll = students.filter(s => 
-        s.studentClass === "Bal-Vatika" || s.studentClass === "Pre-Primary"
-    ).length;
 
-    const primaryRoll = students.filter(s => 
-        ["1st", "2nd", "3rd", "4th", "5th"].includes(s.studentClass)
-    ).length;
-
-    // 3. Save these counts specifically for the MDM system
-    localStorage.setItem("mdmRollPP", prePrimaryRoll);
-    localStorage.setItem("mdmRollP", primaryRoll);
-
-    console.log(`Roll Synced: PP=${prePrimaryRoll}, P=${primaryRoll}`);
-    
-    // Optional: Update the UI if fields exist
-    if(document.getElementById('rollPP')) document.getElementById('rollPP').value = prePrimaryRoll;
-    if(document.getElementById('rollP')) document.getElementById('rollP').value = primaryRoll;
-}
-
-// Run this every time the Dashboard opens
-window.onload = syncRollFromAdmissions;
-    
-
-    function saveMDM() {
+    // 5. Save Daily MDM Log to Cloud
+    window.saveMDM = async function() {
         const date = document.getElementById('logDate').value;
+        if(!date) return alert("Select a date");
+
         const prePri = parseInt(document.getElementById('prePriCount').value) || 0;
         const pri = parseInt(document.getElementById('priCount').value) || 0;
         const lifted = parseFloat(document.getElementById('grainsLifted').value) || 0;
         const funds = parseFloat(document.getElementById('fundsReceived').value) || 0;
-        const currentRate = parseFloat(localStorage.getItem("mdmRate")) || 5.45;
+        const currentRate = parseFloat(document.getElementById('configRate').value) || 5.45;
 
         const record = {
             date,
@@ -127,25 +145,25 @@ window.onload = syncRollFromAdmissions;
             priCount: pri,
             grainsLifted: lifted,
             fundsReceived: funds,
-            // AUTOMATION: Calculating consumption on the fly
-            grainsUtilized: (prePri + pri) * 0.100,
-            fundsUtilized: (prePri + pri) * currentRate
+            grainsUtilized: (prePri + pri) * 0.100, // 100g per student
+            fundsUtilized: (prePri + pri) * currentRate,
+            timestamp: new Date().toISOString()
         };
 
-        let logs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
-        const idx = logs.findIndex(l => l.date === date);
-        
-        if (idx > -1) logs[idx] = record;
-        else logs.push(record);
-
-        localStorage.setItem("mdmDailyLogs", JSON.stringify(logs));
-        alert("Data successfully synced for " + date);
-        
-        // Reset counts but keep date/lifted for convenience
-        document.getElementById('prePriCount').value = "";
-        document.getElementById('priCount').value = "";
-    }
+        try {
+            // Using date as the ID ensures one entry per day
+            await setDoc(doc(db, "mdmDailyLogs", date), record);
+            alert("Data successfully synced to Cloud for " + date);
+            
+            document.getElementById('prePriCount').value = "";
+            document.getElementById('priCount').value = "";
+        } catch (e) {
+            console.error("Save error:", e);
+            alert("Cloud sync failed.");
+        }
+    };
 </script>
+
 </body>
 </html>
 
