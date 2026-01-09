@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student View | Digital Diary GPS Pethgam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    body { background-color: #f8fafc; }
+    .diary-card { border-radius: 24px; background: white; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+    .subject-tag { background: #f1f5f9; border-left: 4px solid #10b981; }
+    @media print { .no-print { display: none !important; } .diary-card { box-shadow: none; border: 1px solid #ddd; } }
+  </style>
+</head>
+<body class="pb-10">
+
+  <header class="bg-indigo-900 text-white p-6 no-print">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold flex items-center gap-2">
+        <span class="material-icons-outlined">child_care</span> Digital Diary
+      </h1>
+      <button onclick="window.print()" class="bg-indigo-700 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+        <span class="material-icons-outlined text-sm">print</span> Print PDF
+      </button>
+    </div>
+  </header>
+
+  <div class="container mx-auto px-4 -mt-4">
+    <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-wrap gap-4 items-end no-print">
+      <div class="flex-1 min-w-[200px]">
+        <label class="text-xs font-bold text-gray-500 uppercase">Admission Number</label>
+        <input type="text" id="admSearch" placeholder="Enter Admission No." class="w-full p-2 border-b-2 border-indigo-200 focus:border-indigo-600 outline-none">
+      </div>
+      <div class="flex-1 min-w-[200px]">
+        <label class="text-xs font-bold text-gray-500 uppercase">Select Date</label>
+        <input type="date" id="datePicker" onchange="fetchDiary()" class="w-full p-2 border-b-2 border-indigo-200 outline-none">
+      </div>
+      <button onclick="loadStudentAndDiary()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold">View Diary</button>
+    </div>
+
+    <div id="diaryContent" class="hidden">
+      <div class="grid lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-1">
+          <div class="diary-card p-6 text-center">
+            <img id="p_photo" src="https://via.placeholder.com/150" class="w-32 h-32 rounded-full mx-auto border-4 border-indigo-50 mb-4 object-fit-cover">
+            <h2 id="p_name" class="text-xl font-black text-gray-800 uppercase">Student Name</h2>
+            <p id="p_meta" class="text-gray-500 font-medium">Class: -- | Section: --</p>
+            <div class="mt-4 flex justify-center gap-2">
+              <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">Roll No: <span id="p_roll">--</span></span>
+            </div>
+          </div>
+
+          <div class="mt-6 no-print">
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <span class="material-icons-outlined">history</span> Previous Entries
+            </h3>
+            <div id="historyList" class="space-y-2">
+              </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+          
+          <div id="importantNoteBox" class="hidden bg-rose-50 border-l-8 border-rose-500 p-5 rounded-r-2xl">
+            <div class="flex items-center gap-3 text-rose-700 font-bold mb-1">
+              <span class="material-icons-outlined">error</span> IMPORTANT ANNOUNCEMENT
+            </div>
+            <p id="p_note" class="text-rose-900"></p>
+          </div>
+
+          <div class="diary-card overflow-hidden">
+            <div class="bg-indigo-50 p-4 border-b flex justify-between items-center">
+              <span class="font-bold text-indigo-900">Today's Learning Record</span>
+              <span id="p_date_display" class="text-sm font-bold text-indigo-600"></span>
+            </div>
+            
+            <div class="p-6 space-y-6">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="subject-tag p-3">
+                  <label class="text-[10px] uppercase font-black text-gray-400">English</label>
+                  <p id="p_hw_English" class="text-gray-700 font-medium">--</p>
+                </div>
+                <div class="subject-tag p-3" style="border-color: #3b82f6;">
+                  <label class="text-[10px] uppercase font-black text-gray-400">Mathematics</label>
+                  <p id="p_hw_Maths" class="text-gray-700 font-medium">--</p>
+                </div>
+                <div class="subject-tag p-3" style="border-color: #f59e0b;">
+                  <label class="text-[10px] uppercase font-black text-gray-400">EVS</label>
+                  <p id="p_hw_EVS" class="text-gray-700 font-medium">--</p>
+                </div>
+                <div class="subject-tag p-3" style="border-color: #8b5cf6;">
+                  <label class="text-[10px] uppercase font-black text-gray-400">Urdu / Kashmiri</label>
+                  <p id="p_hw_UrduKash" class="text-gray-700 font-medium">--</p>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 p-4 rounded-xl">
+                <h4 class="text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
+                  <span class="material-icons-outlined text-sm">menu_book</span> Classwork & Activities
+                </h4>
+                <p id="p_classwork" class="text-gray-600 text-sm leading-relaxed">--</p>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                <div>
+                  <h4 class="text-xs font-bold text-emerald-800 uppercase">Conduct & Remark</h4>
+                  <p id="p_remark" class="text-emerald-900 font-medium italic">--</p>
+                </div>
+                <div id="p_rating" class="text-emerald-600 font-black text-lg">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-print bg-white p-6 rounded-2xl shadow-lg border-2 border-dashed border-indigo-200 text-center">
+            <h4 class="font-bold text-gray-700 mb-2">Parent's Digital Signature</h4>
+            <button onclick="acknowledge()" id="ackBtn" class="bg-indigo-100 text-indigo-700 px-8 py-2 rounded-full font-bold hover:bg-indigo-600 hover:text-white transition">
+              I have seen today's diary
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from './init-firebase.js';
+    import { doc, getDoc, collection, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    document.getElementById('datePicker').valueAsDate = new Date();
+
+    window.loadStudentAndDiary = async function() {
+      const admNo = document.getElementById('admSearch').value;
+      if(!admNo) return alert("Please enter Admission Number");
+
+      // 1. Fetch Student Details
+      try {
+        const q = query(collection(db, "admissions"), where("admNo", "==", admNo), limit(1));
+        const snap = await getDocs(q);
+        
+        if(snap.empty) return alert("Student not found!");
+        
+        const student = snap.docs[0].data();
+        document.getElementById('p_name').innerText = student.studentName;
+        document.getElementById('p_meta').innerText = `Class: ${student.studentClass} | Section: A`;
+        document.getElementById('p_roll').innerText = student.rollNo || 'N/A';
+        if(student.photo) document.getElementById('p_photo').src = student.photo;
+
+        fetchDiary(student.studentClass);
+      } catch (e) { console.error(e); }
+    };
+
+    async function fetchDiary(studentClass) {
+      const date = document.getElementById('datePicker').value;
+      const classLevel = studentClass || document.getElementById('p_meta').innerText.split(':')[1].split('|')[0].trim();
+      
+      const docId = `${classLevel}_${date}`;
+      const docRef = doc(db, "studentDiaries", docId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if(!data.isPublished) {
+          showEmpty("Diary is currently being prepared by the teacher.");
+          return;
+        }
+
+        document.getElementById('diaryContent').classList.remove('hidden');
+        document.getElementById('p_date_display').innerText = date;
+        
+        // Populate Notes
+        if(data.isImportant) {
+          document.getElementById('importantNoteBox').classList.remove('hidden');
+          document.getElementById('p_note').innerText = data.importantNote;
+        } else {
+          document.getElementById('importantNoteBox').classList.add('hidden');
+        }
+
+        // Populate Homework
+        document.getElementById('p_hw_English').innerText = data.homework.English || 'No homework';
+        document.getElementById('p_hw_Maths').innerText = data.homework.Maths || 'No homework';
+        document.getElementById('p_hw_EVS').innerText = data.homework.EVS || 'No homework';
+        document.getElementById('p_hw_UrduKash').innerText = `${data.homework.Urdu || ''} / ${data.homework.Kashmiri || ''}`;
+
+        document.getElementById('p_classwork').innerText = data.classwork || 'No activities recorded.';
+        document.getElementById('p_remark').innerText = data.individualRemark.grade;
+        document.getElementById('p_rating').innerText = data.individualRemark.grade === 'Excellent' ? '⭐⭐⭐' : '⭐';
+        
+      } else {
+        showEmpty("No diary entry found for this date.");
+      }
+    }
+
+    function showEmpty(msg) {
+      alert(msg);
+      document.getElementById('diaryContent').classList.add('hidden');
+    }
+
+    window.acknowledge = function() {
+      const btn = document.getElementById('ackBtn');
+      btn.innerText = "✅ Acknowledged";
+      btn.classList.replace('bg-indigo-100', 'bg-emerald-500');
+      btn.classList.replace('text-indigo-700', 'text-white');
+      btn.disabled = true;
+    };
+  </script>
+</body>
+</html>
