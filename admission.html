@@ -127,21 +127,74 @@
   <form id="admissionForm">
     <div class="row" style="grid-template-columns: 1fr 1fr 110px;">
       <div class="field-group" style="grid-column: span 2;">
-    <div class="row">
-        <div class="field-group"><label>Mother's Contact No</label><input type="tel" id="motherContact" name="motherContact"></div>
-        <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName" name="bankName"></div>
-        <div class="field-group"><label>IFSC Code (11 Chars)</label><input type="text" id="ifsc" name="ifsc" pattern="[A-Z]{4}0[A-Z0-9]{6}" maxlength="11" style="text-transform:uppercase"></div>
+        <label>Full Name of Student</label>
+        <input type="text" id="studentName" name="studentName" required>
+        
+        <label style="margin-top:8px">Name as per Aadhaar Card</label>
+        <input type="text" id="aadhaarName" name="aadhaarName">
+        
+        <div class="row" style="margin-top:8px; margin-bottom:0;">
+            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" name="dob" onchange="convertDOB()" required></div>
+            <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" name="dobWords" readonly style="background:#f0f0f0"></div>
+        </div>
+      </div>
+      <div class="photo-box">
+        <img id="photoPreview" style="max-width:100%; max-height:100%; display:none; object-fit: cover;">
+        <p id="photoTxt">Affix Passport Size Photograph</p>
+        <input type="file" id="photoInput" onchange="previewPhoto(event)" class="no-print" style="position:absolute; bottom:0; width:100%; opacity:0.8; font-size:8px;">
+      </div>
+    </div>
+
+    <div class="row-4">
+      <div class="field-group">
+          <label>Gender</label>
+          <select name="gender" id="gender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+          </select>
+      </div>
+      <div class="field-group"><label>Blood Group</label><input type="text" id="bloodGroup" name="bloodGroup" placeholder="e.g. O+"></div>
+      <div class="field-group">
+          <label>Category</label>
+          <select name="category" id="category">
+              <option value="General">General</option>
+              <option value="OBC">OBC</option>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+              <option value="RBA">RBA</option>
+          </select>
+      </div>
+      <div class="field-group"><label>Seeking Class</label><input type="text" id="studentClass" name="studentClass" required></div>
     </div>
 
     <div class="row">
-        <div class="field-group" style="grid-column: span 1;"><label>Account No (16 Digits)</label><input type="text" id="bankAcc" name="bankAcc" pattern="\d{16}" maxlength="16"></div>
+        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" id="aadhaarNo" name="aadhaarNo" pattern="\d{12}" maxlength="12" required></div>
+        <div class="field-group"><label>APAAR ID / ABC ID</label><input type="text" id="apaarId" name="apaarId" maxlength="12"></div>
+        <div class="field-group"><label>PEN Number</label><input type="text" id="penId" name="penId" style="text-transform:uppercase"></div>
+    </div>
+
+    <h3>Parental & Contact Information</h3>
+    <div class="row">
+        <div class="field-group"><label>Father's Name</label><input type="text" id="fatherName" name="fatherName" required></div>
+        <div class="field-group"><label>Mother's Name</label><input type="text" id="motherName" name="motherName" required></div>
+        <div class="field-group"><label>Father's Contact No</label><input type="tel" id="fatherContact" name="fatherContact" maxlength="10"></div>
+    </div>
+    <div class="row">
+        <div class="field-group"><label>Mother's Contact No</label><input type="tel" id="motherContact" name="motherContact" maxlength="10"></div>
+        <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName" name="bankName"></div>
+        <div class="field-group"><label>IFSC Code</label><input type="text" id="ifsc" name="ifsc" maxlength="11" style="text-transform:uppercase" placeholder="SBIN0001234"></div>
+    </div>
+
+    <div class="row">
+        <div class="field-group"><label>Account No</label><input type="text" id="bankAcc" name="bankAcc"></div>
         <div class="field-group" style="grid-column: span 2;"></div>
     </div>
 
     <h3>Residential Address</h3>
     <div class="row">
         <div class="field-group"><label>Mohallah / House No</label><input type="text" id="mohallah" name="mohallah"></div>
-        <div class="field-group"><label>Village / Ward</label><input type="text" id="village" name="village"></div>
+        <div class="field-group"><label>Village / Ward</label><input type="text" id="village" name="village" required></div>
         <div class="field-group"><label>Tehsil</label><input type="text" id="tehsil" name="tehsil" value="Wagoora"></div>
     </div>
     <div class="row">
@@ -151,7 +204,10 @@
     </div>
 
     <div class="declaration-box">
-        <input type="checkbox" required> <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+        <input type="checkbox" id="declaration" required>
+        <label for="declaration" style="font-weight: normal; text-transform: none; color: inherit; cursor: pointer;">
+            <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
+        </label>
     </div>
 
     <div class="sig-section">
@@ -159,28 +215,32 @@
         <div class="sig-placeholder" style="margin-left: auto;">Signature of Parent/Guardian</div>
     </div>
 
-    <div id="officeSection" style="display:none;">
+    <div id="officeSection">
       <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
-      <div class="row" style="margin-bottom:0px">
-        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo"></div>
+      <div class="row">
+        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo" placeholder="GPSPW/2026/001"></div>
         <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate" name="admDate"></div>
-        <div class="field-group"><label>Udise Code</label><input type="text" name="udise" value="01022202207" readonly></div>
+        <div class="field-group"><label>Registration Status</label><input type="text" value="Verified & Active" readonly style="background:#eee"></div>
       </div>
-      <div class="field-group" style="margin-top:8px;"><label>Remarks</label><textarea name="remarks" id="remarks" rows="1" style="width: 100%; border: 1px solid #777;"></textarea></div>
-      <div class="sig-section" style="margin-top: 35px;">
+      <div class="field-group" style="margin-top:8px;">
+          <label>Remarks / Recommendations</label>
+          <textarea name="remarks" id="remarks" rows="2"></textarea>
+      </div>
+      <div class="sig-section" style="margin-top: 40px;">
         <div class="sig-placeholder">Admission Incharge</div>
         <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
       </div>
     </div>
 
-    <div class="no-print" style="text-align:center; margin-top:15px;">
-      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Save & Update</button>
-      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:10px;">Print Form</button>
+    <div class="no-print" style="text-align:center; margin-top:30px; padding-bottom: 50px;">
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:12px 30px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px;">💾 Save Student Record</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:12px 30px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px; margin-left:15px;">🖨️ Print Form</button>
     </div>
   </form>
 </div>
 
 <script>
+// 1. Photo Preview Logic
 function previewPhoto(event) {
   const img = document.getElementById("photoPreview");
   const txt = document.getElementById("photoTxt");
@@ -196,77 +256,94 @@ function previewPhoto(event) {
   }
 }
 
+// 2. Date to Words Conversion
 function convertDOB() {
     const dob = document.getElementById("dob").value;
     if (!dob) return;
     const dateObj = new Date(dob);
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    document.getElementById("dobWords").value = `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    const day = dateObj.getDate();
+    const month = months[dateObj.getMonth()];
+    const year = dateObj.getFullYear();
+    document.getElementById("dobWords").value = `${day} ${month} ${year}`;
 }
 
+// 3. Load Existing Data for Edit or Setup Initial State
 window.onload = function() {
-    const role = localStorage.getItem("userRole");
+    const role = localStorage.getItem("userRole") || "INCHARGE"; // Default for testing
     const params = new URLSearchParams(window.location.search);
     const studentId = params.get('id');
 
+    // Show Office Section only for HOI/Incharge
     const officeSection = document.getElementById("officeSection");
-    if (officeSection) {
-        officeSection.style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
-    }
+    officeSection.style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
 
     if (studentId) {
         const records = JSON.parse(localStorage.getItem("admissions")) || [];
-        const student = records.find(r => r.admNo.trim() === studentId.trim());
+        const student = records.find(r => r.admNo === studentId);
 
         if (student) {
-            if(document.getElementById("admNo")) document.getElementById("admNo").value = student.admNo;
-            if(document.getElementById("studentName")) document.getElementById("studentName").value = student.studentName || "";
-            if(document.getElementById("fatherName")) document.getElementById("fatherName").value = student.fatherName || "";
-            if(document.getElementById("motherName")) document.getElementById("motherName").value = student.motherName || "";
-            if(document.getElementById("studentClass")) document.getElementById("studentClass").value = student.studentClass || "";
-            if(document.getElementById("dob")) document.getElementById("dob").value = student.dob || "";
-            if(document.getElementById("apaarId")) document.getElementById("apaarId").value = student.apaarId || "";
-            if(document.getElementById("penId")) document.getElementById("penId").value = student.penId || "";
-            
+            // Map all data back to form fields
+            Object.keys(student).forEach(key => {
+                const el = document.getElementById(key);
+                if (el && key !== 'studentPhoto') el.value = student[key];
+            });
+
+            // Handle Photo
             if (student.studentPhoto) {
                 const img = document.getElementById("photoPreview");
                 const txt = document.getElementById("photoTxt");
-                if(img) {
-                    img.src = student.studentPhoto;
-                    img.style.display = "block";
-                    if(txt) txt.style.display = "none";
-                }
+                img.src = student.studentPhoto;
+                img.style.display = "block";
+                if(txt) txt.style.display = "none";
             }
             convertDOB();
-        } else {
-            alert("Error: Student record not found.");
         }
     } else {
-        const admInput = document.getElementById("admNo");
-        if (admInput && !admInput.value) {
-            admInput.value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 900);
-        }
+        // Generate Temp ID for new form
+        document.getElementById("admNo").value = "GPSPW/2026/" + Math.floor(100 + Math.random() * 899);
+        document.getElementById("admDate").valueAsDate = new Date();
     }
 };
 
+// 4. Submit & Save Logic
 function submitAdmission() {
     const form = document.getElementById('admissionForm');
     if(!form.checkValidity()) { form.reportValidity(); return; }
 
-    const role = localStorage.getItem("userRole");
+    const role = localStorage.getItem("userRole") || "STAFF";
     const admNoValue = document.getElementById("admNo").value;
     const photoPreview = document.getElementById("photoPreview");
 
-    const data = {
+    // Gather Comprehensive Data Object
+    const studentData = {
         admNo: admNoValue,
         studentName: document.getElementById("studentName").value,
-        fatherName: document.getElementById("fatherName").value,
-        motherName: document.getElementById("motherName").value,
-        studentClass: document.getElementById("studentClass").value,
+        aadhaarName: document.getElementById("aadhaarName").value,
         dob: document.getElementById("dob").value,
         dobWords: document.getElementById("dobWords").value,
-        apaarId: document.getElementById("apaarId") ? document.getElementById("apaarId").value : "",
-        penId: document.getElementById("penId") ? document.getElementById("penId").value : "",
+        gender: document.getElementById("gender").value,
+        bloodGroup: document.getElementById("bloodGroup").value,
+        category: document.getElementById("category").value,
+        studentClass: document.getElementById("studentClass").value,
+        aadhaarNo: document.getElementById("aadhaarNo").value,
+        apaarId: document.getElementById("apaarId").value,
+        penId: document.getElementById("penId").value.toUpperCase(),
+        fatherName: document.getElementById("fatherName").value,
+        motherName: document.getElementById("motherName").value,
+        fatherContact: document.getElementById("fatherContact").value,
+        motherContact: document.getElementById("motherContact").value,
+        bankName: document.getElementById("bankName").value,
+        bankAcc: document.getElementById("bankAcc").value,
+        ifsc: document.getElementById("ifsc").value.toUpperCase(),
+        village: document.getElementById("village").value,
+        mohallah: document.getElementById("mohallah").value,
+        tehsil: document.getElementById("tehsil").value,
+        dist: document.getElementById("dist").value,
+        pincode: document.getElementById("pincode").value,
+        state: document.getElementById("state").value,
+        admDate: document.getElementById("admDate").value,
+        remarks: document.getElementById("remarks").value,
         status: (role === "HOI" || role === "INCHARGE") ? "Approved" : "Pending Approval",
         studentPhoto: (photoPreview && photoPreview.src.startsWith("data:image")) ? photoPreview.src : ""
     };
@@ -275,26 +352,24 @@ function submitAdmission() {
     const index = records.findIndex(r => r.admNo === admNoValue);
 
     if (index !== -1) {
-        if (!data.studentPhoto && records[index].studentPhoto) {
-            data.studentPhoto = records[index].studentPhoto;
+        // Retain existing photo if a new one wasn't uploaded during edit
+        if (!studentData.studentPhoto && records[index].studentPhoto) {
+            studentData.studentPhoto = records[index].studentPhoto;
         }
-        records[index] = data; 
+        records[index] = studentData; 
     } else {
-        records.push(data); 
+        records.push(studentData); 
     }
 
-    localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Record Processed Successfully!");
-    
-    if (role === "HOI" || role === "INCHARGE") {
-        window.location.href = "admin/dashboard.html";
-    } else {
-        window.location.reload();
+    try {
+        localStorage.setItem("admissions", JSON.stringify(records));
+        alert("Success: Record for " + studentData.studentName + " has been saved/updated.");
+        window.location.href = "adm-register.html";
+    } catch (e) {
+        alert("Error: Storage full. Please ensure photo size is small.");
     }
 }
 </script>
-  
 </body>
 </html>
-        
-            
+ 
