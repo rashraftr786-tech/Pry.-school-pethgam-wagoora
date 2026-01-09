@@ -57,11 +57,38 @@
     #officeSection { border: 1px dashed darkred; padding: 8px; margin-top: 10px; background: #fffcfc; }
 
     @media print {
-      body { background: none; }
-      .page-border { margin: 0; border: 2px solid darkgreen; width: 210mm; height: 297mm; }
-      .no-print { display: none !important; }
-      #officeSection { display: block !important; }
-    }
+  /* 1. Force the browser to use the full page area */
+  @page { 
+    size: A4; 
+    margin: 0; 
+  }
+
+  body { 
+    background: none; 
+    margin: 0; 
+    padding: 0; 
+  }
+
+  .page-border { 
+    /* 2. Remove any screen margins */
+    margin: 0 !important; 
+    
+    /* 3. Use 100% of the viewport height instead of a fixed mm value */
+    /* This prevents the "blank bottom" by adapting to the printer's edge */
+    width: 210mm; 
+    height: 100vh; 
+    
+    /* 4. Ensure border is calculated INSIDE the 297mm height */
+    box-sizing: border-box; 
+    border: 2px solid darkgreen;
+    
+    /* 5. Clean up for professional PDF */
+    box-shadow: none;
+  }
+
+  .no-print { display: none !important; }
+  #officeSection { display: block !important; }
+}
   </style>
 </head>
 <body>
