@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Diary Panel | GPS Pethgam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    .glass-morphism { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    .btn-3d { transition: all 0.1s; border-bottom: 4px solid rgba(0,0,0,0.2); }
+    .btn-3d:active { transform: translateY(2px); border-bottom-width: 2px; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen pb-20">
+
+  <nav class="bg-emerald-800 text-white p-4 sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="font-bold flex items-center gap-2">
+        <span class="material-icons-outlined">menu_book</span> Digital Diary – Teacher Panel
+      </h1>
+      <a href="dashboard.html" class="text-sm bg-emerald-700 px-3 py-1 rounded">Back to ERP</a>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 mt-6">
+    <div class="grid lg:grid-cols-3 gap-8">
+      
+      <div class="lg:col-span-2 space-y-6">
+        <form id="diaryForm" class="glass-morphism p-6 rounded-2xl shadow-xl border border-white">
+          
+          <div class="grid md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label class="block text-sm font-bold text-gray-700">Class</label>
+              <select id="diaryClass" class="w-full p-2 border rounded-lg focus:ring-2 ring-emerald-500" required>
+                <option value="">Select Class</option>
+                <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700">Section</label>
+              <select id="diarySection" class="w-full p-2 border rounded-lg">
+                <option>A</option><option>B</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-gray-700">Date</label>
+              <input type="date" id="diaryDate" class="w-full p-2 border rounded-lg" required>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 p-4 rounded-xl border-l-4 border-amber-400 mb-6">
+            <label class="flex items-center gap-2 font-bold text-amber-800">
+              <span class="material-icons-outlined text-sm">campaign</span> General Message / Note
+            </label>
+            <textarea id="importantNote" class="w-full mt-2 p-3 border rounded-lg bg-white" placeholder="Message for the whole class..."></textarea>
+            <label class="inline-flex items-center mt-2 cursor-pointer">
+              <input type="checkbox" id="isImportant" class="form-checkbox text-emerald-600">
+              <span class="ml-2 text-sm text-amber-900">Mark as "Important Message"</span>
+            </label>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Homework Entry</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="space-y-3">
+                <input type="text" id="hw_English" placeholder="English Homework" class="w-full p-2 border rounded-md">
+                <input type="text" id="hw_Maths" placeholder="Maths Homework" class="w-full p-2 border rounded-md">
+                <input type="text" id="hw_EVS" placeholder="EVS Homework" class="w-full p-2 border rounded-md">
+              </div>
+              <div class="space-y-3">
+                <input type="text" id="hw_Urdu" placeholder="Urdu Homework" class="w-full p-2 border rounded-md">
+                <input type="text" id="hw_Kashmiri" placeholder="Kashmiri Homework" class="w-full p-2 border rounded-md">
+                <div class="flex items-center gap-2 p-2 border rounded-md bg-gray-50">
+                  <span class="material-icons-outlined text-gray-400">attach_file</span>
+                  <input type="file" class="text-xs">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block font-bold text-gray-800 mb-2">Work Done / Activities Today</label>
+            <textarea id="classwork" rows="3" class="w-full p-3 border rounded-lg" placeholder="List activities or topics covered..."></textarea>
+          </div>
+
+          <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6">
+            <h3 class="font-bold text-blue-800 mb-2">Individual Student Remark (Optional)</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <select id="specificStudent" class="w-full p-2 border rounded-lg">
+                <option value="">Applies to Whole Class</option>
+                </select>
+              <select id="remarkGrade" class="w-full p-2 border rounded-lg">
+                <option>Satisfactory</option>
+                <option>Excellent</option>
+                <option>Good</option>
+                <option>Needs Improvement</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button type="button" onclick="saveDiary(false)" class="btn-3d bg-emerald-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2">
+              <span class="material-icons-outlined">save</span> Save Draft
+            </button>
+            <button type="button" onclick="saveDiary(true)" class="btn-3d bg-blue-600 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2">
+              <span class="material-icons-outlined">send</span> Publish to Parents
+            </button>
+            <button type="button" class="btn-3d bg-gray-500 text-white px-6 py-2 rounded-lg font-bold">Preview</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-emerald-600">
+          <h3 class="font-bold text-gray-800 mb-4">Teacher Verification</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="text-xs text-gray-500 uppercase">Teacher Name</label>
+              <p id="teacherName" class="font-bold text-emerald-800">Mohammad Ashraf Rather</p>
+            </div>
+            <div>
+              <label class="text-xs text-gray-500 uppercase">Auto Timestamp</label>
+              <p id="liveTime" class="text-sm font-mono bg-gray-100 p-2 rounded">--:--:--</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+          <h3 class="font-bold text-gray-800 mb-4 flex items-center justify-between">
+            Recent Entries
+            <button onclick="fetchDiaries()" class="text-xs text-emerald-600">Refresh</button>
+          </h3>
+          <div id="pastEntries" class="space-y-3 max-h-96 overflow-y-auto">
+            <p class="text-gray-400 text-center text-sm py-4">No recent entries found.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from './init-firebase.js';
+    import { collection, addDoc, getDocs, query, where, orderBy, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Initialize Date
+    document.getElementById('diaryDate').valueAsDate = new Date();
+    
+    // Live Clock
+    setInterval(() => {
+      document.getElementById('liveTime').innerText = new Date().toLocaleString();
+    }, 1000);
+
+    // Save/Publish Function
+    window.saveDiary = async function(isPublished) {
+      const diaryData = {
+        class: document.getElementById('diaryClass').value,
+        section: document.getElementById('diarySection').value,
+        date: document.getElementById('diaryDate').value,
+        importantNote: document.getElementById('importantNote').value,
+        isImportant: document.getElementById('isImportant').checked,
+        homework: {
+          English: document.getElementById('hw_English').value,
+          Maths: document.getElementById('hw_Maths').value,
+          EVS: document.getElementById('hw_EVS').value,
+          Urdu: document.getElementById('hw_Urdu').value,
+          Kashmiri: document.getElementById('hw_Kashmiri').value
+        },
+        classwork: document.getElementById('classwork').value,
+        individualRemark: {
+          student: document.getElementById('specificStudent').value,
+          grade: document.getElementById('remarkGrade').value
+        },
+        teacher: document.getElementById('teacherName').innerText,
+        isPublished: isPublished,
+        timestamp: serverTimestamp()
+      };
+
+      if(!diaryData.class || !diaryData.date) return alert("Please select Class and Date!");
+
+      try {
+        const docId = `${diaryData.class}_${diaryData.date}`;
+        await setDoc(doc(db, "studentDiaries", docId), diaryData);
+        alert(isPublished ? "Diary Published to Parents Successfully!" : "Diary Saved as Draft.");
+        fetchDiaries();
+      } catch (e) {
+        console.error(e);
+        alert("Error saving diary.");
+      }
+    };
+
+    // Fetch Past Entries
+    async function fetchDiaries() {
+      const container = document.getElementById('pastEntries');
+      container.innerHTML = "Loading...";
+      
+      try {
+        const q = query(collection(db, "studentDiaries"), orderBy("timestamp", "desc"));
+        const snap = await getDocs(q);
+        container.innerHTML = "";
+        
+        snap.forEach(doc => {
+          const d = doc.data();
+          const card = `
+            <div class="p-3 border rounded-lg bg-gray-50 hover:bg-white transition flex justify-between items-center">
+              <div>
+                <p class="font-bold text-sm">Class ${d.class} (${d.date})</p>
+                <p class="text-xs text-gray-500">${d.isPublished ? '🟢 Published' : '🟡 Draft'}</p>
+              </div>
+              <button class="material-icons-outlined text-gray-400 hover:text-emerald-600">edit</button>
+            </div>
+          `;
+          container.innerHTML += card;
+        });
+      } catch (e) { console.error(e); }
+    }
+
+    window.onload = fetchDiaries;
+  </script>
+</body>
+</html>
