@@ -2,51 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admission Register - Government Primary School Pethgam Wagoora</title>
+  <title>Admission Register - GPS Pethgam Wagoora</title>
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    /* Global Styles */
+    body { font-family: 'Segoe UI', SegoeUI, Roboto, Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; }
     
     /* Navigation Bar */
-    .nav-bar { background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00; margin: -20px -20px 20px -20px; }
-    .nav-bar a { color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1); font-size: 14px; }
-    .nav-bar a:hover { background: rgba(255,255,255,0.2); }
+    .nav-bar { background: #1a5d1a; padding: 12px; display: flex; gap: 15px; justify-content: center; border-bottom: 4px solid #ffcc00; margin: -20px -20px 30px -20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .nav-bar a { color: white; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 5px; background: rgba(255,255,255,0.15); font-size: 14px; transition: 0.3s; }
+    .nav-bar a:hover { background: rgba(255,255,255,0.3); }
 
-        .school-header { display: flex; align-items: center; background: #e8f5e9; padding: 15px; border-bottom: 1px solid darkgreen; }
-    .school-logo { width: 60px; height: auto; margin-right: 15px; }
-    .school-title h1 { margin: 0; color: darkgreen; font-size: 20px; }
+    /* School Header */
+    .register-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 6px solid darkgreen; max-width: 98%; margin: 0 auto; }
     
-
-    .register-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 5px solid darkgreen; }
+    .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+    .branding { display: flex; align-items: center; gap: 20px; }
+    .school-logo { width: 70px; height: 70px; object-fit: contain; }
     
-    .register-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .register-header h2 { margin: 0; color: #1a5d1a; font-size: 20px; }
+    .school-title h1 { margin: 0; color: #1a5d1a; font-size: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .school-title h2 { margin: 5px 0; color: #444; font-size: 18px; font-weight: 500; }
+    .school-title small { color: #666; font-size: 13px; font-family: monospace; }
 
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; }
-    .search-input { padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+    /* Controls */
+    .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }
+    .search-input { padding: 10px 15px; width: 350px; border: 2px solid #ddd; border-radius: 6px; outline: none; transition: 0.3s; }
+    .search-input:focus { border-color: darkgreen; box-shadow: 0 0 5px rgba(0,100,0,0.2); }
 
-    .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; display: inline-block; }
-    .btn-print { background: #444; color: white; }
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; }
+    .btn-print { background: #2c3e50; color: white; display: flex; align-items: center; gap: 8px; }
+    .btn-print:hover { background: #000; }
 
-    .table-wrapper { overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
-    table { width: 100%; border-collapse: collapse; font-size: 11.5px; white-space: nowrap; }
-    th { background: #f8f9fa; color: #333; padding: 10px; text-align: left; border-bottom: 2px solid darkgreen; position: sticky; top: 0; }
-    td { padding: 8px; border-bottom: 1px solid #eee; color: #444; vertical-align: middle; }
+    /* Table Styles */
+    .table-wrapper { overflow-x: auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { background: #f8fbf8; color: #1a5d1a; padding: 14px 10px; text-align: left; border-bottom: 3px solid darkgreen; font-weight: 700; position: sticky; top: 0; text-transform: uppercase; }
+    td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    tr:hover { background-color: #f9fff9; }
     
-    /* Photo Style in Table */
-    .student-thumb { width: 40px; height: 45px; object-fit: cover; border: 1px solid #ddd; border-radius: 2px; background: #eee; }
+    .student-thumb { width: 45px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
+    .adm-no { font-family: monospace; font-weight: bold; color: #1a5d1a; font-size: 14px; }
 
-    .status-pill { padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
-    .status-approved { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+    .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+    .status-approved { background: #e6f4ea; color: #1e7e34; border: 1px solid #b7e1cd; }
+    .status-pending { background: #fff4e5; color: #664d03; border: 1px solid #ffeeba; }
 
+    /* Print Optimization */
     @media print {
-      .no-print, .nav-bar, .filter-bar { display: none !important; }
+      .no-print { display: none !important; }
       body { padding: 0; background: white; }
-      .register-card { border: none; box-shadow: none; width: 100%; }
-      table { font-size: 8.5px; border: 1px solid #000; }
-      th, td { border: 1px solid #ccc; padding: 4px; }
-      .student-thumb { width: 35px; height: 40px; }
-      @page { size: landscape; margin: 5mm; }
+      .register-card { border: none; box-shadow: none; width: 100%; padding: 0; }
+      table { font-size: 10px; border: 1px solid #000; }
+      th, td { border: 1px solid #ddd; padding: 6px; white-space: normal; }
+      .student-thumb { width: 40px; height: 45px; }
+      @page { size: landscape; margin: 10mm; }
     }
   </style>
 </head>
@@ -54,25 +62,27 @@
 
 <div class="nav-bar no-print">
     <a href="admission.html">📝 Admission Form</a>
-    <a href="adm-register.html" style="background: rgba(255,255,255,0.3);">📋 View Register</a>
+    <a href="adm-register.html">📋 View Register</a>
 </div>
 
 <div class="register-card">
-  <div class="register-header">
-    <div>
+  <div class="header-container">
+    <div class="branding">
       <img src="logo.png" alt="School Logo" class="school-logo">
-    <div class="school-title">
-      <h1><strong>Government Prinary School Pethgam Wagoora</strong></h1>
-      <h1>Admission Register 2026</h1>
-      <small>Udise: 01022202207 | District: Baramulla</small>
+      <div class="school-title">
+        <h1>Government Primary School Pethgam Wagoora</h1>
+        <h2>Student Admission Register - 2026</h2>
+        <small>UDISE: 01022202207 | Zone: Wagoora | Dist: Baramulla</small>
+      </div>
     </div>
     <div class="no-print">
-      <button onclick="window.print()" class="btn btn-print">Print Register (Landscape)</button>
+      <button onclick="window.print()" class="btn btn-print">🖨️ Print Full Register</button>
     </div>
   </div>
 
-  <div class="filter-bar no-print">
-    <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Aadhaar or Class..." onkeyup="searchTable()">
+  <div class="controls-row no-print">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search Name, Aadhaar, Class or Adm No..." onkeyup="searchTable()">
+    <div style="font-size: 13px; color: #666;">Total Records: <span id="recordCount" style="font-weight:bold; color:darkgreen;">0</span></div>
   </div>
 
   <div class="table-wrapper">
@@ -81,22 +91,19 @@
         <tr>
           <th>Photo</th>
           <th>Adm No</th>
-          <th>Student Name</th>
-          <th>Parentage (F/M)</th>
+          <th>Student Details</th>
+          <th>Parentage</th>
           <th>Class</th>
           <th>DOB</th>
-          <th>Gender / Blood</th>
-          <th>Aadhaar Number</th>
-          <th>APAAR / PEN</th>
-          <th>Contacts (F/M)</th>
-          <th>Bank Details</th>
-          <th>Address</th>
+          <th>ID Numbers</th>
+          <th>Contacts</th>
+          <th>Bank / Address</th>
           <th>Status</th>
-          <th class="no-print">Review</th>
+          <th class="no-print">Action</th>
         </tr>
       </thead>
       <tbody id="tableContent">
-        </tbody>
+          </tbody>
     </table>
   </div>
 </div>
@@ -105,30 +112,26 @@
 function loadData() {
     const records = JSON.parse(localStorage.getItem("admissions")) || [];
     const tbody = document.getElementById("tableContent");
+    document.getElementById("recordCount").innerText = records.length;
     tbody.innerHTML = "";
 
     records.forEach(student => {
         const row = document.createElement("tr");
-        
-        // Handle Photo: If no photo is saved, show a placeholder
-        const photoSrc = student.studentPhoto || 'https://via.placeholder.com/40x45?text=No+Img';
+        const photoSrc = student.studentPhoto || 'https://via.placeholder.com/45x50?text=NA';
 
         row.innerHTML = `
-            <td><img src="${photoSrc}" class="student-thumb" alt="Photo"></td>
-            <td><strong>${student.admNo || '---'}</strong></td>
-            <td>${student.studentName}</td>
+            <td><img src="${photoSrc}" class="student-thumb"></td>
+            <td class="adm-no">${student.admNo || '---'}</td>
+            <td><strong>${student.studentName}</strong><br><small>${student.gender} | ${student.bloodGroup || 'O+'}</small></td>
             <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
-            <td>${student.studentClass}</td>
+            <td><strong>${student.studentClass}</strong></td>
             <td>${student.dob}</td>
-            <td>${student.gender} / ${student.bloodGroup || 'N/A'}</td>
-            <td>${student.aadhaarNo}</td>
-            <td>A: ${student.apaarId || '---'}<br>P: ${student.penId || '---'}</td>
-            <td>F: ${student.fatherContact}<br>M: ${student.motherContact}</td>
-            <td>${student.bankAcc}<br><small>${student.ifsc}</small></td>
-            <td>${student.village}, ${student.mohallah}</td>
+            <td><small>AAD: ${student.aadhaarNo}</small><br><small>PEN: ${student.penId || '---'}</small></td>
+            <td>${student.fatherContact}<br><small>Res: ${student.motherContact}</small></td>
+            <td><small>${student.bankAcc} (${student.ifsc})</small><br><em>${student.village}</em></td>
             <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
             <td class="no-print">
-                <a href="admission.html?id=${student.admNo}" style="color:blue; text-decoration:none; font-weight:bold;">Review</a>
+                <a href="admission.html?id=${student.admNo}" style="color:#1a5d1a; text-decoration:none; font-weight:bold;">📝 Edit</a>
             </td>
         `;
         tbody.appendChild(row);
@@ -146,6 +149,6 @@ function searchTable() {
 
 window.onload = loadData;
 </script>
+
 </body>
 </html>
-            
