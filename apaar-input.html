@@ -170,40 +170,60 @@
   </div>
 </div>
 
-<script>
-    window.onload = function() {
+<script type="module">
+    // 1. Import Firebase dependencies
+    import { db } from './init-firebase.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 2. Main Logic on Load
+    window.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams(window.location.search);
         const studentId = params.get('id');
         
+        // Set dates
         const today = new Date().toLocaleDateString('en-GB');
         if(document.getElementById("todayDate")) document.getElementById("todayDate").value = today;
         if(document.getElementById("consentDate")) document.getElementById("consentDate").value = today;
 
         if (studentId) {
-            const records = JSON.parse(localStorage.getItem("admissions")) || [];
-            const student = records.find(r => r.admNo.trim() === studentId.trim());
-            
-            if (student) {
-                document.getElementById("displayAdmNo").innerText = student.admNo;
-                if(document.getElementById("studentNameDisplay")) document.getElementById("studentNameDisplay").value = student.studentName;
-                if(document.getElementById("studentNameHOI")) document.getElementById("studentNameHOI").value = student.studentName;
-                if(document.getElementById("parentNameInput")) document.getElementById("parentNameInput").value = student.fatherName || "";
-                if(document.getElementById("parentAadhaarInput") && student.aadhaarNo) {
-                    document.getElementById("parentAadhaarInput").value = student.aadhaarNo;
+            try {
+                // Fetch specific student document from the "admissions" collection
+                const docRef = doc(db, "admissions", studentId.trim());
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const student = docSnap.data();
+                    
+                    // Fill display elements
+                    if(document.getElementById("displayAdmNo")) document.getElementById("displayAdmNo").innerText = student.admNo;
+                    if(document.getElementById("studentNameDisplay")) document.getElementById("studentNameDisplay").value = student.studentName;
+                    if(document.getElementById("studentNameHOI")) document.getElementById("studentNameHOI").value = student.studentName;
+                    if(document.getElementById("parentNameInput")) document.getElementById("parentNameInput").value = student.fatherName || "";
+                    
+                    // Specific logic for Aadhaar
+                    if(document.getElementById("parentAadhaarInput") && student.aadhaarNo) {
+                        document.getElementById("parentAadhaarInput").value = student.aadhaarNo;
+                    }
+                } else {
+                    console.error("No such student record found in Firebase!");
                 }
+            } catch (error) {
+                console.error("Error fetching student data:", error);
             }
         }
-    };
+    });
 
-    function downloadPDF() {
-        const studentName = document.getElementById("studentNameDisplay").value || "Student";
+    // 3. Attach Download function to window so the button can still find it
+    window.downloadPDF = function() {
+        const studentName = document.getElementById("studentNameDisplay")?.value || "Student";
         const filename = "APAAR_Consent_" + studentName.replace(/\s+/g, '_') + ".pdf";
         const originalTitle = document.title;
         document.title = filename;
         window.print();
         document.title = originalTitle;
-    }
+    };
 </script>
+
 
 </body>
 </html>
