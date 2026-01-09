@@ -190,47 +190,98 @@
   </div>
 </div>
 
-<script>
-  const students = JSON.parse(localStorage.getItem("admissions")) || [];
+<script type="module">
+  // 1. Firebase Imports
+  import { db } from './init-firebase.js';
+  import { collection, getDocs, doc, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  let students = [];
   let selectedStudent = null;
 
-  window.onload = () => {
+  // 2. Load Student List from Cloud on Page Load
+  window.onload = async () => {
       const select = document.getElementById('studentSelect');
-      students.sort((a, b) => a.studentName.localeCompare(b.studentName)).forEach(s => {
-          const option = document.createElement('option');
-          option.value = s.admNo;
-          option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
-          select.appendChild(option);
-      });
       document.getElementById('date').valueAsDate = new Date();
+      
+      try {
+          // Fetch from "admissions" collection ordered by name
+          const q = query(collection(db, "admissions"), orderBy("studentName", "asc"));
+          const querySnapshot = await getDocs(q);
+          
+          querySnapshot.forEach((doc) => {
+              const s = doc.data();
+              students.push(s);
+              const option = document.createElement('option');
+              option.value = s.admNo;
+              option.textContent = `${s.studentName} (Adm: ${s.admNo})`;
+              select.appendChild(option);
+          });
+      } catch (error) {
+          console.error("Error loading students:", error);
+          alert("Could not load student list from cloud.");
+      }
   };
 
-  function loadStudentData() {
+  // 3. Load Selected Student Data
+  window.loadStudentData = function() {
       const admNo = document.getElementById('studentSelect').value;
       if (!admNo) return;
+      
       selectedStudent = students.find(s => s.admNo == admNo);
-      document.getElementById('inputSection').style.display = "block";
-      document.getElementById('refNo').value = `GPS/PW/BON/${new Date().getFullYear()}/${selectedStudent.admNo}`;
-  }
+      
+      if (selectedStudent) {
+          document.getElementById('inputSection').style.display = "block";
+          // Generate professional Reference Number
+          const year = new Date().getFullYear();
+          document.getElementById('refNo').value = `GPS/PW/BON/${year}/${selectedStudent.admNo}`;
+      }
+  };
 
-  function generateCertificate() {
+  // 4. Generate and Save Certificate Record
+  window.generateCertificate = async function() {
     if (!selectedStudent) return;
+
+    // Fill the Certificate Template
     document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
     document.getElementById('p_fname').innerText = selectedStudent.fatherName;
     document.getElementById('p_adm').innerText = selectedStudent.admNo;
     document.getElementById('p_class').innerText = selectedStudent.studentClass;
     document.getElementById('p_dob').innerText = selectedStudent.dob;
-    document.getElementById('p_ref').innerText = document.getElementById('refNo').value;
-    document.getElementById('p_date').innerText = document.getElementById('date').value;
-    document.getElementById('p_purpose').innerText = document.getElementById('purpose').value || "Official Requirements";
+    
+    const refNo = document.getElementById('refNo').value;
+    const issueDate = document.getElementById('date').value;
+    const purpose = document.getElementById('purpose').value || "Official Requirements";
+
+    document.getElementById('p_ref').innerText = refNo;
+    document.getElementById('p_date').innerText = issueDate;
+    document.getElementById('p_purpose').innerText = purpose;
     document.getElementById('p_session').innerText = document.getElementById('session').value;
     document.getElementById('p_signedBy').innerText = document.getElementById('signedBy').value;
 
+    // UI Updates
     document.getElementById('certificate').style.display = "block";
     document.getElementById('printBtn').style.display = "inline-block";
     document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
-  }
+
+    // 5. OPTIONAL: Save a log of this certificate to Firebase
+    try {
+        const certId = refNo.replace(/\//g, "_"); // Format ID for Firebase
+        await setDoc(doc(db, "issued_certificates", certId), {
+            studentName: selectedStudent.studentName,
+            admNo: selectedStudent.admNo,
+            refNo: refNo,
+            date: issueDate,
+            purpose: purpose,
+            type: "Bonafide",
+            issuedAt: new Date().toISOString()
+        });
+        console.log("Certificate record logged to cloud.");
+    } catch (e) {
+        console.error("Error logging certificate:", e);
+    }
+  };
 </script>
+
 
 </body>
 </html>
