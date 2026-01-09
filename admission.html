@@ -205,11 +205,15 @@
   </form>
 </div>
 
-<script>
-// --- 1. PHOTO COMPRESSION LOGIC ---
+<script type="module">
+// --- 1. FIREBASE IMPORTS ---
+import { db } from './init-firebase.js';
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// --- 2. PHOTO COMPRESSION LOGIC ---
 let compressedPhotoBase64 = "";
 
-function processPhoto(event) {
+window.processPhoto = function(event) { // Attached to window for HTML access
     const file = event.target.files[0];
     if (!file) return;
 
@@ -218,15 +222,13 @@ function processPhoto(event) {
         const img = new Image();
         img.onload = function() {
             const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 150; // Smaller size for storage
+            const MAX_WIDTH = 150; 
             const scaleSize = MAX_WIDTH / img.width;
             canvas.width = MAX_WIDTH;
             canvas.height = img.height * scaleSize;
-
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7); // Compress to 70% quality
+            compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
             document.getElementById("photoPreview").src = compressedPhotoBase64;
             document.getElementById("photoPreview").style.display = "block";
             document.getElementById("photoTxt").style.display = "none";
@@ -236,11 +238,10 @@ function processPhoto(event) {
     reader.readAsDataURL(file);
 }
 
-// --- 2. DATE TO WORDS LOGIC ---
-function convertDOB() {
+// --- 3. DATE TO WORDS LOGIC ---
+window.convertDOB = function() {
     const dob = document.getElementById("dob").value;
     if (!dob) return;
-    
     const d = new Date(dob);
     const day = d.getDate();
     const month = d.toLocaleString('en-IN', { month: 'long' });
@@ -259,13 +260,12 @@ function convertDOB() {
         return numWords(first) + " Hundred " + numWords(second);
     };
 
-    const ordinals = ["", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteenth", "Twentieth", "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth", "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"];
-
+    const ordinals = ["", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteen", "Twentieth", "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth", "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"];
     document.getElementById("dobWords").value = `${ordinals[day]} ${month} ${yearToWords(year)}`;
 }
 
-// --- 3. DATA PERSISTENCE ---
-window.onload = function() {
+// --- 4. DATA PERSISTENCE (FIREBASE) ---
+window.addEventListener('DOMContentLoaded', async () => {
     const role = localStorage.getItem("userRole") || "HOI"; 
     document.getElementById("officeSection").style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
 
@@ -273,10 +273,12 @@ window.onload = function() {
     const studentId = params.get('id');
 
     if (studentId) {
-        const records = JSON.parse(localStorage.getItem("admissions")) || [];
-        const student = records.find(r => r.admNo === studentId);
-        if (student) {
-            // Fill every field back exactly
+        // Fetch specific document from Firebase
+        const docRef = doc(db, "admissions", studentId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const student = docSnap.data();
             document.getElementById("studentName").value = student.studentName || "";
             document.getElementById("aadhaarName").value = student.aadhaarName || "";
             document.getElementById("dob").value = student.dob || "";
@@ -306,14 +308,18 @@ window.onload = function() {
                 document.getElementById("photoPreview").style.display = "block";
                 document.getElementById("photoTxt").style.display = "none";
             }
-            convertDOB();
+            window.convertDOB();
         }
     } else {
         document.getElementById("admNo").value = "GPSPW/" + Date.now().toString().slice(-4);
     }
-};
+});
 
-function submitAdmission() {
+// --- 5. SUBMIT TO FIREBASE ---
+window.submitAdmission = async function() {
+    const admNo = document.getElementById("admNo").value;
+    if(!admNo) return alert("Admission Number is required!");
+
     const data = {
         studentName: document.getElementById("studentName").value,
         aadhaarName: document.getElementById("aadhaarName").value,
@@ -334,19 +340,22 @@ function submitAdmission() {
         ifsc: document.getElementById("ifsc").value,
         village: document.getElementById("village").value,
         mohallah: document.getElementById("mohallah").value,
-        admNo: document.getElementById("admNo").value,
+        admNo: admNo,
         admDate: document.getElementById("admDate").value,
         remarks: document.getElementById("remarks").value,
         status: "Approved",
-        studentPhoto: compressedPhotoBase64
+        studentPhoto: compressedPhotoBase64,
+        updatedAt: new Date().toISOString()
     };
 
-    let records = JSON.parse(localStorage.getItem("admissions")) || [];
-    const index = records.findIndex(r => r.admNo === data.admNo);
-    if (index !== -1) records[index] = data; else records.push(data);
-
-    localStorage.setItem("admissions", JSON.stringify(records));
-    alert("Record Saved Successfully!");
+    try {
+        // Save to Firebase Cloud Firestore
+        await setDoc(doc(db, "admissions", admNo), data);
+        alert("Record Saved to Cloud Successfully!");
+    } catch (e) {
+        console.error("Error saving document: ", e);
+        alert("Error saving to cloud. check console.");
+    }
 }
 </script>
 </body>
