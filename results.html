@@ -116,29 +116,49 @@
     <p>© 2026 Government Primary School Pethgam Wagoora</p>
   </footer>
 
-  <script>
-    function checkResult() {
+  <script type="module">
+    // 1. Import Firebase dependencies
+    import { db } from './init-firebase.js';
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 2. Main Search Logic
+    async function checkResult() {
       const admNo = document.getElementById('admInput').value.trim();
       const errorBox = document.getElementById('errorBox');
       
+      // Reset error box
+      errorBox.style.display = "none";
+      errorBox.innerText = "";
+
       if (!admNo) {
         errorBox.innerText = "Please enter an Admission Number.";
         errorBox.style.display = "block";
         return;
       }
 
-      // Check results in localStorage
-      const results = JSON.parse(localStorage.getItem("results")) || [];
-      const studentResult = results.find(r => r.admNo === admNo);
+      try {
+        // 3. Check for the record in the "results" collection in Firebase
+        const docRef = doc(db, "results", admNo);
+        const docSnap = await getDoc(docRef);
 
-      if (studentResult) {
-        window.location.href = `marks-sheet.html?admNo=${encodeURIComponent(admNo)}`;
-      } else {
-        errorBox.innerText = "Result not found. Ensure marks are uploaded for this ID.";
+        if (docSnap.exists()) {
+          // If found, redirect to marks-sheet with the ID
+          window.location.href = `marks-sheet.html?admNo=${encodeURIComponent(admNo)}`;
+        } else {
+          errorBox.innerText = "Result not found. Ensure marks are uploaded for this ID.";
+          errorBox.style.display = "block";
+        }
+      } catch (error) {
+        console.error("Firebase Search Error:", error);
+        errorBox.innerText = "Database error. Please try again later.";
         errorBox.style.display = "block";
       }
     }
-  </script>
+
+    // 4. Attach to window so the HTML button can find it
+    window.checkResult = checkResult;
+</script>
+
 </body>
 </html>
     
