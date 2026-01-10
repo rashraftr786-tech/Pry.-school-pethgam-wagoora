@@ -35,6 +35,17 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       color: var(--primary);
     }
+    /* Simple spinner for loading state */
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #1b5e20;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -62,10 +73,12 @@
         </div>
       </div>
 
-      <div id="recaptcha-container" class="flex justify-center"></div>
+      <div id="recaptcha-container"></div>
 
-      <button onclick="onSignInSubmit()" class="btn-3d w-full bg-emerald-700 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wider">
-        Get Verification Code <span class="material-icons-outlined">sms</span>
+      <button id="btn-request-otp" onclick="onSignInSubmit()" class="btn-3d w-full bg-emerald-700 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wider">
+        <span>Get Verification Code</span>
+        <div class="loader" id="request-loader"></div>
+        <span class="material-icons-outlined" id="sms-icon">sms</span>
       </button>
     </div>
 
@@ -109,16 +122,28 @@
       activeBtn.classList.remove('text-gray-500');
     };
 
-    // Initialize Recaptcha
+    // Initialize Invisible Recaptcha
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'normal'
+      'size': 'invisible',
+      'callback': (response) => {
+        // Optional: logic after captcha solved
+      }
     });
 
     // Step 1: Request OTP
     window.onSignInSubmit = function() {
       const phoneInput = document.getElementById('phoneNumber').value;
+      const loader = document.getElementById('request-loader');
+      const smsIcon = document.getElementById('sms-icon');
+      const btn = document.getElementById('btn-request-otp');
+
       if (phoneInput.length !== 10) return alert("Please enter a valid 10-digit mobile number");
       
+      // Start Loading UI
+      loader.style.display = 'block';
+      smsIcon.style.display = 'none';
+      btn.disabled = true;
+
       const number = "+91" + phoneInput;
       const appVerifier = window.recaptchaVerifier;
 
@@ -129,7 +154,7 @@
           document.getElementById('step-otp').classList.remove('hidden');
         }).catch((error) => {
           console.error(error);
-          alert("Error: SMS could not be sent. Check your internet or Recaptcha.");
+          alert("Error: SMS could not be sent. Please check your internet, ensure your number is correct, or check if the domain is authorized in Firebase.");
           location.reload();
         });
     };
@@ -145,9 +170,9 @@
         const result = await window.confirmationResult.confirm(code);
         const user = result.user;
 
-        // Security Check: Is this number in our database for this role?
         let isAuthorized = false;
         
+        // Security Check against Firestore
         if (selectedRole === 'staff' || selectedRole === 'admin') {
           const q = query(collection(db, "staffRecords"), where("contact", "==", rawPhone));
           const snap = await getDocs(q);
@@ -160,22 +185,21 @@
         }
 
         if (isAuthorized) {
-          // Send to correct page based on role
           if(selectedRole === 'admin') window.location.href = "index.html";
           else if(selectedRole === 'staff') window.location.href = "staff-entry.html";
           else window.location.href = "student-diary-parent.html";
         } else {
           await auth.signOut();
-          alert("❌ ACCESS DENIED: This mobile number is not registered for the selected role in our school database.");
+          alert("❌ ACCESS DENIED: This mobile number is not registered as " + selectedRole.toUpperCase() + " in our database.");
           location.reload();
         }
 
       } catch (error) {
         console.error(error);
-        alert("Verification failed. Please check the code.");
+        alert("Verification failed. Please check the code or try again.");
       }
     };
   </script>
 </body>
 </html>
-</html>
+    
