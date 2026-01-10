@@ -3,105 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PS Pethgam ERP | Unified Portal</title>
+  <title>Admin Dashboard | GPS Pethgam Cloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
-    :root {
-      --primary: #1b5e20;
-      --clerical: #0277bd;
-      --admin: #c62828;
-      --accent: #fbc02d;
-      --shadow-3d: 0 6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
-    }
-
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
-
-    /* --- ANIMATIONS --- */
-    @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
-
-    /* --- Navigation Style --- */
-    .nav-container {
-      background: #1b5e20; padding: 12px 5%; display: flex; justify-content: space-between; 
-      align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
-    }
-    .nav-brand { color: white; font-weight: 800; font-size: 14px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-    .nav-links { display: flex; align-items: center; }
-    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.9); font-weight: bold; font-size: 12px; margin-left: 20px; text-transform: uppercase; }
-    
-    .logout-3d {
-        background: #c62828; color: white; border: none; padding: 8px 16px;
-        font-size: 11px; font-weight: 900; border-radius: 8px; cursor: pointer;
-        box-shadow: 0 4px 0 #801313; transition: 0.1s; margin-left: 20px;
-    }
-    .logout-3d:active { transform: translateY(3px); box-shadow: 0 1px 0 #801313; }
-
-    /* --- Hero Section --- */
-    .hero-header {
-      background: linear-gradient(-45deg, #1b5e20, #2e7d32, #1565c0, #222);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: white; padding: 40px 5% 80px; text-align: center; clip-path: ellipse(150% 100% at 50% 0%);
-    }
-
-    #liveClock { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--accent); min-height: 1.5em; }
-    .floating-logo { width: 80px; animation: floating 3s ease-in-out infinite; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
-
-    /* --- Grid System --- */
-    .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 0 5%; margin-top: -60px; }
-    .tier-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd; }
-    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-    .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    /* --- 3D Buttons --- */
-    .btn-3d {
-      display: inline-flex; align-items: center; justify-content: center; padding: 12px 8px;
-      font-weight: bold; color: white; text-decoration: none; border-radius: 10px;
-      cursor: pointer; border: none; font-size: 11px; gap: 6px;
-      text-transform: uppercase; box-shadow: var(--shadow-3d); position: relative; overflow: hidden; transition: 0.1s;
-    }
-    .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
-    .btn-3d::after { content: ''; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: rgba(255,255,255,0.2); transform: rotate(45deg); animation: shine 5s infinite; }
-
-    .btn-admin { background: var(--admin); }
-    .btn-clerical { background: var(--clerical); }
-    .btn-general { background: var(--primary); }
-    
-    .page-section { display: none; }
-    .active { display: block; }
-    @media print { .no-print { display: none !important; } }
+    :root { --primary: #1b5e20; }
+    body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .sidebar-link:hover { background: rgba(27, 94, 32, 0.1); color: var(--primary); }
+    .stat-card { transition: transform 0.2s; }
+    .stat-card:hover { transform: translateY(-5px); }
   </style>
 </head>
-<body>
+<body class="flex min-h-screen">
 
-  <nav class="nav-container no-print">
-    <div class="nav-brand">
-        <img src="logo.png" alt="Logo" style="width: 35px;" onerror="this.src='https://via.placeholder.com/35'">
-        GPS PETHGAM ERP
+  <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
+    <div class="p-6 border-b border-gray-100 text-center">
+      <h2 class="font-black text-emerald-800 tracking-tighter text-xl">GPS PETHGAM</h2>
+      <p class="text-[10px] text-gray-400 font-bold uppercase">Admin Control Panel</p>
     </div>
-    <div class="nav-links">
-      <a href="index.html">Dashboard</a>
-      <a href="wb.html">Whiteboard</a>
-      <button onclick="handleLogout()" class="logout-3d">
-        <span class="material-icons-outlined" style="font-size: 16px; vertical-align: middle;">logout</span> SIGN OUT
+    
+    <nav class="flex-1 p-4 space-y-2">
+      <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-emerald-700 bg-emerald-50 font-bold">
+        <span class="material-icons-outlined">dashboard</span> Dashboard
+      </a>
+      <a href="staff-entry.html" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-500 font-bold">
+        <span class="material-icons-outlined">people</span> Staff Records
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-500 font-bold">
+        <span class="material-icons-outlined">school</span> Admissions
+      </a>
+      <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-500 font-bold">
+        <span class="material-icons-outlined">menu_book</span> Student Diary
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-gray-100">
+      <button id="logoutBtn" class="flex items-center gap-3 w-full p-3 text-red-600 font-bold hover:bg-red-50 rounded-xl transition-all">
+        <span class="material-icons-outlined">logout</span> Logout
       </button>
     </div>
-  </nav>
+  </aside>
 
-  <div id="dashboard" class="page-section active">
-    <header class="hero-header">
-      <div id="liveClock">Initializing Clock...</div>
-      <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
-      <h1>Unified ERP Portal</h1>
-      <p>Session 2026 | Administration & Management</p>
-      <span id="cloudStatus" style="font-size: 0.8rem; opacity: 0.8;">☁️ Connecting to School Cloud...</span>
+  <main class="flex-1 p-6 md:p-10">
+    <header class="flex justify-between items-center mb-10">
+      <div>
+        <h1 class="text-3xl font-black text-gray-800">Welcome, Admin</h1>
+        <p class="text-gray-500 font-medium">Here is what's happening today at GPS Pethgam.</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-black text-gray-800" id="adminName">Loading...</p>
+          <p class="text-[10px] text-emerald-600 font-bold uppercase">System Superuser</p>
+        </div>
+        <div class="w-12 h-12 bg-emerald-700 rounded-2xl flex items-center justify-center text-white font-bold shadow-lg">
+          AD
+        </div>
+      </div>
     </header>
 
-    <main class="main-grid">
-      <section class="tier-card">
-        <div class="tier-header"><span class="material-icons-outlined" style="color:var(--primary)">public</span><h2>General</h2></div>
-        <div class="link-list">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
+        <span class="material-icons-outlined text-blue-600 bg-blue-50 p-3 rounded-2xl mb-4">groups</span>
+        <h3 class="text-gray-500 font-bold text-sm uppercase tracking-wider">Total Students</h3>
+        <p class="text-4xl font-black text-gray-800">248</p>
+      </div>
+      <div class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
+        <span class="material-icons-outlined text-emerald-600 bg-emerald-50 p-3 rounded-2xl mb-4">badge</span>
+        <h3 class="text-gray-500 font-bold text-sm uppercase tracking-wider">Staff Members</h3>
+        <p class="text-4xl font-black text-gray-800">14</p>
+      </div>
+      <div class="stat-card bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
+        <span class="material-icons-outlined text-orange-600 bg-orange-50 p-3 rounded-2xl mb-4">event_available</span>
+        <h3 class="text-gray-500 font-bold text-sm uppercase tracking-wider">Attendance Today</h3>
+        <p class="text-4xl font-black text-gray-800">92%</p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from './init-firebase.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Security Check: Redirect if not logged in
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "signin.html";
+      } else {
+        // Fetch Admin Name from Firestore using the contact number
+        const phone = user.phoneNumber.replace("+91", "");
+        const q = query(collection(db, "staffRecords"), where("contact", "==", phone));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          document.getElementById('adminName').innerText = snap.docs[0].data().name;
+        }
+      }
+    });
+
+    // Logout Functionality
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = "signin.html";
+      });
+    });
+  </script>
+</body>
+</html>
           <a href="results.html" class="btn-3d btn-general">Results</a>
           <a href="marks-sheet.html" class="btn-3d btn-general">Marks Sheet</a>
           <a href="student-id.html" class="btn-3d btn-general">Student ID</a>
