@@ -81,88 +81,39 @@
   </main>
 
   <script type="module">
-    import { auth, db } from './init-firebase.js';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { auth, db } from './init-firebase.js';
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Security Check: Redirect if not logged in
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "signin.html";
+  // Check if user is logged in
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "signin.html"; // Redirect to login if no session
+    } else {
+      const phone = user.phoneNumber.replace("+91", "");
+      
+      // Fetch user details from Firestore
+      const q = query(collection(db, "staffRecords"), where("contact", "==", phone));
+      const snap = await getDocs(q);
+      
+      if (!snap.empty) {
+        const userData = snap.docs[0].data();
+        document.getElementById('adminName').innerText = userData.name;
       } else {
-        // Fetch Admin Name from Firestore using the contact number
-        const phone = user.phoneNumber.replace("+91", "");
-        const q = query(collection(db, "staffRecords"), where("contact", "==", phone));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          document.getElementById('adminName').innerText = snap.docs[0].data().name;
-        }
+        // Fallback if record is missing but Auth succeeded
+        document.getElementById('adminName').innerText = "Authorized Staff";
       }
-    });
-
-    // Logout Functionality
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = "signin.html";
-      });
-    });
-  </script>
-</body>
-</html>
-          <a href="tc.html" class="btn-3d btn-admin">Transfer Cert</a>
-          <a href="teaching-id.html" class="btn-3d btn-admin">Teaching ID</a>
-          <a href="reports-hub.html" class="btn-3d btn-admin">Reports Hub</a>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <footer style="background: #102e12; color: white; text-align: center; padding: 20px; margin-top: 50px;">
-    <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
-  </footer>
-
-    <script>
-    function updateClock() {
-        const clockEl = document.getElementById('liveClock');
-        if (clockEl) {
-            const now = new Date();
-            const options = { 
-                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', 
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true 
-            };
-            clockEl.innerText = now.toLocaleString('en-IN', options);
-        }
     }
-    updateClock();
-    setInterval(updateClock, 1000);
-  </script>
+  });
 
-  <script type="module">
-    import { auth } from './init-firebase.js';
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-    // SECURITY GUARD
-    onAuthStateChanged(auth, (user) => {
-      const status = document.getElementById('cloudStatus');
-      if (!user) {
-        window.location.replace("signin.html");
-      } else {
-        if(status) status.innerText = "✅ Cloud Synchronized (Studio-2729)";
-      }
+  // Logout Logic
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = "signin.html";
     });
+  });
+</script>
 
-    // GLOBAL LOGOUT FUNCTION
-    window.handleLogout = async function() {
-      if (confirm("Sign out from GPS Pethgam Cloud?")) {
-        try {
-          await signOut(auth);
-          window.location.replace("signin.html");
-        } catch (e) { 
-          alert("Error: " + e.message); 
-        }
-      }
-    };
-  </script>
 
 </body>
 </html>
