@@ -104,102 +104,97 @@
   </div>
 
   <script type="module">
-    import { auth, db } from './init-firebase.js';
-    import { RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { auth, db } from './init-firebase.js';
+  import { RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    let selectedRole = 'parent';
+  let selectedRole = 'parent';
 
-    // UI Role Switcher
-    window.setRole = (role) => {
-      selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-emerald-800');
-        btn.classList.add('text-gray-500');
+  // Make setRole global so the buttons can still find it
+  window.setRole = (role) => {
+    selectedRole = role;
+    document.querySelectorAll('.role-btn').forEach(btn => {
+      btn.classList.remove('active', 'text-emerald-800');
+      btn.classList.add('text-gray-500');
+    });
+    const activeBtn = document.getElementById(`role-${role}`);
+    activeBtn.classList.add('active');
+    activeBtn.classList.remove('text-gray-500');
+  };
+
+  // Initialize Recaptcha - Linked specifically to the Button ID
+  window.recaptchaVerifier = new RecaptchaVerifier(auth, 'btn-request-otp', {
+    'size': 'invisible'
+  });
+
+  // Handle the Sign-In Request using an Event Listener instead of onclick
+  const requestBtn = document.getElementById('btn-request-otp');
+  
+  requestBtn.addEventListener('click', () => {
+    const phoneInput = document.getElementById('phoneNumber').value;
+    const loader = document.getElementById('request-loader');
+    const smsIcon = document.getElementById('sms-icon');
+
+    if (phoneInput.length !== 10) return alert("Please enter a valid 10-digit mobile number");
+    
+    // UI Loading State
+    loader.style.display = 'block';
+    smsIcon.style.display = 'none';
+    requestBtn.disabled = true;
+
+    const number = "+91" + phoneInput;
+    const appVerifier = window.recaptchaVerifier;
+
+    signInWithPhoneNumber(auth, number, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        document.getElementById('step-phone').classList.add('hidden');
+        document.getElementById('step-otp').classList.remove('hidden');
+      }).catch((error) => {
+        console.error("Firebase Error:", error.code, error.message);
+        alert("Error: " + error.message);
+        // Reset button if it fails
+        loader.style.display = 'none';
+        smsIcon.style.display = 'block';
+        requestBtn.disabled = false;
       });
-      const activeBtn = document.getElementById(`role-${role}`);
-      activeBtn.classList.add('active');
-      activeBtn.classList.remove('text-gray-500');
-    };
+  });
 
-    // Initialize Invisible Recaptcha
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'btn-request-otp', {
-  'size': 'invisible',
-  'callback': (response) => {
-    // This links the captcha directly to your "Get Verification Code" button
-  }
-});
+  // Globalize verifyOtp for the Verify button
+  window.verifyOtp = async function() {
+    const code = document.getElementById('otpCode').value;
+    const rawPhone = document.getElementById('phoneNumber').value;
+    if (code.length !== 6) return alert("Enter the 6-digit OTP");
 
-    // Step 1: Request OTP
-    window.onSignInSubmit = function() {
-      const phoneInput = document.getElementById('phoneNumber').value;
-      const loader = document.getElementById('request-loader');
-      const smsIcon = document.getElementById('sms-icon');
-      const btn = document.getElementById('btn-request-otp');
-
-      if (phoneInput.length !== 10) return alert("Please enter a valid 10-digit mobile number");
+    try {
+      const result = await window.confirmationResult.confirm(code);
+      const user = result.user;
+      let isAuthorized = false;
       
-      // Start Loading UI
-      loader.style.display = 'block';
-      smsIcon.style.display = 'none';
-      btn.disabled = true;
-
-      const number = "+91" + phoneInput;
-      const appVerifier = window.recaptchaVerifier;
-
-      signInWithPhoneNumber(auth, number, appVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult;
-          document.getElementById('step-phone').classList.add('hidden');
-          document.getElementById('step-otp').classList.remove('hidden');
-        }).catch((error) => {
-          console.error(error);
-          alert("Error: SMS could not be sent. Please check your internet, ensure your number is correct, or check if the domain is authorized in Firebase.");
-          location.reload();
-        });
-    };
-
-    // Step 2: Verify OTP & Check Authorization
-    window.verifyOtp = async function() {
-      const code = document.getElementById('otpCode').value;
-      const rawPhone = document.getElementById('phoneNumber').value;
-      
-      if (code.length !== 6) return alert("Enter the 6-digit OTP");
-
-      try {
-        const result = await window.confirmationResult.confirm(code);
-        const user = result.user;
-
-        let isAuthorized = false;
-        
-        // Security Check against Firestore
-        if (selectedRole === 'staff' || selectedRole === 'admin') {
-          const q = query(collection(db, "staffRecords"), where("contact", "==", rawPhone));
-          const snap = await getDocs(q);
-          if (!snap.empty) isAuthorized = true;
-        } 
-        else if (selectedRole === 'parent') {
-          const q = query(collection(db, "admissions"), where("parentMobile", "==", rawPhone));
-          const snap = await getDocs(q);
-          if (!snap.empty) isAuthorized = true;
-        }
-
-        if (isAuthorized) {
-          if(selectedRole === 'admin') window.location.href = "index.html";
-          else if(selectedRole === 'staff') window.location.href = "staff-entry.html";
-          else window.location.href = "student-diary-parent.html";
-        } else {
-          await auth.signOut();
-          alert("❌ ACCESS DENIED: This mobile number is not registered as " + selectedRole.toUpperCase() + " in our database.");
-          location.reload();
-        }
-
-      } catch (error) {
-        console.error(error);
-        alert("Verification failed. Please check the code or try again.");
+      if (selectedRole === 'staff' || selectedRole === 'admin') {
+        const q = query(collection(db, "staffRecords"), where("contact", "==", rawPhone));
+        const snap = await getDocs(q);
+        if (!snap.empty) isAuthorized = true;
+      } 
+      else if (selectedRole === 'parent') {
+        const q = query(collection(db, "admissions"), where("parentMobile", "==", rawPhone));
+        const snap = await getDocs(q);
+        if (!snap.empty) isAuthorized = true;
       }
-    };
-  </script>
+
+      if (isAuthorized) {
+        window.location.href = (selectedRole === 'admin') ? "index.html" : 
+                              (selectedRole === 'staff') ? "staff-entry.html" : "student-diary-parent.html";
+      } else {
+        await auth.signOut();
+        alert("❌ ACCESS DENIED: Mobile number not registered.");
+      }
+    } catch (error) {
+      alert("Verification failed. Check the code.");
+    }
+  };
+</script>
+
 </body>
 </html>
     
