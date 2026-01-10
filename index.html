@@ -138,39 +138,58 @@
     <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
   </footer>
 
-  <script type="module">
-    // 2. Firebase & Security Integration
+    <script type="module">
+    // 1. Import from your local init file
     import { auth } from './init-firebase.js';
     import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    // Protection Guard
+    // --- SECURITY GUARD ---
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "signin.html";
       } else {
-        document.getElementById('cloudStatus').innerText = "✅ Cloud Synchronized (Studio-2729)";
+        const cloudStatus = document.getElementById('cloudStatus');
+        if(cloudStatus) cloudStatus.innerText = "✅ Cloud Synchronized (Studio-2729)";
       }
     });
 
-    // Logout Function
+    // --- CLOCK LOGIC (Moved inside module to ensure it runs) ---
+    function updateClock() {
+        const clockEl = document.getElementById('liveClock');
+        if (clockEl) {
+            const now = new Date();
+            const options = { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            clockEl.innerText = now.toLocaleString('en-IN', options);
+        }
+    }
+    
+    // Start clock immediately
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // --- SIGN OUT LOGIC (Attached to window for HTML button access) ---
     window.handleLogout = async function() {
       if (confirm("Sign out from School Cloud?")) {
         try {
           await signOut(auth);
           window.location.href = "signin.html";
-        } catch (e) { alert("Logout failed."); }
+        } catch (e) { 
+          console.error("Logout error:", e);
+          alert("Logout failed. Please check your connection."); 
+        }
       }
     };
-
-    // Clock Utility
-    function updateClock() {
-        const now = new Date();
-        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        document.getElementById('liveClock').innerText = now.toLocaleString('en-IN', options);
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
   </script>
+</body>
+
 </body>
 </html>
       
