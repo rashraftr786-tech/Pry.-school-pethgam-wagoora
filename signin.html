@@ -123,12 +123,12 @@
     };
 
     // Initialize Invisible Recaptcha
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      'size': 'invisible',
-      'callback': (response) => {
-        // Optional: logic after captcha solved
-      }
-    });
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'btn-request-otp', {
+  'size': 'invisible',
+  'callback': (response) => {
+    // This links the captcha directly to your "Get Verification Code" button
+  }
+});
 
     // Step 1: Request OTP
     window.onSignInSubmit = function() {
