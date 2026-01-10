@@ -16,31 +16,27 @@
 
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
 
-    /* --- CONTINUOUS ANIMATIONS --- */
-    @keyframes floating {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
+    /* --- ANIMATIONS --- */
+    @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* --- Navigation Style (Matches your request) --- */
+    .nav-container {
+      background: #1b5e20; padding: 12px 5%; display: flex; justify-content: space-between; 
+      align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
     }
-
-    @keyframes shine {
-      0% { left: -100%; }
-      100% { left: 100%; }
+    .nav-brand { color: white; font-weight: 800; font-size: 14px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.9); font-weight: bold; font-size: 12px; margin-left: 20px; text-transform: uppercase; }
+    
+    .logout-3d {
+        background: #c62828; color: white; border: none; padding: 8px 16px;
+        font-size: 11px; font-weight: 900; border-radius: 8px; cursor: pointer;
+        box-shadow: 0 4px 0 #801313; transition: 0.1s; margin-left: 20px;
     }
+    .logout-3d:active { transform: translateY(3px); box-shadow: 0 1px 0 #801313; }
 
-    /* --- Navigation --- */
-    nav {
-      background: white; padding: 10px 5%; display: flex; justify-content: space-between; 
-      align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
-    }
-    .nav-links a { text-decoration: none; color: var(--primary); font-weight: bold; margin-left: 20px; cursor: pointer; }
-
-    /* --- Header & Live Clock --- */
+    /* --- Hero Section --- */
     .hero-header {
       background: linear-gradient(-45deg, #1b5e20, #2e7d32, #1565c0, #222);
       background-size: 400% 400%;
@@ -49,63 +45,46 @@
     }
 
     #liveClock { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--accent); }
-    #cloudStatus { font-size: 0.8rem; opacity: 0.8; margin-top: 5px; display: block; }
-
-    .floating-logo {
-      width: 80px; animation: floating 3s ease-in-out infinite;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-    }
+    .floating-logo { width: 80px; animation: floating 3s ease-in-out infinite; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
 
     /* --- Grid System --- */
-    .main-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 25px; padding: 0 5%; margin-top: -60px;
-    }
-
-    .tier-card {
-      background: white; border-radius: 20px; padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd;
-    }
-
+    .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 0 5%; margin-top: -60px; }
+    .tier-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #ddd; }
     .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
     .link-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    /* --- 3D Interactive Buttons --- */
+    /* --- 3D Buttons --- */
     .btn-3d {
       display: inline-flex; align-items: center; justify-content: center; padding: 12px 8px;
       font-weight: bold; color: white; text-decoration: none; border-radius: 10px;
       cursor: pointer; border: none; font-size: 11px; gap: 6px;
-      text-transform: uppercase; box-shadow: var(--shadow-3d);
-      position: relative; overflow: hidden; transition: 0.1s;
+      text-transform: uppercase; box-shadow: var(--shadow-3d); position: relative; overflow: hidden; transition: 0.1s;
     }
     .btn-3d:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
-    .btn-3d::after {
-      content: ''; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%;
-      background: rgba(255,255,255,0.2); transform: rotate(45deg); animation: shine 5s infinite;
-    }
+    .btn-3d::after { content: ''; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: rgba(255,255,255,0.2); transform: rotate(45deg); animation: shine 5s infinite; }
 
     .btn-admin { background: var(--admin); }
     .btn-clerical { background: var(--clerical); }
     .btn-general { background: var(--primary); }
-
-    .login-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
-    }
-    .login-box { background: white; padding: 30px; border-radius: 20px; width: 300px; text-align: center; }
-
+    
     .page-section { display: none; }
     .active { display: block; }
+    @media print { .no-print { display: none !important; } }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div style="font-weight: bold; color: var(--primary);">GPS PETHGAM ERP</div>
+  <nav class="nav-container no-print">
+    <div class="nav-brand">
+        <img src="logo.png" alt="Logo" style="width: 35px;" onerror="this.src='https://via.placeholder.com/35'">
+        GPS PETHGAM ERP
+    </div>
     <div class="nav-links">
-      <a onclick="showPage('dashboard')">Home</a>
+      <a href="index.html">Dashboard</a>
       <a href="wb.html">Whiteboard</a>
-      <a href="README.txt">Docs</a>
+      <button onclick="handleLogout()" class="logout-3d">
+        <span class="material-icons-outlined" style="font-size: 16px; vertical-align: middle;">logout</span> SIGN OUT
+      </button>
     </div>
   </nav>
 
@@ -115,7 +94,7 @@
       <img src="logo.png" class="floating-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
       <h1>Unified ERP Portal</h1>
       <p>Session 2026 | Administration & Management</p>
-      <span id="cloudStatus">☁️ Connecting to School Cloud...</span>
+      <span id="cloudStatus" style="font-size: 0.8rem; opacity: 0.8;">☁️ Connecting to School Cloud...</span>
     </header>
 
     <main class="main-grid">
@@ -132,36 +111,27 @@
       <section class="tier-card">
         <div class="tier-header"><span class="material-icons-outlined" style="color:var(--clerical)">assignment</span><h2>Clerical</h2></div>
         <div class="link-list">
-          <button onclick="requestLogin('clerical', 'attendance.html')" class="btn-3d btn-clerical">Attendance</button>
-          <button onclick="requestLogin('clerical', 'admission.html')" class="btn-3d btn-clerical">New Admission</button>
-          <button onclick="requestLogin('clerical', 'staff-entry.html')" class="btn-3d btn-clerical">Staff Entry</button>
-          <button onclick="requestLogin('clerical', 'apaar-input.html')" class="btn-3d btn-clerical">APAAR Input</button>
-          <button onclick="requestLogin('clerical', 'mdm.html')" class="btn-3d btn-clerical">Daily MDM</button>
-          <button onclick="requestLogin('clerical', 'upload-results.html')" class="btn-3d btn-clerical">Marks Entry</button>
+          <a href="attendance.html" class="btn-3d btn-clerical">Attendance</a>
+          <a href="admission.html" class="btn-3d btn-clerical">New Admission</a>
+          <a href="staff-entry.html" class="btn-3d btn-clerical">Staff Entry</a>
+          <a href="apaar-input.html" class="btn-3d btn-clerical">APAAR Input</a>
+          <a href="mdm.html" class="btn-3d btn-clerical">Daily MDM</a>
+          <a href="upload-results.html" class="btn-3d btn-clerical">Marks Entry</a>
         </div>
       </section>
 
       <section class="tier-card">
         <div class="tier-header"><span class="material-icons-outlined" style="color:var(--admin)">admin_panel_settings</span><h2>Admin</h2></div>
         <div class="link-list">
-          <button onclick="requestLogin('admin', 'roll-statement.html')" class="btn-3d btn-admin">Roll Statement</button>
-          <button onclick="requestLogin('admin', 'staff-statement.html')" class="btn-3d btn-admin">Staff Statement</button>
-          <button onclick="requestLogin('admin', 'bonafide.html')" class="btn-3d btn-admin">Bonafide</button>
-          <button onclick="requestLogin('admin', 'tc.html')" class="btn-3d btn-admin">Transfer Cert</button>
-          <button onclick="requestLogin('admin', 'teaching-id.html')" class="btn-3d btn-admin">Teaching ID</button>
-          <button onclick="requestLogin('admin', 'reports-hub.html')" class="btn-3d btn-admin">Reports Hub</button>
+          <a href="roll-statement.html" class="btn-3d btn-admin">Roll Statement</a>
+          <a href="staff-statement.html" class="btn-3d btn-admin">Staff Statement</a>
+          <a href="bonafide.html" class="btn-3d btn-admin">Bonafide</a>
+          <a href="tc.html" class="btn-3d btn-admin">Transfer Cert</a>
+          <a href="teaching-id.html" class="btn-3d btn-admin">Teaching ID</a>
+          <a href="reports-hub.html" class="btn-3d btn-admin">Reports Hub</a>
         </div>
       </section>
     </main>
-  </div>
-
-  <div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-      <h3 id="loginTitle">System Login</h3>
-      <input type="password" id="passCode" placeholder="Enter PIN" style="width: 80%; padding: 12px; text-align: center; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd;">
-      <button onclick="validate()" class="btn-3d btn-general" style="width: 100%;">Authorize</button>
-      <button onclick="hideLogin()" style="background:none; border:none; color:red; margin-top:15px; cursor:pointer;">Cancel</button>
-    </div>
   </div>
 
   <footer style="background: #102e12; color: white; text-align: center; padding: 20px; margin-top: 50px;">
@@ -169,37 +139,30 @@
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    // 2. Firebase & Security Integration
+    import { auth } from './init-firebase.js';
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCzxHme_3hrztrDuD7wupGwNilDtYLfENI",
-      authDomain: "studio-2729610945-4684b.firebaseapp.com",
-      projectId: "studio-2729610945-4684b",
-      storageBucket: "studio-2729610945-4684b.firebasestorage.app",
-      messagingSenderId: "711147405574",
-      appId: "1:711147405574:web:7b5597955b676a3e4d1e87"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.addEventListener('load', () => {
-      document.getElementById('cloudStatus').innerText = "✅ Cloud Synchronized (Studio-2729)";
+    // Protection Guard
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "signin.html";
+      } else {
+        document.getElementById('cloudStatus').innerText = "✅ Cloud Synchronized (Studio-2729)";
+      }
     });
 
-    window.showPage = (id) => {
-      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+    // Logout Function
+    window.handleLogout = async function() {
+      if (confirm("Sign out from School Cloud?")) {
+        try {
+          await signOut(auth);
+          window.location.href = "signin.html";
+        } catch (e) { alert("Logout failed."); }
+      }
     };
 
-    window.db = db;
-  </script>
-
-  <script>
-    let targetPage = "";
-    let requiredRole = "";
-
+    // Clock Utility
     function updateClock() {
         const now = new Date();
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -207,28 +170,7 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
-
-    function requestLogin(role, page) {
-      targetPage = page;
-      requiredRole = role;
-      document.getElementById('loginTitle').innerText = role.toUpperCase() + " LOGIN";
-      document.getElementById('loginOverlay').style.display = 'flex';
-      document.getElementById('passCode').focus();
-    }
-
-    function hideLogin() {
-      document.getElementById('loginOverlay').style.display = 'none';
-      document.getElementById('passCode').value = "";
-    }
-
-    function validate() {
-      const pin = document.getElementById('passCode').value;
-      if ((requiredRole === 'admin' && pin === "2026") || (requiredRole === 'clerical' && pin === "1234")) {
-        window.location.href = targetPage;
-      } else {
-        alert("Access Denied!");
-      }
-    }
   </script>
 </body>
 </html>
+      
