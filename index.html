@@ -139,21 +139,7 @@
     <p>© 2026 GPS Pethgam Wagoora | Designed by Mohammad Ashraf Rather</p>
   </footer>
 
-  <script type="module">
-    import { auth } from './init-firebase.js';
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-    // --- SECURITY GUARD ---
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "signin.html";
-      } else {
-        const cloudStatus = document.getElementById('cloudStatus');
-        if(cloudStatus) cloudStatus.innerText = "✅ Cloud Synchronized (Studio-2729)";
-      }
-    });
-
-    // --- CLOCK LOGIC ---
+    <script>
     function updateClock() {
         const clockEl = document.getElementById('liveClock');
         if (clockEl) {
@@ -165,25 +151,37 @@
             clockEl.innerText = now.toLocaleString('en-IN', options);
         }
     }
-    
-    // Start clock immediately and set interval
     updateClock();
     setInterval(updateClock, 1000);
+  </script>
 
-    // --- SIGN OUT LOGIC ---
-    // Attaching to window object so HTML onclick can access it
+  <script type="module">
+    import { auth } from './init-firebase.js';
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // SECURITY GUARD
+    onAuthStateChanged(auth, (user) => {
+      const status = document.getElementById('cloudStatus');
+      if (!user) {
+        window.location.replace("signin.html");
+      } else {
+        if(status) status.innerText = "✅ Cloud Synchronized (Studio-2729)";
+      }
+    });
+
+    // GLOBAL LOGOUT FUNCTION
     window.handleLogout = async function() {
-      if (confirm("Are you sure you want to sign out?")) {
+      if (confirm("Sign out from GPS Pethgam Cloud?")) {
         try {
           await signOut(auth);
-          window.location.href = "signin.html";
+          window.location.replace("signin.html");
         } catch (e) { 
-          console.error("Logout error:", e);
-          alert("Logout failed. Please check your internet connection."); 
+          alert("Error: " + e.message); 
         }
       }
     };
   </script>
+
 </body>
 </html>
           
