@@ -85,28 +85,36 @@
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // Check if user is logged in
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      window.location.href = "signin.html"; // Redirect to login if no session
+      window.location.href = "signin.html"; 
     } else {
-      const phone = user.phoneNumber.replace("+91", "");
+      // Remove +91 to match your Firestore 'contact' field
+      const phone = user.phoneNumber.replace("+91", "").trim();
       
-      // Fetch user details from Firestore
       const q = query(collection(db, "staffRecords"), where("contact", "==", phone));
       const snap = await getDocs(q);
       
       if (!snap.empty) {
         const userData = snap.docs[0].data();
+        
+        // 1. Check if the user is actually an admin
+        if (userData.role !== "admin") {
+          alert("Unauthorized Access. Redirecting to Staff Portal.");
+          window.location.href = "staff-entry.html"; 
+          return;
+        }
+
+        // 2. Update the UI with the name from database
         document.getElementById('adminName').innerText = userData.name;
       } else {
-        // Fallback if record is missing but Auth succeeded
-        document.getElementById('adminName').innerText = "Authorized Staff";
+        // If phone auth worked but no database record exists
+        document.getElementById('adminName').innerText = "Unknown Admin";
+        console.error("No database record found for: " + phone);
       }
     }
   });
 
-  // Logout Logic
   document.getElementById('logoutBtn').addEventListener('click', () => {
     signOut(auth).then(() => {
       window.location.href = "signin.html";
