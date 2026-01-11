@@ -5,84 +5,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | GPS Pethgam Cloud</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
     :root { --primary: #1b5e20; }
     body { background: linear-gradient(135deg, #1b5e20 0%, #1565c0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-    .role-btn.active { background: #1b5e20; color: white; }
+    .role-btn.active { background: #1b5e20; color: white; box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3); }
   </style>
 </head>
 <body>
 
   <div class="glass-card w-full max-w-md p-8 m-4">
     <div class="text-center mb-8">
-      <h1 class="text-2xl font-black text-gray-800 tracking-tight uppercase">School ERP Login</h1>
-      <p class="text-gray-500 text-sm font-bold">GPS PETHGAM WAGOORA</p>
+      <img src="logo.png" class="w-16 mx-auto mb-2" onerror="this.src='https://via.placeholder.com/64'">
+      <h1 class="text-2xl font-black text-gray-800 uppercase tracking-tight">ERP Portal Login</h1>
+      <p class="text-gray-500 text-xs font-bold uppercase">GPS Pethgam Wagoora</p>
     </div>
 
     <div class="flex bg-gray-200 p-1 rounded-2xl mb-6">
-      <button onclick="setRole('staff')" id="role-staff" class="role-btn active flex-1 py-2 text-xs font-black rounded-xl transition-all">STAFF</button>
-      <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-2 text-xs font-black rounded-xl transition-all text-gray-500">ADMIN</button>
+      <button onclick="setRole('staff')" id="role-staff" class="role-btn active flex-1 py-2 text-[10px] font-black rounded-xl transition-all">STAFF</button>
+      <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-2 text-[10px] font-black rounded-xl transition-all text-gray-500">ADMIN</button>
     </div>
 
     <div class="space-y-4">
-      <div>
-        <label class="block text-[10px] font-black text-gray-500 uppercase ml-1">Email Address</label>
-        <input type="email" id="email" placeholder="name@school.com" class="w-full p-3 border-2 border-gray-200 rounded-xl outline-none focus:border-emerald-600 font-bold">
+      <div class="relative">
+        <label class="text-[10px] font-black text-gray-400 uppercase ml-2">Official Email</label>
+        <input type="email" id="email" placeholder="admin@school.com" 
+               class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold text-gray-700">
       </div>
-      <div>
-        <label class="block text-[10px] font-black text-gray-500 uppercase ml-1">Password</label>
-        <input type="password" id="password" placeholder="••••••••" class="w-full p-3 border-2 border-gray-200 rounded-xl outline-none focus:border-emerald-600 font-bold">
+      <div class="relative">
+        <label class="text-[10px] font-black text-gray-400 uppercase ml-2">Password</label>
+        <input type="password" id="password" placeholder="••••••••" 
+               class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold text-gray-700">
       </div>
-      <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition-all uppercase tracking-widest">
-        Login to Portal
+      
+      <button onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition-all uppercase tracking-widest text-sm">
+        Sign In to Cloud
       </button>
+      
+      <p class="text-center">
+        <button onclick="forgotPassword()" class="text-[10px] text-gray-400 font-bold hover:text-emerald-700 uppercase">Forgot Password?</button>
+      </p>
     </div>
   </div>
 
   <script type="module">
     import { auth, db } from './init-firebase.js';
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     let selectedRole = 'staff';
 
     window.setRole = (role) => {
       selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active', 'text-white'));
-      document.getElementById(`role-${role}`).classList.add('active', 'text-white');
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.classList.remove('active', 'text-white');
+        btn.classList.add('text-gray-500');
+      });
+      const btn = document.getElementById(`role-${role}`);
+      btn.classList.add('active', 'text-white');
+      btn.classList.remove('text-gray-500');
     };
 
     window.handleLogin = async function() {
       const email = document.getElementById('email').value;
       const pass = document.getElementById('password').value;
 
+      if(!email || !pass) return alert("Please fill all fields.");
+
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Security: Check if user exists in staffRecords with the correct role
+        // Verify user against Firestore database
         const q = query(collection(db, "staffRecords"), where("email", "==", email));
         const snap = await getDocs(q);
 
         if (!snap.empty) {
           const userData = snap.docs[0].data();
           if (userData.role === selectedRole) {
+            // Redirect based on role
             window.location.href = selectedRole === 'admin' ? "index.html" : "staff-entry.html";
           } else {
-            alert("Wrong Role Selected.");
             await auth.signOut();
+            alert("Role Mismatch: You are not authorized as " + selectedRole.toUpperCase());
           }
         } else {
-          alert("Unauthorized User.");
           await auth.signOut();
+          alert("Access Denied: Email not found in Staff Database.");
         }
       } catch (error) {
-        alert("Login Failed: " + error.message);
+        alert("Login Error: " + error.message);
+      }
+    };
+
+    window.forgotPassword = async function() {
+      const email = document.getElementById('email').value;
+      if(!email) return alert("Please enter your email address first.");
+      
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Password reset link sent to your email!");
+      } catch (error) {
+        alert("Error: " + error.message);
       }
     };
   </script>
 </body>
 </html>
-          
