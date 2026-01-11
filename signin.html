@@ -8,32 +8,26 @@
   <style>
     :root { --primary: #1b5e20; }
     body { background: linear-gradient(135deg, #1b5e20 0%, #1565c0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; }
-    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); width: 100%; max-width: 400px; padding: 2rem; margin: 1rem; }
-    .role-btn.active { background: #1b5e20; color: white; }
+    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); width: 100%; max-width: 400px; padding: 2.5rem; }
+    .role-btn.active { background: #1b5e20; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
-  <div class="glass-card text-center">
-    <h1 class="text-2xl font-black text-gray-800 uppercase mb-2">ERP Portal Login</h1>
-    <p class="text-gray-500 text-xs font-bold mb-6">GPS PETHGAM WAGOORA</p>
+  <div class="glass-card">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-black text-gray-800 uppercase">ERP Portal</h1>
+      <p class="text-gray-500 text-xs font-bold">GPS PETHGAM WAGOORA</p>
+    </div>
 
     <div class="flex bg-gray-200 p-1 rounded-2xl mb-6">
       <button onclick="setRole('staff')" id="role-staff" class="role-btn active flex-1 py-2 text-[10px] font-black rounded-xl transition-all">STAFF</button>
       <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-2 text-[10px] font-black rounded-xl transition-all text-gray-500">ADMIN</button>
     </div>
 
-    <div class="space-y-4 text-left">
-      <div>
-        <label class="text-[10px] font-black text-gray-400 uppercase ml-2">Email</label>
-        <input type="email" id="email" placeholder="admin@school.com" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
-      </div>
-      <div>
-        <label class="text-[10px] font-black text-gray-400 uppercase ml-2">Password</label>
-        <input type="password" id="password" placeholder="••••••••" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
-      </div>
-      <button id="loginBtn" onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl shadow-lg hover:bg-emerald-800 transition-all uppercase tracking-widest text-sm">
-        Sign In
-      </button>
+    <div class="space-y-4">
+      <input type="email" id="email" placeholder="Email Address" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
+      <input type="password" id="password" placeholder="Password" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
+      <button id="loginBtn" onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl uppercase tracking-widest hover:bg-emerald-800 transition-all">Sign In</button>
     </div>
   </div>
 
@@ -43,62 +37,43 @@
     import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     let selectedRole = 'staff';
-
     window.setRole = (role) => {
       selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-white');
-        btn.classList.add('text-gray-500');
-      });
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active', 'text-white'));
       document.getElementById(`role-${role}`).classList.add('active', 'text-white');
     };
 
     window.handleLogin = async function() {
-      const emailInput = document.getElementById('email').value.trim().toLowerCase();
-      const passwordInput = document.getElementById('password').value;
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const pass = document.getElementById('password').value;
       const btn = document.getElementById('loginBtn');
 
-      if (!emailInput || !passwordInput) return alert("Please fill all fields");
-
+      if (!email || !pass) return alert("Please fill all fields");
       btn.innerText = "Verifying...";
-      btn.disabled = true;
 
       try {
-        // 1. Authenticate with Firebase
-        const userCredential = await signInWithEmailAndPassword(auth, emailInput, passwordInput);
-        const user = userCredential.user;
-
-        // 2. Check Database for Authorization
-        // Note: We use .trim() on the query value just in case
-        const q = query(collection(db, "staffRecords"), where("email", "==", emailInput));
+        // 1. Authenticate user
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        
+        // 2. Query Firestore for authorized email
+        const q = query(collection(db, "staffRecords"), where("email", "==", email));
         const snap = await getDocs(q);
 
         if (snap.empty) {
-          // If query fails, let's try one more time without lowercase (just in case)
-          const q2 = query(collection(db, "staffRecords"), where("email", "==", document.getElementById('email').value.trim()));
-          const snap2 = await getDocs(q2);
-          
-          if (snap2.empty) {
-            throw new Error("Email not found in Staff Database. Please check your Firestore entry.");
-          }
+          throw new Error("Access Denied: Email not found in Staff Database.");
         }
 
         const userData = snap.docs[0].data();
-        const userRole = userData.role.toLowerCase().trim();
-
-        if (userRole === selectedRole) {
-            window.location.href = "index.html";
+        if (userData.role.toLowerCase() === selectedRole) {
+          window.location.href = "index.html"; // Redirect to dashboard
         } else {
-            throw new Error(`Role Mismatch. Your account is registered as '${userRole}'.`);
+          throw new Error("Unauthorized: Role mismatch.");
         }
-
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
+      } catch (err) {
+        alert(err.message);
         await auth.signOut();
       } finally {
         btn.innerText = "Sign In";
-        btn.disabled = false;
       }
     };
   </script>
