@@ -5,98 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | GPS Pethgam Cloud</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   <style>
-    :root { --primary: #1b5e20; }
-    body { 
-      background: linear-gradient(135deg, #1b5e20 0%, #1565c0 100%); 
-      min-height: 100vh; 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .glass-card { 
-      background: rgba(255, 255, 255, 0.95); 
-      backdrop-filter: blur(10px); 
-      border-radius: 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
-    .btn-3d { 
-      box-shadow: 0 4px 0 #0d3a10; 
-      transition: all 0.1s; 
-    }
-    .btn-3d:active { 
-      transform: translateY(2px); 
-      box-shadow: 0 2px 0 #0d3a10; 
-    }
-    .role-btn.active {
-      background: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      color: var(--primary);
-    }
-    .loader {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #1b5e20;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    .hidden { display: none; }
   </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-emerald-900 to-emerald-700 min-h-screen flex items-center justify-center p-4">
 
-  <div class="glass-card w-full max-w-md p-8 m-4">
+  <div class="glass-card w-full max-w-md rounded-[2.5rem] shadow-2xl p-8 border border-white/20">
     <div class="text-center mb-8">
-      <img src="logo.png" alt="Logo" class="w-20 mx-auto mb-4 drop-shadow-lg" onerror="this.src='https://via.placeholder.com/80'">
-      <h1 class="text-2xl font-black text-gray-800 tracking-tight uppercase">School ERP Cloud</h1>
-      <p class="text-gray-500 text-sm font-bold">GPS PETHGAM WAGOORA</p>
+      <img src="https://rashraftr786-tech.github.io/logo.png" class="w-20 mx-auto mb-4" alt="School Logo">
+      <h1 class="text-2xl font-black text-emerald-900">SCHOOL ERP CLOUD</h1>
+      <p class="text-gray-500 font-bold text-xs uppercase tracking-widest">GPS Pethgam Wagoora</p>
     </div>
 
-    <div class="flex bg-gray-200 p-1 rounded-2xl mb-8">
-      <button onclick="setRole('parent')" id="role-parent" class="role-btn active flex-1 py-2 text-xs font-black rounded-xl transition-all">PARENT</button>
-      <button onclick="setRole('staff')" id="role-staff" class="role-btn flex-1 py-2 text-xs font-black rounded-xl transition-all text-gray-500">STAFF</button>
-      <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-2 text-xs font-black rounded-xl transition-all text-gray-500">ADMIN</button>
+    <div class="flex bg-gray-100 p-1 rounded-2xl mb-8">
+      <button onclick="setRole('parent')" id="role-parent" class="role-btn flex-1 py-3 rounded-xl font-bold text-sm transition-all active bg-white shadow-sm">PARENT</button>
+      <button onclick="setRole('staff')" id="role-staff" class="role-btn flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-400">STAFF</button>
+      <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-400">ADMIN</button>
     </div>
 
     <div id="step-phone" class="space-y-6">
-      <div class="relative">
-        <label class="text-[10px] font-black text-emerald-700 uppercase absolute -top-2 left-3 bg-white px-1">Mobile Number</label>
-        <div class="flex items-center border-2 border-gray-200 rounded-xl p-1 focus-within:border-emerald-600 transition-all">
-          <span class="text-gray-400 font-bold px-3 border-r border-gray-200">+91</span>
-          <input type="tel" id="phoneNumber" placeholder="9906XXXXXX" maxlength="10" 
-                 class="w-full p-3 outline-none font-bold text-lg tracking-widest text-gray-700">
+      <div>
+        <label class="block text-[10px] font-black text-emerald-800 uppercase mb-2 ml-1">Mobile Number</label>
+        <div class="relative">
+          <span class="absolute left-4 top-4 font-bold text-gray-400">+91</span>
+          <input type="tel" id="phoneNumber" maxlength="10" placeholder="9596449881" 
+            class="w-full pl-14 p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-emerald-500 font-bold transition-all">
         </div>
       </div>
-
-      <button id="btn-request-otp" class="btn-3d w-full bg-emerald-700 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wider">
-        <span>Get Verification Code</span>
-        <div class="loader" id="request-loader"></div>
-        <span class="material-icons-outlined" id="sms-icon">sms</span>
+      <button id="btn-request-otp" class="w-full bg-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-emerald-800 transition-all uppercase tracking-wider">
+        Send Access Code
       </button>
     </div>
 
     <div id="step-otp" class="space-y-6 hidden">
-      <div class="text-center">
-        <p class="text-sm font-bold text-gray-600 mb-4">Enter 6-digit code sent via SMS</p>
-        <input type="text" id="otpCode" placeholder="000000" maxlength="6" 
-               class="w-full p-4 bg-gray-50 border-2 border-emerald-500 rounded-2xl text-center text-3xl font-black tracking-[0.5em] outline-none">
+      <div>
+        <label class="block text-[10px] font-black text-emerald-800 uppercase mb-2 text-center">Enter 6-digit code sent via SMS</label>
+        <input type="text" id="otpCode" maxlength="6" placeholder="······" 
+          class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:border-emerald-500 text-center text-2xl font-black tracking-[1rem] transition-all">
       </div>
-      
-      <button onclick="verifyOtp()" class="btn-3d w-full bg-indigo-700 text-white font-black py-4 rounded-xl uppercase tracking-wider">
+      <button onclick="verifyOtp()" class="w-full bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-indigo-800 transition-all uppercase tracking-wider">
         Verify & Access Portal
       </button>
-      
-      <button onclick="location.reload()" class="w-full text-xs text-gray-400 font-bold uppercase hover:text-emerald-700">
-        Wrong Number? Try Again
-      </button>
+      <button onclick="location.reload()" class="w-full text-gray-400 font-bold text-xs uppercase">Wrong Number? Try Again</button>
     </div>
 
-    <p class="mt-8 text-center text-[10px] text-gray-400 font-medium">
-      Secure Multi-Factor Authentication <br> © 2026 GPS Pethgam Cloud Services
+    <p class="mt-10 text-[10px] text-center text-gray-400 font-bold uppercase">
+      Secure Multi-Factor Authentication<br>© 2026 GPS Pethgam Cloud Services
     </p>
   </div>
 
@@ -107,80 +63,69 @@
 
     let selectedRole = 'parent';
 
+    // Role switcher
     window.setRole = (role) => {
       selectedRole = role;
       document.querySelectorAll('.role-btn').forEach(btn => {
-        btn.classList.remove('active', 'text-emerald-800');
-        btn.classList.add('text-gray-500');
+        btn.classList.remove('active', 'bg-white', 'shadow-sm', 'text-emerald-800');
+        btn.classList.add('text-gray-400');
       });
-      document.getElementById(`role-${role}`).classList.add('active');
-      document.getElementById(`role-${role}`).classList.remove('text-gray-500');
+      const activeBtn = document.getElementById(`role-${role}`);
+      activeBtn.classList.add('active', 'bg-white', 'shadow-sm', 'text-emerald-800');
+      activeBtn.classList.remove('text-gray-400');
     };
 
-    // Initialize reCAPTCHA
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'btn-request-otp', {
-      'size': 'invisible'
-    });
+    // Recaptcha
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'btn-request-otp', { 'size': 'invisible' });
 
+    // Request OTP
     const requestBtn = document.getElementById('btn-request-otp');
     requestBtn.addEventListener('click', () => {
       const phoneInput = document.getElementById('phoneNumber').value.trim();
-      const loader = document.getElementById('request-loader');
-      const smsIcon = document.getElementById('sms-icon');
+      if (phoneInput.length !== 10) return alert("Please enter a valid 10-digit number.");
 
-      if (phoneInput.length !== 10) return alert("Enter valid 10-digit number");
-
-      loader.style.display = 'block';
-      smsIcon.style.display = 'none';
-      requestBtn.disabled = true;
-
-      const number = "+91" + phoneInput;
-      signInWithPhoneNumber(auth, number, window.recaptchaVerifier)
+      signInWithPhoneNumber(auth, "+91" + phoneInput, window.recaptchaVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
           document.getElementById('step-phone').classList.add('hidden');
           document.getElementById('step-otp').classList.remove('hidden');
-        }).catch((error) => {
-          alert("SMS Error: " + error.message);
-          location.reload();
-        });
+        }).catch((error) => alert("SMS Error: " + error.message));
     });
 
-    // Verification Logic with Debugging
+    // Verify OTP and Check Database
     window.verifyOtp = async function() {
       const code = document.getElementById('otpCode').value;
       const rawPhone = document.getElementById('phoneNumber').value.trim();
 
       try {
-        const result = await window.confirmationResult.confirm(code);
-        const user = result.user;
-
-        let isAuthorized = false;
-        // Match collection names exactly as seen in your console
-        let colName = (selectedRole === 'staff' || selectedRole === 'admin') ? "staffRecords" : "admissions";
-        let fieldName = (selectedRole === 'staff' || selectedRole === 'admin') ? "contact" : "parentMobile";
+        await window.confirmationResult.confirm(code);
+        
+        // Use the collection name exactly as it appears in your screenshot
+        const colName = (selectedRole === 'staff' || selectedRole === 'admin') ? "staffRecords" : "admissions";
+        const fieldName = (selectedRole === 'staff' || selectedRole === 'admin') ? "contact" : "parentMobile";
 
         const q = query(collection(db, colName), where(fieldName, "==", rawPhone));
         const snap = await getDocs(q);
 
         if (!snap.empty) {
-          isAuthorized = true;
-        } else {
-          // Helpful debug alert to confirm what the database is looking for
-          alert(`ACCESS DENIED: ${rawPhone} not found in ${colName} database.`);
-        }
+          const userData = snap.docs[0].data();
+          // Lowercase check to prevent "Access Denied" if database uses capital letters
+          const dbRole = String(userData.role || userData.Role || "").toLowerCase();
 
-        if (isAuthorized) {
-          window.location.href = (selectedRole === 'admin') ? "index.html" : 
-                                (selectedRole === 'staff') ? "staff-entry.html" : "student-diary-parent.html";
+          if (selectedRole === 'admin' && dbRole === 'admin') {
+            window.location.href = "index.html";
+          } else {
+            window.location.href = "staff-entry.html";
+          }
         } else {
+          alert(`ACCESS DENIED: ${rawPhone} not found in ${colName} database.`);
           await auth.signOut();
         }
       } catch (error) {
-        alert("Invalid OTP Code.");
+        alert("Invalid OTP code. Please try again.");
       }
     };
   </script>
 </body>
 </html>
-              
+            
