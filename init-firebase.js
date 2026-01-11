@@ -3,6 +3,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
+  // ... your existing config remains the same ...
   apiKey: "AIzaSyCzxHme_3hrztrDuD7wupGwNilDtYLfENI",
   authDomain: "studio-2729610945-4684b.firebaseapp.com",
   projectId: "studio-2729610945-4684b",
@@ -13,4 +14,4 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app); // IMPORTANT: This must be here
+export const auth = getAuth(app);
