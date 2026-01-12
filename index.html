@@ -6,48 +6,33 @@
     <title>Dashboard | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50">
-    <nav class="bg-emerald-800 text-white p-4 flex justify-between items-center shadow-lg">
-        <h1 class="font-bold">GPS PETHGAM ADMIN</h1>
-        <a href="signin.html" id="forceLogout" class="bg-red-600 px-4 py-2 rounded-lg font-bold text-xs uppercase shadow-md">
-            Logout
-        </a>
+<body class="bg-slate-50 min-h-screen">
+    <nav class="bg-emerald-900 text-white p-4 flex justify-between items-center shadow-lg">
+        <h1 class="font-bold tracking-tight">GPS PETHGAM ADMIN</h1>
+        <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded-lg font-bold text-xs">LOGOUT</button>
     </nav>
 
     <div class="p-10 text-center">
-        <h2 class="text-2xl font-black text-slate-800">DASHBOARD</h2>
-        <div id="status" class="mt-4 text-emerald-600 font-bold italic">Verifying Session...</div>
+        <h2 class="text-2xl font-black text-slate-800">WELCOME TO DASHBOARD</h2>
+        <p id="userMail" class="text-emerald-600 mt-2 font-medium">Verifying Session...</p>
     </div>
 
     <script type="module">
         import { auth } from './init-firebase.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const logoutLink = document.getElementById('forceLogout');
-
-        // Check login
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('status').innerText = "Logged in as: " + user.email;
+                document.getElementById('userMail').innerText = "Admin: " + user.email;
             } else {
-                // If not logged in, go to signin immediately
                 window.location.replace("signin.html");
             }
         });
 
-        // The Manual Trigger
-        logoutLink.onclick = async (e) => {
-            e.preventDefault(); // Stop the link for a second
-            try {
-                await signOut(auth);
-                // Clear any local storage manually just in case
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.replace("signin.html");
-            } catch (err) {
-                window.location.replace("signin.html");
-            }
-        };
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.replace("signin.html");
+        });
     </script>
 </body>
 </html>
