@@ -3,38 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | GPS Pethgam Wagoora</title>
+    <title>Login | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-b from-emerald-800 to-blue-600 min-h-screen flex items-center justify-center p-4">
-
-    <div class="bg-white w-full max-w-md rounded-[40px] shadow-2xl p-8 pt-12 relative">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">ERP PORTAL</h1>
-            <p class="text-slate-500 font-bold text-sm">GPS PETHGAM WAGOORA</p>
+<body class="bg-gradient-to-b from-emerald-900 to-blue-700 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl p-8 pt-10">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-black text-slate-800">ERP PORTAL</h1>
+            <p class="text-slate-500 font-bold text-xs uppercase">GPS Pethgam Wagoora</p>
         </div>
 
-        <div class="flex bg-slate-100 rounded-2xl p-1 mb-8 shadow-inner">
-            <button id="staffTab" class="flex-1 py-3 rounded-xl font-bold transition-all bg-emerald-800 text-white shadow-md">
-                STAFF
-            </button>
-            <button id="adminTab" class="flex-1 py-3 rounded-xl font-bold transition-all text-slate-400 bg-transparent">
-                ADMIN
-            </button>
+        <div class="flex bg-slate-100 rounded-2xl p-1 mb-6">
+            <button id="staffTab" class="flex-1 py-3 rounded-xl font-bold transition-all bg-emerald-800 text-white">STAFF</button>
+            <button id="adminTab" class="flex-1 py-3 rounded-xl font-bold transition-all text-slate-400 bg-transparent">ADMIN</button>
         </div>
 
         <div class="space-y-4">
-            <input type="email" id="email" placeholder="Email Address" 
-                class="w-full bg-slate-50 border-none p-4 rounded-2xl text-slate-700 font-medium outline-none">
-            <input type="password" id="password" placeholder="Password" 
-                class="w-full bg-slate-50 border-none p-4 rounded-2xl text-slate-700 font-medium outline-none">
-            
-            <button id="loginBtn" class="w-full bg-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg mt-4">
-                SIGN IN
-            </button>
+            <input type="email" id="email" placeholder="Email Address" class="w-full bg-slate-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500">
+            <input type="password" id="password" placeholder="Password" class="w-full bg-slate-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500">
+            <button id="loginBtn" class="w-full bg-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-emerald-800 transition-all">SIGN IN</button>
         </div>
-
-        <div id="errorMessage" class="mt-4 text-red-500 text-center text-sm font-bold hidden"></div>
+        <p id="errorMsg" class="mt-4 text-red-500 text-center font-bold text-sm hidden"></p>
     </div>
 
     <script type="module">
@@ -42,91 +31,47 @@
         import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        let selectedRole = 'staff';
-        const staffBtn = document.getElementById('staffTab');
-        const adminBtn = document.getElementById('adminTab');
-        const loginBtn = document.getElementById('loginBtn');
-        const errorDiv = document.getElementById('errorMessage');
+        let role = 'staff';
+        const sTab = document.getElementById('staffTab');
+        const aTab = document.getElementById('adminTab');
 
-        // 1. Force the Switch Logic via Event Listeners
-        staffBtn.addEventListener('click', () => {
-            selectedRole = 'staff';
-            staffBtn.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white shadow-md";
-            adminBtn.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
-            console.log("Role: Staff");
+        // Logic to switch tabs visually
+        sTab.addEventListener('click', () => {
+            role = 'staff';
+            sTab.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white";
+            aTab.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
         });
 
-        adminBtn.addEventListener('click', () => {
-            selectedRole = 'admin';
-            adminBtn.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white shadow-md";
-            staffBtn.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
-            console.log("Role: Admin");
+        aTab.addEventListener('click', () => {
+            role = 'admin';
+            aTab.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white";
+            sTab.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
         });
 
-        // 2. Login Execution
-        loginBtn.addEventListener('click', async () => {
+        document.getElementById('loginBtn').addEventListener('click', async () => {
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                errorDiv.innerText = "Fill all fields";
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-
-            loginBtn.innerText = "VERIFYING...";
-            loginBtn.disabled = true;
+            const err = document.getElementById('errorMsg');
 
             try {
-                // Auth check
-                await signInWithEmailAndPassword(auth, email, password);
-                
-                // Firestore check
+                const userCred = await signInWithEmailAndPassword(auth, email, password);
                 const q = query(collection(db, "staffRecords"), where("email", "==", email));
-                const querySnapshot = await getDocs(q);
+                const snap = await getDocs(q);
 
-                if (querySnapshot.empty) throw new Error("No database record found.");
+                if (snap.empty) throw new Error("No database record found.");
+                const data = snap.docs[0].data();
 
-                const userData = querySnapshot.docs[0].data();
-
-                // Match selected tab with database role
-                if (userData.role.toLowerCase() === selectedRole.toLowerCase()) {
+                if (data.role.toLowerCase() === role) {
                     window.location.replace("index.html");
                 } else {
-                    throw new Error(`Access Denied: You are registered as ${userData.role}.`);
+                    throw new Error(`Select ${data.role.toUpperCase()} tab to login.`);
                 }
-
-            } catch (error) {
-                errorDiv.innerText = error.message;
-                errorDiv.classList.remove('hidden');
-                loginBtn.innerText = "SIGN IN";
-                loginBtn.disabled = false;
+            } catch (e) {
+                err.innerText = e.message;
+                err.classList.remove('hidden');
             }
         });
     </script>
 </body>
 </html>
-            if (querySnapshot.empty) {
-                throw new Error("No staff record found for this email.");
-            }
-
-            const userData = querySnapshot.docs[0].data();
-
-            // 3. Verify selection matches database
-            if (userData.role.toLowerCase() === selectedRole.toLowerCase()) {
-                window.location.replace("index.html");
-            } else {
-                throw new Error(`You selected ${selectedRole.toUpperCase()} but you are registered as ${userData.role.toUpperCase()}.`);
-            }
-
-        } catch (error) {
-            errorDiv.innerText = error.message;
-            errorDiv.classList.remove('hidden');
-            btn.innerText = "SIGN IN";
-            btn.disabled = false;
-        }
-    };
-</script>
-
-</body>
-</html>
+    
