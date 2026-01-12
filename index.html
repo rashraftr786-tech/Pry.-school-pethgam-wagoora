@@ -6,46 +6,46 @@
     <title>Dashboard | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50">
     <nav class="bg-emerald-800 text-white p-4 flex justify-between items-center shadow-lg">
-        <h1 class="font-black uppercase tracking-tight">GPS Pethgam Admin</h1>
-        <button id="mainLogoutBtn" class="text-xs font-bold bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition-all shadow-md">
+        <h1 class="font-bold">GPS PETHGAM ADMIN</h1>
+        <a href="signin.html" id="forceLogout" class="bg-red-600 px-4 py-2 rounded-lg font-bold text-xs uppercase shadow-md">
             Logout
-        </button>
+        </a>
     </nav>
 
-    <div class="p-8 text-center">
-        <h2 class="text-3xl font-bold text-slate-800 mb-2">Welcome to the Dashboard</h2>
-        <p id="userStatus" class="text-emerald-600 font-medium italic">Verifying Session...</p>
+    <div class="p-10 text-center">
+        <h2 class="text-2xl font-black text-slate-800">DASHBOARD</h2>
+        <div id="status" class="mt-4 text-emerald-600 font-bold italic">Verifying Session...</div>
     </div>
 
     <script type="module">
         import { auth } from './init-firebase.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const statusLabel = document.getElementById('userStatus');
-        const logoutBtn = document.getElementById('mainLogoutBtn');
+        const logoutLink = document.getElementById('forceLogout');
 
-        // 1. Session Persistence Check
+        // Check login
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is authenticated based on staffRecords
-                statusLabel.innerText = "Authorized: " + user.email;
+                document.getElementById('status').innerText = "Logged in as: " + user.email;
             } else {
-                // No session found, redirect to login
-                window.location.href = "signin.html";
+                // If not logged in, go to signin immediately
+                window.location.replace("signin.html");
             }
         });
 
-        // 2. Reliable Logout Trigger
-        logoutBtn.onclick = async () => {
+        // The Manual Trigger
+        logoutLink.onclick = async (e) => {
+            e.preventDefault(); // Stop the link for a second
             try {
                 await signOut(auth);
-                // Force a clear of the cache data to prevent auto-login loops
-                window.location.href = "signin.html";
-            } catch (error) {
-                console.error("Logout error:", error);
-                window.location.href = "signin.html"; // Redirect anyway
+                // Clear any local storage manually just in case
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.replace("signin.html");
+            } catch (err) {
+                window.location.replace("signin.html");
             }
         };
     </script>
