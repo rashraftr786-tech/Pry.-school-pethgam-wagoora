@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library & Textbook Manager | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <nav class="bg-emerald-800 text-white p-4 shadow-md no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-book-reader text-2xl text-emerald-300"></i>
+                <h1 class="font-black uppercase tracking-tighter">Library & Textbooks</h1>
+            </div>
+            <a href="index.html" class="text-xs bg-emerald-700 px-4 py-2 rounded-full font-bold hover:bg-emerald-600 transition">BACK TO DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main class="p-4 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-1">
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-white sticky top-24">
+                <h2 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-plus-circle text-emerald-600"></i> New Issue
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Select Student</label>
+                        <select id="studentSelect" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                            <option value="">-- Choose Student --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Category</label>
+                        <select id="itemType" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                            <option value="General Library Book">General Library Book</option>
+                            <option value="Government Textbook">Government Textbook</option>
+                            <option value="Digital Resource">Digital Resource (PDF)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Book Title / ID</label>
+                        <input type="text" id="itemTitle" placeholder="Enter Book Name" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                    </div>
+
+                    <button onclick="issueItem()" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]">
+                        CONFIRM ISSUE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-white">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-black text-slate-800">Recent Issues & Distributions</h2>
+                    <button onclick="window.print()" class="text-[10px] font-black bg-slate-800 text-white px-3 py-1 rounded">PRINT LOG</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b-2 border-slate-100">
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Student</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Book/Item</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Date</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issueList" class="text-sm font-bold text-slate-700">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db } from './init-firebase.js';
+        import { collection, getDocs, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const studentSelect = document.getElementById('studentSelect');
+        const issueList = document.getElementById('issueList');
+
+        // 1. Load Student Names into Dropdown
+        async function loadStudents() {
+            try {
+                // Fetching from 'admissions' collection
+                const snap = await getDocs(collection(db, "admissions"));
+                snap.forEach(doc => {
+                    const s = doc.data();
+                    const opt = document.createElement('option');
+                    opt.value = `${s.studentName} (${s.admNo})`;
+                    opt.textContent = `${s.studentName} - Class ${s.studentClass}`;
+                    studentSelect.appendChild(opt);
+                });
+            } catch (e) { console.error("Load Error:", e); }
+        }
+
+        // 2. Save New Issue Record
+        window.issueItem = async () => {
+            const btn = document.getElementById('saveBtn');
+            const data = {
+                student: studentSelect.value,
+                type: document.getElementById('itemType').value,
+                title: document.getElementById('itemTitle').value,
+                date: new Date().toLocaleDateString('en-GB'),
+                timestamp: new Date()
+            };
+
+            if(!data.student || !data.title) return alert("Please fill all fields!");
+
+            btn.disabled = true;
+            btn.innerText = "SAVING...";
+
+            try {
+                await addDoc(collection(db, "library_issues"), data);
+                alert("Book Issued Successfully!");
+                location.reload(); // Refresh to show in table
+            } catch (e) {
+                alert("Error saving to cloud. Check console.");
+                btn.disabled = false;
+                btn.innerText = "CONFIRM ISSUE";
+            }
+        };
+
+        // 3. Load Recent History
+        async function loadHistory() {
+            const q = query(collection(db, "library_issues"), orderBy("timestamp", "desc"));
+            const snap = await getDocs(q);
+            issueList.innerHTML = "";
+            
+            snap.forEach(doc => {
+                const item = doc.data();
+                const color = item.type.includes("Textbook") ? "text-emerald-600" : "text-blue-600";
+                
+                issueList.innerHTML += `
+                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                        <td class="py-4">${item.student}</td>
+                        <td class="py-4"><span class="${color}">${item.type}</span><br><span class="text-[10px] text-slate-400">${item.title}</span></td>
+                        <td class="py-4 text-slate-500">${item.date}</td>
+                        <td class="py-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[9px] uppercase">Issued</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            loadHistory();
+        });
+    </script>
+</body>
+</html>
