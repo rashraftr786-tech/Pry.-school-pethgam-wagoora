@@ -3,65 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | GPS Pethgam</title>
+    <title>Dashboard | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; font-family: 'Segoe UI', sans-serif; }
-        .sidebar { background: #1b5e20; }
-    </style>
 </head>
-<body class="flex min-h-screen">
-
-    <aside class="sidebar w-64 text-white p-6 hidden md:block">
-        <h2 class="text-xl font-bold mb-10 text-center uppercase tracking-tighter">GPS Pethgam</h2>
-        <nav class="space-y-4">
-            <a href="index.html" class="flex items-center gap-3 bg-emerald-800 p-3 rounded-xl"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
-            <a href="students.html" class="flex items-center gap-3 hover:bg-emerald-700 p-3 rounded-xl transition"><span class="material-icons-outlined">groups</span> Students</a>
-            <button onclick="logout()" class="flex items-center gap-3 text-red-300 hover:text-red-100 p-3 w-full mt-20"><span class="material-icons-outlined">logout</span> Logout</button>
-        </nav>
-    </aside>
-
-    <main class="flex-1 p-8">
-        <header class="flex justify-between items-center mb-10">
-            <div>
-                <h1 class="text-3xl font-black text-slate-800">Admin Dashboard</h1>
-                <p class="text-slate-500 font-medium" id="welcome-text">Loading session...</p>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border-b-4 border-emerald-600">
-                <h3 class="text-slate-400 font-bold text-xs uppercase">Welcome</h3>
-                <p class="text-xl font-black text-slate-800" id="user-display">---</p>
-            </div>
-            </div>
-    </main>
+<body class="bg-slate-50 min-h-screen">
+    <nav class="bg-emerald-800 text-white p-4 flex justify-between items-center">
+        <h1 class="font-black uppercase tracking-tight">GPS Pethgam Admin</h1>
+        <button onclick="logout()" class="text-xs font-bold bg-emerald-700 px-4 py-2 rounded-lg">Logout</button>
+    </nav>
+    <div class="p-8">
+        <h2 class="text-2xl font-bold text-slate-800" id="welcome">Welcome to the Dashboard</h2>
+    </div>
 
     <script type="module">
         import { auth, db } from './init-firebase.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Security Check: Redirect to login if not authenticated
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const q = query(collection(db, "staffRecords"), where("email", "==", user.email));
-                const snap = await getDocs(q);
-                if (!snap.empty) {
-                    const data = snap.docs[0].data();
-                    document.getElementById('welcome-text').innerText = "Logged in as " + data.role;
-                    document.getElementById('user-display').innerText = data.name;
-                }
-            } else {
-                window.location.href = "signin.html";
-            }
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = "signin.html";
+            else document.getElementById('welcome').innerText = "Welcome back, " + user.email;
         });
 
-        window.logout = () => {
-            signOut(auth).then(() => window.location.href = "signin.html");
-        }
+        window.logout = () => signOut(auth).then(() => window.location.href = "signin.html");
     </script>
 </body>
 </html>
-          
