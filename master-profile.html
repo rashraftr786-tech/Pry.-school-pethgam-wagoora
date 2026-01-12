@@ -98,97 +98,95 @@
   </table>
 </div>
 
-<script>
-const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
-const dynamicHeaderRow = document.getElementById('dynamicHeaderRow');
+<script type="module">
+    // 1. Import Firebase and your new results-handler
+    import { db } from './init-firebase.js';
+    import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { calculateGrades } from './results-handler.js';
 
-// Inject repeating subject headers
-let subjectHtml = "";
-subjects.forEach(() => {
-    subjectHtml += '<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>';
-});
-
-// Summary Headers
-subjectHtml += `
-    <th class="summary-col">G.Tot</th>
-    <th class="summary-col">%</th>
-    <th class="summary-col">GP</th>
-    <th class="summary-col">Grd</th>
-    <th class="summary-col">C.Rk</th>
-    <th class="summary-col">S.Rk</th>
-    <th class="summary-col">Result</th>`;
-
-dynamicHeaderRow.innerHTML += subjectHtml;
-
-function calculateGrade(perc) {
-    if(perc >= 90) return {g:'A+', p:10};
-    if(perc >= 80) return {g:'A', p:9};
-    if(perc >= 70) return {g:'B+', p:8};
-    if(perc >= 60) return {g:'B', p:7};
-    if(perc >= 50) return {g:'C', p:6};
-    if(perc >= 40) return {g:'D', p:5};
-    return {g:'E', p:4};
-}
-
-function renderMasterTable() {
-    const selectedClass = document.getElementById('classSearch').value;
-    const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
-    const results = JSON.parse(localStorage.getItem("results")) || [];
+    const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
     const tbody = document.getElementById('masterBody');
-    tbody.innerHTML = "";
 
-    admissions.forEach(s => {
-        // Filter by Class
-        if (selectedClass !== "All" && s.studentClass !== selectedClass) return;
-
-        const r = results.find(res => res.admNo === s.admNo);
-        if (!r) return;
-
-        let grandTotal = 0;
-        let subCells = "";
-        
-        subjects.forEach(sub => {
-            const m = r.marks[sub] || { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
-            const fa = m.fa || [0,0,0,0,0,0];
-            const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
-            const cc = Number(m.cca) || 0;
-            const sa = Number(m.sa) || 0;
-            const subTotal = faSum + cc + sa;
-            grandTotal += subTotal;
-            
-            subCells += `
-                <td>${fa[0]||0}</td><td>${fa[1]||0}</td><td>${fa[2]||0}</td>
-                <td>${fa[3]||0}</td><td>${fa[4]||0}</td><td>${fa[5]||0}</td>
-                <td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
-        });
-
-        const perc = (grandTotal / 5).toFixed(1);
-        const gradeInfo = calculateGrade(perc);
-
-        tbody.innerHTML += `<tr>
-            <td>${s.admNo}</td>
-            <td>${r.rollNo || '-'}</td>
-            <td>${s.studentClass || '-'}</td>
-            <td class="student-info">${(s.studentName || '').toUpperCase()}</td>
-            <td class="student-info">${s.fatherName || '-'}</td>
-            <td class="student-info">${s.motherName || '-'}</td>
-            <td>${s.dob || '-'}</td>
-            <td>${s.apaarId || '-'}</td>
-            <td>${s.penNo || '-'}</td>
-            ${subCells}
-            <td class="summary-col">${grandTotal}</td>
-            <td class="summary-col">${perc}%</td>
-            <td class="summary-col">${gradeInfo.p}</td>
-            <td class="summary-col">${gradeInfo.g}</td>
-            <td class="summary-col">-</td>
-            <td class="summary-col">-</td>
-            <td class="summary-col">${perc >= 33 ? "Promoted" : "Needs Imp."}</td>
-        </tr>`;
+    // Setup headers once
+    const dynamicHeaderRow = document.getElementById('dynamicHeaderRow');
+    let subjectHtml = "";
+    subjects.forEach(() => {
+        subjectHtml += '<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>';
     });
-}
+    subjectHtml += `<th class="summary-col">G.Tot</th><th class="summary-col">%</th><th class="summary-col">GP</th><th class="summary-col">Grd</th><th class="summary-col">Result</th>`;
+    dynamicHeaderRow.innerHTML += subjectHtml;
 
-document.addEventListener('DOMContentLoaded', renderMasterTable);
+    // 2. Load Data from Firebase instead of LocalStorage
+    async function renderMasterTable() {
+        const selectedClass = document.getElementById('classSearch').value;
+        const selectedSession = document.getElementById('sessionSearch').value;
+        
+        tbody.innerHTML = "<tr><td colspan='60'>Fetching Records from Firebase...</td></tr>";
+
+        try {
+            // Fetch Students
+            const studentSnap = await getDocs(collection(db, "students"));
+            // Fetch Results
+            const resultSnap = await getDocs(collection(db, "results"));
+            
+            const resultsData = resultSnap.docs.map(doc => doc.data());
+            tbody.innerHTML = "";
+
+            studentSnap.forEach(doc => {
+                const s = doc.data();
+                
+                // Filter by Class
+                if (selectedClass !== "All" && s.studentClass !== selectedClass) return;
+
+                const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
+                
+                let grandTotal = 0;
+                let subCells = "";
+                
+                subjects.forEach(sub => {
+                    const m = (r && r.marks && r.marks[sub]) ? r.marks[sub] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
+                    const fa = m.fa || [0,0,0,0,0,0];
+                    const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
+                    const cc = Number(m.cca) || 0;
+                    const sa = Number(m.sa) || 0;
+                    const subTotal = faSum + cc + sa;
+                    grandTotal += subTotal;
+                    
+                    subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
+                });
+
+                // Use the shared handler for grading
+                const finalResult = calculateGrades(grandTotal, 500); 
+
+                tbody.innerHTML += `<tr>
+                    <td>${s.admNo}</td>
+                    <td>${s.rollNo || '-'}</td>
+                    <td>${s.studentClass}</td>
+                    <td class="student-info">${s.studentName.toUpperCase()}</td>
+                    <td class="student-info">${s.fatherName}</td>
+                    <td>${s.motherName}</td>
+                    <td>${s.dob}</td>
+                    <td>${s.apaarId || '-'}</td>
+                    <td>${s.penNo || '-'}</td>
+                    ${subCells}
+                    <td class="summary-col">${grandTotal}</td>
+                    <td class="summary-col">${finalResult.percentage}%</td>
+                    <td class="summary-col">-</td>
+                    <td class="summary-col">${finalResult.grade}</td>
+                    <td class="summary-col">${finalResult.remarks}</td>
+                </tr>`;
+            });
+        } catch (error) {
+            console.error(error);
+            tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.</td></tr>";
+        }
+    }
+
+    // Attach to window so the dropdowns can call it
+    window.renderMasterTable = renderMasterTable;
+    document.addEventListener('DOMContentLoaded', renderMasterTable);
 </script>
+
 </body>
 </html>
     
