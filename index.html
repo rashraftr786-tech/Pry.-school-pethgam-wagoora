@@ -3,35 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | GPS Pethgam</title>
+    <title>Admin Dashboard | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen">
-    <nav class="bg-emerald-900 text-white p-4 flex justify-between items-center shadow-lg">
-        <h1 class="font-bold tracking-tight">GPS PETHGAM ADMIN</h1>
-        <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded-lg font-bold text-xs">LOGOUT</button>
+<body class="bg-slate-100 min-h-screen">
+    <nav class="bg-emerald-900 text-white p-4 sticky top-0 z-50 shadow-xl flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-school text-xl text-emerald-400"></i>
+            <h1 class="font-black tracking-tight uppercase text-sm">GPS Pethgam Admin</h1>
+        </div>
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold text-[10px] transition-all">
+            <i class="fas fa-sign-out-alt mr-1"></i> LOGOUT
+        </button>
     </nav>
 
-    <div class="p-10 text-center">
-        <h2 class="text-2xl font-black text-slate-800">WELCOME TO DASHBOARD</h2>
-        <p id="userMail" class="text-emerald-600 mt-2 font-medium">Verifying Session...</p>
-    </div>
+    <main class="p-6 max-w-6xl mx-auto">
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-slate-800">Welcome Back, Admin</h2>
+            <p id="userMail" class="text-emerald-700 font-bold text-xs italic">Loading session...</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-blue-500">
+                <p class="text-slate-400 text-[10px] font-bold uppercase">Students</p>
+                <h3 class="text-2xl font-black text-slate-800">120</h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-emerald-500">
+                <p class="text-slate-400 text-[10px] font-bold uppercase">Staff</p>
+                <h3 class="text-2xl font-black text-slate-800">08</h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-orange-500">
+                <p class="text-slate-400 text-[10px] font-bold uppercase">Today's Attendance</p>
+                <h3 class="text-2xl font-black text-slate-800">92%</h3>
+            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border-b-4 border-purple-500">
+                <p class="text-slate-400 text-[10px] font-bold uppercase">Fee Collection</p>
+                <h3 class="text-2xl font-black text-slate-800">₹45k</h3>
+            </div>
+        </div>
+
+        <h4 class="text-slate-500 font-bold text-xs uppercase mb-4 tracking-widest">Management Tools</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="admission.html" class="bg-white p-6 rounded-[2rem] shadow-lg hover:shadow-2xl transition-all border border-slate-100 group">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-user-plus text-xl"></i>
+                </div>
+                <h3 class="font-black text-slate-800 text-lg">New Admission</h3>
+                <p class="text-slate-500 text-xs mt-1 font-medium">Register a new student to the school database.</p>
+            </a>
+
+            <button class="bg-white p-6 rounded-[2rem] shadow-lg text-left border border-slate-100 opacity-60">
+                <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+                <h3 class="font-black text-slate-800 text-lg">Daily Attendance</h3>
+                <p class="text-slate-500 text-xs mt-1 font-medium italic">(In Development)</p>
+            </button>
+
+            <button class="bg-white p-6 rounded-[2rem] shadow-lg text-left border border-slate-100 opacity-60">
+                <div class="w-12 h-12 bg-orange-100 text-orange-700 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-users-cog text-xl"></i>
+                </div>
+                <h3 class="font-black text-slate-800 text-lg">Staff Records</h3>
+                <p class="text-slate-500 text-xs mt-1 font-medium italic">(In Development)</p>
+            </button>
+        </div>
+    </main>
 
     <script type="module">
         import { auth } from './init-firebase.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        const mailDisplay = document.getElementById('userMail');
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('userMail').innerText = "Admin: " + user.email;
+                mailDisplay.innerText = "Authorized: " + user.email;
             } else {
                 window.location.replace("signin.html");
             }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.replace("signin.html");
+            if(confirm("Sign out of the ERP?")) {
+                await signOut(auth);
+                window.location.replace("signin.html");
+            }
         });
     </script>
 </body>
