@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Logs | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <nav class="bg-orange-600 text-white p-4 shadow-lg no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-history text-2xl text-orange-200"></i>
+                <h1 class="font-black uppercase tracking-tighter">Communication History</h1>
+            </div>
+            <a href="index.html" class="text-xs bg-orange-700 px-4 py-2 rounded-full font-bold hover:bg-orange-800 transition">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main class="p-4 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Total Messages</p>
+                <h3 id="totalMsg" class="text-2xl font-black text-slate-800">0</h3>
+            </div>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Successful Delivery</p>
+                <h3 id="successRate" class="text-2xl font-black text-emerald-600">0%</h3>
+            </div>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
+                <p class="text-[10px] font-black text-slate-400 uppercase">Failed Alerts</p>
+                <h3 id="failedCount" class="text-2xl font-black text-red-600">0</h3>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
+            <div class="relative flex-1">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="logSearch" onkeyup="filterLogs()" placeholder="Search by student name, phone, or content..." class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <select id="typeFilter" onchange="filterLogs()" class="p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none">
+                <option value="All">All Channels</option>
+                <option value="SMS">SMS Only</option>
+                <option value="WhatsApp">WhatsApp Only</option>
+                <option value="Email">Email Only</option>
+            </select>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="p-4 text-[10px] font-black text-slate-400 uppercase">Timestamp</th>
+                            <th class="p-4 text-[10px] font-black text-slate-400 uppercase">Recipient</th>
+                            <th class="p-4 text-[10px] font-black text-slate-400 uppercase">Channel</th>
+                            <th class="p-4 text-[10px] font-black text-slate-400 uppercase">Message Content</th>
+                            <th class="p-4 text-[10px] font-black text-slate-400 uppercase text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsBody" class="text-sm font-bold text-slate-700">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db } from './init-firebase.js';
+        import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        async function fetchLogs() {
+            const body = document.getElementById('logsBody');
+            body.innerHTML = "<tr><td colspan='5' class='p-10 text-center text-slate-400'>Loading logs...</td></tr>";
+
+            try {
+                // Query logs collection
+                const q = query(collection(db, "comm_logs"), orderBy("timestamp", "desc"));
+                const snap = await getDocs(q);
+                
+                let total = 0;
+                let success = 0;
+                body.innerHTML = "";
+
+                snap.forEach(doc => {
+                    const log = doc.data();
+                    total++;
+                    if(log.status === "Sent") success++;
+
+                    const channelIcon = log.type === "WhatsApp" ? "fa-whatsapp text-emerald-500" : "fa-sms text-blue-500";
+                    const statusClass = log.status === "Sent" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700";
+
+                    body.innerHTML += `
+                        <tr class="border-b border-slate-50 hover:bg-slate-50 transition log-row" data-type="${log.type}">
+                            <td class="p-4 text-slate-400 font-medium">${log.date}<br><span class="text-[9px]">${log.time || ''}</span></td>
+                            <td class="p-4">
+                                <div class="text-slate-900">${log.recipient}</div>
+                                <div class="text-[10px] text-slate-400">${log.phone}</div>
+                            </td>
+                            <td class="p-4 text-center">
+                                <i class="fab ${channelIcon} text-lg"></i>
+                            </td>
+                            <td class="p-4 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap text-slate-500 italic">
+                                "${log.message}"
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-full text-[9px] uppercase font-black ${statusClass}">${log.status}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                // Update Stats
+                document.getElementById('totalMsg').innerText = total;
+                document.getElementById('failedCount').innerText = total - success;
+                document.getElementById('successRate').innerText = total > 0 ? Math.round((success/total)*100) + "%" : "0%";
+
+            } catch (e) {
+                console.error(e);
+                body.innerHTML = "<tr><td colspan='5' class='p-10 text-center text-red-400'>Error loading records.</td></tr>";
+            }
+        }
+
+        window.filterLogs = () => {
+            const search = document.getElementById('logSearch').value.toLowerCase();
+            const type = document.getElementById('typeFilter').value;
+            const rows = document.querySelectorAll('.log-row');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const rowType = row.getAttribute('data-type');
+                const matchesSearch = text.includes(search);
+                const matchesType = type === "All" || rowType === type;
+
+                row.style.display = (matchesSearch && matchesType) ? "" : "none";
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', fetchLogs);
+    </script>
+</body>
+</html>
+
