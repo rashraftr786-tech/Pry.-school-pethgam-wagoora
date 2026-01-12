@@ -208,7 +208,34 @@
 <script type="module">
 // --- 1. FIREBASE IMPORTS ---
 import { db } from './init-firebase.js';
-import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+async function saveAdmission() {
+    try {
+        const studentData = {
+            admNo: document.getElementById("admNo").value,
+            studentName: document.getElementById("fullName").value,
+            fatherName: document.getElementById("fName").value,
+            motherName: document.getElementById("mName").value,
+            studentClass: document.getElementById("classSelect").value,
+            dob: document.getElementById("dob").value,
+            aadhaarNo: document.getElementById("aadhaar").value,
+            fatherContact: document.getElementById("contact").value,
+            bankAcc: document.getElementById("account").value,
+            village: document.getElementById("village").value,
+            status: "Pending", // Default status for new entries
+            createdAt: new Date()
+        };
+
+        const docRef = await addDoc(collection(db, "admissions"), studentData);
+        alert("Saved successfully! ID: " + docRef.id);
+        window.location.href = "adm-register.html"; // Redirect to the register
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        alert("Error saving to cloud. Check console for details.");
+    }
+}
+
 
 // --- 2. PHOTO COMPRESSION LOGIC ---
 let compressedPhotoBase64 = "";
