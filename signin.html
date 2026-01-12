@@ -1,81 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | GPS Pethgam Cloud</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root { --primary: #1b5e20; }
-    body { background: linear-gradient(135deg, #1b5e20 0%, #1565c0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; }
-    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); width: 100%; max-width: 400px; padding: 2.5rem; }
-    .role-btn.active { background: #1b5e20; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | GPS Pethgam Wagoora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="glass-card">
-    <div class="text-center mb-8">
-      <h1 class="text-2xl font-black text-gray-800 uppercase">ERP Portal</h1>
-      <p class="text-gray-500 text-xs font-bold">GPS PETHGAM WAGOORA</p>
+<body class="bg-gradient-to-b from-emerald-800 to-blue-600 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white w-full max-w-md rounded-[40px] shadow-2xl p-8 pt-12 relative">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">ERP PORTAL</h1>
+            <p class="text-slate-500 font-bold text-sm">GPS PETHGAM WAGOORA</p>
+        </div>
+
+        <div class="flex bg-slate-100 rounded-2xl p-1 mb-8 shadow-inner">
+            <button id="staffTab" onclick="setRole('staff')" class="flex-1 py-3 rounded-xl font-bold transition-all bg-emerald-800 text-white shadow-md">
+                STAFF
+            </button>
+            <button id="adminTab" onclick="setRole('admin')" class="flex-1 py-3 rounded-xl font-bold transition-all text-slate-400">
+                ADMIN
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <div class="relative">
+                <input type="email" id="email" placeholder="Email Address" 
+                    class="w-full bg-slate-50 border-none p-4 rounded-2xl text-slate-700 font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+            </div>
+            <div class="relative">
+                <input type="password" id="password" placeholder="Password" 
+                    class="w-full bg-slate-50 border-none p-4 rounded-2xl text-slate-700 font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+            </div>
+            
+            <button onclick="handleLogin()" id="loginBtn" 
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-black py-4 rounded-2xl shadow-lg shadow-emerald-900/20 transition-all transform active:scale-95 mt-4">
+                SIGN IN
+            </button>
+        </div>
+
+        <div id="errorMessage" class="mt-4 text-red-500 text-center text-sm font-bold hidden"></div>
     </div>
 
-    <div class="flex bg-gray-200 p-1 rounded-2xl mb-6">
-      <button onclick="setRole('staff')" id="role-staff" class="role-btn active flex-1 py-2 text-[10px] font-black rounded-xl transition-all">STAFF</button>
-      <button onclick="setRole('admin')" id="role-admin" class="role-btn flex-1 py-2 text-[10px] font-black rounded-xl transition-all text-gray-500">ADMIN</button>
-    </div>
+    <script type="module">
+        import { auth, db } from './init-firebase.js';
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <div class="space-y-4">
-      <input type="email" id="email" placeholder="Email Address" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
-      <input type="password" id="password" placeholder="Password" class="w-full p-4 border-2 border-gray-100 rounded-xl outline-none focus:border-emerald-600 font-bold">
-      <button id="loginBtn" onclick="handleLogin()" class="w-full bg-emerald-700 text-white font-black py-4 rounded-xl uppercase tracking-widest hover:bg-emerald-800 transition-all">Sign In</button>
-    </div>
-  </div>
+        let selectedRole = 'staff';
 
-  <script type="module">
-    import { auth, db } from './init-firebase.js';
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // 1. Role Switching Logic (Fixed the "Stuck" button)
+        window.setRole = (role) => {
+            selectedRole = role;
+            const staffBtn = document.getElementById('staffTab');
+            const adminBtn = document.getElementById('adminTab');
 
-    let selectedRole = 'staff';
-    window.setRole = (role) => {
-      selectedRole = role;
-      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active', 'text-white'));
-      document.getElementById(`role-${role}`).classList.add('active', 'text-white');
-    };
+            if (role === 'admin') {
+                adminBtn.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white shadow-md";
+                staffBtn.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
+            } else {
+                staffBtn.className = "flex-1 py-3 rounded-xl font-bold bg-emerald-800 text-white shadow-md";
+                adminBtn.className = "flex-1 py-3 rounded-xl font-bold text-slate-400 bg-transparent";
+            }
+        };
 
-    window.handleLogin = async function() {
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const pass = document.getElementById('password').value;
-      const btn = document.getElementById('loginBtn');
+        // 2. Login Logic
+        window.handleLogin = async function() {
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('errorMessage');
 
-      if (!email || !pass) return alert("Please fill all fields");
-      btn.innerText = "Verifying...";
+            if (!email || !password) {
+                errorDiv.innerText = "Please fill all fields";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
 
-      try {
-        // 1. Authenticate user
-        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-        
-        // 2. Query Firestore for authorized email
-        const q = query(collection(db, "staffRecords"), where("email", "==", email));
-        const snap = await getDocs(q);
+            btn.innerText = "VERIFYING...";
+            btn.disabled = true;
+            errorDiv.classList.add('hidden');
 
-        if (snap.empty) {
-          throw new Error("Access Denied: Email not found in Staff Database.");
-        }
+            try {
+                // A. Authenticate with Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // B. Verify Role in Firestore (staffRecords)
+                const staffRef = collection(db, "staffRecords");
+                const q = query(staffRef, where("email", "==", email));
+                const querySnapshot = await getDocs(q);
 
-        const userData = snap.docs[0].data();
-        if (userData.role.toLowerCase() === selectedRole) {
-          window.location.href = "index.html"; // Redirect to dashboard
-        } else {
-          throw new Error("Unauthorized: Role mismatch.");
-        }
-      } catch (err) {
-        alert(err.message);
-        await auth.signOut();
-      } finally {
-        btn.innerText = "Sign In";
-      }
-    };
-  </script>
+                if (querySnapshot.empty) {
+                    throw new Error("Access denied. No record found in database.");
+                }
+
+                const userData = querySnapshot.docs[0].data();
+
+                // C. Match Role (Case Insensitive)
+                if (userData.role.toLowerCase() === selectedRole.toLowerCase()) {
+                    window.location.replace("index.html");
+                } else {
+                    throw new Error(`Role mismatch. You are registered as ${userData.role}.`);
+                }
+
+            } catch (error) {
+                console.error(error);
+                errorDiv.innerText = error.message;
+                errorDiv.classList.remove('hidden');
+                btn.innerText = "SIGN IN";
+                btn.disabled = false;
+            }
+        };
+    </script>
 </body>
 </html>
