@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textbook Distribution | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <nav class="bg-emerald-700 text-white p-4 shadow-lg no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-book-open text-2xl"></i>
+                <h1 class="font-black uppercase tracking-tight">Textbook Distribution Log</h1>
+            </div>
+            <a href="index.html" class="text-xs font-bold border border-white/30 px-4 py-2 rounded-lg hover:bg-emerald-800">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main class="p-4 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <div class="md:col-span-1">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="font-black text-slate-800 mb-4 uppercase text-sm">Issue New Set</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Student</label>
+                        <select id="studentList" class="w-full p-3 rounded-xl border bg-slate-50 font-bold text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="">-- Select Student --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Subject/Book Name</label>
+                        <input type="text" id="bookTitle" placeholder="e.g. English Marigold" class="w-full p-3 rounded-xl border bg-slate-50 font-bold text-sm outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Condition</label>
+                        <select id="condition" class="w-full p-3 rounded-xl border bg-slate-50 font-bold text-sm outline-none">
+                            <option value="New">New / Fresh</option>
+                            <option value="Good">Used (Good)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="saveIssue()" id="saveBtn" class="w-full bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
+                        SAVE RECORD
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:col-span-3">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h2 class="font-black text-slate-700 uppercase text-sm">Distribution Registry</h2>
+                    <input type="text" id="searchBox" onkeyup="filterTable()" placeholder="Search student..." class="text-xs p-2 border rounded-lg outline-none">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse" id="distTable">
+                        <thead>
+                            <tr class="text-[10px] font-black text-slate-400 uppercase border-b">
+                                <th class="p-4">Student Name</th>
+                                <th class="p-4">Book Issued</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Condition</th>
+                                <th class="p-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logContent" class="text-sm font-bold text-slate-600">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db } from './init-firebase.js';
+        import { collection, getDocs, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // 1. Load students from 'students' collection
+        async function loadStudents() {
+            const snap = await getDocs(collection(db, "students"));
+            const select = document.getElementById('studentList');
+            snap.forEach(doc => {
+                const s = doc.data();
+                const opt = document.createElement('option');
+                opt.value = `${s.studentName} (${s.admNo})`;
+                opt.textContent = `${s.studentName} - Cl ${s.studentClass}`;
+                select.appendChild(opt);
+            });
+        }
+
+        // 2. Save issue record
+        window.saveIssue = async () => {
+            const btn = document.getElementById('saveBtn');
+            const data = {
+                student: document.getElementById('studentList').value,
+                book: document.getElementById('bookTitle').value,
+                condition: document.getElementById('condition').value,
+                date: new Date().toLocaleDateString('en-GB'),
+                timestamp: new Date()
+            };
+
+            if(!data.student || !data.book) return alert("Fill all fields");
+
+            btn.disabled = true;
+            btn.innerText = "SAVING...";
+
+            try {
+                await addDoc(collection(db, "textbook_issues"), data);
+                location.reload();
+            } catch (e) {
+                alert("Cloud Error");
+                btn.disabled = false;
+            }
+        };
+
+        // 3. Load History
+        async function loadHistory() {
+            const q = query(collection(db, "textbook_issues"), orderBy("timestamp", "desc"));
+            const snap = await getDocs(q);
+            const tbody = document.getElementById('logContent');
+            tbody.innerHTML = "";
+            
+            snap.forEach(doc => {
+                const item = doc.data();
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                        <td class="p-4">${item.student}</td>
+                        <td class="p-4 text-emerald-700">${item.book}</td>
+                        <td class="p-4 text-slate-400">${item.date}</td>
+                        <td class="p-4 text-xs italic">${item.condition}</td>
+                        <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-[9px] uppercase">Distributed</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.filterTable = () => {
+            let term = document.getElementById('searchBox').value.toLowerCase();
+            let rows = document.querySelectorAll("#logContent tr");
+            rows.forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(term) ? "" : "none";
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            loadHistory();
+        });
+    </script>
+</body>
+</html>
+
