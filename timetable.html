@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Manager | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-clock text-2xl text-indigo-300"></i>
+                <h1 class="font-black uppercase tracking-tighter">School Timetable</h1>
+            </div>
+            <a href="index.html" class="text-xs bg-indigo-700 px-4 py-2 rounded-full font-bold hover:bg-indigo-600 transition">ADMIN DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main class="p-4 max-w-7xl mx-auto">
+        <div class="bg-white p-6 rounded-3xl shadow-sm mb-6 border border-slate-200 no-print">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Select Class</label>
+                    <select id="classFilter" onchange="loadTimetable()" class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="1st">1st Primary</option>
+                        <option value="2nd">2nd Primary</option>
+                        <option value="3rd">3rd Primary</option>
+                        <option value="4th">4th Primary</option>
+                        <option value="5th">5th Primary</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Teacher View (Filter)</label>
+                    <input type="text" id="teacherSearch" onkeyup="filterByTeacher()" placeholder="Enter Teacher Name..." class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none">
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="openAddModal()" class="flex-1 bg-indigo-600 text-white font-black py-3 rounded-xl shadow-md hover:bg-indigo-700 transition">ADD PERIOD</button>
+                    <button onclick="window.print()" class="bg-slate-800 text-white p-3 rounded-xl"><i class="fas fa-print"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-center border-collapse">
+                    <thead>
+                        <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-100">
+                            <th class="p-4 text-[11px] font-black uppercase border-r">Day</th>
+                            <th class="p-4 text-[11px] font-black uppercase">P1<br><span class="text-[9px] opacity-60">10:00-10:40</span></th>
+                            <th class="p-4 text-[11px] font-black uppercase">P2<br><span class="text-[9px] opacity-60">10:40-11:20</span></th>
+                            <th class="p-4 text-[11px] font-black uppercase">P3<br><span class="text-[9px] opacity-60">11:20-12:00</span></th>
+                            <th class="p-4 text-[11px] font-black uppercase bg-amber-50">Break</th>
+                            <th class="p-4 text-[11px] font-black uppercase">P4<br><span class="text-[9px] opacity-60">12:30-01:10</span></th>
+                            <th class="p-4 text-[11px] font-black uppercase">P5<br><span class="text-[9px] opacity-60">01:10-01:50</span></th>
+                            <th class="p-4 text-[11px] font-black uppercase">P6<br><span class="text-[9px] opacity-60">01:50-02:30</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody" class="text-sm font-bold text-slate-700">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+            <h2 class="text-xl font-black mb-4">Assign Period</h2>
+            <div class="space-y-3">
+                <select id="dayInp" class="w-full p-3 border rounded-xl font-bold"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
+                <select id="periodInp" class="w-full p-3 border rounded-xl font-bold"><option value="P1">Period 1</option><option value="P2">Period 2</option><option value="P3">Period 3</option><option value="P4">Period 4</option><option value="P5">Period 5</option><option value="P6">Period 6</option></select>
+                <input type="text" id="subjectInp" placeholder="Subject Name" class="w-full p-3 border rounded-xl font-bold">
+                <input type="text" id="teacherInp" placeholder="Teacher Name" class="w-full p-3 border rounded-xl font-bold">
+                <div class="flex gap-2 mt-4">
+                    <button onclick="closeAddModal()" class="flex-1 bg-slate-200 py-3 rounded-xl font-bold">Cancel</button>
+                    <button onclick="savePeriod()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from './init-firebase.js';
+        import { collection, getDocs, setDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        
+        // Load existing timetable data from Firestore
+        window.loadTimetable = async () => {
+            const classLevel = document.getElementById('classFilter').value;
+            const body = document.getElementById('timetableBody');
+            body.innerHTML = "";
+
+            try {
+                const snap = await getDocs(collection(db, "timetables"));
+                const data = {};
+                snap.forEach(d => { if(d.id.startsWith(classLevel)) data[d.id] = d.data(); });
+
+                days.forEach(day => {
+                    let row = `<tr class="border-b border-slate-100">
+                        <td class="p-4 bg-slate-50 font-black text-indigo-900 border-r uppercase text-[10px]">${day}</td>`;
+                    
+                    ["P1", "P2", "P3"].forEach(p => {
+                        const cellData = data[`${classLevel}_${day}_${p}`] || {sub: "-", tea: "-"};
+                        row += `<td class="p-4 period-cell" data-teacher="${cellData.tea}"><div class="text-indigo-600">${cellData.sub}</div><div class="text-[9px] text-slate-400 uppercase">${cellData.tea}</div></td>`;
+                    });
+
+                    row += `<td class="p-4 bg-amber-50 text-[10px] text-amber-600 font-black italic">MDM</td>`;
+
+                    ["P4", "P5", "P6"].forEach(p => {
+                        const cellData = data[`${classLevel}_${day}_${p}`] || {sub: "-", tea: "-"};
+                        row += `<td class="p-4 period-cell" data-teacher="${cellData.tea}"><div class="text-indigo-600">${cellData.sub}</div><div class="text-[9px] text-slate-400 uppercase">${cellData.tea}</div></td>`;
+                    });
+
+                    row += `</tr>`;
+                    body.innerHTML += row;
+                });
+            } catch (e) { console.error(e); }
+        };
+
+        window.savePeriod = async () => {
+            const classLevel = document.getElementById('classFilter').value;
+            const day = document.getElementById('dayInp').value;
+            const period = document.getElementById('periodInp').value;
+            const docId = `${classLevel}_${day}_${period}`;
+
+            await setDoc(doc(db, "timetables", docId), {
+                sub: document.getElementById('subjectInp').value,
+                tea: document.getElementById('teacherInp').value
+            });
+            
+            closeAddModal();
+            loadTimetable();
+        };
+
+        window.filterByTeacher = () => {
+            const term = document.getElementById('teacherSearch').value.toLowerCase();
+            document.querySelectorAll('.period-cell').forEach(cell => {
+                const teacher = cell.getAttribute('data-teacher').toLowerCase();
+                if(term && teacher !== term && teacher !== "-") {
+                    cell.style.opacity = "0.2";
+                } else {
+                    cell.style.opacity = "1";
+                }
+            });
+        };
+
+        window.openAddModal = () => document.getElementById('addModal').style.display = 'flex';
+        window.closeAddModal = () => document.getElementById('addModal').style.display = 'none';
+
+        document.addEventListener('DOMContentLoaded', loadTimetable);
+    </script>
+</body>
+</html>
