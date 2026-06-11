@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Pethgam Wagoora - Survey Portal</title>
+    <!-- Include SheetJS library to handle Excel downloading natively -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
+        .container { max-width: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 0 auto; }
+        h2 { text-align: center; color: #1e3a8a; margin-bottom: 5px; }
+        h4 { text-align: center; color: #6b7280; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-add { background-color: #10b981; color: white; }
+        .btn-download { background-color: #2563eb; color: white; }
+        .counter { text-align: center; margin: 15px 0; font-weight: bold; color: #059669; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>GPS Pethgam Wagoora</h2>
+    <h4>Village Education Register (VER) Digital Survey</h4>
+    <hr>
+    
+    <form id="surveyForm">
+        <div class="form-group">
+            <label>Head of Family Name</label>
+            <input type="text" id="headOfFamily" required placeholder="e.g., Mohammad Yusuf Malik">
+        </div>
+        
+        <div class="form-group">
+            <label>Child's Name</label>
+            <input type="text" id="childName" required placeholder="e.g., Aadil Ahmad">
+        </div>
+        
+        <div class="form-group">
+            <label>Gender</label>
+            <select id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Age / Date of Birth</label>
+            <input type="number" id="age" min="0" max="18" required placeholder="Age (0-18)">
+        </div>
+        
+        <div class="form-group">
+            <label>Current Status</label>
+            <select id="status">
+                <option value="Enrolled (Govt)">Enrolled in Govt School</option>
+                <option value="Enrolled (Private)">Enrolled in Private School</option>
+                <option value="Never Enrolled">Never Enrolled</option>
+                <option value="Dropout">Dropout</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Last Class Attended (If applicable)</label>
+            <input type="text" id="lastClass" placeholder="e.g., Class 3rd (Leave blank if none)">
+        </div>
+
+        <div class="form-group">
+            <label>OOSC Reason / Months Out (If Dropout/Never Enrolled)</label>
+            <input type="text" id="ooscReason" placeholder="e.g., Financial / 6 months">
+        </div>
+        
+        <div class="form-group">
+            <label>Children with Special Needs (CWSN)?</label>
+            <select id="cwsn">
+                <option value="No">No</option>
+                <option value="Yes (Visual Impairment)">Yes (Visual Impairment)</option>
+                <option value="Yes (Hearing Impairment)">Yes (Hearing Impairment)</option>
+                <option value="Yes (Orthopedic)">Yes (Orthopedic)</option>
+                <option value="Yes (Other)">Yes (Other)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Parent Mobile Number</label>
+            <input type="tel" id="mobile" required placeholder="10-digit mobile number">
+        </div>
+        
+        <button type="button" class="btn-add" onclick="addRecord()">➕ Save Student Entry</button>
+    </form>
+    
+    <div class="counter">Total Records Saved: <span id="recordCount">0</span></div>
+    <button class="btn-download" onclick="exportToExcel()">📥 Download Excel File (.xlsx)</button>
+</div>
+
+<script>
+    // Array to temporarily hold data in browser memory
+    let surveyData = [];
+
+    function addRecord() {
+        // Validate form inputs
+        const head = document.getElementById('headOfFamily').value.trim();
+        const child = document.getElementById('childName').value.trim();
+        const age = document.getElementById('age').value;
+        const mobile = document.getElementById('mobile').value.trim();
+        
+        if(!head || !child || !age || !mobile) {
+            alert("Please fill in all mandatory fields before saving!");
+            return;
+        }
+
+        // Create a structured data row matching your Excel needs
+        const record = {
+            "Head of Family": head,
+            "Child Name": child,
+            "Gender": document.getElementById('gender').value,
+            "Age": age,
+            "Schooling Status": document.getElementById('status').value,
+            "Last Class Attended": document.getElementById('lastClass').value || "N/A",
+            "OOSC Details/Reason": document.getElementById('ooscReason').value || "N/A",
+            "CWSN Status": document.getElementById('cwsn').value,
+            "Mobile Number": mobile
+        };
+
+        // Push data to array
+        surveyData.push(record);
+        
+        // Update UI counter
+        document.getElementById('recordCount').innerText = surveyData.length;
+        
+        // Clear child-specific fields for the next entry in the same house
+        document.getElementById('childName').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('lastClass').value = '';
+        document.getElementById('ooscReason').value = '';
+        
+        alert(`Saved successfully! Total records: ${surveyData.length}`);
+    }
+
+    function exportToExcel() {
+        if(surveyData.length === 0) {
+            alert("No data to download yet. Please add at least one entry!");
+            return;
+        }
+        
+        // Convert JSON array into an Excel worksheet object
+        const worksheet = XLSX.utils.json_to_sheet(surveyData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "GPS Pethgam Data");
+        
+        // Trigger immediate browser download package
+        XLSX.writeFile(workbook, "GPS_Pethgam_VER_Data_2026.xlsx");
+    }
+</script>
+
+</body>
+  </html>
+              
