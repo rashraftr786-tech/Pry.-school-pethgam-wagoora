@@ -2,227 +2,379 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Government Primary School Pethgam Wagoora | Official Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>GPS Pethgam Wagoora | School ERP Dashboard</title>
+    <!-- Tailwind CSS + Font Awesome + Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .hero-gradient {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        }
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #f0f4f9; }
+        .hero-gradient { background: linear-gradient(135deg, #0c2b4b 0%, #1a4a7a 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15); }
+        .dropdown:hover .dropdown-menu { display: block; }
+        .nav-link { transition: 0.2s; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="antialiased">
 
-    <div class="bg-yellow-400 text-blue-900 text-sm font-semibold py-2 px-4 text-center shadow-inner">
-        <i class="fa-solid fa-bullhorn mr-2 animate-pulse"></i> 
-        <span>Notice: Ongoing Academic & Infrastructure Surveys 2026 are live. Please submit your feedback below!</span>
-    </div>
-
+    <!-- ==================== HEADER & NAVIGATION ==================== -->
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="bg-blue-600 text-white p-2.5 rounded-lg shadow-md">
-                    <i class="fa-solid fa-school text-2xl"></i>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3 md:py-4">
+                <!-- Logo & School Name -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-800 text-white p-2 rounded-xl shadow-md">
+                        <i class="fas fa-school text-xl md:text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base md:text-xl font-bold text-gray-800">Government Primary School</h1>
+                        <p class="text-xs text-gray-500">Pethgam Wagoora | UDISE: 01022202207</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-lg font-bold text-blue-900 leading-tight tracking-tight uppercase">Govt. Primary School</h1>
-                    <p class="text-xs text-gray-500 font-medium">Pethgam Wagoora, Baramulla (J&K)</p>
+                <!-- Desktop Navigation (Categories with dropdowns) -->
+                <nav class="hidden md:flex space-x-1">
+                    <a href="index.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-blue-700 text-white shadow-sm">Home</a>
+                    
+                    <!-- Surveys & Registers Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Surveys <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏘️ Village Education Register (VER)</a>
+                            <a href="child-population.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👥 Child Population Register</a>
+                            <a href="roll-analyzer.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📊 Roll Analyzer</a>
+                            <a href="roll-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Roll Statement</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✅ Attendance Register</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Academics Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Academics <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                            <a href="results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📝 Exam Results</a>
+                            <a href="upload-results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📤 Upload Results</a>
+                            <a href="marks-sheet.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📑 Marksheet</a>
+                            <a href="timetable.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">⏰ Class Timetable</a>
+                            <a href="textbook-issue.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📚 Textbook Issue</a>
+                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📖 Digital Library</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Students & Parents Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Students <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-64 z-20">
+                            <a href="student-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🆔 Student ID Card</a>
+                            <a href="tc.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📜 Transfer Certificate (TC)</a>
+                            <a href="bonafide.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Bonafide Certificate</a>
+                            <a href="student-diary-parent.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📓 Student Diary (Parent)</a>
+                            <a href="student-diary-teacher.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✏️ Student Diary (Teacher)</a>
+                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🔢 APAAR ID Entry</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Staff & Admin Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Staff <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                            <a href="staff-entry.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👩‍🏫 Staff Entry</a>
+                            <a href="staff-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📋 Staff Statement</a>
+                            <a href="teaching-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🪪 Teaching ID</a>
+                            <a href="leave-management.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏖️ Leave Management</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✅ Staff Attendance</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Communication Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Communication <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                            <a href="broadcast-whatsapp.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📱 WhatsApp Broadcast</a>
+                            <a href="send-email.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📧 Send Email</a>
+                            <a href="send-sms.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">💬 Send SMS</a>
+                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📜 Communication Logs</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Reports & Analytics Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Reports <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                            <a href="reports-hub.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📈 Reports Hub</a>
+                            <a href="mdm-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🍽️ MDM Statement</a>
+                            <a href="master-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👤 Master Profile</a>
+                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📁 Document Vault</a>
+                        </div>
+                    </div>
+                    
+                    <a href="signin.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-amber-500 text-white hover:bg-amber-600">Login</a>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu (full list) -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4 max-h-96 overflow-y-auto">
+                <div class="space-y-1">
+                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-blue-50 text-blue-800 font-medium">Home</a>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">SURVEYS & REGISTERS</p>
+                        <a href="VER.html" class="block px-3 py-1.5 text-sm">VER Survey</a>
+                        <a href="child-population.html" class="block px-3 py-1.5 text-sm">Child Population Register</a>
+                        <a href="roll-analyzer.html" class="block px-3 py-1.5 text-sm">Roll Analyzer</a>
+                        <a href="roll-statement.html" class="block px-3 py-1.5 text-sm">Roll Statement</a>
+                        <a href="attendance.html" class="block px-3 py-1.5 text-sm">Attendance Register</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">ACADEMICS</p>
+                        <a href="results.html" class="block px-3 py-1.5 text-sm">Exam Results</a>
+                        <a href="upload-results.html" class="block px-3 py-1.5 text-sm">Upload Results</a>
+                        <a href="marks-sheet.html" class="block px-3 py-1.5 text-sm">Marksheet</a>
+                        <a href="timetable.html" class="block px-3 py-1.5 text-sm">Timetable</a>
+                        <a href="textbook-issue.html" class="block px-3 py-1.5 text-sm">Textbook Issue</a>
+                        <a href="library.html" class="block px-3 py-1.5 text-sm">Library</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">STUDENTS & PARENTS</p>
+                        <a href="student-id.html" class="block px-3 py-1.5 text-sm">Student ID Card</a>
+                        <a href="tc.html" class="block px-3 py-1.5 text-sm">Transfer Certificate</a>
+                        <a href="bonafide.html" class="block px-3 py-1.5 text-sm">Bonafide Certificate</a>
+                        <a href="student-diary-parent.html" class="block px-3 py-1.5 text-sm">Student Diary (Parent)</a>
+                        <a href="student-diary-teacher.html" class="block px-3 py-1.5 text-sm">Student Diary (Teacher)</a>
+                        <a href="apaar-input.html" class="block px-3 py-1.5 text-sm">APAAR ID Entry</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">STAFF & ADMIN</p>
+                        <a href="staff-entry.html" class="block px-3 py-1.5 text-sm">Staff Entry</a>
+                        <a href="staff-statement.html" class="block px-3 py-1.5 text-sm">Staff Statement</a>
+                        <a href="teaching-id.html" class="block px-3 py-1.5 text-sm">Teaching ID</a>
+                        <a href="leave-management.html" class="block px-3 py-1.5 text-sm">Leave Management</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">COMMUNICATION</p>
+                        <a href="broadcast-whatsapp.html" class="block px-3 py-1.5 text-sm">WhatsApp Broadcast</a>
+                        <a href="send-email.html" class="block px-3 py-1.5 text-sm">Send Email</a>
+                        <a href="send-sms.html" class="block px-3 py-1.5 text-sm">Send SMS</a>
+                        <a href="comm-logs.html" class="block px-3 py-1.5 text-sm">Communication Logs</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">REPORTS & SETTINGS</p>
+                        <a href="reports-hub.html" class="block px-3 py-1.5 text-sm">Reports Hub</a>
+                        <a href="mdm-statement.html" class="block px-3 py-1.5 text-sm">MDM Statement</a>
+                        <a href="master-profile.html" class="block px-3 py-1.5 text-sm">Master Profile</a>
+                        <a href="document-vault.html" class="block px-3 py-1.5 text-sm">Document Vault</a>
+                    </div>
+                    <a href="signin.html" class="block px-3 py-2 rounded-lg bg-amber-100 text-amber-800 font-medium mt-2">Login / Sign In</a>
                 </div>
-            </a>
-
-            <div class="hidden lg:flex items-center space-x-6 text-sm font-medium">
-                <a href="#portal-matrix" class="text-blue-600 hover:text-blue-800 transition duration-150 flex items-center">
-                    <i class="fa-solid fa-sitemap mr-1.5"></i> Site Directory
-                </a>
-                <a href="udise-dashboard.html" class="text-gray-600 hover:text-blue-600 transition duration-150">
-                    UDISE: <span class="font-bold text-gray-800">10222022070</span>
-                </a>
             </div>
         </div>
     </header>
 
-    <section class="hero-gradient text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden shadow-lg">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-5xl mx-auto text-center relative z-10">
-            <span class="bg-blue-500 bg-opacity-40 text-blue-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-blue-400">
-                Department of School Education, J&K
-            </span>
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mt-4 tracking-tight leading-tight">
-                Empowering Minds, Shaping Futures
-            </h2>
-            <p class="mt-4 text-base sm:text-lg text-blue-100 max-w-2xl mx-auto font-light">
-                Welcome to the digital gateway of GPS Pethgam Wagoora. Access academic modules, real-time analytics dashboards, public datasets, and critical school surveys below.
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero-gradient text-white py-12 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-medium mb-4">
+                <i class="fas fa-school"></i> UDISE: 01022202207 | Zone Wagoora, Baramulla
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4">Government Primary School<br>Pethgam Wagoora</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-6">
+                Complete School ERP with Firebase – Manage admissions, results, attendance, surveys, communication & more.
             </p>
-            <div class="mt-8 flex flex-wrap justify-center gap-4">
-                <a href="#surveys" class="bg-yellow-400 hover:bg-yellow-300 text-blue-950 font-bold px-6 py-3 rounded-lg shadow-md transition duration-150 flex items-center">
-                    <i class="fa-solid fa-clipboard-question mr-2"></i> Take Active Surveys
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="VER.html" class="bg-white text-blue-800 px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition flex items-center gap-2">
+                    <i class="fas fa-clipboard-list"></i> VER Survey
                 </a>
-                <a href="#portal-matrix" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white font-semibold px-6 py-3 rounded-lg border border-white border-opacity-30 transition duration-150 flex items-center">
-                    <i class="fa-solid fa-layer-group mr-2"></i> Explore Pages Matrix
+                <a href="results.html" class="bg-amber-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-amber-600 transition flex items-center gap-2">
+                    <i class="fas fa-chart-line"></i> Check Results
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="surveys" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-r-xl shadow-sm mb-12">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 flex items-center">
-                        <i class="fa-solid fa-square-poll-vertical text-yellow-600 mr-2.5 text-2xl"></i>
-                        Critical Community & Institutional Surveys
-                    </h3>
-                    <p class="text-sm text-gray-600 mt-1">
-                        Your direct input feeds our operational datasets. Please complete the vital infrastructure, enrollment, and evaluation forms.
-                    </p>
-                </div>
-                <div class="flex flex-wrap gap-2 shrink-0">
-                    <a href="survey.html" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-4 py-2.5 rounded shadow transition duration-150">
-                        Primary Survey Form
-                    </a>
-                    <a href="infrastructure-survey.html" class="bg-white hover:bg-gray-100 text-blue-700 font-semibold text-sm px-4 py-2.5 rounded border border-gray-300 shadow-sm transition duration-150">
-                        MDM & Infra Feedback
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div id="portal-matrix" class="space-y-10">
-            <div>
-                <h3 class="text-2xl font-black text-gray-900 tracking-tight flex items-center">
-                    <i class="fa-solid fa-folder-tree text-blue-600 mr-3"></i>
-                    Comprehensive Site Page Directory
-                </h3>
-                <p class="text-gray-500 text-sm mt-1">
-                    System map linking all active documents, analytical charts, trackers, lists, and institutional metrics across the platform.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-emerald-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-emerald-600 text-white p-2 rounded-lg"><i class="fa-solid fa-book-open"></i></div>
-                        <h4 class="font-bold text-gray-900">Academics & Curricula</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="syllabus.html" class="hover:text-emerald-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Class-wise Syllabus Grid</a></li>
-                        <li><a href="timetable.html" class="hover:text-emerald-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Weekly Instructional Schedule</a></li>
-                        <li><a href="examinations.html" class="hover:text-emerald-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Continuous & Comprehensive Evaluation (CCE)</a></li>
-                        <li><a href="books-inventory.html" class="hover:text-emerald-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Textbook Distribution Registry</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-blue-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-blue-600 text-white p-2 rounded-lg"><i class="fa-solid fa-users-rectangle"></i></div>
-                        <h4 class="font-bold text-gray-900">Student & Enrollment Logs</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="admissions.html" class="hover:text-blue-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>New Admission Portal & Criteria</a></li>
-                        <li><a href="student-roster.html" class="hover:text-blue-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Active Grade-wise Enrolment Register</a></li>
-                        <li><a href="attendance-dashboard.html" class="hover:text-blue-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Daily Attendance Analytics</a></li>
-                        <li><a href="scholarships.html" class="hover:text-blue-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Pre-Matric Scholarship Schemes</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-amber-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-amber-600 text-white p-2 rounded-lg"><i class="fa-solid fa-utensils"></i></div>
-                        <h4 class="font-bold text-gray-900">Welfare & Infrastructure</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="mid-day-meal.html" class="hover:text-amber-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Daily MDM Allocation & Menu Tracker</a></li>
-                        <li><a href="infrastructure.html" class="hover:text-amber-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Building, Classrooms & Assets Log</a></li>
-                        <li><a href="sanitation-water.html" class="hover:text-amber-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Drinking Water & Sanitation Profile</a></li>
-                        <li><a href="sports-inventory.html" class="hover:text-amber-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Playground & Sports Equipment List</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-purple-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-purple-600 text-white p-2 rounded-lg"><i class="fa-solid fa-user-shield"></i></div>
-                        <h4 class="font-bold text-gray-900">Administration & Staff</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="staff-directory.html" class="hover:text-purple-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Faculty Profiles & Designations</a></li>
-                        <li><a href="smc-committee.html" class="hover:text-purple-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>School Management Committee (SMC)</a></li>
-                        <li><a href="official-documents.html" class="hover:text-purple-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Government Circulars & Orders Archive</a></li>
-                        <li><a href="meeting-minutes.html" class="hover:text-purple-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>SMC & Parent-Teacher Minutes Log</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-rose-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-rose-600 text-white p-2 rounded-lg"><i class="fa-solid fa-chart-line"></i></div>
-                        <h4 class="font-bold text-gray-900">Metrics & Public Compliance</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="performance-charts.html" class="hover:text-rose-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Annual School Performance Dashboard</a></li>
-                        <li><a href="survey-results.html" class="hover:text-rose-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Aggregated Public Survey Metrics</a></li>
-                        <li><a href="udise-report.html" class="hover:text-rose-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Full UDISE Data Summary Sheet</a></li>
-                        <li><a href="audit-statements.html" class="hover:text-rose-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Financial Grants Transparency Page</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                    <div class="bg-cyan-50 border-b border-gray-100 p-4 flex items-center space-x-3">
-                        <div class="bg-cyan-600 text-white p-2 rounded-lg"><i class="fa-solid fa-icons"></i></div>
-                        <h4 class="font-bold text-gray-900">Media, Events & Feedback</h4>
-                    </div>
-                    <ul class="p-4 space-y-2.5 text-sm font-medium text-gray-600">
-                        <li><a href="gallery.html" class="hover:text-cyan-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Activity & Infrastructure Gallery</a></li>
-                        <li><a href="events.html" class="hover:text-cyan-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>National Festivals & Events Calendar</a></li>
-                        <li><a href="contact.html" class="hover:text-cyan-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>Grievance Redressal & Contacts</a></li>
-                        <li><a href="helpdesk.html" class="hover:text-cyan-600 block transition"><i class="fa-solid fa-angle-right mr-1.5 text-gray-400"></i>System Helpdesk & Technical FAQs</a></li>
-                    </ul>
-                </div>
-
+    <!-- ==================== STATS BADGES ==================== -->
+    <section class="py-8 bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="p-3"><i class="fas fa-users text-2xl text-blue-600"></i><p class="font-bold">120+ Students</p></div>
+                <div class="p-3"><i class="fas fa-chalkboard-user text-2xl text-green-600"></i><p class="font-bold">8+ Teachers</p></div>
+                <div class="p-3"><i class="fas fa-file-excel text-2xl text-red-500"></i><p class="font-bold">Digital Registers</p></div>
+                <div class="p-3"><i class="fas fa-cloud-upload-alt text-2xl text-purple-600"></i><p class="font-bold">Firebase Sync</p></div>
             </div>
         </div>
     </section>
 
-    <section class="bg-gray-100 border-t border-b border-gray-200 my-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="p-4 bg-white rounded-lg shadow-sm">
-                    <p class="text-3xl font-black text-blue-900">2005</p>
-                    <p class="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">Established Year</p>
+    <!-- ==================== MAIN GRID CARDS (All Pages Overview) ==================== -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Complete ERP Modules</h2>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
+                <p class="text-gray-500 mt-3">One‑click access to all school management tools</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card: Surveys -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-clipboard-list text-2xl text-blue-600"></i><h3 class="font-bold text-lg">Household & Child Surveys</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="VER.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">VER</a>
+                        <a href="child-population.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Child Population</a>
+                        <a href="roll-analyzer.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Roll Analyzer</a>
+                        <a href="roll-statement.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Roll Statement</a>
+                        <a href="attendance.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Attendance</a>
+                    </div>
                 </div>
-                <div class="p-4 bg-white rounded-lg shadow-sm">
-                    <p class="text-3xl font-black text-blue-900">1:10</p>
-                    <p class="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">Student-Teacher Ratio</p>
+                
+                <!-- Card: Academics -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-graduation-cap text-2xl text-green-600"></i><h3 class="font-bold text-lg">Academics & Results</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="results.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Results</a>
+                        <a href="upload-results.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Upload Results</a>
+                        <a href="marks-sheet.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Marksheet</a>
+                        <a href="timetable.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Timetable</a>
+                        <a href="textbook-issue.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Textbooks</a>
+                        <a href="library.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Library</a>
+                    </div>
                 </div>
-                <div class="p-4 bg-white rounded-lg shadow-sm">
-                    <p class="text-3xl font-black text-blue-900">Co-Ed</p>
-                    <p class="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">Education Model</p>
+                
+                <!-- Card: Student Services -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-id-card text-2xl text-purple-600"></i><h3 class="font-bold text-lg">Student Services</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="student-id.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">ID Card</a>
+                        <a href="tc.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">TC</a>
+                        <a href="bonafide.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Bonafide</a>
+                        <a href="student-diary-parent.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Diary (Parent)</a>
+                        <a href="student-diary-teacher.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Diary (Teacher)</a>
+                        <a href="apaar-input.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">APAAR ID</a>
+                    </div>
                 </div>
-                <div class="p-4 bg-white rounded-lg shadow-sm">
-                    <p class="text-3xl font-black text-blue-900">Primary</p>
-                    <p class="text-xs text-gray-500 uppercase font-semibold tracking-wider mt-1">Grades Provided</p>
+                
+                <!-- Card: Staff & HR -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-users-between text-2xl text-amber-600"></i><h3 class="font-bold text-lg">Staff Management</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="staff-entry.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Staff Entry</a>
+                        <a href="staff-statement.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Staff Statement</a>
+                        <a href="teaching-id.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Teaching ID</a>
+                        <a href="leave-management.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Leave Mgmt</a>
+                        <a href="attendance.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Attendance</a>
+                    </div>
+                </div>
+                
+                <!-- Card: Communication -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-bullhorn text-2xl text-red-600"></i><h3 class="font-bold text-lg">Bulk Communication</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="broadcast-whatsapp.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">WhatsApp</a>
+                        <a href="send-email.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">Email</a>
+                        <a href="send-sms.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">SMS</a>
+                        <a href="comm-logs.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">Logs</a>
+                    </div>
+                </div>
+                
+                <!-- Card: Reports & Admin -->
+                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
+                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-chart-pie text-2xl text-indigo-600"></i><h3 class="font-bold text-lg">Reports & Administration</h3></div>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <a href="reports-hub.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Reports Hub</a>
+                        <a href="mdm-statement.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">MDM Statement</a>
+                        <a href="master-profile.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Master Profile</a>
+                        <a href="document-vault.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Document Vault</a>
+                        <a href="forgot-password.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Forgot Password</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Quick Links Row (extra pages not covered) -->
+            <div class="mt-10 text-center">
+                <p class="text-gray-500 text-sm mb-3">Other Utilities:</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <a href="admission.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Admission Form</a>
+                    <a href="adm-register.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Admission Register</a>
+                    <a href="mdm.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">MDM Dashboard</a>
+                    <a href="wb.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">WhatsApp Bot</a>
+                    <a href="signin.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== FIREBASE INTEGRATION NOTE ==================== -->
+    <section class="py-8 bg-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="bg-blue-50 rounded-2xl p-5 border border-blue-200">
+                <i class="fas fa-fire text-3xl text-orange-500 mb-2"></i>
+                <h3 class="font-bold text-gray-800">Firebase Connected ERP</h3>
+                <p class="text-sm text-gray-600">Authentication, Firestore Database, and Storage active. All modules are integrated with real-time sync.</p>
+                <div class="mt-3 flex justify-center gap-3 text-xs">
+                    <span class="bg-gray-200 px-2 py-1 rounded">📁 init-firebase.js</span>
+                    <span class="bg-gray-200 px-2 py-1 rounded">🔐 Auth ready</span>
+                    <span class="bg-gray-200 px-2 py-1 rounded">📊 Firestore collections</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-gray-400 text-sm mt-auto border-t-4 border-blue-600">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-                <p class="text-white font-semibold">Government Primary School Pethgam Wagoora</p>
-                <p class="text-xs text-gray-500 mt-0.5">Wagoora Babareshi Road, Near Zonal Education Office Wagoora, Baramulla, J&K - 193103</p>
-            </div>
-            <div class="text-xs text-gray-500 text-center md:text-right">
-                <p>&copy; 2026 Institutional Repository Directory. All Rights Reserved.</p>
-                <p class="mt-0.5">UDISE Management Portal v4.1</p>
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-gray-900 text-gray-400 py-6 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+            <p>© 2026 Government Primary School Pethgam Wagoora | Samagra Shiksha Abhiyan</p>
+            <p class="text-xs mt-1">UDISE: 01022202207 | Zone Wagoora, District Baramulla, J&K</p>
+            <div class="flex justify-center gap-4 mt-3">
+                <a href="#" class="hover:text-white"><i class="fab fa-github"></i></a>
+                <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-white"><i class="fab fa-facebook"></i></a>
             </div>
         </div>
     </footer>
 
+    <script>
+        // Mobile menu toggle
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        // Close mobile menu on link click
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        // Dropdown hover for desktop
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dd => {
+            dd.addEventListener('mouseenter', () => {
+                const menu = dd.querySelector('.dropdown-menu');
+                if (menu) menu.style.display = 'block';
+            });
+            dd.addEventListener('mouseleave', () => {
+                const menu = dd.querySelector('.dropdown-menu');
+                if (menu) menu.style.display = 'none';
+            });
+        });
+    </script>
 </body>
 </html>
-            
+```                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
