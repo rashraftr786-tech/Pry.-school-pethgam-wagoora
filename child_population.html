@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>GPS Pethgam Wagoora | Family-Centric Survey Management</title>
+    <!-- Tailwind CSS + Font Awesome + Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #f0f4f9; }
+        .hero-gradient { background: linear-gradient(135deg, #0c2b4b 0%, #1a4a7a 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15); }
+        .tab-active { background-color: #1e3a8a; color: white; border-bottom: 2px solid #fbbf24; }
+        .tab-inactive { background-color: #f1f5f9; color: #334155; }
+        .conditional-field { transition: all 0.2s; }
+        .btn-primary { background-color: #1e3a8a; transition: 0.2s; }
+        .btn-primary:hover { background-color: #1e40af; transform: translateY(-1px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border-l-8 border-blue-700">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800 flex items-center gap-2"><i class="fas fa-chalkboard-user text-blue-700"></i> Government Primary School Pethgam Wagoora</h1>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1 mt-2 text-sm text-gray-600">
+                        <span><i class="fas fa-qrcode mr-1"></i> UDISE: 01022202207</span>
+                        <span><i class="fas fa-map-marker-alt mr-1"></i> Zone: Wagoora</span>
+                        <span><i class="fas fa-city mr-1"></i> District: Baramulla</span>
+                        <span><i class="fas fa-home mr-1"></i> Catchment: Pethgam Wagoora</span>
+                    </div>
+                </div>
+                <div class="bg-blue-50 p-2 rounded-xl text-sm font-medium text-blue-800"><i class="fas fa-database mr-1"></i> Family-Centric Survey</div>
+            </div>
+        </div>
+
+        <!-- Global Metadata Card -->
+        <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border-l-8 border-amber-500">
+            <div class="flex flex-wrap justify-between items-center border-b pb-2 mb-4">
+                <h2 class="text-xl font-semibold"><i class="fas fa-cog text-amber-600 mr-2"></i> General Survey Metadata (Once per survey)</h2>
+                <div class="flex gap-2">
+                    <button id="saveMetaBtn" class="bg-emerald-600 text-white px-4 py-1.5 rounded-lg text-sm"><i class="fas fa-save"></i> Save</button>
+                    <button id="updateMetaBtn" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm"><i class="fas fa-pen"></i> Update</button>
+                    <button id="deleteMetaBtn" class="bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div><label class="text-sm">Prepared by (Teacher)</label><input type="text" id="globalPrep" class="w-full border rounded-lg p-2"></div>
+                <div><label class="text-sm">Mobile No.</label><input type="tel" id="globalMob" maxlength="10" class="w-full border rounded-lg p-2"></div>
+                <div><label class="text-sm">Date of Survey</label><input type="date" id="globalDate" class="w-full border rounded-lg p-2"></div>
+                <div><label class="text-sm">Academic Session</label><select id="globalSession" class="w-full border rounded-lg p-2"><option>2025-2026</option><option selected>2026-2027</option><option>2027-2028</option></select></div>
+            </div>
+            <div id="metaMsg" class="text-sm text-green-600 mt-2"></div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow p-4 border-t-4 border-blue-600"><div class="flex justify-between"><span>🏘️ Families</span><i class="fas fa-home text-blue-400"></i></div><div class="text-2xl font-bold" id="totalFamilies">0</div></div>
+            <div class="bg-white rounded-xl shadow p-4 border-t-4 border-green-600"><div class="flex justify-between"><span>🧒 Children (0-18)</span><i class="fas fa-child text-green-500"></i></div><div class="text-2xl font-bold" id="totalChildren">0</div></div>
+            <div class="bg-white rounded-xl shadow p-4 border-t-4 border-amber-600"><div class="flex justify-between"><span>📚 Out-of-School</span><i class="fas fa-school-circle-exclamation text-amber-500"></i></div><div class="text-2xl font-bold" id="totalOOSC">0</div></div>
+            <div class="bg-white rounded-xl shadow p-4 border-t-4 border-rose-600"><div class="flex justify-between"><span>🩺 CWSN</span><i class="fas fa-wheelchair text-rose-500"></i></div><div class="text-2xl font-bold" id="totalCWSN">0</div></div>
+        </div>
+
+        <!-- FAMILY REGISTRATION SECTION -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-8">
+            <div class="bg-blue-700 text-white px-6 py-3 font-bold text-lg">🏠 Register a New Family (Head of Household)</div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" id="familyHeadName" placeholder="Head of Family Name *" class="border rounded-lg p-2">
+                    <input type="text" id="familyIdAadhar" placeholder="Family ID / Aadhar No." class="border rounded-lg p-2">
+                    <input type="text" id="familyAddress" placeholder="Address / Village" value="Pethgam Wagoora" class="border rounded-lg p-2">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input type="tel" id="familyMobile" placeholder="Family Contact Mobile (10 digits)" maxlength="10" class="border rounded-lg p-2">
+                    <input type="text" id="familyRemarks" placeholder="Any remarks for family" class="border rounded-lg p-2">
+                </div>
+                <button id="addFamilyBtn" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold"><i class="fas fa-plus-circle"></i> Register Family</button>
+            </div>
+        </div>
+
+        <!-- FAMILY LIST + CHILD MANAGEMENT TABS (per family) -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-8">
+            <div class="bg-gray-100 px-6 py-3 font-bold text-gray-700">📋 Registered Families (Click to add children / view details)</div>
+            <div id="familiesList" class="p-4 divide-y"></div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="bg-white rounded-2xl shadow-md p-5 mb-6 flex flex-wrap gap-3 justify-center">
+            <button id="exportVERBtn" class="bg-emerald-700 text-white px-6 py-2 rounded-lg font-semibold"><i class="fas fa-file-excel"></i> Download VER (Village Education Register)</button>
+            <button id="exportPopBtn" class="bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold"><i class="fas fa-chart-simple"></i> Download Child Population Register</button>
+        </div>
+    </div>
+
+    <script>
+        // ---------- DATA MODELS ----------
+        let families = [];        // { id, headName, familyIdAadhar, address, mobile, remarks, createdAt }
+        let children = [];        // { id, familyId, child fields... }
+        let nextFamilyId = 1;
+        let nextChildId = 1;
+        
+        let globalMetadata = { preparedBy: "", teacherMobile: "", dateOfSurvey: "", academicSession: "2026-2027" };
+
+        // Helper: compute age from DOB
+        function computeAge(dobStr) {
+            if(!dobStr) return '';
+            const birth = new Date(dobStr);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            return age >= 0 ? age : 0;
+        }
+
+        // Load/Save localStorage
+        function loadData() {
+            const storedFamilies = localStorage.getItem("families_data");
+            const storedChildren = localStorage.getItem("children_data");
+            if(storedFamilies) { families = JSON.parse(storedFamilies); if(families.length) nextFamilyId = Math.max(...families.map(f=>f.id)) + 1; else nextFamilyId=1; }
+            if(storedChildren) { children = JSON.parse(storedChildren); if(children.length) nextChildId = Math.max(...children.map(c=>c.id)) + 1; else nextChildId=1; }
+            const storedMeta = localStorage.getItem("survey_global_metadata");
+            if(storedMeta) globalMetadata = JSON.parse(storedMeta);
+            document.getElementById('globalPrep').value = globalMetadata.preparedBy || "";
+            document.getElementById('globalMob').value = globalMetadata.teacherMobile || "";
+            document.getElementById('globalDate').value = globalMetadata.dateOfSurvey || "";
+            document.getElementById('globalSession').value = globalMetadata.academicSession || "2026-2027";
+            renderFamiliesList();
+            updateStats();
+        }
+        function saveData() {
+            localStorage.setItem("families_data", JSON.stringify(families));
+            localStorage.setItem("children_data", JSON.stringify(children));
+        }
+        function saveGlobalMetadata() { localStorage.setItem("survey_global_metadata", JSON.stringify(globalMetadata)); }
+
+        // Update summary stats
+        function updateStats() {
+            document.getElementById('totalFamilies').innerText = families.length;
+            const children018 = children.filter(c => { let a = parseInt(c.age); return !isNaN(a) && a <= 18; }).length;
+            document.getElementById('totalChildren').innerText = children018;
+            const oosc = children.filter(c => c.schoolStatus === 'Drop Out' || c.schoolStatus === 'Never Enrolled').length;
+            document.getElementById('totalOOSC').innerText = oosc;
+            const cwsnCount = children.filter(c => c.cwsn === 'Yes').length;
+            document.getElementById('totalCWSN').innerText = cwsnCount;
+        }
+
+        // Render families list with inline child management
+        function renderFamiliesList() {
+            const container = document.getElementById('familiesList');
+            if(families.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-6">No families registered yet. Add a family above.</div>';
+                return;
+            }
+            container.innerHTML = families.map(family => `
+                <div class="py-4 border-b last:border-0">
+                    <div class="flex flex-wrap justify-between items-center mb-2">
+                        <div>
+                            <span class="font-bold text-lg">👨‍👩‍👧 ${escapeHtml(family.headName)}</span>
+                            <span class="text-sm text-gray-500 ml-2">ID: ${escapeHtml(family.familyIdAadhar || 'N/A')}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="showChildForm(${family.id})" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm"><i class="fas fa-plus"></i> Add Child</button>
+                            <button onclick="deleteFamily(${family.id})" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm"><i class="fas fa-trash"></i> Delete Family</button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600 ml-2">📞 ${escapeHtml(family.mobile || 'No mobile')} | 📍 ${escapeHtml(family.address)}</div>
+                    <div class="mt-3 ml-4 border-l-2 border-blue-200 pl-4">
+                        <div class="font-semibold text-sm text-gray-700 mb-2">Children (${children.filter(c=>c.familyId===family.id).length})</div>
+                        <div class="space-y-2">
+                            ${children.filter(c=>c.familyId===family.id).map(child => `
+                                <div class="bg-gray-50 p-3 rounded-lg flex flex-wrap justify-between items-center">
+                                    <div>
+                                        <span class="font-medium">${escapeHtml(child.studentName)}</span> (${child.gender}, ${child.age || '?'} yrs) - 
+                                        <span class="text-xs">${child.schoolStatus}</span>
+                                        ${child.cwsn === 'Yes' ? '<span class="bg-rose-100 text-rose-700 text-xs px-2 rounded-full">CWSN</span>' : ''}
+                                    </div>
+                                    <div>
+                                        <button onclick="editChild(${child.id})" class="text-blue-600 mr-2"><i class="fas fa-edit"></i></button>
+                                        <button onclick="deleteChild(${child.id})" class="text-red-600"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            ${children.filter(c=>c.familyId===family.id).length === 0 ? '<div class="text-gray-400 text-sm">No children added yet. Click "Add Child".</div>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper for escaping HTML
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+        // Add Family
+        document.getElementById('addFamilyBtn').addEventListener('click', () => {
+            const headName = document.getElementById('familyHeadName').value.trim();
+            const familyIdAadhar = document.getElementById('familyIdAadhar').value.trim();
+            const address = document.getElementById('familyAddress').value.trim() || 'Pethgam Wagoora';
+            const mobile = document.getElementById('familyMobile').value.trim();
+            const remarks = document.getElementById('familyRemarks').value.trim();
+            if(!headName) { alert("Head of Family name is required"); return; }
+            if(mobile && !/^\d{10}$/.test(mobile)) { alert("Mobile must be 10 digits if provided"); return; }
+            const newFamily = { id: nextFamilyId++, headName, familyIdAadhar, address, mobile, remarks, createdAt: new Date().toISOString() };
+            families.push(newFamily);
+            saveData();
+            // Clear family form fields
+            document.getElementById('familyHeadName').value = '';
+            document.getElementById('familyIdAadhar').value = '';
+            document.getElementById('familyAddress').value = 'Pethgam Wagoora';
+            document.getElementById('familyMobile').value = '';
+            document.getElementById('familyRemarks').value = '';
+            renderFamiliesList();
+            updateStats();
+        });
+
+        window.deleteFamily = function(familyId) {
+            if(confirm("Delete this family and all its children? This action is permanent.")) {
+                families = families.filter(f => f.id !== familyId);
+                children = children.filter(c => c.familyId !== familyId);
+                saveData();
+                renderFamiliesList();
+                updateStats();
+            }
+        };
+
+        // Child Form Modal (dynamic)
+        let currentFamilyIdForChild = null;
+        let editChildId = null;
+
+        function showChildForm(familyId) {
+            currentFamilyIdForChild = familyId;
+            editChildId = null;
+            // Create modal dialog
+            const modalDiv = document.createElement('div');
+            modalDiv.id = 'childModal';
+            modalDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modalDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center sticky top-0">
+                        <h3 class="text-lg font-bold">${editChildId ? 'Edit Child' : 'Add New Child'} for Family</h3>
+                        <button onclick="closeChildModal()" class="text-white text-2xl">&times;</button>
+                    </div>
+                    <div class="p-6">
+                        <form id="childForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div><label>Student Name *</label><input type="text" id="childName" required class="w-full border p-2 rounded"></div>
+                                <div><label>Gender</label><select id="childGender" class="w-full border p-2 rounded"><option>Boy</option><option>Girl</option></select></div>
+                                <div><label>Date of Birth *</label><input type="date" id="childDob" required class="w-full border p-2 rounded"></div>
+                                <div><label>Age (auto)</label><input type="text" id="childAge" readonly class="bg-gray-100 w-full border p-2 rounded"></div>
+                                <div><label>Class Last Attended</label><input type="text" id="childLastClass" class="w-full border p-2 rounded"></div>
+                                <div><label>Present Schooling Status</label><select id="childStatus" class="w-full border p-2 rounded"><option>Enrolled</option><option>Drop Out</option><option>Never Enrolled</option></select></div>
+                                <div id="dropoutDiv" class="hidden"><label>Dropout Period (Months)</label><input type="number" id="childDropout" class="w-full border p-2 rounded"></div>
+                                <div><label>Name of Last/Present School</label><input type="text" id="childSchoolName" class="w-full border p-2 rounded"></div>
+                                <div><label>Type of School</label><select id="childSchoolType" class="w-full border p-2 rounded"><option>Govt.</option><option>Pvt.</option><option>Govt Aided</option><option>Darul uloom</option><option>Other</option></select></div>
+                                <div><label>UDISE Code of Last School</label><input type="text" id="childLastUdise" class="w-full border p-2 rounded"></div>
+                                <div><label>Is Migrant?</label><select id="childMigrant" class="w-full border p-2 rounded"><option>No</option><option>Yes</option></select></div>
+                                <div><label>Category</label><select id="childCategory" class="w-full border p-2 rounded"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
+                                <div><label>Religion</label><select id="childReligion" class="w-full border p-2 rounded"><option>Muslim</option><option>Hindu</option><option>Sikh</option><option>Christian</option><option>Other</option></select></div>
+                                <div><label>CWSN</label><select id="childCwsn" class="w-full border p-2 rounded"><option>No</option><option>Yes</option></select></div>
+                                <div id="disabilityDiv" class="hidden"><label>Type of Disability</label><input type="text" id="childDisabilityType" class="w-full border p-2 rounded"></div>
+                                <div><label>Disability Certificate Issued?</label><select id="childDisabilityCert" class="w-full border p-2 rounded"><option>No</option><option>Yes</option></select></div>
+                                <div><label>Training Required</label><select id="childTrainingReq" class="w-full border p-2 rounded"><option>No</option><option>Yes</option></select></div>
+                                <div><label>Mode of Training</label><select id="childModeTraining" class="w-full border p-2 rounded"><option>Non-Residential</option><option>Residential</option></select></div>
+                                <div><label>Financial Support Required</label><select id="childFinancialSupport" class="w-full border p-2 rounded"><option>No</option><option>Yes</option></select></div>
+                                <div><label>Duration of Training (Months)</label><input type="number" id="childDurationTraining" class="w-full border p-2 rounded"></div>
+                                <div><label>Training for Class Target</label><input type="text" id="childTrainingClassTarget" class="w-full border p-2 rounded"></div>
+                                <div><label>Center Type</label><select id="childCenterType" class="w-full border p-2 rounded"><option>STC</option><option>Direct Enrolment</option></select></div>
+                                <div><label>Target UDISE Code</label><input type="text" id="childTargetUdise" value="01022202207" class="w-full border p-2 rounded"></div>
+                                <div class="md:col-span-2"><label>Remarks</label><textarea id="childRemarks" rows="2" class="w-full border rounded p-2"></textarea></div>
+                            </div>
+                            <div class="flex justify-end gap-2 pt-4">
+                                <button type="button" onclick="closeChildModal()" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Child</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalDiv);
+            // attach event listeners
+            document.getElementById('childDob').addEventListener('change', function() { document.getElementById('childAge').value = computeAge(this.value); });
+            const statusSel = document.getElementById('childStatus');
+            const cwsnSel = document.getElementById('childCwsn');
+            const updateConditional = () => {
+                document.getElementById('dropoutDiv').classList.toggle('hidden', statusSel.value !== 'Drop Out');
+                document.getElementById('disabilityDiv').classList.toggle('hidden', cwsnSel.value !== 'Yes');
+            };
+            statusSel.addEventListener('change', updateConditional);
+            cwsnSel.addEventListener('change', updateConditional);
+            updateConditional();
+            document.getElementById('childForm').addEventListener('submit', (e) => { e.preventDefault(); saveChild(); });
+        }
+
+        function saveChild() {
+            const name = document.getElementById('childName').value.trim();
+            if(!name) { alert("Student name required"); return; }
+            const dob = document.getElementById('childDob').value;
+            if(!dob) { alert("Date of Birth required"); return; }
+            const age = computeAge(dob);
+            const childData = {
+                id: editChildId ? editChildId : nextChildId++,
+                familyId: currentFamilyIdForChild,
+                studentName: name,
+                gender: document.getElementById('childGender').value,
+                dob: dob,
+                age: age,
+                lastClass: document.getElementById('childLastClass').value,
+                schoolStatus: document.getElementById('childStatus').value,
+                dropoutPeriod: document.getElementById('childDropout').value || 0,
+                schoolName: document.getElementById('childSchoolName').value,
+                schoolType: document.getElementById('childSchoolType').value,
+                lastUdise: document.getElementById('childLastUdise').value,
+                isMigrant: document.getElementById('childMigrant').value,
+                category: document.getElementById('childCategory').value,
+                religion: document.getElementById('childReligion').value,
+                cwsn: document.getElementById('childCwsn').value,
+                disabilityType: document.getElementById('childDisabilityType').value,
+                disabilityCert: document.getElementById('childDisabilityCert').value,
+                trainingRequired: document.getElementById('childTrainingReq').value,
+                modeTraining: document.getElementById('childModeTraining').value,
+                financialSupport: document.getElementById('childFinancialSupport').value,
+                durationTraining: document.getElementById('childDurationTraining').value || 0,
+                trainingClassTarget: document.getElementById('childTrainingClassTarget').value,
+                centerType: document.getElementById('childCenterType').value,
+                targetUdise: document.getElementById('childTargetUdise').value,
+                remarks: document.getElementById('childRemarks').value
+            };
+            if(editChildId) {
+                const index = children.findIndex(c => c.id === editChildId);
+                if(index !== -1) children[index] = childData;
+            } else {
+                children.push(childData);
+            }
+            saveData();
+            closeChildModal();
+            renderFamiliesList();
+            updateStats();
+        }
+
+        window.editChild = function(childId) {
+            const child = children.find(c => c.id === childId);
+            if(!child) return;
+            const family = families.find(f => f.id === child.familyId);
+            if(family) currentFamilyIdForChild = family.id;
+            editChildId = childId;
+            showChildForm(currentFamilyIdForChild);
+            // populate form after modal created
+            setTimeout(() => {
+                document.getElementById('childName').value = child.studentName || '';
+                document.getElementById('childGender').value = child.gender || 'Boy';
+                document.getElementById('childDob').value = child.dob || '';
+                document.getElementById('childAge').value = child.age || '';
+                document.getElementById('childLastClass').value = child.lastClass || '';
+                document.getElementById('childStatus').value = child.schoolStatus || 'Enrolled';
+                document.getElementById('childDropout').value = child.dropoutPeriod || 0;
+                document.getElementById('childSchoolName').value = child.schoolName || '';
+                document.getElementById('childSchoolType').value = child.schoolType || 'Govt.';
+                document.getElementById('childLastUdise').value = child.lastUdise || '';
+                document.getElementById('childMigrant').value = child.isMigrant || 'No';
+                document.getElementById('childCategory').value = child.category || 'General';
+                document.getElementById('childReligion').value = child.religion || 'Muslim';
+                document.getElementById('childCwsn').value = child.cwsn || 'No';
+                document.getElementById('childDisabilityType').value = child.disabilityType || '';
+                document.getElementById('childDisabilityCert').value = child.disabilityCert || 'No';
+                document.getElementById('childTrainingReq').value = child.trainingRequired || 'No';
+                document.getElementById('childModeTraining').value = child.modeTraining || 'Non-Residential';
+                document.getElementById('childFinancialSupport').value = child.financialSupport || 'No';
+                document.getElementById('childDurationTraining').value = child.durationTraining || 0;
+                document.getElementById('childTrainingClassTarget').value = child.trainingClassTarget || '';
+                document.getElementById('childCenterType').value = child.centerType || 'STC';
+                document.getElementById('childTargetUdise').value = child.targetUdise || '01022202207';
+                document.getElementById('childRemarks').value = child.remarks || '';
+                // trigger conditionals
+                const statusSel = document.getElementById('childStatus');
+                const cwsnSel = document.getElementById('childCwsn');
+                const updateCond = () => {
+                    document.getElementById('dropoutDiv').classList.toggle('hidden', statusSel.value !== 'Drop Out');
+                    document.getElementById('disabilityDiv').classList.toggle('hidden', cwsnSel.value !== 'Yes');
+                };
+                statusSel.dispatchEvent(new Event('change'));
+                cwsnSel.dispatchEvent(new Event('change'));
+            }, 50);
+        };
+
+        window.deleteChild = function(childId) {
+            if(confirm("Remove this child from the family?")) {
+                children = children.filter(c => c.id !== childId);
+                saveData();
+                renderFamiliesList();
+                updateStats();
+            }
+        };
+
+        window.closeChildModal = function() {
+            const modal = document.getElementById('childModal');
+            if(modal) modal.remove();
+        };
+
+        // EXPORT VER
+        function exportVER() {
+            const rows = [];
+            children.forEach((child, idx) => {
+                const family = families.find(f => f.id === child.familyId);
+                rows.push({
+                    "S. No.": idx+1,
+                    "Name of Head of Family": family ? family.headName : '',
+                    "Family ID / Aadhar No.": family ? family.familyIdAadhar : '',
+                    "Name of Child": child.studentName,
+                    "Gender": child.gender,
+                    "Date of Birth / Age": child.dob ? `${child.dob} (${child.age}y)` : child.age,
+                    "Class Last Attended": child.lastClass,
+                    "Present Status": child.schoolStatus,
+                    "Name of School": child.schoolName,
+                    "Type of School": child.schoolType,
+                    "Remarks": child.remarks
+                });
+            });
+            const cwsnRows = children.filter(c => c.cwsn === 'Yes').map((c,i) => {
+                const fam = families.find(f=>f.id===c.familyId);
+                return { "S. No.": i+1, "Name of Child": c.studentName, "Gender": c.gender, "Age": c.age, "Type of Disability": c.disabilityType, "Disability Certificate (Y/N)": c.disabilityCert, "Class": c.lastClass, "School Enrolled": c.schoolName, "Support Required": c.trainingRequired, "Remarks": c.remarks };
+            });
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Part A - Household Info");
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cwsnRows), "Part B - CWSN");
+            XLSX.writeFile(wb, `VER_${new Date().toISOString().slice(0,19)}.xlsx`);
+        }
+
+        // EXPORT Child Population Register
+        function exportChildPop() {
+            const stdWise = children.map((c,i) => {
+                const fam = families.find(f=>f.id===c.familyId);
+                return {
+                    "S. No.": i+1, "Student Name": c.studentName, "Father Name": fam ? fam.headName : '', "Mother Name": '', "Name of Local Guardian": '', "Mobile (mandatory)": fam ? fam.mobile : '', "Address": fam ? fam.address : '', "Gender": c.gender, "DOB": c.dob, "Age": c.age, "CWSN": c.cwsn,
+                    "Category": c.category, "Religion": c.religion, "Drop Out / Never Enrolled": (c.schoolStatus === "Drop Out" || c.schoolStatus === "Never Enrolled") ? c.schoolStatus : "Enrolled",
+                    "Approx. Period of Drop Out": c.schoolStatus === "Drop Out" ? c.dropoutPeriod : "", "UDISE Code of Last School": c.lastUdise, "Last class attended": c.lastClass,
+                    "District": "Baramulla", "Zone": "Wagoora", "Training Required": c.trainingRequired, "Mode of Training": c.modeTraining, "Financial Support Required": c.financialSupport,
+                    "Is Migrant": c.isMigrant, "Duration of training": c.durationTraining, "Training for Class": c.trainingClassTarget, "Center Type": c.centerType, "UDISE School Code": c.targetUdise
+                };
+            });
+            const oosc = children.filter(c => c.schoolStatus === "Drop Out" || c.schoolStatus === "Never Enrolled");
+            const brackets = [{label:"3-8 Years", min:3, max:8},{label:"8-11 Years", min:8, max:11},{label:"11-14 Years", min:11, max:14},{label:"14-16 Years", min:14, max:16},{label:"16-18 Years", min:16, max:18}];
+            let matrix = brackets.map(b => ({ bracket: b.label, Boys:0, Girls:0, Total:0 }));
+            oosc.forEach(c => { let age = parseInt(c.age); if(isNaN(age)) return; let idx = brackets.findIndex(b => age >= b.min && age < b.max); if(idx === -1 && age>=16 && age<=18) idx=4; if(idx !== -1) { if(c.gender === 'Boy') matrix[idx].Boys++; else matrix[idx].Girls++; matrix[idx].Total = matrix[idx].Boys + matrix[idx].Girls; } });
+            const consolidated = matrix.map(m => ({ "Age Bracket": m.bracket, "Boys": m.Boys, "Girls": m.Girls, "Grand Total": m.Total }));
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(stdWise), "Student Wise");
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(consolidated), "Consolidated");
+            XLSX.writeFile(wb, `Child_Population_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
+
+        // Metadata actions
+        document.getElementById('saveMetaBtn').onclick = () => { globalMetadata = { preparedBy: document.getElementById('globalPrep').value.trim(), teacherMobile: document.getElementById('globalMob').value.trim(), dateOfSurvey: document.getElementById('globalDate').value, academicSession: document.getElementById('globalSession').value }; if(globalMetadata.teacherMobile && !/^\d{10}$/.test(globalMetadata.teacherMobile)) { alert("Mobile must be 10 digits"); return; } saveGlobalMetadata(); document.getElementById('metaMsg').innerText="Metadata saved"; setTimeout(()=>document.getElementById('metaMsg').innerText="",2000); };
+        document.getElementById('updateMetaBtn').onclick = () => { globalMetadata = { preparedBy: document.getElementById('globalPrep').value.trim(), teacherMobile: document.getElementById('globalMob').value.trim(), dateOfSurvey: document.getElementById('globalDate').value, academicSession: document.getElementById('globalSession').value }; saveGlobalMetadata(); document.getElementById('metaMsg').innerText="Updated"; setTimeout(()=>document.getElementById('metaMsg').innerText="",2000); };
+        document.getElementById('deleteMetaBtn').onclick = () => { if(confirm("Delete metadata?")){ globalMetadata = {preparedBy:"",teacherMobile:"",dateOfSurvey:"",academicSession:"2026-2027"}; saveGlobalMetadata(); document.getElementById('globalPrep').value=""; document.getElementById('globalMob').value=""; document.getElementById('globalDate').value=""; document.getElementById('globalSession').value="2026-2027"; document.getElementById('metaMsg').innerText="Deleted"; } };
+        document.getElementById('exportVERBtn').onclick = exportVER;
+        document.getElementById('exportPopBtn').onclick = exportChildPop;
+
+        loadData();
+    </script>
+</body>
+</html>
