@@ -13,6 +13,25 @@
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
+    /* Photo Upload Section */
+    .photo-upload-section {
+      background: #e8f0fe;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #1a5d1a;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+    .photo-preview { display: flex; align-items: center; gap: 15px; }
+    .photo-preview img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #1a5d1a; background: white; }
+    .photo-upload-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .photo-upload-controls input, .photo-upload-controls button { padding: 6px 12px; }
+    .btn-small { background: #2c7a2c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .status-msg { font-size: 12px; margin-left: 10px; }
+    
     /* Search Bar Styling */
     .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; }
     .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
@@ -20,8 +39,6 @@
     /* High-Contrast Header Styling */
     table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1400px; }
     th, td { border: 1px solid #444; padding: 2px; text-align: center; }
-    
-    /* Deep Navy Background with Pure White Text for maximum contrast */
     th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; }
     .header-group { background: #001a4d !important; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; }
     
@@ -30,7 +47,7 @@
     .sub-total { background: #eeeeee; font-weight: bold; color: #000; }
 
     @media print {
-      .nav-header, .filter-section, .no-print { display: none !important; }
+      .nav-header, .filter-section, .photo-upload-section, .no-print { display: none !important; }
       body { background: white; padding: 0; }
       table { font-size: 5.5px; min-width: 100%; }
       th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
@@ -50,6 +67,25 @@
 <div class="master-container">
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
   <div class="sub-title">Detailed Award Roll / Consolidated Master Sheet</div>
+
+  <!-- === NEW: PHOTO UPLOAD SECTION === -->
+  <div class="photo-upload-section no-print">
+    <div class="photo-preview">
+      <img id="previewPhoto" src="https://via.placeholder.com/80?text=No+Photo" alt="Student Photo">
+      <div>
+        <strong id="previewName">-</strong><br>
+        <span id="previewClass" style="font-size:12px">Adm: -</span>
+      </div>
+    </div>
+    <div class="photo-upload-controls">
+      <input type="text" id="photoAdmNo" placeholder="Adm No (e.g., 117)" style="width:100px">
+      <button id="searchStudentForPhoto" class="btn-small">🔍 Search</button>
+      <input type="file" id="photoFile" accept="image/jpeg,image/png" style="display:none">
+      <button id="selectPhotoBtn" class="btn-small" disabled>📸 Select Photo</button>
+      <button id="uploadPhotoBtn" class="btn-small" disabled>⬆️ Upload</button>
+      <span id="photoStatus" class="status-msg"></span>
+    </div>
+  </div>
 
   <div class="filter-section no-print">
     <label><b>Session:</b></label>
@@ -92,17 +128,22 @@
         <th>D.O.B</th>
         <th>APAAR ID</th>
         <th>PEN No</th>
-        </tr>
+      </tr>
     </thead>
     <tbody id="masterBody"></tbody>
   </table>
 </div>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
-    // 1. Import Firebase and your new results-handler
+    // Firebase imports (existing)
     import { db } from './init-firebase.js';
-    import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
     import { calculateGrades } from './results-handler.js';
+
+    // Initialize Storage
+    const storage = getStorage();
 
     const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
     const tbody = document.getElementById('masterBody');
@@ -116,7 +157,114 @@
     subjectHtml += `<th class="summary-col">G.Tot</th><th class="summary-col">%</th><th class="summary-col">GP</th><th class="summary-col">Grd</th><th class="summary-col">Result</th>`;
     dynamicHeaderRow.innerHTML += subjectHtml;
 
-    // 2. Load Data from Firebase instead of LocalStorage
+    // ---------- Photo Upload Logic ----------
+    const photoAdmNoInput = document.getElementById('photoAdmNo');
+    const searchStudentBtn = document.getElementById('searchStudentForPhoto');
+    const selectPhotoBtn = document.getElementById('selectPhotoBtn');
+    const photoFileInput = document.getElementById('photoFile');
+    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+    const photoStatus = document.getElementById('photoStatus');
+    const previewPhoto = document.getElementById('previewPhoto');
+    const previewName = document.getElementById('previewName');
+    const previewClass = document.getElementById('previewClass');
+
+    let selectedStudentData = null;
+    let selectedFile = null;
+
+    // Search student from "students" collection
+    searchStudentBtn.addEventListener('click', async () => {
+        const admNo = photoAdmNoInput.value.trim();
+        if (!admNo) {
+            photoStatus.innerText = 'Enter Admission Number';
+            return;
+        }
+        photoStatus.innerText = 'Searching...';
+        try {
+            const studentRef = doc(db, "students", admNo);
+            const studentSnap = await getDoc(studentRef);
+            if (!studentSnap.exists()) {
+                photoStatus.innerText = 'Student not found. Upload results first.';
+                previewName.innerText = 'Not found';
+                previewPhoto.src = "https://via.placeholder.com/80?text=No+Photo";
+                selectedStudentData = null;
+                selectPhotoBtn.disabled = true;
+                uploadPhotoBtn.disabled = true;
+                return;
+            }
+            selectedStudentData = { id: admNo, ...studentSnap.data() };
+            previewName.innerText = selectedStudentData.name || 'No Name';
+            previewClass.innerText = `Adm: ${admNo} | Class: ${selectedStudentData.class || '-'}`;
+            if (selectedStudentData.photoURL) {
+                previewPhoto.src = selectedStudentData.photoURL;
+            } else {
+                previewPhoto.src = "https://via.placeholder.com/80?text=No+Photo";
+            }
+            photoStatus.innerText = 'Student found. Select photo.';
+            selectPhotoBtn.disabled = false;
+        } catch (err) {
+            console.error(err);
+            photoStatus.innerText = 'Error searching student.';
+        }
+    });
+
+    // Trigger file picker
+    selectPhotoBtn.addEventListener('click', () => {
+        photoFileInput.click();
+    });
+
+    photoFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            photoStatus.innerText = 'Only image files allowed.';
+            return;
+        }
+        selectedFile = file;
+        // Preview locally
+        const reader = new FileReader();
+        reader.onload = (ev) => { previewPhoto.src = ev.target.result; };
+        reader.readAsDataURL(file);
+        photoStatus.innerText = `Selected: ${file.name}. Click Upload.`;
+        uploadPhotoBtn.disabled = false;
+    });
+
+    // Upload photo to Firebase Storage and update Firestore
+    uploadPhotoBtn.addEventListener('click', async () => {
+        if (!selectedStudentData || !selectedFile) {
+            photoStatus.innerText = 'No student or photo selected.';
+            return;
+        }
+        photoStatus.innerText = 'Uploading...';
+        uploadPhotoBtn.disabled = true;
+        selectPhotoBtn.disabled = true;
+        try {
+            const admNo = selectedStudentData.id;
+            const fileExt = selectedFile.name.split('.').pop();
+            const storageRef = ref(storage, `student_photos/${admNo}.${fileExt}`);
+            await uploadBytes(storageRef, selectedFile);
+            const photoURL = await getDownloadURL(storageRef);
+            // Update Firestore
+            const studentRef = doc(db, "students", admNo);
+            await updateDoc(studentRef, { photoURL: photoURL });
+            // Update preview
+            previewPhoto.src = photoURL;
+            selectedStudentData.photoURL = photoURL;
+            photoStatus.innerText = '✅ Photo uploaded successfully!';
+            // Clear file input
+            photoFileInput.value = '';
+            selectedFile = null;
+            uploadPhotoBtn.disabled = true;
+            selectPhotoBtn.disabled = false; // allow new selection
+            // Optional: refresh the master table to show photo? Not needed for table.
+        } catch (err) {
+            console.error(err);
+            photoStatus.innerText = '❌ Upload failed: ' + err.message;
+            uploadPhotoBtn.disabled = false;
+            selectPhotoBtn.disabled = false;
+        }
+    });
+
+    // ---------- Master Table Loading (existing, with slight field name adaptation) ----------
     async function renderMasterTable() {
         const selectedClass = document.getElementById('classSearch').value;
         const selectedSession = document.getElementById('sessionSearch').value;
@@ -132,11 +280,11 @@
             const resultsData = resultSnap.docs.map(doc => doc.data());
             tbody.innerHTML = "";
 
-            studentSnap.forEach(doc => {
-                const s = doc.data();
-                
-                // Filter by Class
-                if (selectedClass !== "All" && s.studentClass !== selectedClass) return;
+            studentSnap.forEach(docSnap => {
+                const s = docSnap.data();
+                // Use s.class (from Excel upload) or s.studentClass – adapt
+                const studentClass = s.class || s.studentClass || '';
+                if (selectedClass !== "All" && studentClass !== selectedClass) return;
 
                 const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
                 
@@ -144,7 +292,10 @@
                 let subCells = "";
                 
                 subjects.forEach(sub => {
-                    const m = (r && r.marks && r.marks[sub]) ? r.marks[sub] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
+                    // Map subject names: Math vs Mathematics, etc.
+                    let subKey = sub;
+                    if (sub === 'Math') subKey = 'Mathematics';
+                    const m = (r && r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
                     const fa = m.fa || [0,0,0,0,0,0];
                     const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
                     const cc = Number(m.cca) || 0;
@@ -155,19 +306,18 @@
                     subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
                 });
 
-                // Use the shared handler for grading
                 const finalResult = calculateGrades(grandTotal, 500); 
 
                 tbody.innerHTML += `<tr>
-                    <td>${s.admNo}</td>
+                    <td>${s.admNo || ''}</td>
                     <td>${s.rollNo || '-'}</td>
-                    <td>${s.studentClass}</td>
-                    <td class="student-info">${s.studentName.toUpperCase()}</td>
-                    <td class="student-info">${s.fatherName}</td>
-                    <td>${s.motherName}</td>
-                    <td>${s.dob}</td>
-                    <td>${s.apaarId || '-'}</td>
-                    <td>${s.penNo || '-'}</td>
+                    <td>${studentClass}</td>
+                    <td class="student-info">${(s.name || s.studentName || '').toUpperCase()}</td>
+                    <td class="student-info">${s.fatherName || ''}</td>
+                    <td>${s.motherName || ''}</td>
+                    <td>${s.dob || ''}</td>
+                    <td>${s.apaarId || s.apaarID || '-'}</td>
+                    <td>${s.penNo || s.penNumber || '-'}</td>
                     ${subCells}
                     <td class="summary-col">${grandTotal}</td>
                     <td class="summary-col">${finalResult.percentage}%</td>
@@ -182,11 +332,11 @@
         }
     }
 
-    // Attach to window so the dropdowns can call it
+    // Attach to window so dropdowns work
     window.renderMasterTable = renderMasterTable;
     document.addEventListener('DOMContentLoaded', renderMasterTable);
 </script>
 
 </body>
 </html>
-    
+                        
