@@ -91,7 +91,7 @@
   </div>
   <div id="studentName" style="color: darkgreen; font-weight: bold; margin-bottom: 15px;"></div>
 
-  </table>
+  <table>
     <thead>
       <tr>
         <th>Subject</th>
@@ -204,26 +204,38 @@ processBtn.addEventListener('click', async () => {
 
     let successCount = 0;
     let errorCount = 0;
-    let consecutiveEmpty = 0;
+    let consecutiveMissingAdm = 0;  // count rows with no admission number
     let totalProcessed = 0;
 
     for (let i = 4; i < rows.length; i++) {
       const row = rows[i];
       
-      // Stop if row is completely empty
+      // 1. Check if row is completely empty (all cells empty)
       const isEmpty = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || cell === '');
-      if (isEmpty) {
-        consecutiveEmpty++;
-        if (consecutiveEmpty > 2) break;
+      
+      // 2. Also check if the first cell (Admission No) is missing/empty
+      const admCandidate = row && row[0] ? String(row[0]).trim() : '';
+      const hasValidAdm = !isEmpty && admCandidate !== '';
+      
+      if (isEmpty || !hasValidAdm) {
+        consecutiveMissingAdm++;
+        if (consecutiveMissingAdm > 2) {
+          addLog(`⏹️ Stopped at row ${i+1} (${consecutiveMissingAdm} rows without Admission No.)`, false);
+          break;
+        }
+        // Don't log each missing row, just skip
         continue;
       }
-      consecutiveEmpty = 0;
       
+      // Reset counter when we find a valid row
+      consecutiveMissingAdm = 0;
+      
+      // Ensure enough columns for basic info
       if (row.length < 8) continue;
       
       const studentData = parseStudentRow(row, 0);
       if (!studentData) {
-        addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
+        // This should not happen because we already checked admCandidate, but keep for safety
         errorCount++;
         continue;
       }
