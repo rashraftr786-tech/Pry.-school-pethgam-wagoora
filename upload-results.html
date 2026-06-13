@@ -91,7 +91,7 @@
   </div>
   <div id="studentName" style="color: darkgreen; font-weight: bold; margin-bottom: 15px;"></div>
 
-  <table>
+  </table>
     <thead>
       <tr>
         <th>Subject</th>
@@ -125,22 +125,7 @@ import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/f
 // ---------- Subjects in order (must match Excel column groups) ----------
 const SUBJECTS = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
 
-// ---------- Excel Column Mapping (based on your template) ----------
-// Data row starts at index 4 (0-based). Columns:
-// A: Admission No., B: Roll No, C: Class, D: Name, E: Father, F: Mother, G: Contact, H: DOB
-// Then for each subject (in order): 
-//   next 6 cols: F1..F6 marks (each 5 max)
-//   then 1 col: Total FA (we skip, we calculate from F1..F6)
-//   then 1 col: Co-Curricular (max 20)
-//   then 1 col: Summative Assessment (max 50)
-//   then 1 col: Total (FA+CC+SA) - we skip
-// Repeat for each subject.
-// So per subject: 6+1+1+1 = 9 columns? Actually from data: after F6, there is a column with formula =SUM(...) (Total FA), then Co-Curricular (e.g., 13.0), then Summative (e.g., 32.0), then Total (FA+CC+SA). So 4 extra columns after F6. Total per subject = 6 (FA) + 4 = 10 columns, but we only need F1..F6, Co-Curricular, Summative.
-// We'll dynamically read based on starting column offset.
-
-// Function to parse a row and extract marks for each subject
 function parseStudentRow(row, startColIndex) {
-  // Basic info
   const admNo = row[startColIndex] ? String(row[startColIndex]).trim() : null;
   const rollNo = row[startColIndex + 1] ? String(row[startColIndex + 1]).trim() : '';
   const className = row[startColIndex + 2] || '';
@@ -152,14 +137,11 @@ function parseStudentRow(row, startColIndex) {
 
   if (!admNo || admNo === '') return null;
 
-  // Now iterate subjects. After basic info (8 columns), each subject occupies:
-  // 6 FA columns, then 1 "Total FA" (skip), 1 CoCurricular, 1 Summative, 1 "Total" (skip) -> total 10 columns
   let colOffset = startColIndex + 8; // first subject's F1 column
   const marks = {};
 
   for (let subIdx = 0; subIdx < SUBJECTS.length; subIdx++) {
     const subject = SUBJECTS[subIdx];
-    // Extract 6 FA marks (if any cell is non-numeric or "Ab", treat as 0)
     const fa = [];
     for (let i = 0; i < 6; i++) {
       let val = row[colOffset + i];
@@ -167,33 +149,18 @@ function parseStudentRow(row, startColIndex) {
       const num = Number(val);
       fa.push(isNaN(num) ? 0 : num);
     }
-    // Next column: Total FA (skip)
-    // Then CoCurricular (colOffset + 7)
     let ccaVal = row[colOffset + 7];
     if (ccaVal === undefined || ccaVal === '' || ccaVal === 'Ab') ccaVal = 0;
     const cca = Number(ccaVal);
-    // Then Summative (colOffset + 8)
     let saVal = row[colOffset + 8];
     if (saVal === undefined || saVal === '' || saVal === 'Ab') saVal = 0;
     const sa = Number(saVal);
     
     marks[subject] = { fa, cca, sa };
-    
-    // Move to next subject block (10 columns)
     colOffset += 10;
   }
 
-  return {
-    admNo,
-    rollNo,
-    className,
-    studentName,
-    fatherName,
-    motherName,
-    contact,
-    dob,
-    marks
-  };
+  return { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks };
 }
 
 // ---------- Excel Upload Logic ----------
@@ -229,7 +196,6 @@ processBtn.addEventListener('click', async () => {
     const workbook = XLSX.read(data, { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-    // Convert to array of arrays (to preserve empty cells and exact positions)
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
     
     if (!rows || rows.length < 5) throw new Error('File has less than 5 rows');
@@ -238,35 +204,34 @@ processBtn.addEventListener('click', async () => {
 
     let successCount = 0;
     let errorCount = 0;
-    const totalStudents = rows.length - 4; // rows 0-3 are headers
-
     let consecutiveEmpty = 0;
-for (let i = 4; i < rows.length; i++) {
-  const row = rows[i];
-  
-  // Stop if row is completely empty
-  if (!row || row.length === 0 || row.every(cell => cell === undefined || cell === null || cell === '')) {
-    consecutiveEmpty++;
-    if (consecutiveEmpty > 2) break; // stop after 2 empty rows
-    continue;
-  }
-  consecutiveEmpty = 0;
-  
-  // Ensure row has at least 8 columns (up to DOB)
-  if (row.length < 8) continue;
-  
-  const studentData = parseStudentRow(row, 0);
-  if (!studentData) {
-    addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
-    errorCount++;
-    continue;
-  }
-  // ... rest of saving code
-}
+    let totalProcessed = 0;
 
+    for (let i = 4; i < rows.length; i++) {
+      const row = rows[i];
+      
+      // Stop if row is completely empty
+      const isEmpty = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || cell === '');
+      if (isEmpty) {
+        consecutiveEmpty++;
+        if (consecutiveEmpty > 2) break;
+        continue;
+      }
+      consecutiveEmpty = 0;
+      
+      if (row.length < 8) continue;
+      
+      const studentData = parseStudentRow(row, 0);
+      if (!studentData) {
+        addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
+        errorCount++;
+        continue;
+      }
+
+      totalProcessed++;
       const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks } = studentData;
 
-      // Prepare document for "results" collection
+      // Save to Firestore
       const resultDocRef = doc(db, "results", admNo);
       const existing = await getDoc(resultDocRef);
       const existingData = existing.exists() ? existing.data() : {};
@@ -284,7 +249,6 @@ for (let i = 4; i < rows.length; i++) {
         session: "Oct 2025",
         uploadedAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        // preserve any existing remarks, attendance, etc.
         attendance: existingData.attendance || '',
         remarks: existingData.remarks || '',
         discipline: existingData.discipline || '',
@@ -294,7 +258,7 @@ for (let i = 4; i < rows.length; i++) {
 
       await setDoc(resultDocRef, finalData, { merge: true });
 
-      // Also update students collection for quick lookup
+      // Update students collection
       const studentRef = doc(db, "students", admNo);
       await setDoc(studentRef, {
         admNo: admNo,
@@ -307,10 +271,10 @@ for (let i = 4; i < rows.length; i++) {
       }, { merge: true });
 
       successCount++;
-      const percent = Math.floor(((successCount + errorCount) / totalStudents) * 100);
+      const percent = Math.floor((totalProcessed / (rows.length - 4)) * 100);
       progressFill.style.width = `${percent}%`;
       progressFill.textContent = `${percent}%`;
-      addLog(`✅ ${admNo} - ${studentName} (${className}) processed`);
+      addLog(`✅ ${admNo} - ${studentName} (${className}) saved`);
     }
 
     addLog(`🎉 Upload complete! ${successCount} students saved, ${errorCount} errors.`);
@@ -323,7 +287,7 @@ for (let i = 4; i < rows.length; i++) {
   }
 });
 
-// ---------- Manual Entry Code (unchanged, preserved) ----------
+// ---------- Manual Entry Code (unchanged) ----------
 const subjectsList = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const tbody = document.getElementById('marksBody');
 subjectsList.forEach(sub => {
