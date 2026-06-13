@@ -5,7 +5,7 @@
   <title>Upload Results | GPS Pethgam Wagoora</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-    .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     .admin-nav { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin: -20px -20px 20px -20px; }
     .admin-nav a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; }
     
@@ -16,7 +16,6 @@
     .subject-label { text-align: left; font-weight: bold; width: 120px; }
     .btn-save { background: #1a5d1a; color: white; padding: 15px 30px; border: none; cursor: pointer; width: 100%; margin-top: 20px; font-weight: bold; }
     
-    /* New Excel upload styles */
     .excel-upload-section {
       background: #e8f0fe;
       padding: 15px;
@@ -49,13 +48,14 @@
       font-size: 12px;
     }
     .log-area {
-      max-height: 150px;
+      max-height: 200px;
       overflow-y: auto;
       background: #f9f9f9;
       padding: 8px;
       font-size: 12px;
       font-family: monospace;
       margin-top: 10px;
+      border: 1px solid #ddd;
     }
   </style>
 </head>
@@ -70,19 +70,16 @@
 </div>
 
 <div class="container">
-  <!-- === NEW EXCEL UPLOAD SECTION === -->
+  <!-- === EXCEL UPLOAD SECTION (CUSTOM PARSER) === -->
   <div class="excel-upload-section">
-    <h3>📂 Bulk Upload from Excel (Sample format)</h3>
+    <h3>📂 Upload Result Oct 2025 (Excel file)</h3>
+    <p>✅ Works with your exact template: 4 header rows, subjects English, Mathematics, Environment Science, Urdu, Kashmiri</p>
     <input type="file" id="excelFile" accept=".xlsx, .xls" />
     <button class="upload-btn" id="processExcelBtn">⬆️ Upload & Process</button>
     <div class="progress-bar" style="display:none;" id="progressContainer">
       <div class="progress-fill" id="progressFill">0%</div>
     </div>
     <div class="log-area" id="uploadLog"></div>
-    <p style="font-size:12px; margin-top:8px;">
-      ✅ Expects columns: <strong>Adm. No, Student Name, Subject, FA1(5) to FA6(5), Co-Curricular Activities (20), Total (100), Grade, Proficiency Level</strong><br>
-      🔁 Each row = one subject. Data is grouped by Admission Number and stored in Firestore.
-    </p>
   </div>
 
   <h2>📝 Manual Assessment Entry (Session 2024-25)</h2>
@@ -109,49 +106,97 @@
   <div style="margin-top:25px; border: 1px solid #1a5d1a; padding: 15px; border-radius: 4px; background: #f9fff9;">
     <h3 style="margin-top:0; color: #1a5d1a; font-size: 14px; border-bottom: 1px solid #1a5d1a;">Co-Scholastic Record</h3>
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-      <div class="field-group">
-        <label>Attendance %</label>
-        <input type="text" id="att2" style="width: 80%; text-align: center;">
-      </div>
-      <div class="field-group">
-        <label>Discipline (Grade)</label>
-        <select id="discipline" style="width: 100%; padding: 3px;">
-          <option value="">Select</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label>Sports / Health</label>
-        <select id="sports" style="width: 100%; padding: 3px;">
-          <option value="">Select</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label>Art & Craft</label>
-        <select id="artCraft" style="width: 100%; padding: 3px;">
-          <option value="">Select</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>
-        </select>
-      </div>
+      <div><label>Attendance %</label><input type="text" id="att2" style="width: 80%;"></div>
+      <div><label>Discipline</label><select id="discipline"><option>A</option><option>B</option><option>C</option></select></div>
+      <div><label>Sports</label><select id="sports"><option>A</option><option>B</option><option>C</option></select></div>
+      <div><label>Art & Craft</label><select id="artCraft"><option>A</option><option>B</option><option>C</option></select></div>
     </div>
   </div>
   
-  <div style="margin-top:20px;">
-    <label>General Remarks:</label><br>
-    <textarea id="remarks" style="width: 100%; height: 60px;"></textarea>
-  </div>
-
+  <div><label>General Remarks:</label><textarea id="remarks" style="width:100%; height:60px;"></textarea></div>
   <button class="btn-save" onclick="saveData()">💾 Save Assessment Record</button>
 </div>
 
-<!-- SheetJS library -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-
 <script type="module">
-// ======================= EXCEL UPLOAD LOGIC =======================
 import { db } from './init-firebase.js';
-import { doc, setDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const subjectsList = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
+// ---------- Subjects in order (must match Excel column groups) ----------
+const SUBJECTS = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
 
+// ---------- Excel Column Mapping (based on your template) ----------
+// Data row starts at index 4 (0-based). Columns:
+// A: Admission No., B: Roll No, C: Class, D: Name, E: Father, F: Mother, G: Contact, H: DOB
+// Then for each subject (in order): 
+//   next 6 cols: F1..F6 marks (each 5 max)
+//   then 1 col: Total FA (we skip, we calculate from F1..F6)
+//   then 1 col: Co-Curricular (max 20)
+//   then 1 col: Summative Assessment (max 50)
+//   then 1 col: Total (FA+CC+SA) - we skip
+// Repeat for each subject.
+// So per subject: 6+1+1+1 = 9 columns? Actually from data: after F6, there is a column with formula =SUM(...) (Total FA), then Co-Curricular (e.g., 13.0), then Summative (e.g., 32.0), then Total (FA+CC+SA). So 4 extra columns after F6. Total per subject = 6 (FA) + 4 = 10 columns, but we only need F1..F6, Co-Curricular, Summative.
+// We'll dynamically read based on starting column offset.
+
+// Function to parse a row and extract marks for each subject
+function parseStudentRow(row, startColIndex) {
+  // Basic info
+  const admNo = row[startColIndex] ? String(row[startColIndex]).trim() : null;
+  const rollNo = row[startColIndex + 1] ? String(row[startColIndex + 1]).trim() : '';
+  const className = row[startColIndex + 2] || '';
+  const studentName = row[startColIndex + 3] || '';
+  const fatherName = row[startColIndex + 4] || '';
+  const motherName = row[startColIndex + 5] || '';
+  const contact = row[startColIndex + 6] || '';
+  const dob = row[startColIndex + 7] || '';
+
+  if (!admNo || admNo === '') return null;
+
+  // Now iterate subjects. After basic info (8 columns), each subject occupies:
+  // 6 FA columns, then 1 "Total FA" (skip), 1 CoCurricular, 1 Summative, 1 "Total" (skip) -> total 10 columns
+  let colOffset = startColIndex + 8; // first subject's F1 column
+  const marks = {};
+
+  for (let subIdx = 0; subIdx < SUBJECTS.length; subIdx++) {
+    const subject = SUBJECTS[subIdx];
+    // Extract 6 FA marks (if any cell is non-numeric or "Ab", treat as 0)
+    const fa = [];
+    for (let i = 0; i < 6; i++) {
+      let val = row[colOffset + i];
+      if (val === undefined || val === null || val === '' || val === 'Ab') val = 0;
+      const num = Number(val);
+      fa.push(isNaN(num) ? 0 : num);
+    }
+    // Next column: Total FA (skip)
+    // Then CoCurricular (colOffset + 7)
+    let ccaVal = row[colOffset + 7];
+    if (ccaVal === undefined || ccaVal === '' || ccaVal === 'Ab') ccaVal = 0;
+    const cca = Number(ccaVal);
+    // Then Summative (colOffset + 8)
+    let saVal = row[colOffset + 8];
+    if (saVal === undefined || saVal === '' || saVal === 'Ab') saVal = 0;
+    const sa = Number(saVal);
+    
+    marks[subject] = { fa, cca, sa };
+    
+    // Move to next subject block (10 columns)
+    colOffset += 10;
+  }
+
+  return {
+    admNo,
+    rollNo,
+    className,
+    studentName,
+    fatherName,
+    motherName,
+    contact,
+    dob,
+    marks
+  };
+}
+
+// ---------- Excel Upload Logic ----------
 const fileInput = document.getElementById('excelFile');
 const processBtn = document.getElementById('processExcelBtn');
 const progressContainer = document.getElementById('progressContainer');
@@ -169,7 +214,7 @@ function addLog(msg, isError = false) {
 processBtn.addEventListener('click', async () => {
   const file = fileInput.files[0];
   if (!file) {
-    alert('Please select an Excel file first.');
+    alert('Select an Excel file first.');
     return;
   }
 
@@ -182,120 +227,80 @@ processBtn.addEventListener('click', async () => {
   try {
     const data = await file.arrayBuffer();
     const workbook = XLSX.read(data, { type: 'array' });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    // Convert to array of arrays (to preserve empty cells and exact positions)
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+    
+    if (!rows || rows.length < 5) throw new Error('File has less than 5 rows');
 
-    if (rows.length === 0) throw new Error('Empty sheet');
+    addLog(`✅ Total rows: ${rows.length}. Starting from row 5 (index 4)...`);
 
-    addLog(`✅ Found ${rows.length} rows. Grouping by Admission Number...`);
+    let successCount = 0;
+    let errorCount = 0;
+    const totalStudents = rows.length - 4; // rows 0-3 are headers
 
-    // Group rows by Adm. No
-    const studentMap = new Map(); // key: admNo, value: { name, subjects: {} }
+    for (let i = 4; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row || row.length < 10) continue;
 
-    for (const row of rows) {
-      const admNoRaw = row['Adm. No'] || row['Adm No'] || row['ADM_NO'];
-      if (!admNoRaw) {
-        addLog(`⚠️ Skipping row without Adm. No`, true);
-        continue;
-      }
-      const admNo = String(admNoRaw).trim();
-      const studentName = row['Student Name'] || '';
-      const subject = row['Subject']?.trim();
-      if (!subject) {
-        addLog(`⚠️ Skipping row for Adm ${admNo} – missing Subject`, true);
-        continue;
-      }
-      if (!subjectsList.includes(subject)) {
-        addLog(`⚠️ Unknown subject "${subject}" for Adm ${admNo} – skipping`, true);
+      const studentData = parseStudentRow(row, 0); // column A index 0
+      if (!studentData) {
+        addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
+        errorCount++;
         continue;
       }
 
-      // Extract FA marks (1 to 6)
-      const fa = [];
-      for (let i = 1; i <= 6; i++) {
-        let val = row[`FA${i} (5)`] ?? row[`FA${i}(5)`] ?? row[`FA${i}`];
-        if (val === undefined) val = row[`FA${i}`];
-        fa.push(Number(val) || 0);
-      }
-      // CCA (Co-Curricular)
-      let cca = row['Co-Curricular Activities (20)'] ?? row['Co-Curricular'] ?? row['CCA'];
-      cca = Number(cca) || 0;
-      // SA (Summative) – can be derived from Total(100) - (sumFA + CCA)
-      let totalMarks = row['Total (100)'] ?? row['Total'];
-      totalMarks = Number(totalMarks) || 0;
-      const sumFA = fa.reduce((a,b) => a+b, 0);
-      let sa = totalMarks - (sumFA + cca);
-      if (sa < 0) sa = 0; // fallback
-      // Grade & Proficiency
-      const grade = row['Grade (100%)'] || row['Grade'] || '';
-      const proficiency = row['Proficiency Level (Stream/Mount in/Sky)'] || '';
+      const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks } = studentData;
 
-      if (!studentMap.has(admNo)) {
-        studentMap.set(admNo, { name: studentName, subjects: {} });
-      }
-      const student = studentMap.get(admNo);
-      student.subjects[subject] = {
-        fa: fa,
-        cca: cca,
-        sa: sa,
-        grade: grade,
-        proficiency: proficiency,
-        totalMarks: totalMarks
-      };
-      // update name if provided
-      if (studentName) student.name = studentName;
-    }
-
-    addLog(`📦 Grouped into ${studentMap.size} students. Writing to Firestore...`);
-
-    let processed = 0;
-    const total = studentMap.size;
-
-    for (let [admNo, data] of studentMap.entries()) {
-      // Prepare marks object in the same format as manual entry
-      const marks = {};
-      for (let sub of subjectsList) {
-        const subData = data.subjects[sub] || { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
-        marks[sub] = {
-          fa: subData.fa,
-          cca: subData.cca,
-          sa: subData.sa
-        };
-      }
-
-      // Document to store in "results" collection (same as manual entry)
+      // Prepare document for "results" collection
       const resultDocRef = doc(db, "results", admNo);
       const existing = await getDoc(resultDocRef);
       const existingData = existing.exists() ? existing.data() : {};
 
       const finalData = {
         admNo: admNo,
-        studentName: data.name || existingData.studentName || '',
+        rollNo: rollNo || existingData.rollNo || '',
+        className: className,
+        studentName: studentName || existingData.studentName || '',
+        fatherName: fatherName,
+        motherName: motherName,
+        contact: contact,
+        dob: dob,
         marks: marks,
-        excelUploadedAt: new Date().toISOString(),
-        // preserve existing fields like rollNo, attendance, remarks if present
-        rollNo: existingData.rollNo || '',
+        session: "Oct 2025",
+        uploadedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        // preserve any existing remarks, attendance, etc.
         attendance: existingData.attendance || '',
         remarks: existingData.remarks || '',
-        updatedAt: new Date().toISOString()
+        discipline: existingData.discipline || '',
+        sports: existingData.sports || '',
+        artCraft: existingData.artCraft || ''
       };
+
       await setDoc(resultDocRef, finalData, { merge: true });
 
-      // Also store/update in "students" collection for profile lookup
+      // Also update students collection for quick lookup
       const studentRef = doc(db, "students", admNo);
       await setDoc(studentRef, {
         admNo: admNo,
-        name: data.name || existingData.studentName || '',
+        name: studentName,
+        class: className,
+        rollNo: rollNo,
+        fatherName: fatherName,
+        motherName: motherName,
         lastUpdated: new Date().toISOString()
       }, { merge: true });
 
-      processed++;
-      const percent = Math.floor((processed / total) * 100);
+      successCount++;
+      const percent = Math.floor(((successCount + errorCount) / totalStudents) * 100);
       progressFill.style.width = `${percent}%`;
       progressFill.textContent = `${percent}%`;
+      addLog(`✅ ${admNo} - ${studentName} (${className}) processed`);
     }
 
-    addLog(`🎉 Success! ${total} student records uploaded/updated.`);
+    addLog(`🎉 Upload complete! ${successCount} students saved, ${errorCount} errors.`);
     progressFill.style.background = "#1a5d1a";
   } catch (error) {
     console.error(error);
@@ -305,9 +310,9 @@ processBtn.addEventListener('click', async () => {
   }
 });
 
-// ======================= EXISTING MANUAL ENTRY CODE (preserved) =======================
+// ---------- Manual Entry Code (unchanged, preserved) ----------
+const subjectsList = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const tbody = document.getElementById('marksBody');
-// Generate table rows
 subjectsList.forEach(sub => {
     let row = `<tr>
         <td class="subject-label">${sub}</td>
