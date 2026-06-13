@@ -36,12 +36,10 @@
     .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; }
     .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
 
-    /* High-Contrast Header Styling */
-    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1400px; }
+    /* Table styling – single header row */
+    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1600px; }
     th, td { border: 1px solid #444; padding: 2px; text-align: center; }
-    th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; }
-    .header-group { background: #001a4d !important; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; }
-    
+    th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; white-space: nowrap; }
     .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; color: #000; }
     .summary-col { background: #fffde7; font-weight: bold; color: #000; }
     .sub-total { background: #eeeeee; font-weight: bold; color: #000; }
@@ -68,7 +66,7 @@
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
   <div class="sub-title">Detailed Award Roll / Consolidated Master Sheet</div>
 
-  <!-- === NEW: PHOTO UPLOAD SECTION === -->
+  <!-- Photo Upload Section -->
   <div class="photo-upload-section no-print">
     <div class="photo-preview">
       <img id="previewPhoto" src="https://via.placeholder.com/80?text=No+Photo" alt="Student Photo">
@@ -108,27 +106,8 @@
   </div>
 
   <table id="masterTable">
-    <thead>
-      <tr class="header-group">
-        <th colspan="9">Student Profile Details</th>
-        <th colspan="9">English</th>
-        <th colspan="9">Mathematics</th>
-        <th colspan="9">EVS</th>
-        <th colspan="9">Urdu</th>
-        <th colspan="9">Kashmiri</th>
-        <th colspan="7">Final Summary</th>
-      </tr>
-      <tr id="dynamicHeaderRow">
-        <th>Adm No</th>
-        <th>Roll No</th>
-        <th>Class</th>
-        <th>Name</th>
-        <th>Father's Name</th>
-        <th>Mother's Name</th>
-        <th>D.O.B</th>
-        <th>APAAR ID</th>
-        <th>PEN No</th>
-      </tr>
+    <thead id="masterTableHead">
+      <!-- Single header row will be generated here -->
     </thead>
     <tbody id="masterBody"></tbody>
   </table>
@@ -136,28 +115,40 @@
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
-    // Firebase imports (existing)
+    // Firebase imports
     import { db } from './init-firebase.js';
     import { collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
     import { calculateGrades } from './results-handler.js';
 
-    // Initialize Storage
     const storage = getStorage();
+    const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri']; // Firestore keys
+    const displaySubjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri']; // display names
 
-    const subjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
-    const tbody = document.getElementById('masterBody');
+    // ---------- Build SINGLE ROW Header ----------
+    function buildSingleHeader() {
+        const thead = document.getElementById('masterTableHead');
+        thead.innerHTML = '';
+        let headerRow = '<tr>';
+        
+        // Student Profile columns
+        headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father\'s Name</th><th>Mother\'s Name</th><th>D.O.B</th><th>APAAR ID</th><th>PEN No</th>';
+        
+        // Subject columns: for each subject, add F1..F6, CC, SA, T with subject name prefix
+        for (let i = 0; i < subjects.length; i++) {
+            const subName = displaySubjects[i];
+            headerRow += `<th>${subName} F1</th><th>${subName} F2</th><th>${subName} F3</th><th>${subName} F4</th><th>${subName} F5</th><th>${subName} F6</th><th>${subName} CC</th><th>${subName} SA</th><th>${subName} T</th>`;
+        }
+        
+        // Summary columns
+        headerRow += '<th>Grand Total</th><th>%age</th><th>Grade Points</th><th>Grade</th><th>Result</th>';
+        headerRow += '</tr>';
+        thead.innerHTML = headerRow;
+    }
+    
+    buildSingleHeader();
 
-    // Setup headers once
-    const dynamicHeaderRow = document.getElementById('dynamicHeaderRow');
-    let subjectHtml = "";
-    subjects.forEach(() => {
-        subjectHtml += '<th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th><th>F6</th><th>CC</th><th>SA</th><th>T</th>';
-    });
-    subjectHtml += `<th class="summary-col">G.Tot</th><th class="summary-col">%</th><th class="summary-col">GP</th><th class="summary-col">Grd</th><th class="summary-col">Result</th>`;
-    dynamicHeaderRow.innerHTML += subjectHtml;
-
-    // ---------- Photo Upload Logic ----------
+    // ---------- Photo Upload Logic (unchanged) ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -171,13 +162,9 @@
     let selectedStudentData = null;
     let selectedFile = null;
 
-    // Search student from "students" collection
     searchStudentBtn.addEventListener('click', async () => {
         const admNo = photoAdmNoInput.value.trim();
-        if (!admNo) {
-            photoStatus.innerText = 'Enter Admission Number';
-            return;
-        }
+        if (!admNo) { photoStatus.innerText = 'Enter Admission Number'; return; }
         photoStatus.innerText = 'Searching...';
         try {
             const studentRef = doc(db, "students", admNo);
@@ -192,7 +179,7 @@
                 return;
             }
             selectedStudentData = { id: admNo, ...studentSnap.data() };
-            previewName.innerText = selectedStudentData.name || 'No Name';
+            previewName.innerText = selectedStudentData.name || selectedStudentData.studentName || 'No Name';
             previewClass.innerText = `Adm: ${admNo} | Class: ${selectedStudentData.class || '-'}`;
             if (selectedStudentData.photoURL) {
                 previewPhoto.src = selectedStudentData.photoURL;
@@ -207,11 +194,7 @@
         }
     });
 
-    // Trigger file picker
-    selectPhotoBtn.addEventListener('click', () => {
-        photoFileInput.click();
-    });
-
+    selectPhotoBtn.addEventListener('click', () => photoFileInput.click());
     photoFileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -220,7 +203,6 @@
             return;
         }
         selectedFile = file;
-        // Preview locally
         const reader = new FileReader();
         reader.onload = (ev) => { previewPhoto.src = ev.target.result; };
         reader.readAsDataURL(file);
@@ -228,7 +210,6 @@
         uploadPhotoBtn.disabled = false;
     });
 
-    // Upload photo to Firebase Storage and update Firestore
     uploadPhotoBtn.addEventListener('click', async () => {
         if (!selectedStudentData || !selectedFile) {
             photoStatus.innerText = 'No student or photo selected.';
@@ -243,19 +224,15 @@
             const storageRef = ref(storage, `student_photos/${admNo}.${fileExt}`);
             await uploadBytes(storageRef, selectedFile);
             const photoURL = await getDownloadURL(storageRef);
-            // Update Firestore
             const studentRef = doc(db, "students", admNo);
             await updateDoc(studentRef, { photoURL: photoURL });
-            // Update preview
             previewPhoto.src = photoURL;
             selectedStudentData.photoURL = photoURL;
             photoStatus.innerText = '✅ Photo uploaded successfully!';
-            // Clear file input
             photoFileInput.value = '';
             selectedFile = null;
             uploadPhotoBtn.disabled = true;
-            selectPhotoBtn.disabled = false; // allow new selection
-            // Optional: refresh the master table to show photo? Not needed for table.
+            selectPhotoBtn.disabled = false;
         } catch (err) {
             console.error(err);
             photoStatus.innerText = '❌ Upload failed: ' + err.message;
@@ -264,37 +241,31 @@
         }
     });
 
-    // ---------- Master Table Loading (existing, with slight field name adaptation) ----------
+    // ---------- Master Table Loading ----------
     async function renderMasterTable() {
         const selectedClass = document.getElementById('classSearch').value;
         const selectedSession = document.getElementById('sessionSearch').value;
-        
+        const tbody = document.getElementById('masterBody');
         tbody.innerHTML = "<tr><td colspan='60'>Fetching Records from Firebase...</td></tr>";
 
         try {
-            // Fetch Students
             const studentSnap = await getDocs(collection(db, "students"));
-            // Fetch Results
             const resultSnap = await getDocs(collection(db, "results"));
-            
             const resultsData = resultSnap.docs.map(doc => doc.data());
             tbody.innerHTML = "";
 
-            studentSnap.forEach(docSnap => {
+            for (const docSnap of studentSnap.docs) {
                 const s = docSnap.data();
-                // Use s.class (from Excel upload) or s.studentClass – adapt
                 const studentClass = s.class || s.studentClass || '';
-                if (selectedClass !== "All" && studentClass !== selectedClass) return;
+                if (selectedClass !== "All" && studentClass !== selectedClass) continue;
 
                 const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
                 
                 let grandTotal = 0;
                 let subCells = "";
                 
-                subjects.forEach(sub => {
-                    // Map subject names: Math vs Mathematics, etc.
-                    let subKey = sub;
-                    if (sub === 'Math') subKey = 'Mathematics';
+                for (let idx = 0; idx < subjects.length; idx++) {
+                    const subKey = subjects[idx];
                     const m = (r && r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
                     const fa = m.fa || [0,0,0,0,0,0];
                     const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
@@ -304,15 +275,16 @@
                     grandTotal += subTotal;
                     
                     subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
-                });
+                }
 
-                const finalResult = calculateGrades(grandTotal, 500); 
-
+                const finalResult = calculateGrades(grandTotal, 500);
+                const studentName = (s.name || s.studentName || '').toUpperCase();
+                
                 tbody.innerHTML += `<tr>
                     <td>${s.admNo || ''}</td>
                     <td>${s.rollNo || '-'}</td>
                     <td>${studentClass}</td>
-                    <td class="student-info">${(s.name || s.studentName || '').toUpperCase()}</td>
+                    <td class="student-info">${studentName}</td>
                     <td class="student-info">${s.fatherName || ''}</td>
                     <td>${s.motherName || ''}</td>
                     <td>${s.dob || ''}</td>
@@ -325,18 +297,18 @@
                     <td class="summary-col">${finalResult.grade}</td>
                     <td class="summary-col">${finalResult.remarks}</td>
                 </tr>`;
-            });
+            }
+            if (tbody.innerHTML === "") tbody.innerHTML = "<tr><td colspan='60'>No students found for selected criteria.</td></tr>";
         } catch (error) {
             console.error(error);
             tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.</td></tr>";
         }
     }
 
-    // Attach to window so dropdowns work
     window.renderMasterTable = renderMasterTable;
     document.addEventListener('DOMContentLoaded', renderMasterTable);
 </script>
 
 </body>
-</html>
-                        
+</html>    
+                
