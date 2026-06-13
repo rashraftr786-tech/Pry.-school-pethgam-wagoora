@@ -13,7 +13,6 @@
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    /* Photo Upload Section */
     .photo-upload-section {
       background: #e8f0fe;
       padding: 15px;
@@ -32,11 +31,9 @@
     .btn-small { background: #2c7a2c; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .status-msg { font-size: 12px; margin-left: 10px; }
     
-    /* Search Bar Styling */
     .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; }
     .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
 
-    /* Table styling – single header row */
     table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1600px; }
     th, td { border: 1px solid #444; padding: 2px; text-align: center; }
     th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; white-space: nowrap; }
@@ -88,8 +85,8 @@
   <div class="filter-section no-print">
     <label><b>Session:</b></label>
     <select id="sessionSearch" onchange="renderMasterTable()">
-        <option value="2024-25">2024-25</option>
-        <option value="2025-26">2025-26</option>
+        <option value="Oct 2025">Oct 2025</option>
+        <option value="Oct 2024">Oct 2024</option>
     </select>
     
     <label style="margin-left: 10px;"><b>Class:</b></label>
@@ -106,49 +103,38 @@
   </div>
 
   <table id="masterTable">
-    <thead id="masterTableHead">
-      <!-- Single header row will be generated here -->
-    </thead>
+    <thead id="masterTableHead"></thead>
     <tbody id="masterBody"></tbody>
   </table>
 </div>
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
-    // Firebase imports
     import { db } from './init-firebase.js';
     import { collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
     import { calculateGrades } from './results-handler.js';
 
     const storage = getStorage();
-    const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri']; // Firestore keys
-    const displaySubjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri']; // display names
+    const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
+    const displaySubjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 
-    // ---------- Build SINGLE ROW Header ----------
     function buildSingleHeader() {
         const thead = document.getElementById('masterTableHead');
         thead.innerHTML = '';
         let headerRow = '<tr>';
-        
-        // Student Profile columns
         headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father\'s Name</th><th>Mother\'s Name</th><th>D.O.B</th><th>APAAR ID</th><th>PEN No</th>';
-        
-        // Subject columns: for each subject, add F1..F6, CC, SA, T with subject name prefix
         for (let i = 0; i < subjects.length; i++) {
             const subName = displaySubjects[i];
             headerRow += `<th>${subName} F1</th><th>${subName} F2</th><th>${subName} F3</th><th>${subName} F4</th><th>${subName} F5</th><th>${subName} F6</th><th>${subName} CC</th><th>${subName} SA</th><th>${subName} T</th>`;
         }
-        
-        // Summary columns
         headerRow += '<th>Grand Total</th><th>%age</th><th>Grade Points</th><th>Grade</th><th>Result</th>';
         headerRow += '</tr>';
         thead.innerHTML = headerRow;
     }
-    
     buildSingleHeader();
 
-    // ---------- Photo Upload Logic (unchanged) ----------
+    // Photo upload logic (unchanged, kept as is)
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -241,12 +227,12 @@
         }
     });
 
-    // ---------- Master Table Loading ----------
+    // Master table rendering with correct session filter
     async function renderMasterTable() {
         const selectedClass = document.getElementById('classSearch').value;
         const selectedSession = document.getElementById('sessionSearch').value;
         const tbody = document.getElementById('masterBody');
-        tbody.innerHTML = "<tr><td colspan='60'>Fetching Records from Firebase...</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='60'>Loading...</td></tr>";
 
         try {
             const studentSnap = await getDocs(collection(db, "students"));
@@ -254,19 +240,23 @@
             const resultsData = resultSnap.docs.map(doc => doc.data());
             tbody.innerHTML = "";
 
+            let foundAny = false;
             for (const docSnap of studentSnap.docs) {
                 const s = docSnap.data();
                 const studentClass = s.class || s.studentClass || '';
                 if (selectedClass !== "All" && studentClass !== selectedClass) continue;
 
+                // Find result for this student and selected session
                 const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
-                
+                if (!r) continue; // skip if no result for this session
+
+                foundAny = true;
                 let grandTotal = 0;
                 let subCells = "";
                 
                 for (let idx = 0; idx < subjects.length; idx++) {
                     const subKey = subjects[idx];
-                    const m = (r && r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
+                    const m = (r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
                     const fa = m.fa || [0,0,0,0,0,0];
                     const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
                     const cc = Number(m.cca) || 0;
@@ -298,7 +288,7 @@
                     <td class="summary-col">${finalResult.remarks}</td>
                 </tr>`;
             }
-            if (tbody.innerHTML === "") tbody.innerHTML = "<tr><td colspan='60'>No students found for selected criteria.</td></tr>";
+            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class. Try "Oct 2025" if you have uploaded data.</td></tr>";
         } catch (error) {
             console.error(error);
             tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.</td></tr>";
@@ -310,5 +300,6 @@
 </script>
 
 </body>
-</html>    
-                
+</html>  
+
+            
