@@ -240,16 +240,29 @@ processBtn.addEventListener('click', async () => {
     let errorCount = 0;
     const totalStudents = rows.length - 4; // rows 0-3 are headers
 
-    for (let i = 4; i < rows.length; i++) {
-      const row = rows[i];
-      if (!row || row.length < 10) continue;
-
-      const studentData = parseStudentRow(row, 0); // column A index 0
-      if (!studentData) {
-        addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
-        errorCount++;
-        continue;
-      }
+    let consecutiveEmpty = 0;
+for (let i = 4; i < rows.length; i++) {
+  const row = rows[i];
+  
+  // Stop if row is completely empty
+  if (!row || row.length === 0 || row.every(cell => cell === undefined || cell === null || cell === '')) {
+    consecutiveEmpty++;
+    if (consecutiveEmpty > 2) break; // stop after 2 empty rows
+    continue;
+  }
+  consecutiveEmpty = 0;
+  
+  // Ensure row has at least 8 columns (up to DOB)
+  if (row.length < 8) continue;
+  
+  const studentData = parseStudentRow(row, 0);
+  if (!studentData) {
+    addLog(`⚠️ Row ${i+1}: Missing Admission No. Skipping`, true);
+    errorCount++;
+    continue;
+  }
+  // ... rest of saving code
+}
 
       const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks } = studentData;
 
