@@ -4,63 +4,25 @@
   <meta charset="UTF-8">
   <title>Upload Results | GPS Pethgam Wagoora</title>
   <style>
+    /* ... your existing styles (unchanged) ... */
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
     .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     .admin-nav { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin: -20px -20px 20px -20px; }
     .admin-nav a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; }
-    
     table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
     th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
     th { background: #e8f5e9; }
     input { width: 40px; padding: 3px; text-align: center; border: 1px solid #ddd; }
     .subject-label { text-align: left; font-weight: bold; width: 120px; }
     .btn-save { background: #1a5d1a; color: white; padding: 15px 30px; border: none; cursor: pointer; width: 100%; margin-top: 20px; font-weight: bold; }
-    
-    .excel-upload-section {
-      background: #e8f0fe;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-      border-left: 5px solid #1a5d1a;
-    }
-    .upload-btn {
-      background: #2c7a2c;
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-    .progress-bar {
-      width: 100%;
-      background: #ddd;
-      border-radius: 5px;
-      margin: 10px 0;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 20px;
-      background: #1a5d1a;
-      border-radius: 5px;
-      text-align: center;
-      color: white;
-      line-height: 20px;
-      font-size: 12px;
-    }
-    .log-area {
-      max-height: 200px;
-      overflow-y: auto;
-      background: #f9f9f9;
-      padding: 8px;
-      font-size: 12px;
-      font-family: monospace;
-      margin-top: 10px;
-      border: 1px solid #ddd;
-    }
+    .excel-upload-section { background: #e8f0fe; padding: 15px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #1a5d1a; }
+    .upload-btn { background: #2c7a2c; color: white; border: none; padding: 8px 20px; cursor: pointer; margin-left: 10px; }
+    .progress-bar { width: 100%; background: #ddd; border-radius: 5px; margin: 10px 0; }
+    .progress-fill { width: 0%; height: 20px; background: #1a5d1a; border-radius: 5px; text-align: center; color: white; line-height: 20px; font-size: 12px; }
+    .log-area { max-height: 200px; overflow-y: auto; background: #f9f9f9; padding: 8px; font-size: 12px; font-family: monospace; margin-top: 10px; border: 1px solid #ddd; }
   </style>
 </head>
 <body>
-
 <div class="admin-nav">
     <a href="admission.html">📝 Admission</a>
     <a href="adm-register.html">📋 Register</a>
@@ -68,9 +30,7 @@
     <a href="results.html">🎓 Online Result</a>
     <a href="master-profile.html">👤 Master Profile</a>
 </div>
-
 <div class="container">
-  <!-- === EXCEL UPLOAD SECTION (CUSTOM PARSER) === -->
   <div class="excel-upload-section">
     <h3>📂 Upload Result Oct 2025 (Excel file)</h3>
     <p>✅ Works with your exact template: 4 header rows, subjects English, Mathematics, Environment Science, Urdu, Kashmiri</p>
@@ -83,36 +43,22 @@
   </div>
 
   <h2>📝 Manual Assessment Entry (Session 2024-25)</h2>
-  
   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
     <div><label>Adm No:</label> <input type="text" id="admNo" style="width: 100px;" oninput="lookupStudent()"></div>
     <div><label>Roll No:</label> <input type="text" id="rollNo" style="width: 100px;"></div>
     <div><label>Attendance %:</label> <input type="text" id="att" style="width: 60px;"></div>
   </div>
   <div id="studentName" style="color: darkgreen; font-weight: bold; margin-bottom: 15px;"></div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Subject</th>
-        <th>FA1(5)</th><th>FA2(5)</th><th>FA3(5)</th><th>FA4(5)</th><th>FA5(5)</th><th>FA6(5)</th>
-        <th>CCA(20)</th>
-        <th>SA(50)</th>
-      </tr>
-    </thead>
-    <tbody id="marksBody"></tbody>
-  </table>
-  
-  <div style="margin-top:25px; border: 1px solid #1a5d1a; padding: 15px; border-radius: 4px; background: #f9fff9;">
-    <h3 style="margin-top:0; color: #1a5d1a; font-size: 14px; border-bottom: 1px solid #1a5d1a;">Co-Scholastic Record</h3>
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-      <div><label>Attendance %</label><input type="text" id="att2" style="width: 80%;"></div>
+  <table><thead><tr><th>Subject</th><th>FA1(5)</th><th>FA2(5)</th><th>FA3(5)</th><th>FA4(5)</th><th>FA5(5)</th><th>FA6(5)</th><th>CCA(20)</th><th>SA(50)</th></tr></thead><tbody id="marksBody"></tbody></table>
+  <div style="margin-top:25px; border:1px solid #1a5d1a; padding:15px; border-radius:4px; background:#f9fff9;">
+    <h3 style="margin-top:0; color:#1a5d1a; font-size:14px;">Co-Scholastic Record</h3>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;">
+      <div><label>Attendance %</label><input type="text" id="att2"></div>
       <div><label>Discipline</label><select id="discipline"><option>A</option><option>B</option><option>C</option></select></div>
       <div><label>Sports</label><select id="sports"><option>A</option><option>B</option><option>C</option></select></div>
       <div><label>Art & Craft</label><select id="artCraft"><option>A</option><option>B</option><option>C</option></select></div>
     </div>
   </div>
-  
   <div><label>General Remarks:</label><textarea id="remarks" style="width:100%; height:60px;"></textarea></div>
   <button class="btn-save" onclick="saveData()">💾 Save Assessment Record</button>
 </div>
@@ -122,7 +68,6 @@
 import { db } from './init-firebase.js';
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ---------- Subjects in order (must match Excel column groups) ----------
 const SUBJECTS = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
 
 function parseStudentRow(row, startColIndex) {
@@ -134,20 +79,16 @@ function parseStudentRow(row, startColIndex) {
   const motherName = row[startColIndex + 5] || '';
   const contact = row[startColIndex + 6] || '';
   const dob = row[startColIndex + 7] || '';
-
   if (!admNo || admNo === '') return null;
-
-  let colOffset = startColIndex + 8; // first subject's F1 column
+  let colOffset = startColIndex + 8;
   const marks = {};
-
   for (let subIdx = 0; subIdx < SUBJECTS.length; subIdx++) {
     const subject = SUBJECTS[subIdx];
     const fa = [];
     for (let i = 0; i < 6; i++) {
       let val = row[colOffset + i];
       if (val === undefined || val === null || val === '' || val === 'Ab') val = 0;
-      const num = Number(val);
-      fa.push(isNaN(num) ? 0 : num);
+      fa.push(isNaN(Number(val)) ? 0 : Number(val));
     }
     let ccaVal = row[colOffset + 7];
     if (ccaVal === undefined || ccaVal === '' || ccaVal === 'Ab') ccaVal = 0;
@@ -155,15 +96,12 @@ function parseStudentRow(row, startColIndex) {
     let saVal = row[colOffset + 8];
     if (saVal === undefined || saVal === '' || saVal === 'Ab') saVal = 0;
     const sa = Number(saVal);
-    
     marks[subject] = { fa, cca, sa };
     colOffset += 10;
   }
-
   return { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks };
 }
 
-// ---------- Excel Upload Logic ----------
 const fileInput = document.getElementById('excelFile');
 const processBtn = document.getElementById('processExcelBtn');
 const progressContainer = document.getElementById('progressContainer');
@@ -180,204 +118,118 @@ function addLog(msg, isError = false) {
 
 processBtn.addEventListener('click', async () => {
   const file = fileInput.files[0];
-  if (!file) {
-    alert('Select an Excel file first.');
-    return;
-  }
-
+  if (!file) { alert('Select an Excel file first.'); return; }
   progressContainer.style.display = 'block';
   progressFill.style.width = '0%';
-  progressFill.textContent = '0%';
   uploadLog.innerHTML = '';
   addLog('📖 Reading file...');
-
   try {
     const data = await file.arrayBuffer();
     const workbook = XLSX.read(data, { type: 'array' });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
-    
     if (!rows || rows.length < 5) throw new Error('File has less than 5 rows');
-
-    addLog(`✅ Total rows: ${rows.length}. Starting from row 5 (index 4)...`);
-
-    let successCount = 0;
-    let errorCount = 0;
-    let consecutiveMissingAdm = 0;  // count rows with no admission number
-    let totalProcessed = 0;
-
+    addLog(`✅ Total rows: ${rows.length}. Starting from row 5...`);
+    let successCount = 0, errorCount = 0, consecutiveMissing = 0;
     for (let i = 4; i < rows.length; i++) {
       const row = rows[i];
-      
-      // 1. Check if row is completely empty (all cells empty)
-      const isEmpty = !row || row.length === 0 || row.every(cell => cell === undefined || cell === null || cell === '');
-      
-      // 2. Also check if the first cell (Admission No) is missing/empty
+      const isEmpty = !row || row.length === 0 || row.every(c => c === undefined || c === null || c === '');
       const admCandidate = row && row[0] ? String(row[0]).trim() : '';
-      const hasValidAdm = !isEmpty && admCandidate !== '';
-      
-      if (isEmpty || !hasValidAdm) {
-        consecutiveMissingAdm++;
-        if (consecutiveMissingAdm > 2) {
-          addLog(`⏹️ Stopped at row ${i+1} (${consecutiveMissingAdm} rows without Admission No.)`, false);
-          break;
-        }
-        // Don't log each missing row, just skip
+      if (isEmpty || admCandidate === '') {
+        consecutiveMissing++;
+        if (consecutiveMissing > 2) break;
         continue;
       }
-      
-      // Reset counter when we find a valid row
-      consecutiveMissingAdm = 0;
-      
-      // Ensure enough columns for basic info
+      consecutiveMissing = 0;
       if (row.length < 8) continue;
-      
       const studentData = parseStudentRow(row, 0);
-      if (!studentData) {
-        // This should not happen because we already checked admCandidate, but keep for safety
-        errorCount++;
-        continue;
-      }
-
-      totalProcessed++;
+      if (!studentData) { errorCount++; continue; }
       const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks } = studentData;
-
-      // Save to Firestore
       const resultDocRef = doc(db, "results", admNo);
       const existing = await getDoc(resultDocRef);
       const existingData = existing.exists() ? existing.data() : {};
-
       const finalData = {
-        admNo: admNo,
-        rollNo: rollNo || existingData.rollNo || '',
-        className: className,
-        studentName: studentName || existingData.studentName || '',
-        fatherName: fatherName,
-        motherName: motherName,
-        contact: contact,
-        dob: dob,
-        marks: marks,
-        session: "Oct 2025",
-        uploadedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        attendance: existingData.attendance || '',
-        remarks: existingData.remarks || '',
-        discipline: existingData.discipline || '',
-        sports: existingData.sports || '',
-        artCraft: existingData.artCraft || ''
+        admNo, rollNo: rollNo || existingData.rollNo || '', className, studentName: studentName || existingData.studentName || '',
+        fatherName, motherName, contact, dob, marks, session: "Oct 2025",
+        uploadedAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+        attendance: existingData.attendance || '', remarks: existingData.remarks || '',
+        discipline: existingData.discipline || '', sports: existingData.sports || '', artCraft: existingData.artCraft || ''
       };
-
       await setDoc(resultDocRef, finalData, { merge: true });
-
-      // Update students collection
       const studentRef = doc(db, "students", admNo);
       await setDoc(studentRef, {
-        admNo: admNo,
-        name: studentName,
-        class: className,
-        rollNo: rollNo,
-        fatherName: fatherName,
-        motherName: motherName,
+        admNo, name: studentName, class: className, rollNo, fatherName, motherName,
         lastUpdated: new Date().toISOString()
       }, { merge: true });
-
       successCount++;
-      const percent = Math.floor((totalProcessed / (rows.length - 4)) * 100);
+      const percent = Math.floor((successCount / (rows.length - 4)) * 100);
       progressFill.style.width = `${percent}%`;
       progressFill.textContent = `${percent}%`;
       addLog(`✅ ${admNo} - ${studentName} (${className}) saved`);
     }
-
     addLog(`🎉 Upload complete! ${successCount} students saved, ${errorCount} errors.`);
     progressFill.style.background = "#1a5d1a";
   } catch (error) {
-    console.error(error);
     addLog(`❌ Error: ${error.message}`, true);
   } finally {
-    setTimeout(() => { progressContainer.style.display = 'none'; }, 3000);
+    setTimeout(() => progressContainer.style.display = 'none', 3000);
   }
 });
 
-// ---------- Manual Entry Code (unchanged) ----------
 const subjectsList = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const tbody = document.getElementById('marksBody');
 subjectsList.forEach(sub => {
-    let row = `<tr>
-        <td class="subject-label">${sub}</td>
-        ${[1,2,3,4,5,6].map(i => `<td><input type="number" class="${sub}-fa" data-idx="${i}" max="5"></td>`).join('')}
-        <td><input type="number" id="${sub}-cca" max="20"></td>
-        <td><input type="number" id="${sub}-sa" max="50"></td>
-    </tr>`;
-    tbody.innerHTML += row;
+  let row = `<tr><td class="subject-label">${sub}</td>${[1,2,3,4,5,6].map(i => `<td><input type="number" class="${sub}-fa" data-idx="${i}" max="5"></td>`).join('')}<td><input type="number" id="${sub}-cca" max="20"></td><td><input type="number" id="${sub}-sa" max="50"></td></tr>`;
+  tbody.innerHTML += row;
 });
 
 window.lookupStudent = async function() {
-    const adm = document.getElementById('admNo').value.trim();
-    if(!adm) return;
-    try {
-        const docRef = doc(db, "admissions", adm);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const s = docSnap.data();
-            document.getElementById('studentName').innerText = "Editing: " + s.studentName;
-            loadExistingMarks(adm);
-        } else {
-            document.getElementById('studentName').innerText = "Student not found in admissions";
-        }
-    } catch (error) {
-        console.error("Lookup error:", error);
-    }
+  const adm = document.getElementById('admNo').value.trim();
+  if(!adm) return;
+  try {
+    const docRef = doc(db, "admissions", adm);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      document.getElementById('studentName').innerText = "Editing: " + docSnap.data().studentName;
+      loadExistingMarks(adm);
+    } else document.getElementById('studentName').innerText = "Student not found in admissions";
+  } catch(e) { console.error(e); }
 }
 
 window.saveData = async function() {
-    const adm = document.getElementById('admNo').value.trim();
-    if(!adm) return alert("Enter Adm No");
-    const marks = {};
-    subjectsList.forEach(sub => {
-        const faInputs = document.querySelectorAll(`.${sub}-fa`);
-        const faMarks = Array.from(faInputs).map(i => parseInt(i.value) || 0);
-        marks[sub] = {
-            fa: faMarks,
-            cca: parseInt(document.getElementById(`${sub}-cca`).value) || 0,
-            sa: parseInt(document.getElementById(`${sub}-sa`).value) || 0
-        };
-    });
-    const data = {
-        admNo: adm,
-        rollNo: document.getElementById('rollNo').value,
-        attendance: document.getElementById('att').value,
-        remarks: document.getElementById('remarks').value,
-        marks: marks,
-        updatedAt: new Date().toISOString()
+  const adm = document.getElementById('admNo').value.trim();
+  if(!adm) return alert("Enter Adm No");
+  const marks = {};
+  subjectsList.forEach(sub => {
+    const faInputs = document.querySelectorAll(`.${sub}-fa`);
+    marks[sub] = {
+      fa: Array.from(faInputs).map(i => parseInt(i.value) || 0),
+      cca: parseInt(document.getElementById(`${sub}-cca`).value) || 0,
+      sa: parseInt(document.getElementById(`${sub}-sa`).value) || 0
     };
-    try {
-        await setDoc(doc(db, "results", adm), data, { merge: true });
-        alert("Record Saved to Cloud Successfully");
-    } catch (error) {
-        console.error("Save error:", error);
-        alert("Error saving marks. Check console.");
-    }
+  });
+  const data = { admNo: adm, rollNo: document.getElementById('rollNo').value, attendance: document.getElementById('att').value, remarks: document.getElementById('remarks').value, marks, updatedAt: new Date().toISOString() };
+  try {
+    await setDoc(doc(db, "results", adm), data, { merge: true });
+    alert("Record Saved");
+  } catch(e) { alert("Error saving"); }
 }
 
 async function loadExistingMarks(adm) {
-    const docSnap = await getDoc(doc(db, "results", adm));
-    if (docSnap.exists()) {
-        const data = docSnap.data();
-        document.getElementById('rollNo').value = data.rollNo || "";
-        document.getElementById('att').value = data.attendance || "";
-        document.getElementById('remarks').value = data.remarks || "";
-        subjectsList.forEach(sub => {
-            if(data.marks && data.marks[sub]) {
-                const faInputs = document.querySelectorAll(`.${sub}-fa`);
-                faInputs.forEach((input, i) => {
-                    input.value = data.marks[sub].fa[i] || 0;
-                });
-                document.getElementById(`${sub}-cca`).value = data.marks[sub].cca || 0;
-                document.getElementById(`${sub}-sa`).value = data.marks[sub].sa || 0;
-            }
-        });
-    }
+  const docSnap = await getDoc(doc(db, "results", adm));
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    document.getElementById('rollNo').value = data.rollNo || "";
+    document.getElementById('att').value = data.attendance || "";
+    document.getElementById('remarks').value = data.remarks || "";
+    subjectsList.forEach(sub => {
+      if(data.marks && data.marks[sub]) {
+        document.querySelectorAll(`.${sub}-fa`).forEach((input,i) => input.value = data.marks[sub].fa[i] || 0);
+        document.getElementById(`${sub}-cca`).value = data.marks[sub].cca || 0;
+        document.getElementById(`${sub}-sa`).value = data.marks[sub].sa || 0;
+      }
+    });
+  }
 }
 </script>
 </body>
