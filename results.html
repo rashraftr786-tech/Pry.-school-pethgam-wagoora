@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Online Result | GPS Pethgam Wagoora</title>
-  <!-- Chart.js for bar graph -->
+  <!-- Chart.js & JsBarcode -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- JsBarcode for barcode -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
   <style>
     * {
@@ -15,13 +14,22 @@
       box-sizing: border-box;
     }
 
-    body {
-      background: linear-gradient(145deg, #e0f2e0 0%, #c8e6c9 100%);
-      font-family: 'Segoe UI', 'Poppins', 'Roboto', sans-serif;
-      padding: 30px 20px;
+    /* A4 print setup */
+    @page {
+      size: A4;
+      margin: 1.2cm;
     }
 
-    /* Navigation */
+    body {
+      background: #e6f0e6;
+      font-family: 'Segoe UI', 'Poppins', 'Roboto', sans-serif;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navigation (hidden when printing) */
     .nav-header {
       background: #1a5d1a;
       padding: 12px 20px;
@@ -32,6 +40,8 @@
       gap: 12px;
       margin-bottom: 40px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 1200px;
     }
     .nav-header a {
       color: white;
@@ -47,13 +57,13 @@
     /* Search Card */
     .search-card {
       max-width: 600px;
+      width: 100%;
       margin: 0 auto 45px;
       background: white;
       border-radius: 48px;
       box-shadow: 0 20px 35px rgba(0,0,0,0.2);
       padding: 25px 30px;
       text-align: center;
-      backdrop-filter: blur(2px);
     }
     .search-card h2 {
       color: #1a5d1a;
@@ -69,7 +79,6 @@
       border-radius: 50px;
       outline: none;
       font-size: 14px;
-      transition: 0.2s;
     }
     .search-card input:focus {
       border-color: #1a5d1a;
@@ -86,36 +95,63 @@
       margin-top: 15px;
       cursor: pointer;
       transition: 0.2s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .search-card button:hover { transform: scale(1.02); background: #0e4a0e; }
 
-    /* Marksheet Card */
+    /* Marksheet Container – A4 with border and watermark */
     .marksheet {
-      max-width: 1200px;
+      max-width: 1100px;
+      width: 100%;
       margin: 0 auto;
       background: white;
-      border-radius: 40px;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.25);
+      border-radius: 32px;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.2);
       overflow: hidden;
       display: none;
-      transition: all 0.3s;
+      position: relative;
+      /* Stunning page border */
+      border: 3px double #1a5d1a;
+      box-shadow: 0 0 0 8px #f0f7f0, 0 0 0 12px #c8e6c9;
     }
+
+    /* Watermark (school logo) */
+    .marksheet::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 40%;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* All content sits above watermark */
+    .marksheet > * {
+      position: relative;
+      z-index: 1;
+    }
+
     /* Header with school name */
     .marksheet-header {
       background: linear-gradient(135deg, #0b3d0b, #1f6d1f);
-      padding: 25px 30px;
+      padding: 20px 25px;
       text-align: center;
       color: white;
     }
     .marksheet-header h1 {
-      font-size: 32px;
+      font-size: 28px;
       letter-spacing: 1px;
       margin-bottom: 5px;
       font-weight: 800;
     }
     .marksheet-header p {
-      font-size: 13px;
+      font-size: 12px;
       opacity: 0.9;
     }
 
@@ -124,173 +160,224 @@
       display: flex;
       flex-wrap: wrap;
       background: #fef9e6;
-      padding: 20px 25px;
+      padding: 18px 22px;
       gap: 20px;
-      border-bottom: 4px solid #ffb74d;
+      border-bottom: 3px solid #ffb74d;
     }
     .details-grid {
       flex: 3;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-      gap: 12px 25px;
+      grid-template-columns: repeat(auto-fill, minmax(190px,1fr));
+      gap: 10px 20px;
     }
     .detail-item {
-      font-size: 14px;
+      font-size: 13px;
     }
     .detail-item strong {
       color: #1a5d1a;
       font-weight: 700;
       display: inline-block;
-      min-width: 100px;
+      min-width: 95px;
     }
     .photo-area {
       flex: 1;
       text-align: center;
     }
     .photo-area img {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
       object-fit: cover;
       border-radius: 50%;
-      border: 4px solid #ffb74d;
+      border: 3px solid #ffb74d;
       background: white;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     /* Marks table */
     .marks-table-wrapper {
-      padding: 20px 25px;
+      padding: 15px 22px;
       background: white;
       overflow-x: auto;
     }
     .marks-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
-      border-radius: 24px;
+      font-size: 11.5px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
     .marks-table th {
       background: #ffb74d;
       color: #2c2c2c;
-      padding: 12px 5px;
+      padding: 8px 4px;
       font-weight: 700;
     }
     .marks-table td {
       border: 1px solid #e0e0e0;
-      padding: 8px 4px;
+      padding: 6px 3px;
       text-align: center;
     }
     .marks-table .subject-cell {
       background: #f5f5f5;
       font-weight: 700;
       text-align: left;
-      padding-left: 12px;
+      padding-left: 10px;
     }
     .grand-total-row {
       background: #e8f5e9;
       font-weight: bold;
     }
 
-    /* Grade Key & Final Results */
+    /* Info panels */
     .info-panels {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
-      padding: 0 25px 20px 25px;
+      gap: 18px;
+      padding: 0 22px 15px 22px;
     }
     .grade-key {
       flex: 1;
       background: #f1f8e9;
-      border-radius: 28px;
-      padding: 15px 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-radius: 24px;
+      padding: 12px 16px;
     }
     .grade-key h4 {
       color: #1a5d1a;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       border-left: 5px solid #ffb74d;
-      padding-left: 12px;
+      padding-left: 10px;
+      font-size: 14px;
     }
     .grade-key table {
       width: 100%;
-      font-size: 12px;
+      font-size: 11px;
     }
     .final-results {
       flex: 1;
       background: #fff3e0;
-      border-radius: 28px;
-      padding: 15px 20px;
+      border-radius: 24px;
+      padding: 12px 16px;
     }
     .final-results h4 {
       color: #e65100;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
     }
+    .final-results p {
+      font-size: 12px;
+      margin: 4px 0;
+    }
+
+    /* Bar chart */
     .bar-chart-container {
-      padding: 10px 25px 20px 25px;
+      padding: 5px 22px 15px 22px;
     }
     .bar-chart-container canvas {
-      max-height: 250px;
+      max-height: 200px;
       width: 100%;
     }
+
+    /* Extra activities */
     .extra-activities {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
-      padding: 10px 25px;
+      gap: 12px;
+      padding: 5px 22px;
       background: #f9f9f9;
-      margin: 10px 0;
+      margin: 5px 0;
     }
     .extra-box {
       flex: 1;
       background: white;
-      border-radius: 20px;
-      padding: 12px;
+      border-radius: 18px;
+      padding: 8px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-size: 11px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
+
+    /* Remarks */
     .remarks {
       background: #fff8e1;
-      margin: 10px 25px;
-      padding: 15px 20px;
-      border-radius: 28px;
+      margin: 10px 22px;
+      padding: 12px 18px;
+      border-radius: 24px;
       font-style: italic;
-      border-left: 8px solid #ffb74d;
+      font-size: 12px;
+      border-left: 6px solid #ffb74d;
     }
+
+    /* Barcode */
     .barcode-section {
       text-align: center;
-      padding: 15px 25px;
+      padding: 10px 22px;
       background: #fafafa;
-      border-top: 2px dashed #ccc;
-      border-bottom: 2px dashed #ccc;
-      margin: 15px 0;
+      border-top: 1px dashed #ccc;
+      border-bottom: 1px dashed #ccc;
+      margin: 8px 0;
     }
+
+    /* Signatures */
     .signatures {
       display: flex;
       justify-content: space-between;
-      padding: 20px 30px 30px;
-      font-size: 12px;
+      padding: 18px 30px 25px;
+      font-size: 11px;
       color: #444;
     }
+
+    /* Print button */
     .print-btn {
       display: block;
-      width: 220px;
-      margin: 20px auto 30px;
+      width: 200px;
+      margin: 15px auto 25px;
       background: linear-gradient(95deg, #1a5d1a, #2e7d32);
       color: white;
       border: none;
-      padding: 12px;
+      padding: 10px;
       border-radius: 40px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
+      position: relative;
+      z-index: 2;
     }
-    .print-btn:hover { transform: scale(1.02); background: #0e4a0e; }
+    .print-btn:hover { transform: scale(1.02); }
+
+    /* Print styles – ensure watermark and borders print */
     @media print {
-      .nav-header, .search-card, .print-btn { display: none; }
-      body { background: white; padding: 0; }
-      .marksheet { box-shadow: none; border-radius: 0; margin: 0; }
+      .nav-header, .search-card, .print-btn {
+        display: none;
+      }
+      body {
+        background: white;
+        padding: 0;
+        margin: 0;
+      }
+      .marksheet {
+        box-shadow: none;
+        border: 2px solid #1a5d1a;
+        border-radius: 12px;
+        margin: 0 auto;
+        max-width: 100%;
+      }
+      .marksheet::before {
+        opacity: 0.12; /* darker watermark for print */
+        background-size: 45%;
+      }
+      /* Ensure backgrounds print */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .marksheet-header, .student-info-row, .grade-key, .final-results, .extra-box, .remarks {
+        break-inside: avoid;
+      }
+      .marks-table {
+        page-break-inside: avoid;
+      }
+      .bar-chart-container {
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
@@ -319,27 +406,23 @@
   import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
   import { calculateGrades, getProficiencyLevel } from './results-handler.js';
 
-  // Helper: find student by roll number
   async function findAdmByRoll(roll) {
     const q = query(collection(db, "students"), where("rollNo", "==", String(roll)));
     const snap = await getDocs(q);
     return snap.empty ? null : snap.docs[0].data().admNo;
   }
 
-  // Fetch student & result
   async function fetchStudentData(admNo) {
     const studentRef = doc(db, "students", admNo);
     const studentSnap = await getDoc(studentRef);
     if (!studentSnap.exists()) return null;
     const student = studentSnap.data();
-    // result with session Oct 2025 (as per your upload)
     const resQuery = query(collection(db, "results"), where("admNo", "==", String(admNo)), where("session", "==", "Oct 2025"));
     const resSnap = await getDocs(resQuery);
     const result = resSnap.empty ? null : resSnap.docs[0].data();
     return { student, result };
   }
 
-  // Main search
   document.getElementById('searchBtn').addEventListener('click', async () => {
     const admVal = document.getElementById('admNo').value.trim();
     const rollVal = document.getElementById('rollNo').value.trim();
@@ -355,7 +438,7 @@
     
     const data = await fetchStudentData(admNo);
     if (!data || !data.result) {
-      container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">❌ No record found. Make sure results are uploaded for Oct 2025 session.</div>';
+      container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">❌ No record found for Oct 2025 session.</div>';
       return;
     }
     renderMarksheet(data.student, data.result);
@@ -398,7 +481,6 @@
     const overallProf = getProficiencyLevel(overallPercent);
     const resultText = overallPercent >= 33 ? '✅ PROMOTED' : '❌ NOT PROMOTED';
 
-    // Grade key html
     const gradeKeyHtml = `
       <h4>📊 Percentage / Grade Key</h4>
       <table style="width:100%">
@@ -407,10 +489,8 @@
         <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
         <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
         <tr><td>>33% - 40%</td><td>D (Stream)</td></tr>
-      </table>
+       </table>
     `;
-
-    // final results panel
     const finalHtml = `
       <h4>🎯 Final Results</h4>
       <p><strong>Total Marks Obtained:</strong> ${grandTotal} / 500</p>
@@ -420,15 +500,15 @@
       <p><strong>Proficiency:</strong> ${overallProf}</p>
     `;
 
-    // Extra fields (attendance, discipline, art, etc.) – fallback from result object
+    // Extra fields from result or defaults
     const attendance = result.attendance || '92%';
     const discipline = result.discipline || 'A';
     const sports = result.sports || 'Excellent';
     const artCraft = result.artCraft || 'A+';
     const socialSkills = result.socialSkills || 'Good';
-    const remarks = result.remarks || `${student.name || ''} has shown ${overallProf.toLowerCase()} level performance. Focus needed on subjects below 40%.`;
+    const teamwork = result.teamwork || 'A';
+    const remarks = result.remarks || `${student.name || ''} has shown ${overallProf.toLowerCase()} level performance. Needs attention in subjects below 40%.`;
 
-    // Build the full HTML
     const marksheetHtml = `
       <div class="marksheet-header">
         <h1>🏫 GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
@@ -448,18 +528,16 @@
           <div class="detail-item"><strong>PEN No.:</strong> ${student.penNo || student.penNumber || '-'}</div>
         </div>
         <div class="photo-area">
-          <img src="${student.photoURL || 'https://via.placeholder.com/120?text=📷'}" alt="Photo">
+          <img src="${student.photoURL || 'https://via.placeholder.com/100?text=📷'}" alt="Photo">
         </div>
       </div>
       
       <div class="marks-table-wrapper">
         <table class="marks-table">
-          <thead>
-            <tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>T(30)</th><th>CC(20)</th><th>Sum(50)</th><th>Total</th><th>Grade</th><th>Proficiency</th></tr>
-          </thead>
+          <thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>T(30)</th><th>CC(20)</th><th>Sum(50)</th><th>Total</th><th>Grade</th><th>Proficiency</th></tr></thead>
           <tbody>
             ${rowsHtml}
-            <tr class="grand-total-row"><td colspan="7"><strong>Grand Total</strong></td><td><strong>${result.marks ? '74' : '-'}</strong></td><td><strong>50</strong></td><td><strong>119</strong></td><td><strong>${grandTotal}</strong></td><td colspan="2"><strong>Overall: ${overallGrade.grade}</strong></td></tr>
+            <tr class="grand-total-row"><td colspan="7"><strong>Grand Total</strong></td><td><strong>74</strong></td><td><strong>50</strong></td><td><strong>119</strong></td><td><strong>${grandTotal}</strong></td><td colspan="2"><strong>Overall: ${overallGrade.grade}</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -470,15 +548,16 @@
       </div>
       
       <div class="bar-chart-container">
-        <canvas id="subjectChart" width="400" height="180" style="max-width:100%; height:auto;"></canvas>
+        <canvas id="subjectChart"></canvas>
       </div>
       
       <div class="extra-activities">
         <div class="extra-box">🏃‍♂️ <strong>Sports</strong><br>${sports}</div>
-        <div class="extra-box">🤝 <strong>Teamwork</strong><br>A</div>
+        <div class="extra-box">🤝 <strong>Teamwork</strong><br>${teamwork}</div>
         <div class="extra-box">📏 <strong>Discipline</strong><br>${discipline}</div>
         <div class="extra-box">🎨 <strong>Art & Craft</strong><br>${artCraft}</div>
         <div class="extra-box">🗣️ <strong>Social Skills</strong><br>${socialSkills}</div>
+        <div class="extra-box">📊 <strong>Attendance</strong><br>${attendance}</div>
       </div>
       
       <div class="remarks">
@@ -501,7 +580,7 @@
     
     document.getElementById('marksheetContainer').innerHTML = marksheetHtml;
     
-    // Draw bar chart (subject percentages)
+    // Draw chart
     const ctx = document.getElementById('subjectChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
@@ -511,25 +590,23 @@
           label: 'Percentage (%)',
           data: subjectPercentages,
           backgroundColor: ['#2e7d32','#ffb74d','#42a5f5','#ab47bc','#ef5350'],
-          borderRadius: 12,
-          barPercentage: 0.6
+          borderRadius: 10,
+          barPercentage: 0.65
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        plugins: {
-          legend: { position: 'top' },
-          tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toFixed(1)}%` } }
-        },
+        plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toFixed(1)}%` } } },
         scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage' } } }
       }
     });
     
-    // Generate barcode (using student admNo + rollNo)
+    // Barcode
     const barcodeValue = `${student.admNo}-${student.rollNo || '000'}`;
-    JsBarcode("#studentBarcode", barcodeValue, { format: "CODE128", width: 1.8, height: 50, displayValue: true });
+    JsBarcode("#studentBarcode", barcodeValue, { format: "CODE128", width: 1.6, height: 45, displayValue: true });
   }
 </script>
 </body>
-</html>
+</html>          
+          
