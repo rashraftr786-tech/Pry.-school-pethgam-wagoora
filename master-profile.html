@@ -134,7 +134,7 @@
     }
     buildSingleHeader();
 
-    // Photo upload logic (unchanged, kept as is)
+    // ---------- PHOTO UPLOAD (FIXED) ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -148,9 +148,12 @@
     let selectedStudentData = null;
     let selectedFile = null;
 
-    searchStudentBtn.addEventListener('click', async () => {
+    async function searchStudent() {
         const admNo = photoAdmNoInput.value.trim();
-        if (!admNo) { photoStatus.innerText = 'Enter Admission Number'; return; }
+        if (!admNo) {
+            photoStatus.innerText = 'Enter Admission Number';
+            return;
+        }
         photoStatus.innerText = 'Searching...';
         try {
             const studentRef = doc(db, "students", admNo);
@@ -174,14 +177,19 @@
             }
             photoStatus.innerText = 'Student found. Select photo.';
             selectPhotoBtn.disabled = false;
+            uploadPhotoBtn.disabled = true; // reset until a file is chosen
+            selectedFile = null;
         } catch (err) {
             console.error(err);
-            photoStatus.innerText = 'Error searching student.';
+            photoStatus.innerText = 'Error searching student. Check console.';
         }
-    });
+    }
 
-    selectPhotoBtn.addEventListener('click', () => photoFileInput.click());
-    photoFileInput.addEventListener('change', (e) => {
+    function triggerFileSelect() {
+        photoFileInput.click();
+    }
+
+    function onFileSelected(e) {
         const file = e.target.files[0];
         if (!file) return;
         if (!file.type.startsWith('image/')) {
@@ -194,9 +202,9 @@
         reader.readAsDataURL(file);
         photoStatus.innerText = `Selected: ${file.name}. Click Upload.`;
         uploadPhotoBtn.disabled = false;
-    });
+    }
 
-    uploadPhotoBtn.addEventListener('click', async () => {
+    async function uploadPhoto() {
         if (!selectedStudentData || !selectedFile) {
             photoStatus.innerText = 'No student or photo selected.';
             return;
@@ -225,14 +233,20 @@
             uploadPhotoBtn.disabled = false;
             selectPhotoBtn.disabled = false;
         }
-    });
+    }
 
-    // Master table rendering with correct session filter
+    // Attach event listeners safely
+    if (searchStudentBtn) searchStudentBtn.addEventListener('click', searchStudent);
+    if (selectPhotoBtn) selectPhotoBtn.addEventListener('click', triggerFileSelect);
+    if (photoFileInput) photoFileInput.addEventListener('change', onFileSelected);
+    if (uploadPhotoBtn) uploadPhotoBtn.addEventListener('click', uploadPhoto);
+
+    // ---------- MASTER TABLE RENDERING ----------
     async function renderMasterTable() {
         const selectedClass = document.getElementById('classSearch').value;
         const selectedSession = document.getElementById('sessionSearch').value;
         const tbody = document.getElementById('masterBody');
-        tbody.innerHTML = "<tr><td colspan='60'>Loading...</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='60'>Loading...<\/td> <\/tr>";
 
         try {
             const studentSnap = await getDocs(collection(db, "students"));
@@ -246,9 +260,8 @@
                 const studentClass = s.class || s.studentClass || '';
                 if (selectedClass !== "All" && studentClass !== selectedClass) continue;
 
-                // Find result for this student and selected session
                 const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
-                if (!r) continue; // skip if no result for this session
+                if (!r) continue;
 
                 foundAny = true;
                 let grandTotal = 0;
@@ -264,42 +277,40 @@
                     const subTotal = faSum + cc + sa;
                     grandTotal += subTotal;
                     
-                    subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
+                    subCells += `<td>${fa[0]}<\/td><td>${fa[1]}<\/td><td>${fa[2]}<\/td><td>${fa[3]}<\/td><td>${fa[4]}<\/td><td>${fa[5]}<\/td><td>${cc}<\/td><td>${sa}<\/td><td class="sub-total">${subTotal}<\/td>`;
                 }
 
                 const finalResult = calculateGrades(grandTotal, 500);
                 const studentName = (s.name || s.studentName || '').toUpperCase();
                 
                 tbody.innerHTML += `<tr>
-                    <td>${s.admNo || ''}</td>
-                    <td>${s.rollNo || '-'}</td>
-                    <td>${studentClass}</td>
-                    <td class="student-info">${studentName}</td>
-                    <td class="student-info">${s.fatherName || ''}</td>
-                    <td>${s.motherName || ''}</td>
-                    <td>${s.dob || ''}</td>
-                    <td>${s.apaarId || s.apaarID || '-'}</td>
-                    <td>${s.penNo || s.penNumber || '-'}</td>
+                    <td>${s.admNo || ''}<\/td>
+                    <td>${s.rollNo || '-'}<\/td>
+                    <td>${studentClass}<\/td>
+                    <td class="student-info">${studentName}<\/td>
+                    <td class="student-info">${s.fatherName || ''}<\/td>
+                    <td>${s.motherName || ''}<\/td>
+                    <td>${s.dob || ''}<\/td>
+                    <td>${s.apaarId || s.apaarID || '-'}<\/td>
+                    <td>${s.penNo || s.penNumber || '-'}<\/td>
                     ${subCells}
-                    <td class="summary-col">${grandTotal}</td>
-                    <td class="summary-col">${finalResult.percentage}%</td>
-                    <td class="summary-col">-</td>
-                    <td class="summary-col">${finalResult.grade}</td>
-                    <td class="summary-col">${finalResult.remarks}</td>
+                    <td class="summary-col">${grandTotal}<\/td>
+                    <td class="summary-col">${finalResult.percentage}%<\/td>
+                    <td class="summary-col">-<\/td>
+                    <td class="summary-col">${finalResult.grade}<\/td>
+                    <td class="summary-col">${finalResult.remarks}<\/td>
                 </tr>`;
             }
-            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class. Try "Oct 2025" if you have uploaded data.</td></tr>";
+            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class. Try 'Oct 2025' if you have uploaded data.<\/td><\/tr>";
         } catch (error) {
             console.error(error);
-            tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.</td></tr>";
+            tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.<\/td><\/tr>";
         }
     }
 
     window.renderMasterTable = renderMasterTable;
     document.addEventListener('DOMContentLoaded', renderMasterTable);
 </script>
-
 </body>
-</html>  
+</html>
 
-            
