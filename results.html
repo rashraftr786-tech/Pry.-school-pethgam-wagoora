@@ -4,94 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Online Result | GPS Pethgam Wagoora</title>
-  <!-- Chart.js, JsBarcode, QRCode -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    @page {
-      size: A4;
-      margin: 0.8cm;
-    }
-
+    @page { size: A4; margin: 0.7cm; }
     body {
-      background: #e6f0e6;
-      font-family: 'Segoe UI', 'Poppins', 'Roboto', sans-serif;
-      padding: 20px;
+      background: linear-gradient(145deg, #d4e8d4 0%, #bdd8bd 100%);
+      font-family: 'Segoe UI', 'Poppins', Roboto, sans-serif;
+      padding: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-
+    /* Navigation – same as before */
     .nav-header {
       background: #1a5d1a;
-      padding: 10px 20px;
+      padding: 8px 20px;
       border-radius: 60px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 30px;
+      gap: 8px;
+      margin-bottom: 25px;
       width: 100%;
       max-width: 1200px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .nav-header a {
       color: white;
       text-decoration: none;
       font-weight: 600;
-      font-size: 13px;
-      padding: 5px 15px;
+      font-size: 12px;
+      padding: 5px 14px;
       border-radius: 40px;
+      transition: 0.2s;
     }
     .nav-header a:hover { background: #2e7d32; }
 
+    /* Search card */
     .search-card {
       max-width: 550px;
       width: 100%;
-      margin: 0 auto 35px;
+      margin: 0 auto 30px;
       background: white;
       border-radius: 48px;
-      padding: 20px 25px;
+      padding: 18px 25px;
       text-align: center;
-      box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.1);
     }
-    .search-card h2 { color: #1a5d1a; margin-bottom: 15px; font-size: 24px; }
+    .search-card h2 { color: #1a5d1a; margin-bottom: 12px; font-size: 22px; }
     .search-card input {
-      padding: 10px 18px;
-      width: 200px;
+      padding: 8px 16px;
+      width: 190px;
       margin: 5px;
       border: 2px solid #ccc;
-      border-radius: 50px;
+      border-radius: 40px;
     }
     .search-card button {
       background: #1a5d1a;
       color: white;
       border: none;
-      padding: 10px 25px;
-      border-radius: 50px;
+      padding: 8px 22px;
+      border-radius: 40px;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 8px;
       cursor: pointer;
     }
 
+    /* Marksheet container */
     .marksheet {
       max-width: 1100px;
       width: 100%;
       margin: 0 auto;
       background: white;
-      border-radius: 24px;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+      border-radius: 28px;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.2);
       overflow: hidden;
       display: none;
-      border: 2px solid #1a5d1a;
+      border: 2px solid #2e7d32;
       box-shadow: 0 0 0 6px #f0f7f0, 0 0 0 10px #c8e6c9;
     }
 
+    /* Header with school logo */
     .marksheet-header {
-      background: linear-gradient(135deg, #0b3d0b, #1f6d1f);
-      padding: 12px 20px;
+      background: linear-gradient(115deg, #0b3d0b, #1f6d1f);
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -99,20 +98,20 @@
       color: white;
     }
     .logo-area img {
-      height: 50px;
-      width: auto;
+      height: 48px;
       background: white;
       border-radius: 12px;
-      padding: 4px;
+      padding: 3px;
     }
     .school-text { text-align: center; flex: 2; }
-    .school-text h1 { font-size: 22px; margin-bottom: 3px; }
-    .school-text p { font-size: 10px; opacity: 0.9; }
+    .school-text h1 { font-size: 20px; letter-spacing: 0.5px; }
+    .school-text p { font-size: 9px; opacity: 0.9; }
 
+    /* Student info */
     .student-info-row {
       display: flex;
       flex-wrap: wrap;
-      background: #fef9e6;
+      background: #fff7e8;
       padding: 12px 18px;
       gap: 15px;
       border-bottom: 2px solid #ffb74d;
@@ -120,65 +119,110 @@
     .details-grid {
       flex: 3;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
-      gap: 6px 15px;
-      font-size: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(170px,1fr));
+      gap: 5px 12px;
+      font-size: 11px;
     }
     .detail-item strong {
       color: #1a5d1a;
       display: inline-block;
-      min-width: 90px;
+      min-width: 85px;
     }
     .photo-area { flex: 1; text-align: center; }
     .photo-area img {
-      width: 90px;
-      height: 90px;
+      width: 85px;
+      height: 85px;
       object-fit: cover;
       border-radius: 50%;
       border: 3px solid #ffb74d;
       background: white;
     }
 
-    .marks-table-wrapper { padding: 10px 18px; overflow-x: auto; }
+    /* Marks table – compact */
+    .marks-table-wrapper { padding: 8px 18px; overflow-x: auto; }
     .marks-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 10px;
+      font-size: 9.5px;
     }
     .marks-table th, .marks-table td {
-      border: 1px solid #ccc;
+      border: 1px solid #bbb;
       padding: 4px 2px;
       text-align: center;
     }
-    .marks-table th { background: #ffb74d; color: #2c2c2c; }
-    .subject-cell { background: #f5f5f5; font-weight: bold; text-align: left; padding-left: 8px; }
+    .marks-table th {
+      background: #ffb74d;
+      color: #2c2c2c;
+      font-weight: 700;
+    }
+    .subject-cell {
+      background: #f5f5f5;
+      font-weight: bold;
+      text-align: left;
+      padding-left: 6px;
+    }
     .grand-total-row { background: #e8f5e9; font-weight: bold; }
 
+    /* Two columns for grade key + final results */
     .info-panels {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
-      padding: 0 18px 12px;
+      gap: 12px;
+      padding: 0 18px 10px;
     }
     .grade-key, .final-results {
       flex: 1;
       background: #f1f8e9;
       border-radius: 20px;
-      padding: 8px 12px;
-      font-size: 11px;
+      padding: 6px 12px;
+      font-size: 10px;
     }
     .final-results { background: #fff3e0; }
-    .grade-key h4, .final-results h4 { font-size: 13px; margin-bottom: 5px; }
-    .grade-key table { width: 100%; font-size: 10px; }
-    .final-results p { margin: 2px 0; }
+    .grade-key h4, .final-results h4 { font-size: 12px; margin-bottom: 4px; }
+    .grade-key table { width: 100%; font-size: 9px; }
+    .final-results p { margin: 2px 0; font-size: 10px; }
 
-    .bar-chart-container { padding: 5px 18px 10px; }
-    .bar-chart-container canvas { max-height: 160px; width: 100%; }
+    /* NEW: Bar chart + QR/Barcode side by side */
+    .bottom-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 5px 18px 10px;
+      align-items: flex-start;
+    }
+    .chart-container {
+      flex: 2;
+      min-width: 200px;
+    }
+    .verification-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #faf8f0;
+      border-radius: 24px;
+      padding: 12px 10px;
+    }
+    .qr-code, .barcode {
+      text-align: center;
+    }
+    .qr-code canvas, .barcode svg {
+      width: 80px;
+      height: 80px;
+    }
+    .verification-container small {
+      font-size: 9px;
+      display: block;
+      margin-top: 2px;
+    }
 
+    /* Extra activities */
     .extra-activities {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       padding: 5px 18px;
       background: #f9f9f9;
     }
@@ -186,52 +230,33 @@
       flex: 1;
       background: white;
       border-radius: 16px;
-      padding: 5px;
+      padding: 4px;
       text-align: center;
-      font-size: 10px;
+      font-size: 9px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-
     .remarks {
       background: #fff8e1;
-      margin: 8px 18px;
-      padding: 8px 12px;
+      margin: 6px 18px;
+      padding: 7px 12px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 10px;
       border-left: 5px solid #ffb74d;
     }
-
-    .verification-codes {
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 10px 18px;
-      background: #fafafa;
-      border-top: 1px dashed #ccc;
-      border-bottom: 1px dashed #ccc;
-      margin: 8px 0;
-    }
-    .qr-code canvas, .barcode svg {
-      width: 80px;
-      height: 80px;
-    }
-    .verification-codes small { font-size: 9px; display: block; }
-
     .signatures {
       display: flex;
       justify-content: space-between;
-      padding: 12px 22px 18px;
-      font-size: 10px;
+      padding: 10px 22px 15px;
+      font-size: 9px;
     }
     .print-btn {
       display: block;
-      width: 180px;
-      margin: 12px auto 20px;
+      width: 160px;
+      margin: 10px auto 18px;
       background: #1a5d1a;
       color: white;
       border: none;
-      padding: 8px;
+      padding: 7px;
       border-radius: 40px;
       font-weight: bold;
       cursor: pointer;
@@ -240,7 +265,7 @@
     @media print {
       .nav-header, .search-card, .print-btn { display: none; }
       body { background: white; padding: 0; margin: 0; }
-      .marksheet { box-shadow: none; border: 1px solid #1a5d1a; margin: 0 auto; border-radius: 0; }
+      .marksheet { box-shadow: none; border: 1px solid #1a5d1a; border-radius: 0; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
@@ -269,7 +294,7 @@
   import { db } from './init-firebase.js';
   import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ---------- CORRECTED GRADE CALCULATOR (inline) ----------
+  // Correct grade calculator
   function calculateGrade(percentage) {
     if (percentage > 85) return { grade: "A+", remarks: "Outstanding", points: 10, level: "Sky" };
     if (percentage > 70) return { grade: "A", remarks: "Excellent", points: 8.5, level: "Mountain" };
@@ -301,14 +326,10 @@
     const rollVal = document.getElementById('rollNo').value.trim();
     let admNo = admVal;
     if (!admNo && rollVal) admNo = await findAdmByRoll(rollVal);
-    if (!admNo) {
-      alert('Please enter a valid Admission Number or Roll Number.');
-      return;
-    }
+    if (!admNo) { alert('Please enter a valid Admission Number or Roll Number.'); return; }
     const container = document.getElementById('marksheetContainer');
     container.style.display = 'block';
     container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Loading marksheet...</div>';
-    
     const data = await fetchStudentData(admNo);
     if (!data || !data.result) {
       container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">❌ No record found for Oct 2025 session.</div>';
@@ -320,7 +341,6 @@
   function renderMarksheet(student, result) {
     const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
     const display = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
-    
     let grandTotal = 0;
     let subjectPercentages = [];
     let rowsHtml = '';
@@ -334,10 +354,9 @@
       const sa = Number(m.sa)||0;
       const subTotal = faSum + cc + sa;
       grandTotal += subTotal;
-      const subPercent = (subTotal / 100) * 100;  // each subject max 100
+      const subPercent = (subTotal / 100) * 100;
       subjectPercentages.push(subPercent);
       const gradeInfo = calculateGrade(subPercent);
-      
       rowsHtml += `<tr>
         <td class="subject-cell">${display[i]}</td>
         ${fa.map(v => `<td>${v}</td>`).join('')}
@@ -353,18 +372,14 @@
     const resultText = overallPercent >= 33 ? '✅ PROMOTED' : '❌ NOT PROMOTED';
     const proficiencyLevel = overallGrade.level;
 
-    // Grade key table
     const gradeKeyHtml = `
       <h4>📊 Percentage / Grade Key</h4>
-      <table style="width:100%">
-        <tr><td>>85% - 100%</td><td>A+ (Sky)</td></tr>
-        <tr><td>>70% - 85%</td><td>A (Mountain)</td></tr>
-        <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
-        <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
-        <tr><td>>33% - 40%</td><td>D (Stream)</td></tr>
-      </table>
+      <table><tr><td>>85% - 100%</td><td>A+ (Sky)</td></tr>
+      <tr><td>>70% - 85%</td><td>A (Mountain)</td></tr>
+      <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
+      <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
+      <tr><td>>33% - 40%</td><td>D (Stream)</td></tr></table>
     `;
-
     const finalHtml = `
       <h4>🎯 Final Results</h4>
       <p><strong>Total Marks:</strong> ${grandTotal} / 500</p>
@@ -374,61 +389,44 @@
       <p><strong>Proficiency:</strong> ${proficiencyLevel}</p>
     `;
 
-    // Extra fields with fallbacks
     const attendance = result.attendance || '92%';
     const discipline = result.discipline || 'A';
     const sports = result.sports || 'Excellent';
     const artCraft = result.artCraft || 'A+';
     const socialSkills = result.socialSkills || 'Good';
     const teamwork = result.teamwork || 'A';
-    const remarks = result.remarks || `${student.name || ''} has shown ${proficiencyLevel.toLowerCase()} level performance.`;
+    const remarks = result.remarks || `${student.name || ''} has shown ${proficiencyLevel.toLowerCase()} performance.`;
 
-    // Photo handling – ensure valid URL
-    let photoUrl = student.photoURL;
-    if (!photoUrl || photoUrl === '' || photoUrl === 'null') {
-      photoUrl = 'https://via.placeholder.com/90?text=No+Photo';
-    }
-
-    // Verification URL for QR
+    let photoUrl = student.photoURL && student.photoURL !== '' ? student.photoURL : 'https://via.placeholder.com/85?text=No+Photo';
     const verifyId = `${student.admNo}_${Date.now()}`;
     const verificationUrl = `${window.location.origin}${window.location.pathname}?verify=${verifyId}`;
 
     const marksheetHtml = `
       <div class="marksheet-header">
-        <div class="logo-area">
-          <img src="logo.png" alt="School Logo" onerror="this.style.display='none'">
-        </div>
-        <div class="school-text">
-          <h1>🏫 GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-          <p>Wagoora Babareshi Road Near ZEO Office, Baramulla, J&K - 193109 | UDISE: 01022202207</p>
-        </div>
+        <div class="logo-area"><img src="logo.png" alt="Logo" onerror="this.style.display='none'"></div>
+        <div class="school-text"><h1>🏫 GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1><p>Wagoora Babareshi Road, Baramulla, J&K - 193109 | UDISE: 01022202207</p></div>
         <div style="width:50px;"></div>
       </div>
       <div class="student-info-row">
         <div class="details-grid">
-          <div class="detail-item"><strong>Student Name:</strong> ${student.name || student.studentName || ''}</div>
-          <div class="detail-item"><strong>Adm. No:</strong> ${student.admNo}</div>
-          <div class="detail-item"><strong>Roll No:</strong> ${student.rollNo || '-'}</div>
-          <div class="detail-item"><strong>Father's Name:</strong> ${student.fatherName || ''}</div>
-          <div class="detail-item"><strong>Mother's Name:</strong> ${student.motherName || ''}</div>
-          <div class="detail-item"><strong>D.O.B:</strong> ${student.dob || ''}</div>
-          <div class="detail-item"><strong>Class:</strong> ${student.class || ''}</div>
-          <div class="detail-item"><strong>Session:</strong> Oct 2025</div>
-          <div class="detail-item"><strong>Apaar ID:</strong> ${student.apaarId || student.apaarID || '-'}</div>
-          <div class="detail-item"><strong>PEN No.:</strong> ${student.penNo || student.penNumber || '-'}</div>
+          <div><strong>Student Name:</strong> ${student.name || student.studentName || ''}</div>
+          <div><strong>Adm. No:</strong> ${student.admNo}</div>
+          <div><strong>Roll No:</strong> ${student.rollNo || '-'}</div>
+          <div><strong>Father's Name:</strong> ${student.fatherName || ''}</div>
+          <div><strong>Mother's Name:</strong> ${student.motherName || ''}</div>
+          <div><strong>D.O.B:</strong> ${student.dob || ''}</div>
+          <div><strong>Class:</strong> ${student.class || ''}</div>
+          <div><strong>Session:</strong> Oct 2025</div>
+          <div><strong>Apaar ID:</strong> ${student.apaarId || student.apaarID || '-'}</div>
+          <div><strong>PEN No.:</strong> ${student.penNo || student.penNumber || '-'}</div>
         </div>
-        <div class="photo-area">
-          <img src="${photoUrl}" alt="Student Photo" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/90?text=No+Photo'">
-        </div>
+        <div class="photo-area"><img src="${photoUrl}" alt="Photo" onerror="this.src='https://via.placeholder.com/85?text=No+Photo'"></div>
       </div>
       
       <div class="marks-table-wrapper">
         <table class="marks-table">
           <thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>T(30)</th><th>CC(20)</th><th>Sum(50)</th><th>Total</th><th>Grade</th><th>Proficiency</th></tr></thead>
-          <tbody>
-            ${rowsHtml}
-            <tr class="grand-total-row"><td colspan="7"><strong>Grand Total</strong></td><td><strong>74</strong></td><td><strong>50</strong></td><td><strong>119</strong></td><td><strong>${grandTotal}</strong></td><td colspan="2"><strong>Overall: ${overallGrade.grade}</strong></td></tr>
-          </tbody>
+          <tbody>${rowsHtml}<tr class="grand-total-row"><td colspan="7"><strong>Grand Total</strong></td><td><strong>74</strong></td><td><strong>50</strong></td><td><strong>119</strong></td><td><strong>${grandTotal}</strong></td><td colspan="2"><strong>Overall: ${overallGrade.grade}</strong></td></tr></tbody>
         </table>
       </div>
       
@@ -437,8 +435,12 @@
         <div class="final-results">${finalHtml}</div>
       </div>
       
-      <div class="bar-chart-container">
-        <canvas id="subjectChart"></canvas>
+      <div class="bottom-row">
+        <div class="chart-container"><canvas id="subjectChart"></canvas></div>
+        <div class="verification-container">
+          <div class="qr-code"><div id="qrCodeDiv"></div><small>Scan to Verify</small></div>
+          <div class="barcode"><svg id="studentBarcode"></svg><small>Student ID Barcode</small></div>
+        </div>
       </div>
       
       <div class="extra-activities">
@@ -450,62 +452,28 @@
         <div class="extra-box">📊 <strong>Attendance</strong><br>${attendance}</div>
       </div>
       
-      <div class="remarks">
-        <strong>📝 General Remarks</strong><br>${remarks}
-      </div>
-      
-      <div class="verification-codes">
-        <div class="qr-code"><div id="qrCodeDiv"></div><small>Scan to Verify</small></div>
-        <div class="barcode"><svg id="studentBarcode"></svg><small>Student ID Barcode</small></div>
-      </div>
-      
+      <div class="remarks"><strong>📝 General Remarks</strong><br>${remarks}</div>
       <div class="signatures">
-        <div>Sign. Form Teacher</div>
-        <div>Sign. Exam I/C</div>
-        <div>Parents Signature</div>
-        <div>Seal & Sign. Headmaster</div>
+        <div>Sign. Form Teacher</div><div>Sign. Exam I/C</div><div>Parents Signature</div><div>Seal & Sign. Headmaster</div>
       </div>
       <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
     `;
     
     document.getElementById('marksheetContainer').innerHTML = marksheetHtml;
     
-    // Draw bar chart
+    // Bar chart
     const ctx = document.getElementById('subjectChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
-      data: {
-        labels: display,
-        datasets: [{
-          label: 'Percentage (%)',
-          data: subjectPercentages,
-          backgroundColor: ['#2e7d32','#ffb74d','#42a5f5','#ab47bc','#ef5350'],
-          borderRadius: 8,
-          barPercentage: 0.7
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: { legend: { position: 'top', labels: { font: { size: 10 } } } },
-        scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage', font: { size: 10 } } } }
-      }
+      data: { labels: display, datasets: [{ label: 'Percentage (%)', data: subjectPercentages, backgroundColor: ['#2e7d32','#ffb74d','#42a5f5','#ab47bc','#ef5350'], borderRadius: 8, barPercentage: 0.7 }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 10 } } } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage', font: { size: 10 } } } } }
     });
     
     // Barcode
-    const barcodeValue = `${student.admNo}-${student.rollNo || '000'}`;
-    JsBarcode("#studentBarcode", barcodeValue, { format: "CODE128", width: 1.4, height: 40, displayValue: true, fontSize: 10 });
-    
+    JsBarcode("#studentBarcode", `${student.admNo}-${student.rollNo || '000'}`, { format: "CODE128", width: 1.5, height: 45, displayValue: true, fontSize: 9 });
     // QR code
-    new QRCode(document.getElementById("qrCodeDiv"), {
-      text: verificationUrl,
-      width: 80,
-      height: 80,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
-    });
+    new QRCode(document.getElementById("qrCodeDiv"), { text: verificationUrl, width: 85, height: 85, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
   }
 </script>
 </body>
-</html>
+</html>                  
