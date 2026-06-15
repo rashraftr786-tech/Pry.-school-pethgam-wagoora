@@ -11,7 +11,6 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* A4 print setup – tighter margins for single page */
     @page {
       size: A4;
       margin: 0.8cm;
@@ -26,7 +25,6 @@
       align-items: center;
     }
 
-    /* Navigation (hidden when printing) */
     .nav-header {
       background: #1a5d1a;
       padding: 10px 20px;
@@ -49,7 +47,6 @@
     }
     .nav-header a:hover { background: #2e7d32; }
 
-    /* Search Card */
     .search-card {
       max-width: 550px;
       width: 100%;
@@ -79,7 +76,6 @@
       cursor: pointer;
     }
 
-    /* Marksheet – single A4 with border */
     .marksheet {
       max-width: 1100px;
       width: 100%;
@@ -91,10 +87,8 @@
       display: none;
       border: 2px solid #1a5d1a;
       box-shadow: 0 0 0 6px #f0f7f0, 0 0 0 10px #c8e6c9;
-      position: relative;
     }
 
-    /* School logo in header */
     .marksheet-header {
       background: linear-gradient(135deg, #0b3d0b, #1f6d1f);
       padding: 12px 20px;
@@ -104,11 +98,6 @@
       flex-wrap: wrap;
       color: white;
     }
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
     .logo-area img {
       height: 50px;
       width: auto;
@@ -116,21 +105,10 @@
       border-radius: 12px;
       padding: 4px;
     }
-    .school-text {
-      text-align: center;
-      flex: 2;
-    }
-    .school-text h1 {
-      font-size: 22px;
-      letter-spacing: 1px;
-      margin-bottom: 3px;
-    }
-    .school-text p {
-      font-size: 10px;
-      opacity: 0.9;
-    }
+    .school-text { text-align: center; flex: 2; }
+    .school-text h1 { font-size: 22px; margin-bottom: 3px; }
+    .school-text p { font-size: 10px; opacity: 0.9; }
 
-    /* Student info – tighter */
     .student-info-row {
       display: flex;
       flex-wrap: wrap;
@@ -151,10 +129,7 @@
       display: inline-block;
       min-width: 90px;
     }
-    .photo-area {
-      flex: 1;
-      text-align: center;
-    }
+    .photo-area { flex: 1; text-align: center; }
     .photo-area img {
       width: 90px;
       height: 90px;
@@ -164,11 +139,7 @@
       background: white;
     }
 
-    /* Marks table – compact */
-    .marks-table-wrapper {
-      padding: 10px 18px;
-      overflow-x: auto;
-    }
+    .marks-table-wrapper { padding: 10px 18px; overflow-x: auto; }
     .marks-table {
       width: 100%;
       border-collapse: collapse;
@@ -179,22 +150,10 @@
       padding: 4px 2px;
       text-align: center;
     }
-    .marks-table th {
-      background: #ffb74d;
-      color: #2c2c2c;
-    }
-    .subject-cell {
-      background: #f5f5f5;
-      font-weight: bold;
-      text-align: left;
-      padding-left: 8px;
-    }
-    .grand-total-row {
-      background: #e8f5e9;
-      font-weight: bold;
-    }
+    .marks-table th { background: #ffb74d; color: #2c2c2c; }
+    .subject-cell { background: #f5f5f5; font-weight: bold; text-align: left; padding-left: 8px; }
+    .grand-total-row { background: #e8f5e9; font-weight: bold; }
 
-    /* Info panels – side by side */
     .info-panels {
       display: flex;
       flex-wrap: wrap;
@@ -209,23 +168,13 @@
       font-size: 11px;
     }
     .final-results { background: #fff3e0; }
-    .grade-key h4, .final-results h4 {
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
+    .grade-key h4, .final-results h4 { font-size: 13px; margin-bottom: 5px; }
     .grade-key table { width: 100%; font-size: 10px; }
     .final-results p { margin: 2px 0; }
 
-    /* Bar chart – slightly smaller */
-    .bar-chart-container {
-      padding: 5px 18px 10px;
-    }
-    .bar-chart-container canvas {
-      max-height: 160px;
-      width: 100%;
-    }
+    .bar-chart-container { padding: 5px 18px 10px; }
+    .bar-chart-container canvas { max-height: 160px; width: 100%; }
 
-    /* Extra activities – compact */
     .extra-activities {
       display: flex;
       flex-wrap: wrap;
@@ -242,7 +191,6 @@
       font-size: 10px;
     }
 
-    /* Remarks */
     .remarks {
       background: #fff8e1;
       margin: 8px 18px;
@@ -252,7 +200,6 @@
       border-left: 5px solid #ffb74d;
     }
 
-    /* QR + Barcode section */
     .verification-codes {
       display: flex;
       justify-content: space-evenly;
@@ -265,19 +212,12 @@
       border-bottom: 1px dashed #ccc;
       margin: 8px 0;
     }
-    .qr-code, .barcode {
-      text-align: center;
-    }
     .qr-code canvas, .barcode svg {
       width: 80px;
       height: 80px;
     }
-    .verification-codes small {
-      font-size: 9px;
-      display: block;
-    }
+    .verification-codes small { font-size: 9px; display: block; }
 
-    /* Signatures */
     .signatures {
       display: flex;
       justify-content: space-between;
@@ -297,30 +237,11 @@
       cursor: pointer;
     }
 
-    /* Print optimisation – ensure single page */
     @media print {
       .nav-header, .search-card, .print-btn { display: none; }
       body { background: white; padding: 0; margin: 0; }
-      .marksheet {
-        box-shadow: none;
-        border: 1px solid #1a5d1a;
-        margin: 0 auto;
-        max-width: 100%;
-        border-radius: 0;
-      }
-      .marksheet-header { background: #1a5d1a; color: white; }
-      .student-info-row, .grade-key, .final-results, .extra-box, .remarks {
-        break-inside: avoid;
-      }
-      .marks-table, .bar-chart-container, .verification-codes {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-      /* Ensure backgrounds and borders print */
-      * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+      .marksheet { box-shadow: none; border: 1px solid #1a5d1a; margin: 0 auto; border-radius: 0; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -347,7 +268,16 @@
 <script type="module">
   import { db } from './init-firebase.js';
   import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { calculateGrades, getProficiencyLevel } from './results-handler.js';
+
+  // ---------- CORRECTED GRADE CALCULATOR (inline) ----------
+  function calculateGrade(percentage) {
+    if (percentage > 85) return { grade: "A+", remarks: "Outstanding", points: 10, level: "Sky" };
+    if (percentage > 70) return { grade: "A", remarks: "Excellent", points: 8.5, level: "Mountain" };
+    if (percentage > 55) return { grade: "B", remarks: "Good", points: 7, level: "Stream" };
+    if (percentage > 40) return { grade: "C", remarks: "Average", points: 5.5, level: "Stream" };
+    if (percentage > 33) return { grade: "D", remarks: "Pass", points: 4, level: "Stream" };
+    return { grade: "E", remarks: "Needs Improvement", points: 0, level: "Stream" };
+  }
 
   async function findAdmByRoll(roll) {
     const q = query(collection(db, "students"), where("rollNo", "==", String(roll)));
@@ -404,56 +334,62 @@
       const sa = Number(m.sa)||0;
       const subTotal = faSum + cc + sa;
       grandTotal += subTotal;
-      const subPercent = (subTotal/100)*100;
+      const subPercent = (subTotal / 100) * 100;  // each subject max 100
       subjectPercentages.push(subPercent);
-      const gradeObj = calculateGrades(subPercent, 100);
-      const proficiency = getProficiencyLevel(subPercent);
+      const gradeInfo = calculateGrade(subPercent);
       
       rowsHtml += `<tr>
         <td class="subject-cell">${display[i]}</td>
         ${fa.map(v => `<td>${v}</td>`).join('')}
         <td>${faSum}</td><td>${cc}</td><td>${sa}</td>
         <td><strong>${subTotal}</strong></td>
-        <td>${gradeObj.grade}</td>
-        <td>${proficiency}</td>
+        <td>${gradeInfo.grade}</td>
+        <td>${gradeInfo.level}</td>
       </tr>`;
     }
 
-    const overallPercent = (grandTotal/500)*100;
-    const overallGrade = calculateGrades(overallPercent, 500);
-    const overallProf = getProficiencyLevel(overallPercent);
+    const overallPercent = (grandTotal / 500) * 100;
+    const overallGrade = calculateGrade(overallPercent);
     const resultText = overallPercent >= 33 ? '✅ PROMOTED' : '❌ NOT PROMOTED';
+    const proficiencyLevel = overallGrade.level;
 
+    // Grade key table
     const gradeKeyHtml = `
       <h4>📊 Percentage / Grade Key</h4>
-      <table><tr><td>>85% - 100%</td><td>A+ (Sky)</td></tr>
-      <tr><td>>70% - 85%</td><td>A (Mountain)</td></tr>
-      <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
-      <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
-      <tr><td>>33% - 40%</td><td>D (Stream)</td></tr></table>
+      <table style="width:100%">
+        <tr><td>>85% - 100%</td><td>A+ (Sky)</td></tr>
+        <tr><td>>70% - 85%</td><td>A (Mountain)</td></tr>
+        <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
+        <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
+        <tr><td>>33% - 40%</td><td>D (Stream)</td></tr>
+      </table>
     `;
+
     const finalHtml = `
       <h4>🎯 Final Results</h4>
       <p><strong>Total Marks:</strong> ${grandTotal} / 500</p>
       <p><strong>%age:</strong> ${overallPercent.toFixed(2)}%</p>
       <p><strong>Result:</strong> ${resultText}</p>
       <p><strong>Grade:</strong> ${overallGrade.grade}</p>
-      <p><strong>Proficiency:</strong> ${overallProf}</p>
+      <p><strong>Proficiency:</strong> ${proficiencyLevel}</p>
     `;
 
-    // Extra fields
+    // Extra fields with fallbacks
     const attendance = result.attendance || '92%';
     const discipline = result.discipline || 'A';
     const sports = result.sports || 'Excellent';
     const artCraft = result.artCraft || 'A+';
     const socialSkills = result.socialSkills || 'Good';
     const teamwork = result.teamwork || 'A';
-    const remarks = result.remarks || `${student.name || ''} has shown ${overallProf.toLowerCase()} level performance.`;
+    const remarks = result.remarks || `${student.name || ''} has shown ${proficiencyLevel.toLowerCase()} level performance.`;
 
-    // Determine photo URL
-    const photoUrl = student.photoURL && student.photoURL !== '' ? student.photoURL : 'https://via.placeholder.com/90?text=📷';
+    // Photo handling – ensure valid URL
+    let photoUrl = student.photoURL;
+    if (!photoUrl || photoUrl === '' || photoUrl === 'null') {
+      photoUrl = 'https://via.placeholder.com/90?text=No+Photo';
+    }
 
-    // Unique verification ID (student ID + timestamp)
+    // Verification URL for QR
     const verifyId = `${student.admNo}_${Date.now()}`;
     const verificationUrl = `${window.location.origin}${window.location.pathname}?verify=${verifyId}`;
 
@@ -463,10 +399,10 @@
           <img src="logo.png" alt="School Logo" onerror="this.style.display='none'">
         </div>
         <div class="school-text">
-          <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+          <h1>🏫 GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
           <p>Wagoora Babareshi Road Near ZEO Office, Baramulla, J&K - 193109 | UDISE: 01022202207</p>
         </div>
-        <div style="width:50px;"></div> <!-- spacer for balance -->
+        <div style="width:50px;"></div>
       </div>
       <div class="student-info-row">
         <div class="details-grid">
@@ -478,11 +414,11 @@
           <div class="detail-item"><strong>D.O.B:</strong> ${student.dob || ''}</div>
           <div class="detail-item"><strong>Class:</strong> ${student.class || ''}</div>
           <div class="detail-item"><strong>Session:</strong> Oct 2025</div>
-          <div class="detail-item"><strong>Apara ID:</strong> ${student.apaarId || student.apaarID || '-'}</div>
+          <div class="detail-item"><strong>Apaar ID:</strong> ${student.apaarId || student.apaarID || '-'}</div>
           <div class="detail-item"><strong>PEN No.:</strong> ${student.penNo || student.penNumber || '-'}</div>
         </div>
         <div class="photo-area">
-          <img src="${photoUrl}" alt="Student Photo" onerror="this.src='https://via.placeholder.com/90?text=No+Photo'">
+          <img src="${photoUrl}" alt="Student Photo" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/90?text=No+Photo'">
         </div>
       </div>
       
@@ -519,14 +455,8 @@
       </div>
       
       <div class="verification-codes">
-        <div class="qr-code">
-          <div id="qrCodeDiv"></div>
-          <small>Scan to Verify</small>
-        </div>
-        <div class="barcode">
-          <svg id="studentBarcode"></svg>
-          <small>Student ID Barcode</small>
-        </div>
+        <div class="qr-code"><div id="qrCodeDiv"></div><small>Scan to Verify</small></div>
+        <div class="barcode"><svg id="studentBarcode"></svg><small>Student ID Barcode</small></div>
       </div>
       
       <div class="signatures">
@@ -562,11 +492,11 @@
       }
     });
     
-    // Generate barcode
+    // Barcode
     const barcodeValue = `${student.admNo}-${student.rollNo || '000'}`;
     JsBarcode("#studentBarcode", barcodeValue, { format: "CODE128", width: 1.4, height: 40, displayValue: true, fontSize: 10 });
     
-    // Generate QR code
+    // QR code
     new QRCode(document.getElementById("qrCodeDiv"), {
       text: verificationUrl,
       width: 80,
@@ -578,5 +508,4 @@
   }
 </script>
 </body>
-</html>      
-    .            
+</html>
