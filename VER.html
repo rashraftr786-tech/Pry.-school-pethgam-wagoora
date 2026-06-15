@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Village Education Register | GPS Pethgam Wagoora</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Village Education Register (VER) Survey | GPS Pethgam</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f7f6;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f0;
       margin: 0;
       padding: 20px;
     }
@@ -17,481 +19,482 @@
       gap: 15px;
       justify-content: center;
       margin-bottom: 20px;
-      border-radius: 4px;
+      border-radius: 8px;
       flex-wrap: wrap;
     }
     .nav-header a {
       color: white;
       text-decoration: none;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
       padding: 5px 10px;
     }
     .container {
       max-width: 1400px;
       margin: auto;
       background: white;
-      padding: 20px;
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
     }
-    .section-title {
-      color: #1a5d1a;
-      border-left: 5px solid #1a5d1a;
-      padding-left: 12px;
-      margin-bottom: 20px;
-    }
-    .upload-area {
-      background: #e8f0fe;
-      padding: 15px;
-      border-radius: 8px;
+    h2, h3 { color: #1a5d1a; }
+    .form-section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
       margin-bottom: 30px;
-      border: 1px solid #1a5d1a;
+      border: 1px solid #ddd;
     }
-    .upload-area input, .upload-area button {
-      margin: 5px;
-      padding: 8px 15px;
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: flex-end;
     }
-    .btn {
-      background: #2c7a2c;
+    .form-group {
+      flex: 1;
+      min-width: 180px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    button {
+      background: #1a5d1a;
       color: white;
       border: none;
-      border-radius: 4px;
+      padding: 8px 16px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
     }
-    .btn-danger {
-      background: #a94442;
-    }
-    .progress-bar {
-      width: 100%;
-      background: #ddd;
-      border-radius: 5px;
-      margin: 10px 0;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 20px;
-      background: #1a5d1a;
-      border-radius: 5px;
-      text-align: center;
-      color: white;
-      font-size: 12px;
-      line-height: 20px;
-    }
-    .log-area {
-      max-height: 150px;
-      overflow-y: auto;
-      background: #f9f9f9;
-      padding: 8px;
-      font-size: 12px;
-      font-family: monospace;
-      margin-top: 10px;
-      border: 1px solid #ddd;
-    }
-    .search-section {
-      margin-bottom: 25px;
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .search-section input, .search-section select {
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-    .record-table {
+    button.danger { background: #a33; }
+    button.warning { background: #e68a2e; }
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin: 15px 0;
       font-size: 12px;
-      overflow-x: auto;
-      display: block;
     }
-    .record-table th, .record-table td {
-      border: 1px solid #ccc;
+    th, td {
+      border: 1px solid #aaa;
       padding: 6px;
-      text-align: left;
-      vertical-align: top;
+      text-align: center;
+      vertical-align: middle;
     }
-    .record-table th {
-      background: #1a5d1a;
-      color: white;
-      position: sticky;
-      top: 0;
+    th { background: #1a5d1a; color: white; }
+    .actions button {
+      margin: 0 2px;
+      padding: 4px 8px;
+      font-size: 11px;
     }
-    .summary-card {
+    .saved-list {
+      margin-top: 30px;
+    }
+    .saved-item {
       background: #f0f7f0;
-      padding: 15px;
+      padding: 10px;
+      margin-bottom: 8px;
       border-radius: 8px;
-      margin-top: 20px;
-    }
-    .flex-between {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
+      align-items: center;
     }
-    @media print {
-      .nav-header, .upload-area, .search-section, .no-print { display: none; }
-    }
+    .error { color: red; font-size: 12px; }
+    @media print { .nav-header, .no-print { display: none; } }
   </style>
 </head>
 <body>
-
 <div class="nav-header">
   <a href="admission.html">📝 Admission</a>
   <a href="adm-register.html">📋 Register</a>
   <a href="upload-results.html">📤 Upload Marks</a>
-  <a href="results.html">🎓 Online Result</a>
+  <a href="results.html">🎓 Result Search</a>
   <a href="master-profile.html">📊 Master Record</a>
-  <a href="ver-management.html">🏡 Village Register</a>
+  <a href="ver-survey.html">📋 VER Survey</a>
 </div>
 
 <div class="container">
-  <h2 class="section-title">📋 Village Education Register (VER)</h2>
+  <h2>📋 Village Education Register (VER) Survey</h2>
+  <p>Fill Head of Household details once, then add children. All data is saved to Firestore. Export to Excel in official templates.</p>
 
-  <!-- Excel Upload Section -->
-  <div class="upload-area">
-    <h3>📂 Upload Excel (VER Format)</h3>
-    <p>Accepting <strong>Student Wise</strong> and <strong>Consolidated</strong> sheets.</p>
-    <input type="file" id="verExcelFile" accept=".xlsx, .xls">
-    <button id="uploadVerBtn" class="btn">⬆️ Upload & Save</button>
-    <div class="progress-bar" style="display:none;" id="progressContainer">
-      <div class="progress-fill" id="progressFill">0%</div>
+  <!-- Head of Household Section (only once) -->
+  <div class="form-section">
+    <h3>🏠 Head of Household & Village Info</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Village / Ward *</label><input type="text" id="village" placeholder="e.g., Pethgam"></div>
+      <div class="form-group"><label>Panchayat</label><input type="text" id="panchayat"></div>
+      <div class="form-group"><label>Zone</label><input type="text" id="zone"></div>
+      <div class="form-group"><label>District</label><input type="text" id="district" value="Baramulla"></div>
+      <div class="form-group"><label>School Name</label><input type="text" id="schoolName" value="GPS Pethgam Wagoora"></div>
     </div>
-    <div class="log-area" id="uploadLog"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Name of Head of Family *</label><input type="text" id="headName"></div>
+      <div class="form-group"><label>Family ID / Aadhar No.</label><input type="text" id="familyId"></div>
+      <div class="form-group"><label>Mobile (mandatory) *</label><input type="text" id="mobile"></div>
+      <div class="form-group"><label>Address</label><input type="text" id="address"></div>
+      <div class="form-group"><label>Date of Survey</label><input type="date" id="surveyDate"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Prepared by (Teacher Name)</label><input type="text" id="teacherName"></div>
+      <div class="form-group"><label>Teacher Mobile</label><input type="text" id="teacherMobile"></div>
+      <div class="form-group"><label>Academic Session</label><input type="text" id="session" value="2025-26"></div>
+    </div>
   </div>
 
-  <!-- Search Section -->
-  <div class="search-section">
-    <input type="text" id="searchName" placeholder="Search by Child Name">
-    <input type="text" id="searchVillage" placeholder="Search by Village">
-    <select id="searchGender">
-      <option value="">All Genders</option>
-      <option value="Boy">Boy</option>
-      <option value="Girl">Girl</option>
-    </select>
-    <button id="searchBtn" class="btn">🔍 Search</button>
-    <button id="refreshBtn" class="btn">🔄 Refresh All</button>
-  </div>
-
-  <!-- Consolidated Summary (from saved data) -->
-  <div id="summaryArea" class="summary-card" style="display:none;">
-    <h3>📊 Consolidated Summary</h3>
-    <div class="flex-between" id="summaryContent"></div>
-  </div>
-
-  <!-- Data Table -->
-  <div style="overflow-x: auto;">
-    <table class="record-table" id="verTable">
+  <!-- Children List (dynamic) -->
+  <div class="form-section">
+    <h3>👧 Children (0-18 years) – Add each child</h3>
+    <table id="childrenTable">
       <thead>
-        <tr>
-          <th>S.No</th><th>Student Name</th><th>Father Name</th><th>Mother Name</th><th>Guardian</th>
-          <th>Mobile</th><th>Address</th><th>Gender</th><th>DOB</th><th>Age</th>
-          <th>CWSN</th><th>Category</th><th>Religion</th><th>Drop Out</th><th>Period</th>
-          <th>Last School UDISE</th><th>Last Class</th><th>District</th><th>Zone</th>
-          <th>Training Required</th><th>Mode</th><th>Financial Support</th><th>Migrant</th>
-          <th>Training Duration</th><th>Training Class</th><th>Center Type</th><th>Enrolment School UDISE</th>
-        </tr>
+        <tr><th>S.No</th><th>Child Name</th><th>Gender</th><th>DOB/Age</th><th>Class Last Attended</th><th>Present Status</th><th>School Name (if enrolled)</th><th>School Type</th><th>CWSN (Yes/No)</th><th>Disability Type</th><th>Disability Certificate</th><th>Remarks</th><th>Actions</th></tr>
       </thead>
-      <tbody id="verTableBody">
-        <tr><td colspan="27">No records found. Upload an Excel file first.</td></tr>
-      </tbody>
+      <tbody id="childrenBody"></tbody>
     </table>
+    <button id="addChildBtn">➕ Add Child</button>
+  </div>
+
+  <!-- Action Taken (Part D) -->
+  <div class="form-section">
+    <h3>📌 Action Taken / Proposed by VEC</h3>
+    <div id="actionRows">
+      <div class="form-row action-row">
+        <div class="form-group"><label>Date</label><input type="date" class="actionDate"></div>
+        <div class="form-group"><label>Issue Identified</label><input type="text" class="actionIssue"></div>
+        <div class="form-group"><label>Proposed Action</label><input type="text" class="actionProposed"></div>
+        <div class="form-group"><label>Timeline</label><input type="text" class="actionTimeline"></div>
+        <div class="form-group"><label>Responsible</label><input type="text" class="actionResponsible"></div>
+        <div class="form-group"><label>Status</label><select class="actionStatus"><option>Pending</option><option>Completed</option></select></div>
+        <div><button type="button" class="removeActionBtn" style="background:#a33;">✖</button></div>
+      </div>
+    </div>
+    <button id="addActionBtn">➕ Add Action</button>
+  </div>
+
+  <!-- Buttons -->
+  <div style="display: flex; gap: 15px; margin: 20px 0;">
+    <button id="saveSurveyBtn">💾 Save Survey (Household)</button>
+    <button id="exportStudentWiseBtn" class="warning">📎 Export Student-wise Excel</button>
+    <button id="exportConsolidatedBtn" class="warning">📊 Export Consolidated Excel</button>
+  </div>
+
+  <!-- List of saved surveys -->
+  <div class="saved-list">
+    <h3>📂 Saved Household Surveys</h3>
+    <div id="savedSurveysList"></div>
   </div>
 </div>
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
   import { db } from './init-firebase.js';
-  import { collection, doc, setDoc, getDocs, query, where, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import * as XLSX from 'https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js';
 
-  // DOM elements
-  const fileInput = document.getElementById('verExcelFile');
-  const uploadBtn = document.getElementById('uploadVerBtn');
-  const progressContainer = document.getElementById('progressContainer');
-  const progressFill = document.getElementById('progressFill');
-  const uploadLog = document.getElementById('uploadLog');
-  const searchName = document.getElementById('searchName');
-  const searchVillage = document.getElementById('searchVillage');
-  const searchGender = document.getElementById('searchGender');
-  const searchBtn = document.getElementById('searchBtn');
-  const refreshBtn = document.getElementById('refreshBtn');
-  const verTableBody = document.getElementById('verTableBody');
-  const summaryArea = document.getElementById('summaryArea');
-  const summaryContent = document.getElementById('summaryContent');
+  // ---------- Global state ----------
+  let childrenData = [];   // array of child objects
+  let currentEditId = null; // for editing an existing survey
 
-  function addLog(msg, isError = false) {
-    const div = document.createElement('div');
-    div.textContent = msg;
-    div.style.color = isError ? 'red' : 'green';
-    uploadLog.appendChild(div);
-    uploadLog.scrollTop = uploadLog.scrollHeight;
-  }
-
-  // Parse "Student Wise" sheet (Sheet 1)
-  function parseStudentWiseSheet(worksheet) {
-    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
-    if (!rows || rows.length < 3) return [];
-    // Find the actual header row (look for "S. No." column)
-    let headerIndex = -1;
-    for (let i = 0; i < Math.min(rows.length, 10); i++) {
-      const row = rows[i];
-      if (row && row[0] && row[0].toString().trim() === "S. No.") {
-        headerIndex = i;
-        break;
-      }
-    }
-    if (headerIndex === -1) {
-      // Fallback: assume row 2 (index 1) is header based on sample
-      headerIndex = 1;
-    }
-    const headers = rows[headerIndex];
-    const dataRows = rows.slice(headerIndex + 1).filter(row => row && row.length >= 2 && row[0] && row[0].toString().trim() !== "");
-    const students = [];
-    for (const row of dataRows) {
-      const student = {
-        sNo: row[0] || "",
-        studentName: row[1] || "",
-        fatherName: row[2] || "",
-        motherName: row[3] || "",
-        localGuardian: row[4] || "",
-        mobile: row[5] || "",
-        address: row[6] || "",
-        gender: row[7] || "",
-        dob: row[8] || "",
-        age: row[9] || "",
-        cwsn: row[10] || "",
-        category: row[11] || "",
-        religion: row[12] || "",
-        dropOut: row[13] || "",
-        dropOutPeriod: row[14] || "",
-        lastSchoolUdis: row[15] || "",
-        lastClass: row[16] || "",
-        district: row[17] || "",
-        zone: row[18] || "",
-        trainingRequired: row[19] || "",
-        trainingMode: row[20] || "",
-        financialSupport: row[21] || "",
-        isMigrant: row[22] || "",
-        trainingDuration: row[23] || "",
-        trainingClass: row[24] || "",
-        centerType: row[25] || "",
-        enrolmentSchoolUdis: row[26] || ""
-      };
-      students.push(student);
-    }
-    return students;
-  }
-
-  // Parse "Consolidated" sheet (Sheet 2)
-  function parseConsolidatedSheet(worksheet) {
-    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
-    if (!rows || rows.length < 3) return null;
-    // Find header with "S. No." and "Village"
-    let headerIndex = -1;
-    for (let i = 0; i < Math.min(rows.length, 10); i++) {
-      const row = rows[i];
-      if (row && row[0] && row[0].toString().trim() === "S. No." && row[1] === "Village") {
-        headerIndex = i;
-        break;
-      }
-    }
-    if (headerIndex === -1) return null;
-    const dataRows = rows.slice(headerIndex + 1).filter(r => r && r[0] && r[0].toString().trim() !== "");
-    const summaries = dataRows.map(row => ({
-      sNo: row[0] || "",
-      village: row[1] || "",
-      udiseCode: row[2] || "",
-      schoolName: row[3] || "",
-      totalOosc: row[4] || "",
-      boys3_8: row[5] || "",
-      girls3_8: row[6] || "",
-      boys8_11: row[7] || "",
-      girls8_11: row[8] || "",
-      boys11_14: row[9] || "",
-      girls11_14: row[10] || "",
-      boys14_16: row[11] || "",
-      girls14_16: row[12] || "",
-      boys16_18: row[13] || "",
-      girls16_18: row[14] || "",
-      grandBoys: row[15] || "",
-      grandGirls: row[16] || ""
-    }));
-    return summaries;
-  }
-
-  // Save student wise records to Firestore (collection: ver_children)
-  async function saveStudentWise(students) {
-    const batch = writeBatch(db);
-    const collectionRef = collection(db, "ver_children");
-    // Clear existing data? Optional: delete all first. We'll just add/overwrite by ID.
-    for (const student of students) {
-      const docId = `${student.sNo}_${student.studentName}_${Date.now()}`; // unique ID
-      const docRef = doc(collectionRef, docId);
-      batch.set(docRef, { ...student, uploadedAt: new Date().toISOString() });
-    }
-    await batch.commit();
-    return students.length;
-  }
-
-  // Save consolidated summary
-  async function saveConsolidated(summaries) {
-    const batch = writeBatch(db);
-    const collectionRef = collection(db, "ver_consolidated");
-    for (const summary of summaries) {
-      const docId = `${summary.village}_${summary.udiseCode}`;
-      const docRef = doc(collectionRef, docId);
-      batch.set(docRef, { ...summary, updatedAt: new Date().toISOString() }, { merge: true });
-    }
-    await batch.commit();
-  }
-
-  // Load and display records based on search filters
-  async function loadAndDisplay() {
-    const nameFilter = searchName.value.trim().toLowerCase();
-    const villageFilter = searchVillage.value.trim().toLowerCase();
-    const genderFilter = searchGender.value;
-
-    const querySnapshot = await getDocs(collection(db, "ver_children"));
-    let records = [];
-    querySnapshot.forEach(doc => records.push({ id: doc.id, ...doc.data() }));
-
-    // Apply filters
-    let filtered = records;
-    if (nameFilter) {
-      filtered = filtered.filter(r => r.studentName && r.studentName.toLowerCase().includes(nameFilter));
-    }
-    if (villageFilter) {
-      filtered = filtered.filter(r => r.address && r.address.toLowerCase().includes(villageFilter));
-    }
-    if (genderFilter) {
-      filtered = filtered.filter(r => r.gender === genderFilter);
-    }
-    // Sort by S.No if numeric
-    filtered.sort((a,b) => (parseInt(a.sNo) || 0) - (parseInt(b.sNo) || 0));
-
-    if (filtered.length === 0) {
-      verTableBody.innerHTML = '<tr><td colspan="27">No matching records found.</td></tr>';
-    } else {
-      verTableBody.innerHTML = filtered.map(r => `
-        <tr>
-          <td>${escapeHtml(r.sNo)}</td><td>${escapeHtml(r.studentName)}</td><td>${escapeHtml(r.fatherName)}</td>
-          <td>${escapeHtml(r.motherName)}</td><td>${escapeHtml(r.localGuardian)}</td><td>${escapeHtml(r.mobile)}</td>
-          <td>${escapeHtml(r.address)}</td><td>${escapeHtml(r.gender)}</td><td>${escapeHtml(r.dob)}</td>
-          <td>${escapeHtml(r.age)}</td><td>${escapeHtml(r.cwsn)}</td><td>${escapeHtml(r.category)}</td>
-          <td>${escapeHtml(r.religion)}</td><td>${escapeHtml(r.dropOut)}</td><td>${escapeHtml(r.dropOutPeriod)}</td>
-          <td>${escapeHtml(r.lastSchoolUdis)}</td><td>${escapeHtml(r.lastClass)}</td><td>${escapeHtml(r.district)}</td>
-          <td>${escapeHtml(r.zone)}</td><td>${escapeHtml(r.trainingRequired)}</td><td>${escapeHtml(r.trainingMode)}</td>
-          <td>${escapeHtml(r.financialSupport)}</td><td>${escapeHtml(r.isMigrant)}</td><td>${escapeHtml(r.trainingDuration)}</td>
-          <td>${escapeHtml(r.trainingClass)}</td><td>${escapeHtml(r.centerType)}</td><td>${escapeHtml(r.enrolmentSchoolUdis)}</td>
-        </tr>
-      `).join('');
-    }
-
-    // Load and display consolidated summary
-    const consSnapshot = await getDocs(collection(db, "ver_consolidated"));
-    let totalOosc = 0, totalBoys = 0, totalGirls = 0;
-    consSnapshot.forEach(doc => {
-      const data = doc.data();
-      totalOosc += parseInt(data.totalOosc) || 0;
-      totalBoys += (parseInt(data.grandBoys) || 0);
-      totalGirls += (parseInt(data.grandGirls) || 0);
+  // Helper to render children table
+  function renderChildrenTable() {
+    const tbody = document.getElementById('childrenBody');
+    tbody.innerHTML = '';
+    childrenData.forEach((child, idx) => {
+      const row = tbody.insertRow();
+      row.insertCell(0).innerText = idx+1;
+      row.insertCell(1).innerHTML = `<input type="text" value="${escapeHtml(child.childName)}" class="child-name" data-idx="${idx}">`;
+      row.insertCell(2).innerHTML = `<select class="child-gender" data-idx="${idx}"><option ${child.gender=='Boy'?'selected':''}>Boy</option><option ${child.gender=='Girl'?'selected':''}>Girl</option></select>`;
+      row.insertCell(3).innerHTML = `<input type="text" value="${child.dobAge||''}" placeholder="DD/MM/YYYY or Age" class="child-dob" data-idx="${idx}">`;
+      row.insertCell(4).innerHTML = `<input type="text" value="${child.lastClass||''}" class="child-class" data-idx="${idx}">`;
+      row.insertCell(5).innerHTML = `<select class="child-status" data-idx="${idx}"><option ${child.status=='Enrolled'?'selected':''}>Enrolled</option><option ${child.status=='Drop Out'?'selected':''}>Drop Out</option><option ${child.status=='Never Enrolled'?'selected':''}>Never Enrolled</option></select>`;
+      row.insertCell(6).innerHTML = `<input type="text" value="${child.schoolName||''}" class="child-school" data-idx="${idx}">`;
+      row.insertCell(7).innerHTML = `<select class="child-schoolType" data-idx="${idx}"><option ${child.schoolType=='Govt.'?'selected':''}>Govt.</option><option ${child.schoolType=='Private'?'selected':''}>Private</option><option ${child.schoolType=='Govt aided'?'selected':''}>Govt aided</option></select>`;
+      row.insertCell(8).innerHTML = `<select class="child-cwsn" data-idx="${idx}"><option ${child.cwsn=='Yes'?'selected':''}>Yes</option><option ${child.cwsn=='No'?'selected':''}>No</option></select>`;
+      row.insertCell(9).innerHTML = `<input type="text" value="${child.disabilityType||''}" placeholder="Type of disability" class="child-disability" data-idx="${idx}">`;
+      row.insertCell(10).innerHTML = `<select class="child-certificate" data-idx="${idx}"><option ${child.certificate=='Y'?'selected':''}>Y</option><option ${child.certificate=='N'?'selected':''}>N</option></select>`;
+      row.insertCell(11).innerHTML = `<input type="text" value="${child.remarks||''}" class="child-remarks" data-idx="${idx}">`;
+      row.insertCell(12).innerHTML = `<button class="removeChildBtn" data-idx="${idx}" style="background:#a33;">🗑️</button>`;
     });
-    if (consSnapshot.size > 0) {
-      summaryArea.style.display = "block";
-      summaryContent.innerHTML = `
-        <div><strong>Total OOSC Identified:</strong> ${totalOosc}</div>
-        <div><strong>Total Boys (6-18):</strong> ${totalBoys}</div>
-        <div><strong>Total Girls (6-18):</strong> ${totalGirls}</div>
-        <div><strong>Villages Covered:</strong> ${consSnapshot.size}</div>
-      `;
-    } else {
-      summaryArea.style.display = "none";
-    }
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.toString().replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
+    // attach event listeners to dynamic inputs
+    document.querySelectorAll('.child-name, .child-gender, .child-dob, .child-class, .child-status, .child-school, .child-schoolType, .child-cwsn, .child-disability, .child-certificate, .child-remarks').forEach(el => {
+      el.addEventListener('change', (e) => {
+        const idx = parseInt(el.dataset.idx);
+        if (isNaN(idx)) return;
+        const field = el.classList.contains('child-name') ? 'childName' :
+                      el.classList.contains('child-gender') ? 'gender' :
+                      el.classList.contains('child-dob') ? 'dobAge' :
+                      el.classList.contains('child-class') ? 'lastClass' :
+                      el.classList.contains('child-status') ? 'status' :
+                      el.classList.contains('child-school') ? 'schoolName' :
+                      el.classList.contains('child-schoolType') ? 'schoolType' :
+                      el.classList.contains('child-cwsn') ? 'cwsn' :
+                      el.classList.contains('child-disability') ? 'disabilityType' :
+                      el.classList.contains('child-certificate') ? 'certificate' :
+                      'remarks';
+        childrenData[idx][field] = el.value;
+      });
+    });
+    document.querySelectorAll('.removeChildBtn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(btn.dataset.idx);
+        childrenData.splice(idx, 1);
+        renderChildrenTable();
+      });
     });
   }
 
-  // Upload Excel handler
-  uploadBtn.addEventListener('click', async () => {
-    const file = fileInput.files[0];
-    if (!file) {
-      alert('Select an Excel file first.');
-      return;
-    }
-    progressContainer.style.display = 'block';
-    progressFill.style.width = '0%';
-    progressFill.textContent = '0%';
-    uploadLog.innerHTML = '';
-    addLog('📖 Reading file...');
+  function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
+  // Add child
+  document.getElementById('addChildBtn').onclick = () => {
+    childrenData.push({
+      childName: '', gender: 'Boy', dobAge: '', lastClass: '', status: 'Enrolled',
+      schoolName: '', schoolType: 'Govt.', cwsn: 'No', disabilityType: '', certificate: 'N', remarks: ''
+    });
+    renderChildrenTable();
+  };
+
+  // Action rows management
+  function getActionRows() {
+    const rows = [];
+    document.querySelectorAll('.action-row').forEach(row => {
+      rows.push({
+        date: row.querySelector('.actionDate')?.value || '',
+        issue: row.querySelector('.actionIssue')?.value || '',
+        proposed: row.querySelector('.actionProposed')?.value || '',
+        timeline: row.querySelector('.actionTimeline')?.value || '',
+        responsible: row.querySelector('.actionResponsible')?.value || '',
+        status: row.querySelector('.actionStatus')?.value || 'Pending'
+      });
+    });
+    return rows;
+  }
+  document.getElementById('addActionBtn').onclick = () => {
+    const container = document.getElementById('actionRows');
+    const newRow = document.createElement('div');
+    newRow.className = 'form-row action-row';
+    newRow.innerHTML = `
+      <div class="form-group"><label>Date</label><input type="date" class="actionDate"></div>
+      <div class="form-group"><label>Issue Identified</label><input type="text" class="actionIssue"></div>
+      <div class="form-group"><label>Proposed Action</label><input type="text" class="actionProposed"></div>
+      <div class="form-group"><label>Timeline</label><input type="text" class="actionTimeline"></div>
+      <div class="form-group"><label>Responsible</label><input type="text" class="actionResponsible"></div>
+      <div class="form-group"><label>Status</label><select class="actionStatus"><option>Pending</option><option>Completed</option></select></div>
+      <div><button type="button" class="removeActionBtn" style="background:#a33;">✖</button></div>
+    `;
+    container.appendChild(newRow);
+    newRow.querySelector('.removeActionBtn').onclick = () => newRow.remove();
+  };
+  // initial remove buttons
+  document.querySelectorAll('.removeActionBtn').forEach(btn => btn.onclick = () => btn.closest('.action-row').remove());
+
+  // Save to Firestore
+  document.getElementById('saveSurveyBtn').onclick = async () => {
+    const village = document.getElementById('village').value.trim();
+    if (!village) { alert('Village name required'); return; }
+    if (childrenData.length === 0) { alert('Add at least one child'); return; }
+    const household = {
+      village, panchayat: document.getElementById('panchayat').value, zone: document.getElementById('zone').value,
+      district: document.getElementById('district').value, schoolName: document.getElementById('schoolName').value,
+      headName: document.getElementById('headName').value, familyId: document.getElementById('familyId').value,
+      mobile: document.getElementById('mobile').value, address: document.getElementById('address').value,
+      surveyDate: document.getElementById('surveyDate').value, teacherName: document.getElementById('teacherName').value,
+      teacherMobile: document.getElementById('teacherMobile').value, session: document.getElementById('session').value,
+      children: childrenData,
+      actionTaken: getActionRows(),
+      createdAt: new Date().toISOString()
+    };
     try {
-      const data = await file.arrayBuffer();
-      const workbook = XLSX.read(data, { type: 'array' });
-      let students = [];
-      let summaries = [];
-
-      // Process first sheet (Student Wise)
-      const sheet1 = workbook.Sheets[workbook.SheetNames[0]];
-      students = parseStudentWiseSheet(sheet1);
-      addLog(`✅ Found ${students.length} student records.`);
-
-      // Process second sheet (Consolidated) if exists
-      if (workbook.SheetNames.length > 1) {
-        const sheet2 = workbook.Sheets[workbook.SheetNames[1]];
-        summaries = parseConsolidatedSheet(sheet2);
-        if (summaries) addLog(`✅ Found ${summaries.length} summary rows.`);
+      if (currentEditId) {
+        await updateDoc(doc(db, "ver_surveys", currentEditId), household);
+        alert('Survey updated!');
+        currentEditId = null;
+      } else {
+        await addDoc(collection(db, "ver_surveys"), household);
+        alert('Survey saved!');
       }
+      loadSavedSurveys();
+      clearForm();
+    } catch (err) { console.error(err); alert('Error saving'); }
+  };
 
-      if (students.length === 0 && (!summaries || summaries.length === 0)) {
-        throw new Error('No valid data found in the uploaded file.');
-      }
+  function clearForm() {
+    document.getElementById('village').value = ''; document.getElementById('panchayat').value = '';
+    document.getElementById('zone').value = ''; document.getElementById('headName').value = '';
+    document.getElementById('familyId').value = ''; document.getElementById('mobile').value = '';
+    document.getElementById('address').value = ''; document.getElementById('surveyDate').value = '';
+    document.getElementById('teacherName').value = ''; document.getElementById('teacherMobile').value = '';
+    childrenData = []; renderChildrenTable();
+    document.getElementById('actionRows').innerHTML = `<div class="form-row action-row"> ... </div>`; // reset
+    currentEditId = null;
+  }
 
-      progressFill.style.width = '30%';
-      progressFill.textContent = '30%';
-      addLog('💾 Saving to Firestore...');
+  async function loadSavedSurveys() {
+    const q = query(collection(db, "ver_surveys"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    const container = document.getElementById('savedSurveysList');
+    container.innerHTML = '';
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const div = document.createElement('div');
+      div.className = 'saved-item';
+      div.innerHTML = `
+        <div><strong>${data.village}</strong> - Head: ${data.headName || 'N/A'} (${data.children?.length || 0} children)</div>
+        <div>
+          <button class="editSurvey" data-id="${docSnap.id}">✏️ Edit</button>
+          <button class="deleteSurvey" data-id="${docSnap.id}" style="background:#a33;">🗑️ Delete</button>
+        </div>
+      `;
+      container.appendChild(div);
+      div.querySelector('.editSurvey').onclick = () => editSurvey(docSnap.id, data);
+      div.querySelector('.deleteSurvey').onclick = async () => { if(confirm('Delete?')){ await deleteDoc(doc(db,"ver_surveys",docSnap.id)); loadSavedSurveys(); } };
+    });
+  }
 
-      // Save to Firestore
-      if (students.length) await saveStudentWise(students);
-      if (summaries && summaries.length) await saveConsolidated(summaries);
-
-      progressFill.style.width = '100%';
-      progressFill.textContent = '100%';
-      addLog(`🎉 Upload complete! ${students.length} child records and ${summaries?.length || 0} summary entries saved.`);
-      setTimeout(() => { progressContainer.style.display = 'none'; }, 2000);
-      // Refresh display
-      await loadAndDisplay();
-    } catch (err) {
-      console.error(err);
-      addLog(`❌ Error: ${err.message}`, true);
-      progressContainer.style.display = 'none';
+  function editSurvey(id, data) {
+    currentEditId = id;
+    document.getElementById('village').value = data.village || '';
+    document.getElementById('panchayat').value = data.panchayat || '';
+    document.getElementById('zone').value = data.zone || '';
+    document.getElementById('district').value = data.district || '';
+    document.getElementById('schoolName').value = data.schoolName || '';
+    document.getElementById('headName').value = data.headName || '';
+    document.getElementById('familyId').value = data.familyId || '';
+    document.getElementById('mobile').value = data.mobile || '';
+    document.getElementById('address').value = data.address || '';
+    document.getElementById('surveyDate').value = data.surveyDate || '';
+    document.getElementById('teacherName').value = data.teacherName || '';
+    document.getElementById('teacherMobile').value = data.teacherMobile || '';
+    document.getElementById('session').value = data.session || '2025-26';
+    childrenData = data.children ? [...data.children] : [];
+    renderChildrenTable();
+    // actions
+    const actionContainer = document.getElementById('actionRows');
+    actionContainer.innerHTML = '';
+    if (data.actionTaken && data.actionTaken.length) {
+      data.actionTaken.forEach(act => {
+        const row = document.createElement('div');
+        row.className = 'form-row action-row';
+        row.innerHTML = `
+          <div class="form-group"><input type="date" class="actionDate" value="${act.date||''}"></div>
+          <div class="form-group"><input type="text" class="actionIssue" value="${escapeHtml(act.issue||'')}"></div>
+          <div class="form-group"><input type="text" class="actionProposed" value="${escapeHtml(act.proposed||'')}"></div>
+          <div class="form-group"><input type="text" class="actionTimeline" value="${escapeHtml(act.timeline||'')}"></div>
+          <div class="form-group"><input type="text" class="actionResponsible" value="${escapeHtml(act.responsible||'')}"></div>
+          <div class="form-group"><select class="actionStatus"><option ${act.status=='Completed'?'selected':''}>Pending</option><option ${act.status=='Completed'?'selected':''}>Completed</option></select></div>
+          <div><button class="removeActionBtn" style="background:#a33;">✖</button></div>
+        `;
+        actionContainer.appendChild(row);
+        row.querySelector('.removeActionBtn').onclick = () => row.remove();
+      });
+    } else {
+      // add one empty row
+      document.getElementById('addActionBtn').click();
     }
-  });
+  }
 
-  // Search and refresh
-  searchBtn.addEventListener('click', loadAndDisplay);
-  refreshBtn.addEventListener('click', () => {
-    searchName.value = '';
-    searchVillage.value = '';
-    searchGender.value = '';
-    loadAndDisplay();
-  });
+  // Export to Excel - Student Wise (child level)
+  async function exportStudentWise() {
+    const surveysSnap = await getDocs(collection(db, "ver_surveys"));
+    const rows = [];
+    surveysSnap.forEach(docSnap => {
+      const hh = docSnap.data();
+      hh.children.forEach((child, idx) => {
+        rows.push({
+          "S. No.": idx+1,
+          "Student Name": child.childName,
+          "Father Name": hh.headName,
+          "Mother Name": "", // not collected, keep blank
+          "Name of Local Guardian": "",
+          "Mobile (mandatory)": hh.mobile,
+          "Address": hh.address,
+          "Gender (Boy / Girl)": child.gender,
+          "DOB": child.dobAge,
+          "Age (Years)": "",
+          "CWSN (yes /No)": child.cwsn,
+          "Category": "",
+          "Religion": "",
+          "Drop Out / Never Enrolled": child.status === 'Drop Out' ? 'Drop Out' : (child.status === 'Never Enrolled' ? 'Never Enrolled' : ''),
+          "Approx. Period of Drop Out (Months)": "",
+          "UDISE Code of Last School Attended": "",
+          "Last class attended": child.lastClass,
+          "District": hh.district,
+          "Zone": hh.zone,
+          "Training Required (Yes / No)": "",
+          "Mode of Training (Residential / Non-Residential)": "",
+          "Financial Support Required (Yes/No)": "",
+          "Is Migrant (Yes/No)": "",
+          "Duration of training": "",
+          "Training for Class": "",
+          "Center Type (STC) OR Direct Enrolment": "",
+          "UDISE School Code (where supposed to be enrolled)": ""
+        });
+      });
+    });
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Student Wise");
+    XLSX.writeFile(wb, "VER_Student_Wise.xlsx");
+  }
 
-  // Load initial data on page load
-  loadAndDisplay();
+  // Export Consolidated (age-group summary)
+  async function exportConsolidated() {
+    const surveysSnap = await getDocs(collection(db, "ver_surveys"));
+    let totalBoys3_8=0, totalGirls3_8=0, totalBoys8_11=0, totalGirls8_11=0, totalBoys11_14=0, totalGirls11_14=0, totalBoys14_16=0, totalGirls14_16=0, totalBoys16_18=0, totalGirls16_18=0;
+    surveysSnap.forEach(docSnap => {
+      const hh = docSnap.data();
+      hh.children.forEach(child => {
+        let age = parseInt(child.dobAge) || 0;
+        if (isNaN(age)) age = 0;
+        const isBoy = child.gender === 'Boy';
+        if (age >=3 && age <=7) { if(isBoy) totalBoys3_8++; else totalGirls3_8++; }
+        else if (age >=8 && age <=10) { if(isBoy) totalBoys8_11++; else totalGirls8_11++; }
+        else if (age >=11 && age <=13) { if(isBoy) totalBoys11_14++; else totalGirls11_14++; }
+        else if (age >=14 && age <=15) { if(isBoy) totalBoys14_16++; else totalGirls14_16++; }
+        else if (age >=16 && age <=17) { if(isBoy) totalBoys16_18++; else totalGirls16_18++; }
+      });
+    });
+    const summary = [{
+      "S. No.": 1,
+      "Village": "All",
+      "UDISE Code of the School": "01022202207",
+      "Name of the School": "GPS Pethgam Wagoora",
+      "Total No. of OOSC Identified": "",
+      "3-8 Years Boys": totalBoys3_8,
+      "3-8 Years Girls": totalGirls3_8,
+      "8-11 Years Boys": totalBoys8_11,
+      "8-11 Years Girls": totalGirls8_11,
+      "11-14 Years Boys": totalBoys11_14,
+      "11-14 Years Girls": totalGirls11_14,
+      "14-16 Years Boys": totalBoys14_16,
+      "14-16 Years Girls": totalGirls14_16,
+      "16-18 Years Boys": totalBoys16_18,
+      "16-18 Years Girls": totalGirls16_18,
+      "Grand Total Boys": totalBoys3_8+totalBoys8_11+totalBoys11_14+totalBoys14_16+totalBoys16_18,
+      "Grand Total Girls": totalGirls3_8+totalGirls8_11+totalGirls11_14+totalGirls14_16+totalGirls16_18
+    }];
+    const ws = XLSX.utils.json_to_sheet(summary);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Consolidated");
+    XLSX.writeFile(wb, "VER_Consolidated.xlsx");
+  }
+
+  document.getElementById('exportStudentWiseBtn').onclick = exportStudentWise;
+  document.getElementById('exportConsolidatedBtn').onclick = exportConsolidated;
+
+  loadSavedSurveys();
+  renderChildrenTable();
 </script>
 </body>
-</html>ki
-
-    
+</html>
+          
+      
