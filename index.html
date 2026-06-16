@@ -3,52 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>GPS Pethgam Wagoora | School ERP Dashboard</title>
+    <title>GPS Pethgam Wagoora | Vibrant School ERP Dashboard</title>
     <!-- Tailwind CSS + Font Awesome + Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { background: #f0f4f9; }
-        .hero-gradient { background: linear-gradient(135deg, #0c2b4b 0%, #1a4a7a 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15); }
-        .dropdown:hover .dropdown-menu { display: block; }
-        .nav-link { transition: 0.2s; }
+        
+        /* === VIBRANT & STUNNING ENHANCEMENTS === */
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(240, 248, 255, 1) 0%, rgba(226, 240, 255, 1) 100%);
+            scroll-behavior: smooth;
+        }
+        
+        /* animated gradient background for hero */
+        .hero-gradient {
+            background: linear-gradient(125deg, #0c2b4b 0%, #1a4a7a 40%, #2e7eb0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -20%;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,215,0,0.12) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            animation: softDrift 22s infinite alternate;
+        }
+        
+        @keyframes softDrift {
+            0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.6; }
+            100% { transform: translate(3%, 4%) rotate(3deg); opacity: 1; }
+        }
+        
+        /* glass morphism & vibrant card glow */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 12px 25px -12px rgba(0,0,0,0.08);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 28px 35px -15px rgba(0, 55, 120, 0.25);
+            border-color: rgba(59,130,246,0.5);
+            background: white;
+        }
+        
+        /* gradient borders on hover for specific elements */
+        .btn-glow:hover {
+            box-shadow: 0 0 18px rgba(245,158,11,0.5);
+        }
+        
+        /* stats cards vibrant styling */
+        .stat-card {
+            background: linear-gradient(145deg, #ffffff, #f8fcff);
+            transition: all 0.25s ease;
+            border-radius: 2rem;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #fbbf24;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-bottom-color: #3b82f6;
+            background: white;
+        }
+        
+        /* navigation item modern effect */
+        .nav-link {
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:not(.bg-blue-700):hover {
+            background: linear-gradient(135deg, #eef2ff, #ffffff);
+            color: #1e40af;
+            transform: translateY(-1px);
+        }
+        
+        .dropdown-menu {
+            border-radius: 1rem;
+            border: 1px solid rgba(59,130,246,0.2);
+            box-shadow: 0 20px 30px -15px rgba(0,0,0,0.15);
+            backdrop-filter: blur(2px);
+            background: rgba(255,255,255,0.98);
+        }
+        
+        .dropdown-menu a {
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .dropdown-menu a:hover {
+            background: linear-gradient(90deg, #eef2ff, #ffffff);
+            border-left-color: #f59e0b;
+            padding-left: 1.2rem;
+        }
+        
+        /* firebase glass card */
+        .glass-firebase {
+            background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(255,255,255,0.6));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59,130,246,0.4);
+            transition: 0.25s;
+        }
+        
+        .glass-firebase:hover {
+            background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(255,215,0,0.1));
+            border-color: #f59e0b;
+        }
+        
+        /* custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #eef2ff;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(145deg, #3b82f6, #f59e0b);
+            border-radius: 10px;
+        }
+        
+        /* vibrant underline for section titles */
+        .vibrant-underline {
+            background: linear-gradient(90deg, #f59e0b, #3b82f6, #8b5cf6);
+            height: 4px;
+            width: 80px;
+            border-radius: 4px;
+            margin: 0.5rem auto 0;
+        }
+        
+        /* icons floating animation inside stats */
+        .icon-float {
+            animation: gentleFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* module badge links animation */
+        .module-badge {
+            transition: all 0.2s;
+        }
+        
+        .module-badge:hover {
+            transform: scale(1.03);
+            filter: brightness(0.97);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        /* header glass blur effect */
+        .glass-header {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59,130,246,0.2);
+        }
+        
+        .mobile-menu-custom {
+            background: rgba(255,255,255,0.97);
+            border-radius: 1.5rem;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(8px);
+        }
+        
+        /* button gradient shiny effect */
+        .btn-shine {
+            background: linear-gradient(105deg, #ffffff 0%, #fffbeb 100%);
+            border: 1px solid #ffd966;
+        }
+        
+        /* decorative floating elements */
+        .bg-deco-blob {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(59,130,246,0.03) 0%, rgba(139,92,246,0.01) 80%);
+            border-radius: 50%;
+            z-index: -2;
+            pointer-events: none;
+            top: 10%;
+            left: -20vw;
+        }
+        
+        .bg-deco-blob2 {
+            position: fixed;
+            bottom: 0;
+            right: -10vw;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(245,158,11,0.03), transparent);
+            border-radius: 50%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        /* footer link hover */
+        .footer-icon:hover {
+            transform: translateY(-3px);
+            transition: 0.2s;
+            color: #fbbf24;
+        }
+        
+        /* enhanced responsive touch */
+        @media (max-width: 768px) {
+            .card-hover:hover {
+                transform: translateY(-4px);
+            }
+        }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased relative">
+    <!-- Decorative background blobs for vibrant mood -->
+    <div class="bg-deco-blob"></div>
+    <div class="bg-deco-blob2"></div>
 
-    <!-- ==================== HEADER & NAVIGATION ==================== -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <!-- ==================== HEADER & NAVIGATION (GLASS + VIBRANT) ==================== -->
+    <header class="glass-header shadow-lg sticky top-0 z-50 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-3 md:py-4">
-                <!-- Logo & School Name -->
+                <!-- Logo & School Name (enhanced shine) -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-blue-800 text-white p-2 rounded-xl shadow-md">
+                    <div class="bg-gradient-to-br from-blue-700 to-indigo-600 text-white p-2 rounded-xl shadow-lg transform transition hover:scale-105 duration-300">
                         <i class="fas fa-school text-xl md:text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-base md:text-xl font-bold text-gray-800">Government Primary School</h1>
-                        <p class="text-xs text-gray-500">Pethgam Wagoora | UDISE: 01022202207</p>
+                        <h1 class="text-base md:text-xl font-extrabold bg-gradient-to-r from-gray-800 to-blue-900 bg-clip-text text-transparent">Government Primary School</h1>
+                        <p class="text-xs text-gray-500 font-medium">Pethgam Wagoora | UDISE: 01022202207</p>
                     </div>
                 </div>
-                <!-- Desktop Navigation (Categories with dropdowns) -->
+                <!-- Desktop Navigation (enhanced dropdowns) -->
                 <nav class="hidden md:flex space-x-1">
-                    <a href="index.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-blue-700 text-white shadow-sm">Home</a>
+                    <a href="index.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow-md hover:shadow-lg transition-all">Home</a>
                     
                     <!-- Surveys & Registers Dropdown -->
                     <div class="relative dropdown">
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Surveys <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
-                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏘️ Village Education Register (VER)</a>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20 transition-all">
+                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-t-xl">🏘️ Village Education Register (VER)</a>
                             <a href="child-population.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👥 Child Population Register</a>
                             <a href="roll-analyzer.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📊 Roll Analyzer</a>
                             <a href="roll-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Roll Statement</a>
-                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✅ Attendance Register</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">✅ Attendance Register</a>
                         </div>
                     </div>
                     
@@ -57,13 +270,13 @@
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Academics <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
                             <a href="results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📝 Exam Results</a>
                             <a href="upload-results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📤 Upload Results</a>
                             <a href="marks-sheet.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📑 Marksheet</a>
                             <a href="timetable.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">⏰ Class Timetable</a>
                             <a href="textbook-issue.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📚 Textbook Issue</a>
-                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📖 Digital Library</a>
+                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📖 Digital Library</a>
                         </div>
                     </div>
                     
@@ -72,13 +285,13 @@
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Students <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-64 z-20">
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-64 z-20">
                             <a href="student-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🆔 Student ID Card</a>
                             <a href="tc.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📜 Transfer Certificate (TC)</a>
                             <a href="bonafide.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Bonafide Certificate</a>
                             <a href="student-diary-parent.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📓 Student Diary (Parent)</a>
                             <a href="student-diary-teacher.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✏️ Student Diary (Teacher)</a>
-                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🔢 APAAR ID Entry</a>
+                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">🔢 APAAR ID Entry</a>
                         </div>
                     </div>
                     
@@ -87,12 +300,12 @@
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Staff <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
                             <a href="staff-entry.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👩‍🏫 Staff Entry</a>
                             <a href="staff-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📋 Staff Statement</a>
                             <a href="teaching-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🪪 Teaching ID</a>
                             <a href="leave-management.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏖️ Leave Management</a>
-                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✅ Staff Attendance</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">✅ Staff Attendance</a>
                         </div>
                     </div>
                     
@@ -101,11 +314,11 @@
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Communication <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
                             <a href="broadcast-whatsapp.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📱 WhatsApp Broadcast</a>
                             <a href="send-email.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📧 Send Email</a>
                             <a href="send-sms.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">💬 Send SMS</a>
-                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📜 Communication Logs</a>
+                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📜 Communication Logs</a>
                         </div>
                     </div>
                     
@@ -114,237 +327,427 @@
                         <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
                             Reports <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute bg-white shadow-lg rounded-lg mt-1 w-56 z-20">
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
                             <a href="reports-hub.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📈 Reports Hub</a>
                             <a href="mdm-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🍽️ MDM Statement</a>
                             <a href="master-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👤 Master Profile</a>
-                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📁 Document Vault</a>
+                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📁 Document Vault</a>
                         </div>
                     </div>
                     
-                    <a href="signin.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-amber-500 text-white hover:bg-amber-600">Login</a>
+                    <a href="signin.html" class="nav-link px-5 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg transition-all hover:scale-105">Login</a>
                 </nav>
                 
                 <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none bg-white/50 p-2 rounded-full shadow-md">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
             
-            <!-- Mobile Menu (full list) -->
-            <div id="mobileMenu" class="hidden md:hidden pb-4 max-h-96 overflow-y-auto">
-                <div class="space-y-1">
-                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-blue-50 text-blue-800 font-medium">Home</a>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">SURVEYS & REGISTERS</p>
-                        <a href="VER.html" class="block px-3 py-1.5 text-sm">VER Survey</a>
-                        <a href="child-population.html" class="block px-3 py-1.5 text-sm">Child Population Register</a>
-                        <a href="roll-analyzer.html" class="block px-3 py-1.5 text-sm">Roll Analyzer</a>
-                        <a href="roll-statement.html" class="block px-3 py-1.5 text-sm">Roll Statement</a>
-                        <a href="attendance.html" class="block px-3 py-1.5 text-sm">Attendance Register</a>
+            <!-- Mobile Menu (enhanced glass design) -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4 max-h-96 overflow-y-auto rounded-2xl mobile-menu-custom shadow-xl my-2">
+                <div class="space-y-1 p-3">
+                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 font-bold">Home</a>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📋 SURVEYS & REGISTERS</p>
+                        <a href="VER.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">VER Survey</a>
+                        <a href="child-population.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Child Population Register</a>
+                        <a href="roll-analyzer.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Roll Analyzer</a>
+                        <a href="roll-statement.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Roll Statement</a>
+                        <a href="attendance.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Attendance Register</a>
                     </div>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">ACADEMICS</p>
-                        <a href="results.html" class="block px-3 py-1.5 text-sm">Exam Results</a>
-                        <a href="upload-results.html" class="block px-3 py-1.5 text-sm">Upload Results</a>
-                        <a href="marks-sheet.html" class="block px-3 py-1.5 text-sm">Marksheet</a>
-                        <a href="timetable.html" class="block px-3 py-1.5 text-sm">Timetable</a>
-                        <a href="textbook-issue.html" class="block px-3 py-1.5 text-sm">Textbook Issue</a>
-                        <a href="library.html" class="block px-3 py-1.5 text-sm">Library</a>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📚 ACADEMICS</p>
+                        <a href="results.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Exam Results</a>
+                        <a href="upload-results.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Upload Results</a>
+                        <a href="marks-sheet.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Marksheet</a>
+                        <a href="timetable.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Timetable</a>
+                        <a href="textbook-issue.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Textbook Issue</a>
+                        <a href="library.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Library</a>
                     </div>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">STUDENTS & PARENTS</p>
-                        <a href="student-id.html" class="block px-3 py-1.5 text-sm">Student ID Card</a>
-                        <a href="tc.html" class="block px-3 py-1.5 text-sm">Transfer Certificate</a>
-                        <a href="bonafide.html" class="block px-3 py-1.5 text-sm">Bonafide Certificate</a>
-                        <a href="student-diary-parent.html" class="block px-3 py-1.5 text-sm">Student Diary (Parent)</a>
-                        <a href="student-diary-teacher.html" class="block px-3 py-1.5 text-sm">Student Diary (Teacher)</a>
-                        <a href="apaar-input.html" class="block px-3 py-1.5 text-sm">APAAR ID Entry</a>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">🎓 STUDENTS & PARENTS</p>
+                        <a href="student-id.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Student ID Card</a>
+                        <a href="tc.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Transfer Certificate</a>
+                             
+                .mobile-menu-custom {
+            background: rgba(255,255,255,0.97);
+            border-radius: 1.5rem;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(8px);
+        }
+        
+        /* button gradient shiny effect */
+        .btn-shine {
+            background: linear-gradient(105deg, #ffffff 0%, #fffbeb 100%);
+            border: 1px solid #ffd966;
+        }
+        
+        /* decorative floating elements */
+        .bg-deco-blob {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(59,130,246,0.03) 0%, rgba(139,92,246,0.01) 80%);
+            border-radius: 50%;
+            z-index: -2;
+            pointer-events: none;
+            top: 10%;
+            left: -20vw;
+        }
+        
+        .bg-deco-blob2 {
+            position: fixed;
+            bottom: 0;
+            right: -10vw;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(245,158,11,0.03), transparent);
+            border-radius: 50%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        /* footer link hover */
+        .footer-icon:hover {
+            transform: translateY(-3px);
+            transition: 0.2s;
+            color: #fbbf24;
+        }
+        
+        /* enhanced responsive touch */
+        @media (max-width: 768px) {
+            .card-hover:hover {
+                transform: translateY(-4px);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+    <!-- Decorative background blobs for vibrant mood -->
+    <div class="bg-deco-blob"></div>
+    <div class="bg-deco-blob2"></div>
+
+    <!-- ==================== HEADER & NAVIGATION (GLASS + VIBRANT) ==================== -->
+    <header class="glass-header shadow-lg sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3 md:py-4">
+                <!-- Logo & School Name (enhanced shine) -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-br from-blue-700 to-indigo-600 text-white p-2 rounded-xl shadow-lg transform transition hover:scale-105 duration-300">
+                        <i class="fas fa-school text-xl md:text-2xl"></i>
                     </div>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">STAFF & ADMIN</p>
-                        <a href="staff-entry.html" class="block px-3 py-1.5 text-sm">Staff Entry</a>
-                        <a href="staff-statement.html" class="block px-3 py-1.5 text-sm">Staff Statement</a>
-                        <a href="teaching-id.html" class="block px-3 py-1.5 text-sm">Teaching ID</a>
-                        <a href="leave-management.html" class="block px-3 py-1.5 text-sm">Leave Management</a>
+                    <div>
+                        <h1 class="text-base md:text-xl font-extrabold bg-gradient-to-r from-gray-800 to-blue-900 bg-clip-text text-transparent">Government Primary School</h1>
+                        <p class="text-xs text-gray-500 font-medium">Pethgam Wagoora | UDISE: 01022202207</p>
                     </div>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">COMMUNICATION</p>
-                        <a href="broadcast-whatsapp.html" class="block px-3 py-1.5 text-sm">WhatsApp Broadcast</a>
-                        <a href="send-email.html" class="block px-3 py-1.5 text-sm">Send Email</a>
-                        <a href="send-sms.html" class="block px-3 py-1.5 text-sm">Send SMS</a>
-                        <a href="comm-logs.html" class="block px-3 py-1.5 text-sm">Communication Logs</a>
+                </div>
+                <!-- Desktop Navigation (enhanced dropdowns) -->
+                <nav class="hidden md:flex space-x-1">
+                    <a href="index.html" class="nav-link px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow-md hover:shadow-lg transition-all">Home</a>
+                    
+                    <!-- Surveys & Registers Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Surveys <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20 transition-all">
+                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-t-xl">🏘️ Village Education Register (VER)</a>
+                            <a href="child-population.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👥 Child Population Register</a>
+                            <a href="roll-analyzer.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📊 Roll Analyzer</a>
+                            <a href="roll-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Roll Statement</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">✅ Attendance Register</a>
+                        </div>
                     </div>
-                    <div class="border-t pt-2"><p class="text-xs text-gray-400 px-3">REPORTS & SETTINGS</p>
-                        <a href="reports-hub.html" class="block px-3 py-1.5 text-sm">Reports Hub</a>
-                        <a href="mdm-statement.html" class="block px-3 py-1.5 text-sm">MDM Statement</a>
-                        <a href="master-profile.html" class="block px-3 py-1.5 text-sm">Master Profile</a>
-                        <a href="document-vault.html" class="block px-3 py-1.5 text-sm">Document Vault</a>
+                    
+                    <!-- Academics Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Academics <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
+                            <a href="results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📝 Exam Results</a>
+                            <a href="upload-results.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📤 Upload Results</a>
+                            <a href="marks-sheet.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📑 Marksheet</a>
+                            <a href="timetable.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">⏰ Class Timetable</a>
+                            <a href="textbook-issue.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📚 Textbook Issue</a>
+                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📖 Digital Library</a>
+                        </div>
                     </div>
-                    <a href="signin.html" class="block px-3 py-2 rounded-lg bg-amber-100 text-amber-800 font-medium mt-2">Login / Sign In</a>
+                    
+                    <!-- Students & Parents Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Students <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-64 z-20">
+                            <a href="student-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🆔 Student ID Card</a>
+                            <a href="tc.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📜 Transfer Certificate (TC)</a>
+                            <a href="bonafide.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📄 Bonafide Certificate</a>
+                            <a href="student-diary-parent.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📓 Student Diary (Parent)</a>
+                            <a href="student-diary-teacher.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">✏️ Student Diary (Teacher)</a>
+                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">🔢 APAAR ID Entry</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Staff & Admin Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Staff <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
+                            <a href="staff-entry.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👩‍🏫 Staff Entry</a>
+                            <a href="staff-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📋 Staff Statement</a>
+                            <a href="teaching-id.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🪪 Teaching ID</a>
+ 
+                    </div>
+                    
+                    <!-- Communication Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Communication <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
+                            <a href="broadcast-whatsapp.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📱 WhatsApp Broadcast</a>
+                            <a href="send-email.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📧 Send Email</a>
+                            <a href="send-sms.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">💬 Send SMS</a>
+                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📜 Communication Logs</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Reports & Analytics Dropdown -->
+                    <div class="relative dropdown">
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 inline-flex items-center gap-1">
+                            Reports <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu hidden absolute bg-white shadow-xl rounded-2xl mt-1 w-56 z-20">
+                            <a href="reports-hub.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">📈 Reports Hub</a>
+                            <a href="mdm-statement.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🍽️ MDM Statement</a>
+                            <a href="master-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">👤 Master Profile</a>
+                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-b-xl">📁 Document Vault</a>
+                        </div>
+                    </div>
+                    
+                    <a href="signin.html" class="nav-link px-5 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg transition-all hover:scale-105">Login</a>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none bg-white/50 p-2 rounded-full shadow-md">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu (enhanced glass design) -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4 max-h-96 overflow-y-auto rounded-2xl mobile-menu-custom shadow-xl my-2">
+                <div class="space-y-1 p-3">
+                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 font-bold">Home</a>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📋 SURVEYS & REGISTERS</p>
+                        <a href="VER.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">VER Survey</a>
+                        <a href="child-population.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Child Population Register</a>
+                        <a href="roll-analyzer.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Roll Analyzer</a>
+                        <a href="roll-statement.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Roll Statement</a>
+                        <a href="attendance.html" class="block px-3 py-1.5 text-sm hover:bg-blue-100 rounded-lg">Attendance Register</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📚 ACADEMICS</p>
+                        <a href="results.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Exam Results</a>
+                        <a href="upload-results.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Upload Results</a>
+                        <a href="marks-sheet.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Marksheet</a>
+                        <a href="timetable.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Timetable</a>
+                        <a href="textbook-issue.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Textbook Issue</a>
+                        <a href="library.html" class="block px-3 py-1.5 text-sm hover:bg-green-100 rounded-lg">Library</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">🎓 STUDENTS & PARENTS</p>
+                        <a href="student-id.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Student ID Card</a>
+                        <a href="tc.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Transfer Certificate</a>
+                        <a href="bonafide.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Bonafide Certificate</a>
+                        <a href="student-diary-parent.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Student Diary (Parent)</a>
+                        <a href="student-diary-teacher.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">Student Diary (Teacher)</a>
+                        <a href="apaar-input.html" class="block px-3 py-1.5 text-sm hover:bg-purple-100 rounded-lg">APAAR ID Entry</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">👥 STAFF & ADMIN</p>
+                        <a href="staff-entry.html" class="block px-3 py-1.5 text-sm hover:bg-amber-100 rounded-lg">Staff Entry</a>
+                        <a href="staff-statement.html" class="block px-3 py-1.5 text-sm hover:bg-amber-100 rounded-lg">Staff Statement</a>
+                        <a href="teaching-id.html" class="block px-3 py-1.5 text-sm hover:bg-amber-100 rounded-lg">Teaching ID</a>
+                        <a href="leave-management.html" class="block px-3 py-1.5 text-sm hover:bg-amber-100 rounded-lg">Leave Management</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📢 COMMUNICATION</p>
+                        <a href="broadcast-whatsapp.html" class="block px-3 py-1.5 text-sm hover:bg-red-100 rounded-lg">WhatsApp Broadcast</a>
+                        <a href="send-email.html" class="block px-3 py-1.5 text-sm hover:bg-red-100 rounded-lg">Send Email</a>
+                        <a href="send-sms.html" class="block px-3 py-1.5 text-sm hover:bg-red-100 rounded-lg">Send SMS</a>
+                        <a href="comm-logs.html" class="block px-3 py-1.5 text-sm hover:bg-red-100 rounded-lg">Communication Logs</a>
+                    </div>
+                    <div class="border-t pt-2"><p class="text-xs font-bold text-gray-500 px-3">📊 REPORTS & SETTINGS</p>
+                        <a href="reports-hub.html" class="block px-3 py-1.5 text-sm hover:bg-indigo-100 rounded-lg">Reports Hub</a>
+                        <a href="mdm-statement.html" class="block px-3 py-1.5 text-sm hover:bg-indigo-100 rounded-lg">MDM Statement</a>
+                        <a href="master-profile.html" class="block px-3 py-1.5 text-sm hover:bg-indigo-100 rounded-lg">Master Profile</a>
+                        <a href="document-vault.html" class="block px-3 py-1.5 text-sm hover:bg-indigo-100 rounded-lg">Document Vault</a>
+                    </div>
+                    <a href="signin.html" class="block px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-white font-bold text-center mt-3 shadow-md">🔐 Login / Sign In</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- ==================== HERO SECTION ==================== -->
-    <section class="hero-gradient text-white py-12 md:py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-block bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-medium mb-4">
+    <!-- ==================== HERO SECTION (ENHANCED VIBRANT) ==================== -->
+    <section class="hero-gradient text-white py-14 md:py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-1.5 rounded-full text-sm font-semibold mb-5 shadow-md border border-white/30">
                 <i class="fas fa-school"></i> UDISE: 01022202207 | Zone Wagoora, Baramulla
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-4">Government Primary School<br>Pethgam Wagoora</h1>
-            <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-5 drop-shadow-lg">Government Primary School<br><span class="text-amber-200">Pethgam Wagoora</span></h1>
+            <p class="text-lg md:text-xl text-blue-50 max-w-2xl mx-auto mb-8 leading-relaxed">
                 Complete School ERP with Firebase – Manage admissions, results, attendance, surveys, communication & more.
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="VER.html" class="bg-white text-blue-800 px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition flex items-center gap-2">
-                    <i class="fas fa-clipboard-list"></i> VER Survey
+            <div class="flex flex-wrap justify-center gap-5">
+                <a href="VER.html" class="bg-white text-blue-800 px-7 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 hover:scale-105 btn-glow">
+                    <i class="fas fa-clipboard-list text-blue-600"></i> VER Survey
                 </a>
-                <a href="results.html" class="bg-amber-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-amber-600 transition flex items-center gap-2">
+                <a href="results.html" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 hover:scale-105">
                     <i class="fas fa-chart-line"></i> Check Results
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- ==================== STATS BADGES ==================== -->
-    <section class="py-8 bg-white border-b">
+    <!-- ==================== STATS BADGES (VIBRANT CARDS) ==================== -->
+    <section class="py-10 bg-white/60 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div class="p-3"><i class="fas fa-users text-2xl text-blue-600"></i><p class="font-bold">120+ Students</p></div>
-                <div class="p-3"><i class="fas fa-chalkboard-user text-2xl text-green-600"></i><p class="font-bold">8+ Teachers</p></div>
-                <div class="p-3"><i class="fas fa-file-excel text-2xl text-red-500"></i><p class="font-bold">Digital Registers</p></div>
-                <div class="p-3"><i class="fas fa-cloud-upload-alt text-2xl text-purple-600"></i><p class="font-bold">Firebase Sync</p></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="stat-card p-4 flex flex-col items-center gap-2"><i class="fas fa-users text-3xl text-blue-600 icon-float"></i><p class="font-black text-2xl text-gray-800">120+</p><p class="font-semibold text-gray-600">Enrolled Students</p></div>
+                <div class="stat-card p-4 flex flex-col items-center gap-2"><i class="fas fa-chalkboard-user text-3xl text-green-600 icon-float"></i><p class="font-black text-2xl text-gray-800">8+</p><p class="font-semibold text-gray-600">Qualified Teachers</p></div>
+                <div class="stat-card p-4 flex flex-col items-center gap-2"><i class="fas fa-file-excel text-3xl text-red-500 icon-float"></i><p class="font-black text-2xl text-gray-800">100%</p><p class="font-semibold text-gray-600">Digital Registers</p></div>
+                <div class="stat-card p-4 flex flex-col items-center gap-2"><i class="fas fa-cloud-upload-alt text-3xl text-purple-600 icon-float"></i><p class="font-black text-2xl text-gray-800">Real-time</p><p class="font-semibold text-gray-600">Firebase Sync</p></div>
             </div>
         </div>
     </section>
 
     <!-- ==================== MAIN GRID CARDS (All Pages Overview) ==================== -->
-    <section class="py-12 bg-gray-50">
+    <section class="py-14">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Complete ERP Modules</h2>
-                <div class="w-24 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
-                <p class="text-gray-500 mt-3">One‑click access to all school management tools</p>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-indigo-700">Complete ERP Modules</h2>
+                <div class="vibrant-underline"></div>
+                <p class="text-gray-600 mt-4 text-lg">One‑click access to all school management tools — vibrant, fast & smart</p>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card: Surveys -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-clipboard-list text-2xl text-blue-600"></i><h3 class="font-bold text-lg">Household & Child Surveys</h3></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card: Surveys (each retains original links) -->
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-clipboard-list text-3xl text-blue-500"></i><h3 class="font-extrabold text-xl">Household & Child Surveys</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="VER.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">VER</a>
-                        <a href="child_population.html" class="block px-3 py-1.5 text-sm">Child Population</a>
-                        <a href="child-population.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Child Population</a>
-                        <a href="roll-analyzer.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Roll Analyzer</a>
-                        <a href="roll-statement.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Roll Statement</a>
-                        <a href="attendance.html" class="bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100">Attendance</a>
+                        <a href="VER.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">VER</a>
+                        <a href="child_population.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">Child Population</a>
+                        <a href="child-population.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">Child Population</a>
+                        <a href="roll-analyzer.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">Roll Analyzer</a>
+                        <a href="roll-statement.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">Roll Statement</a>
+                        <a href="attendance.html" class="module-badge bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 text-blue-700">Attendance</a>
                     </div>
                 </div>
                 
                 <!-- Card: Academics -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-graduation-cap text-2xl text-green-600"></i><h3 class="font-bold text-lg">Academics & Results</h3></div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-graduation-cap text-3xl text-green-500"></i><h3 class="font-extrabold text-xl">Academics & Results</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="results.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Results</a>
-                        <a href="upload-results.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Upload Results</a>
-                        <a href="marks-sheet.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Marksheet</a>
-                        <a href="timetable.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Timetable</a>
-                        <a href="textbook-issue.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Textbooks</a>
-                        <a href="library.html" class="bg-green-50 px-3 py-1 rounded-full hover:bg-green-100">Library</a>
+                        <a href="results.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Results</a>
+                        <a href="upload-results.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Upload Results</a>
+                        <a href="marks-sheet.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Marksheet</a>
+                        <a href="timetable.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Timetable</a>
+                        <a href="textbook-issue.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Textbooks</a>
+                        <a href="library.html" class="module-badge bg-green-50 px-3 py-1.5 rounded-full hover:bg-green-100">Library</a>
                     </div>
                 </div>
                 
                 <!-- Card: Student Services -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-id-card text-2xl text-purple-600"></i><h3 class="font-bold text-lg">Student Services</h3></div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-id-card text-3xl text-purple-500"></i><h3 class="font-extrabold text-xl">Student Services</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="student-id.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">ID Card</a>
-                        <a href="tc.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">TC</a>
-                        <a href="bonafide.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Bonafide</a>
-                        <a href="student-diary-parent.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Diary (Parent)</a>
-                        <a href="student-diary-teacher.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">Diary (Teacher)</a>
-                        <a href="apaar-input.html" class="bg-purple-50 px-3 py-1 rounded-full hover:bg-purple-100">APAAR ID</a>
+                        <a href="student-id.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">ID Card</a>
+                        <a href="tc.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">TC</a>
+                        <a href="bonafide.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">Bonafide</a>
+                        <a href="student-diary-parent.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">Diary (Parent)</a>
+                        <a href="student-diary-teacher.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">Diary (Teacher)</a>
+                        <a href="apaar-input.html" class="module-badge bg-purple-50 px-3 py-1.5 rounded-full hover:bg-purple-100">APAAR ID</a>
                     </div>
                 </div>
                 
                 <!-- Card: Staff & HR -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-users-between text-2xl text-amber-600"></i><h3 class="font-bold text-lg">Staff Management</h3></div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-users-between text-3xl text-amber-500"></i><h3 class="font-extrabold text-xl">Staff Management</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="staff-entry.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Staff Entry</a>
-                        <a href="staff-statement.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Staff Statement</a>
-                        <a href="teaching-id.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Teaching ID</a>
-                        <a href="leave-management.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Leave Mgmt</a>
-                        <a href="attendance.html" class="bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100">Attendance</a>
+                        <a href="staff-entry.html" class="module-badge bg-amber-50 px-3 py-1.5 rounded-full hover:bg-amber-100">Staff Entry</a>
+                        <a href="staff-statement.html" class="module-badge bg-amber-50 px-3 py-1.5 rounded-full hover:bg-amber-100">Staff Statement</a>
+                        <a href="teaching-id.html" class="module-badge bg-amber-50 px-3 py-1.5 rounded-full hover:bg-amber-100">Teaching ID</a>
+                        <a href="leave-management.html" class="module-badge bg-amber-50 px-3 py-1.5 rounded-full hover:bg-amber-100">Leave Mgmt</a>
+                        <a href="attendance.html" class="module-badge bg-amber-50 px-3 py-1.5 rounded-full hover:bg-amber-100">Attendance</a>
                     </div>
                 </div>
                 
                 <!-- Card: Communication -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-bullhorn text-2xl text-red-600"></i><h3 class="font-bold text-lg">Bulk Communication</h3></div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-bullhorn text-3xl text-red-500"></i><h3 class="font-extrabold text-xl">Bulk Communication</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="broadcast-whatsapp.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">WhatsApp</a>
-                        <a href="send-email.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">Email</a>
-                        <a href="send-sms.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">SMS</a>
-                        <a href="comm-logs.html" class="bg-red-50 px-3 py-1 rounded-full hover:bg-red-100">Logs</a>
+                        <a href="broadcast-whatsapp.html" class="module-badge bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100">WhatsApp</a>
+                        <a href="send-email.html" class="module-badge bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100">Email</a>
+                        <a href="send-sms.html" class="module-badge bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100">SMS</a>
+                        <a href="comm-logs.html" class="module-badge bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100">Logs</a>
                     </div>
                 </div>
                 
                 <!-- Card: Reports & Admin -->
-                <div class="bg-white rounded-xl shadow-md p-5 card-hover">
-                    <div class="flex items-center gap-3 mb-3"><i class="fas fa-chart-pie text-2xl text-indigo-600"></i><h3 class="font-bold text-lg">Reports & Administration</h3></div>
+                <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                    <div class="flex items-center gap-3 mb-4"><i class="fas fa-chart-pie text-3xl text-indigo-500"></i><h3 class="font-extrabold text-xl">Reports & Administration</h3></div>
                     <div class="flex flex-wrap gap-2 text-sm">
-                        <a href="reports-hub.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Reports Hub</a>
-                        <a href="mdm-statement.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">MDM Statement</a>
-                        <a href="master-profile.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Master Profile</a>
-                        <a href="document-vault.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Document Vault</a>
-                        <a href="forgot-password.html" class="bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100">Forgot Password</a>
+                        <a href="reports-hub.html" class="module-badge bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100">Reports Hub</a>
+                        <a href="mdm-statement.html" class="module-badge bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100">MDM Statement</a>
+                        <a href="master-profile.html" class="module-badge bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100">Master Profile</a>
+                        <a href="document-vault.html" class="module-badge bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100">Document Vault</a>
+                        <a href="forgot-password.html" class="module-badge bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100">Forgot Password</a>
                     </div>
                 </div>
             </div>
             
             <!-- Additional Quick Links Row (extra pages not covered) -->
-            <div class="mt-10 text-center">
-                <p class="text-gray-500 text-sm mb-3">Other Utilities:</p>
+            <div class="mt-12 text-center">
+                <p class="text-gray-600 font-semibold mb-3">Other Utilities:</p>
                 <div class="flex flex-wrap justify-center gap-2">
-                    <a href="admission.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Admission Form</a>
-                    <a href="adm-register.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Admission Register</a>
-                    <a href="mdm.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">MDM Dashboard</a>
-                    <a href="wb.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">WhatsApp Bot</a>
-                    <a href="signin.html" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">Sign In</a>
+                    <a href="admission.html" class="text-xs bg-gray-100 px-4 py-2 rounded-full hover:bg-gradient-to-r hover:from-blue-100 hover:to-amber-100 transition-all shadow-sm">Admission Form</a>
+                    <a href="adm-register.html" class="text-xs bg-gray-100 px-4 py-2 rounded-full hover:bg-gradient-to-r transition-all">Admission Register</a>
+                    <a href="mdm.html" class="text-xs bg-gray-100 px-4 py-2 rounded-full hover:bg-gradient-to-r transition-all">MDM Dashboard</a>
+                    <a href="wb.html" class="text-xs bg-gray-100 px-4 py-2 rounded-full hover:bg-gradient-to-r transition-all">WhatsApp Bot</a>
+                    <a href="signin.html" class="text-xs bg-gray-100 px-4 py-2 rounded-full hover:bg-gradient-to-r transition-all">Sign In</a>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- ==================== FIREBASE INTEGRATION NOTE ==================== -->
-    <section class="py-8 bg-white">
+    <!-- ==================== FIREBASE INTEGRATION NOTE (GLASS VIBRANT) ==================== -->
+    <section class="py-10 bg-transparent">
         <div class="max-w-4xl mx-auto px-4 text-center">
-            <div class="bg-blue-50 rounded-2xl p-5 border border-blue-200">
-                <i class="fas fa-fire text-3xl text-orange-500 mb-2"></i>
-                <h3 class="font-bold text-gray-800">Firebase Connected ERP</h3>
-                <p class="text-sm text-gray-600">Authentication, Firestore Database, and Storage active. All modules are integrated with real-time sync.</p>
-                <div class="mt-3 flex justify-center gap-3 text-xs">
-                    <span class="bg-gray-200 px-2 py-1 rounded">📁 init-firebase.js</span>
-                    <span class="bg-gray-200 px-2 py-1 rounded">🔐 Auth ready</span>
-                    <span class="bg-gray-200 px-2 py-1 rounded">📊 Firestore collections</span>
+            <div class="glass-firebase rounded-3xl p-6 shadow-2xl border">
+                <i class="fas fa-fire text-4xl text-orange-500 mb-3 animate-pulse"></i>
+                <h3 class="font-black text-gray-800 text-xl">🔥 Firebase Connected ERP</h3>
+                <p class="text-gray-700 mt-2">Authentication, Firestore Database, and Storage active. All modules integrated with real-time sync.</p>
+                <div class="mt-4 flex justify-center gap-3 text-xs flex-wrap">
+                    <span class="bg-white/80 shadow-sm px-3 py-1 rounded-full font-mono">📁 init-firebase.js</span>
+                    <span class="bg-white/80 shadow-sm px-3 py-1 rounded-full font-mono">🔐 Auth ready</span>
+                    <span class="bg-white/80 shadow-sm px-3 py-1 rounded-full font-mono">📊 Firestore collections</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="bg-gray-900 text-gray-400 py-6 mt-8">
+    <!-- ==================== FOOTER (ENHANCED) ==================== -->
+    <footer class="bg-gray-900 text-gray-300 py-8 mt-8 border-t-4 border-amber-500">
         <div class="max-w-7xl mx-auto px-4 text-center text-sm">
-            <p>© 2026 Government Primary School Pethgam Wagoora | Samagra Shiksha Abhiyan</p>
-            <p class="text-xs mt-1">UDISE: 01022202207 | Zone Wagoora, District Baramulla, J&K</p>
-            <div class="flex justify-center gap-4 mt-3">
-                <a href="#" class="hover:text-white"><i class="fab fa-github"></i></a>
-                <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-white"><i class="fab fa-facebook"></i></a>
+            <p class="font-medium">© 2026 Government Primary School Pethgam Wagoora | Samagra Shiksha Abhiyan</p>
+            <p class="text-xs mt-1 opacity-80">UDISE: 01022202207 | Zone Wagoora, District Baramulla, J&K</p>
+            <div class="flex justify-center gap-6 mt-4">
+                <a href="#" class="footer-icon text-gray-400 hover:text-amber-400 transition-all text-xl"><i class="fab fa-github"></i></a>
+                <a href="#" class="footer-icon text-gray-400 hover:text-amber-400 transition-all text-xl"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="footer-icon text-gray-400 hover:text-amber-400 transition-all text-xl"><i class="fab fa-facebook"></i></a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle (preserved)
         const mobileBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         if (mobileBtn) {
@@ -352,14 +755,13 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
-        // Close mobile menu on link click
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
             });
         });
-        // Dropdown hover for desktop
+        // Dropdown hover desktop
         const dropdowns = document.querySelectorAll('.dropdown');
         dropdowns.forEach(dd => {
             dd.addEventListener('mouseenter', () => {
@@ -373,9 +775,4 @@
         });
     </script>
 </body>
-</html>
-```                                                                  
-                                                                  
-                                                                  
-                                                                  
-                                                                  
+ </html>
