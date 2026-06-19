@@ -4,102 +4,297 @@
   <meta charset="UTF-8">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
-    @page { size: A4; margin: 5mm; }
-    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; font-size: 11px; }
-    
-    .no-print { background: #1a5d1a; padding: 10px; display: flex; gap: 20px; justify-content: center; border-bottom: 3px solid #ffcc00; }
-    .no-print a { color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1); font-size: 12px; }
+    @page { size: A4; margin: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      font-size: 13px; /* Increased base font */
+    }
 
+    /* ===== NO-PRINT NAV ===== */
+    .no-print {
+      background: #1a5d1a;
+      padding: 10px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      border-bottom: 3px solid #ffcc00;
+    }
+    .no-print a,
+    .no-print button {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.15);
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .no-print a:hover,
+    .no-print button:hover { background: rgba(255,255,255,0.3); }
+    .no-print .btn-pdf { background: #d4a017; color: #000; }
+    .no-print .btn-pdf:hover { background: #b8890e; }
+
+    /* ===== PAGE ===== */
     .page-border {
       background: white;
       width: 210mm;
       height: 297mm;
       margin: 10px auto;
-      padding: 8mm 12mm;
+      padding: 6mm 10mm; /* reduced padding to use more space */
       box-sizing: border-box;
       border: 2px solid darkgreen;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .header-container { display: flex; align-items: center; border-bottom: 2px solid darkgreen; padding-bottom: 5px; margin-bottom: 8px; }
-    .school-logo { width: 65px; height: 65px; margin-right: 15px; }
-    .header-text h1 { margin: 0; font-size: 18px; color: darkgreen; text-transform: uppercase; }
-    .header-text p { margin: 1px 0; font-size: 9.5px; color: #333; }
+    /* ===== HEADER ===== */
+    .header-container {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid darkgreen;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .school-logo { width: 70px; height: 70px; margin-right: 18px; }
+    .header-text h1 {
+      margin: 0;
+      font-size: 22px;
+      color: darkgreen;
+      text-transform: uppercase;
+    }
+    .header-text p {
+      margin: 2px 0;
+      font-size: 12px;
+      color: #333;
+    }
 
-    .form-title { text-align: center; font-weight: bold; font-size: 14px; margin-bottom: 8px; text-decoration: underline; }
+    .form-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+      margin-bottom: 10px;
+      text-decoration: underline;
+    }
 
-    h3 { font-size: 11px; margin: 8px 0 5px 0; background: #f0f9f0; padding: 3px 10px; border-left: 4px solid darkgreen; text-transform: uppercase; }
+    /* ===== FIELDS ===== */
+    h3 {
+      font-size: 14px;
+      margin: 8px 0 4px 0;
+      background: #f0f9f0;
+      padding: 4px 12px;
+      border-left: 5px solid darkgreen;
+      text-transform: uppercase;
+    }
 
-    .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 5px; }
-    .row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 5px; }
-    .field-group { display: flex; flex-direction: column; }
-    
-    label { font-weight: bold; font-size: 9.5px; margin-bottom: 1px; color: #222; }
-    input, select { padding: 3px; font-size: 11px; border: 1px solid #777; border-radius: 2px; height: 22px; box-sizing: border-box; }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 2px;
+      color: #222;
+    }
+    input, select {
+      padding: 5px 8px;
+      font-size: 13px;
+      border: 1.5px solid #777;
+      border-radius: 4px;
+      height: 28px;
+      box-sizing: border-box;
+      background: #fafafa;
+    }
+    input:focus, select:focus {
+      border-color: darkgreen;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(26,93,26,0.15);
+    }
 
+    /* ===== PHOTO BOX ===== */
     .photo-box {
-      width: 100px;
-      height: 120px;
-      border: 1px solid #000;
+      width: 110px;
+      height: 130px;
+      border: 2px solid #000;
       text-align: center;
       background: #fff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      border-radius: 4px;
+    }
+    .photo-box img { max-width: 100%; max-height: 100%; }
+    .photo-box p { font-size: 10px; margin: 0; }
+    .photo-box input[type="file"] { font-size: 9px; width: 90px; }
+
+    /* ===== DECLARATION ===== */
+    .declaration-box {
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: justify;
+      margin: 6px 0 8px 0;
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      background: #fafafa;
+      border-radius: 4px;
+    }
+    .declaration-box input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      transform: scale(1.1);
+      margin-right: 6px;
     }
 
-    .declaration-box { font-size: 10px; line-height: 1.3; text-align: justify; margin-top: 8px; border: 1px solid #ccc; padding: 8px; background: #fafafa; }
-    .sig-section { display: grid; grid-template-columns: 1fr 1fr; margin-top: 25px; }
-    .sig-placeholder { border-top: 1px solid #000; text-align: center; font-size: 10px; font-weight: bold; padding-top: 3px; width: 180px; }
+    /* ===== SIGNATURE SECTION ===== */
+    .sig-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .sig-placeholder {
+      border-top: 2px solid #000;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      padding-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sig-placeholder .sig-thumb {
+      max-height: 40px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      padding: 2px;
+      background: white;
+      margin-top: 4px;
+    }
+    .sig-placeholder .sig-btn {
+      font-size: 11px;
+      padding: 3px 12px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .sig-placeholder .sig-btn:hover { background: #1a2632; }
 
-    #officeSection { border: 1px dashed darkred; padding: 8px; margin-top: 10px; background: #fffcfc; }
+    /* ===== OFFICE SECTION ===== */
+    #officeSection {
+      border: 2px dashed darkred;
+      padding: 10px 12px;
+      margin-top: 12px;
+      background: #fffcfc;
+      border-radius: 4px;
+    }
+    #officeSection h3 {
+      background: transparent;
+      padding-left: 0;
+      margin-top: 0;
+    }
+    #officeSection .sig-section { margin-top: 20px; }
 
+    /* ===== SIGNATURE MODAL (overlay) ===== */
+    .sig-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .sig-modal-overlay.active { display: flex; }
+    .sig-modal-box {
+      background: white;
+      max-width: 500px;
+      width: 100%;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    .sig-modal-box h3 { margin-top: 0; color: #1a5d1a; }
+    .sig-modal-box canvas {
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      width: 100%;
+      height: auto;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .sig-modal-box .sig-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .sig-modal-box .btn {
+      padding: 8px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-primary { background: #1a5d1a; color: white; }
+    .btn-secondary { background: #6c7a8d; color: white; }
+    .btn-danger { background: #b22222; color: white; }
+
+    /* ===== PRINT & PDF ===== */
     @media print {
-  /* 1. Force the browser to use the full page area */
-  @page { 
-    size: A4; 
-    margin: 0; 
-  }
-
-  body { 
-    background: none; 
-    margin: 0; 
-    padding: 0; 
-  }
-
-  .page-border { 
-    /* 2. Remove any screen margins */
-    margin: 0 !important; 
-    
-    /* 3. Use 100% of the viewport height instead of a fixed mm value */
-    /* This prevents the "blank bottom" by adapting to the printer's edge */
-    width: 210mm; 
-    height: 100vh; 
-    
-    /* 4. Ensure border is calculated INSIDE the 297mm height */
-    box-sizing: border-box; 
-    border: 2px solid darkgreen;
-    
-    /* 5. Clean up for professional PDF */
-    box-shadow: none;
-  }
-
-  .no-print { display: none !important; }
-  #officeSection { display: block !important; }
-}
+      .no-print { display: none !important; }
+      body { background: white; margin: 0; padding: 0; }
+      .page-border {
+        margin: 0 !important;
+        border: 2px solid darkgreen;
+        width: 100%;
+        height: 100vh;
+        box-sizing: border-box;
+        page-break-after: avoid;
+      }
+      #officeSection { display: block !important; }
+    }
   </style>
 </head>
 <body>
 
+<!-- ===== NAV ===== -->
 <div class="no-print">
-    <a href="admission.html">📝 New Admission</a>
-    <a href="adm-register.html">📋 View Register</a>
-    <a href="apaar-input.html" style="background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
+  <a href="admission.html">📝 New Admission</a>
+  <a href="adm-register.html">📋 View Register</a>
+  <a href="apaar-input.html" style="background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
+  <button class="btn-pdf" onclick="downloadPDF()">📄 Download Pre‑filled PDF</button>
 </div>
 
-<div class="page-border">
+<!-- ===== FORM PAGE ===== -->
+<div class="page-border" id="formPage">
   <div class="header-container">
     <img src="logo.png" alt="Logo" class="school-logo">
     <div class="header-text">
@@ -112,280 +307,427 @@
   <div class="form-title">STUDENT ADMISSION FORM (Session 2026)</div>
 
   <form id="admissionForm">
-    <div class="row" style="grid-template-columns: 1fr 1fr 105px;">
+    <!-- ===== STUDENT NAME + PHOTO ===== -->
+    <div class="row" style="grid-template-columns: 1fr 1fr 120px;">
       <div class="field-group" style="grid-column: span 2;">
-        <label>Full Name of Student</label>
+        <label>Full Name of Student <span style="color:red;">*</span></label>
         <input type="text" id="studentName" required>
-        <label style="margin-top:4px">Name (As per Aadhaar Card)</label>
+        <label style="margin-top:6px;">Name (As per Aadhaar Card)</label>
         <input type="text" id="aadhaarName">
-        <div class="row" style="margin-top:4px">
-            <div class="field-group"><label>Date of Birth</label><input type="date" id="dob" onchange="convertDOB()"></div>
-            <div class="field-group" style="grid-column: span 2;"><label>Date of Birth in Words</label><input type="text" id="dobWords" readonly></div>
+        <div class="row" style="margin-top:6px; grid-template-columns: 1fr 2fr;">
+          <div class="field-group"><label>Date of Birth <span style="color:red;">*</span></label><input type="date" id="dob" onchange="convertDOB()" required></div>
+          <div class="field-group"><label>Date of Birth in Words</label><input type="text" id="dobWords" readonly></div>
         </div>
       </div>
       <div class="photo-box">
-        <img id="photoPreview" style="max-width:100%; max-height:100%; display:none;">
-        <p id="photoTxt" style="font-size:8px">Passport Photo</p>
-        <input type="file" onchange="processPhoto(event)" class="no-print" style="width:90px; font-size:7px;">
+        <img id="photoPreview" style="display:none;">
+        <p id="photoTxt" style="font-size:10px;">Passport Photo</p>
+        <input type="file" onchange="processPhoto(event)" class="no-print" style="width:90px; font-size:8px;">
       </div>
     </div>
 
+    <!-- ===== GENDER, BLOOD, CATEGORY, CLASS ===== -->
     <div class="row-4">
-      <div class="field-group"><label>Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
+      <div class="field-group"><label>Gender <span style="color:red;">*</span></label>
+        <select id="gender"><option>Male</option><option>Female</option></select>
+      </div>
       <div class="field-group"><label>Blood Group</label><input type="text" id="bloodGroup"></div>
-      <div class="field-group"><label>Category</label><select id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></div>
-      <div class="field-group"><label>Seeking Class</label><input type="text" id="studentClass"></div>
+      <div class="field-group"><label>Category <span style="color:red;">*</span></label>
+        <select id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select>
+      </div>
+      <div class="field-group"><label>Seeking Class <span style="color:red;">*</span></label>
+        <input type="text" id="studentClass" required>
+      </div>
     </div>
 
+    <!-- ===== AADHAAR, APAAR, PEN ===== -->
     <div class="row">
-        <div class="field-group"><label>Aadhaar No (12 Digits)</label><input type="text" id="aadhaarNo" maxlength="12"></div>
-        <div class="field-group"><label>APAAR ID</label><input type="text" id="apaarId" maxlength="12"></div>
-        <div class="field-group"><label>PEN Number</label><input type="text" id="penId"></div>
+      <div class="field-group"><label>Aadhaar No (12 Digits) <span style="color:red;">*</span></label>
+        <input type="text" id="aadhaarNo" maxlength="12" required>
+      </div>
+      <div class="field-group"><label>APAAR ID</label><input type="text" id="apaarId" maxlength="12"></div>
+      <div class="field-group"><label>PEN Number</label><input type="text" id="penId"></div>
     </div>
 
+    <!-- ===== PARENTAL INFO ===== -->
     <h3>Parental & Contact Information</h3>
     <div class="row">
-        <div class="field-group"><label>Father's Name</label><input type="text" id="fatherName"></div>
-        <div class="field-group"><label>Mother's Name</label><input type="text" id="motherName"></div>
-        <div class="field-group"><label>Father's Contact No</label><input type="tel" id="fatherContact"></div>
+      <div class="field-group"><label>Father's Name <span style="color:red;">*</span></label><input type="text" id="fatherName" required></div>
+      <div class="field-group"><label>Mother's Name <span style="color:red;">*</span></label><input type="text" id="motherName" required></div>
+      <div class="field-group"><label>Father's Contact <span style="color:red;">*</span></label><input type="tel" id="fatherContact" required></div>
     </div>
     <div class="row">
-        <div class="field-group"><label>Mother's Contact No</label><input type="tel" id="motherContact"></div>
-        <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName"></div>
-        <div class="field-group"><label>IFSC Code</label><input type="text" id="ifsc" maxlength="11" style="text-transform:uppercase"></div>
+      <div class="field-group"><label>Mother's Contact</label><input type="tel" id="motherContact"></div>
+      <div class="field-group"><label>Bank Name & Branch</label><input type="text" id="bankName"></div>
+      <div class="field-group"><label>IFSC Code</label><input type="text" id="ifsc" maxlength="11" style="text-transform:uppercase"></div>
     </div>
-
     <div class="row">
-        <div class="field-group"><label>Account No</label><input type="text" id="bankAcc"></div>
-        <div class="field-group" style="grid-column: span 2;"></div>
+      <div class="field-group"><label>Account No</label><input type="text" id="bankAcc"></div>
+      <div class="field-group" style="grid-column: span 2;"></div>
     </div>
 
+    <!-- ===== ADDRESS ===== -->
     <h3>Residential Address</h3>
     <div class="row">
-        <div class="field-group"><label>Mohallah / House No</label><input type="text" id="mohallah"></div>
-        <div class="field-group"><label>Village / Ward</label><input type="text" id="village"></div>
-        <div class="field-group"><label>Tehsil</label><input type="text" id="tehsil" value="Wagoora"></div>
+      <div class="field-group"><label>Mohallah / House No</label><input type="text" id="mohallah"></div>
+      <div class="field-group"><label>Village / Ward <span style="color:red;">*</span></label><input type="text" id="village" required></div>
+      <div class="field-group"><label>Tehsil</label><input type="text" id="tehsil" value="Wagoora"></div>
     </div>
     <div class="row">
-        <div class="field-group"><label>District</label><input type="text" id="dist" value="Baramulla"></div>
-        <div class="field-group"><label>Pin Code</label><input type="text" id="pincode" value="193109"></div>
-        <div class="field-group"><label>State</label><input type="text" id="state" value="Jammu & Kashmir"></div>
+      <div class="field-group"><label>District <span style="color:red;">*</span></label><input type="text" id="dist" value="Baramulla" required></div>
+      <div class="field-group"><label>Pin Code</label><input type="text" id="pincode" value="193109"></div>
+      <div class="field-group"><label>State</label><input type="text" id="state" value="Jammu & Kashmir"></div>
     </div>
 
+    <!-- ===== DECLARATION ===== -->
     <div class="declaration-box">
-        <input type="checkbox" required> <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
+      <input type="checkbox" id="declaration" required>
+      <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
     </div>
 
+    <!-- ===== SIGNATURES (Parent & Student) with fingerprint ===== -->
     <div class="sig-section">
-        <div class="sig-placeholder">Signature of Parent</div>
-        <div class="sig-placeholder" style="margin-left: auto;">Signature of Student</div>
+      <div class="sig-placeholder">
+        <span>Signature of Parent</span>
+        <button type="button" class="sig-btn no-print" onclick="openSignaturePad('parentSig')">✍️ Sign</button>
+        <span id="parentSigPlaceholder" style="color:#999; font-style:italic; font-size:11px;">No signature</span>
+        <img id="parentSigThumb" class="sig-thumb" style="display:none;">
+        <input type="hidden" id="parentSig" value="">
+      </div>
+      <div class="sig-placeholder">
+        <span>Signature of Student</span>
+        <button type="button" class="sig-btn no-print" onclick="openSignaturePad('studentSig')">✍️ Sign</button>
+        <span id="studentSigPlaceholder" style="color:#999; font-style:italic; font-size:11px;">No signature</span>
+        <img id="studentSigThumb" class="sig-thumb" style="display:none;">
+        <input type="hidden" id="studentSig" value="">
+      </div>
     </div>
 
+    <!-- ===== OFFICE USE ===== -->
     <div id="officeSection">
       <h3 style="color: darkred; border-left-color: darkred;">FOR OFFICE USE ONLY</h3>
       <div class="row">
-        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" name="admNo" placeholder="GPSPW/2026/001"></div>
-        <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate" name="admDate"></div>
-        <div class="field-group"><label>Registration Status</label><input type="text" value="Verified & Active" readonly style="background:#eee"></div>
+        <div class="field-group"><label>Admission No (S.No)</label><input type="text" id="admNo" placeholder="GPSPW/2026/001"></div>
+        <div class="field-group"><label>Date of Admission</label><input type="date" id="admDate"></div>
+        <div class="field-group"><label>Registration Status</label><input type="text" value="Verified & Active" readonly style="background:#eee;"></div>
       </div>
-      <div class="field-group" style="margin-top:8px;">
-          <label>Remarks / Recommendations</label>
-          <textarea name="remarks" id="remarks" rows="2"></textarea>
+      <div class="field-group" style="margin-top:6px;">
+        <label>Remarks / Recommendations</label>
+        <textarea id="remarks" rows="2" style="width:100%; padding:4px; font-size:13px; border:1px solid #777; border-radius:4px;"></textarea>
       </div>
-      <div class="sig-section" style="margin-top: 40px;">
-        <div class="sig-placeholder">Admission Incharge</div>
-        <div class="sig-placeholder" style="margin-left: auto;">Head of Institution (HOI)</div>
+      <div class="sig-section" style="margin-top:20px;">
+        <div class="sig-placeholder">
+          <span>Admission Incharge</span>
+          <button type="button" class="sig-btn no-print" onclick="openSignaturePad('admInchargeSig')">✍️ Sign</button>
+          <span id="admInchargeSigPlaceholder" style="color:#999; font-style:italic; font-size:11px;">No signature</span>
+          <img id="admInchargeSigThumb" class="sig-thumb" style="display:none;">
+          <input type="hidden" id="admInchargeSig" value="">
+        </div>
+        <div class="sig-placeholder">
+          <span>Head of Institution (HOI)</span>
+          <button type="button" class="sig-btn no-print" onclick="openSignaturePad('headmasterSig')">✍️ Sign</button>
+          <span id="headmasterSigPlaceholder" style="color:#999; font-style:italic; font-size:11px;">No signature</span>
+          <img id="headmasterSigThumb" class="sig-thumb" style="display:none;">
+          <input type="hidden" id="headmasterSig" value="">
+        </div>
       </div>
     </div>
 
-    <div class="no-print" style="text-align:center; margin-top:10px;">
-      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer;">Save Record</button>
-      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">Print A4</button>
+    <!-- ===== ACTION BUTTONS ===== -->
+    <div class="no-print" style="text-align:center; margin-top:12px;">
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">💾 Save Record</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; margin-left:10px; font-size:14px;">🖨️ Print A4</button>
     </div>
   </form>
 </div>
 
+<!-- ===== SIGNATURE MODAL ===== -->
+<div class="sig-modal-overlay" id="sigModal">
+  <div class="sig-modal-box">
+    <h3 id="sigModalTitle">Sign Here</h3>
+    <canvas id="sigCanvas" width="400" height="150"></canvas>
+    <div class="sig-actions">
+      <button class="btn btn-danger" onclick="clearSignature()">🗑️ Clear</button>
+      <button class="btn btn-primary" onclick="saveSignature()">✅ Save</button>
+      <button class="btn btn-secondary" onclick="closeSignatureModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== html2pdf CDN ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <script type="module">
-// --- 1. FIREBASE IMPORTS ---
+// ===== FIREBASE IMPORTS =====
 import { db } from './init-firebase.js';
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { collection, addDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-async function saveAdmission() {
-    try {
-        const studentData = {
-            admNo: document.getElementById("admNo").value,
-            studentName: document.getElementById("fullName").value,
-            fatherName: document.getElementById("fName").value,
-            motherName: document.getElementById("mName").value,
-            studentClass: document.getElementById("classSelect").value,
-            dob: document.getElementById("dob").value,
-            aadhaarNo: document.getElementById("aadhaar").value,
-            fatherContact: document.getElementById("contact").value,
-            bankAcc: document.getElementById("account").value,
-            village: document.getElementById("village").value,
-            status: "Pending", // Default status for new entries
-            createdAt: new Date()
-        };
+// ===== DOM REFS =====
+const form = document.getElementById('admissionForm');
 
-        const docRef = await addDoc(collection(db, "admissions"), studentData);
-        alert("Saved successfully! ID: " + docRef.id);
-        window.location.href = "adm-register.html"; // Redirect to the register
-    } catch (e) {
-        console.error("Error adding document: ", e);
-        alert("Error saving to cloud. Check console for details.");
-    }
-}
-
-
-// --- 2. PHOTO COMPRESSION LOGIC ---
+// ===== PHOTO COMPRESSION =====
 let compressedPhotoBase64 = "";
 
-window.processPhoto = function(event) { // Attached to window for HTML access
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 150; 
-            const scaleSize = MAX_WIDTH / img.width;
-            canvas.width = MAX_WIDTH;
-            canvas.height = img.height * scaleSize;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            document.getElementById("photoPreview").src = compressedPhotoBase64;
-            document.getElementById("photoPreview").style.display = "block";
-            document.getElementById("photoTxt").style.display = "none";
-        };
-        img.src = e.target.result;
+window.processPhoto = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 150;
+      const scale = MAX_WIDTH / img.width;
+      canvas.width = MAX_WIDTH;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('photoPreview').src = compressedPhotoBase64;
+      document.getElementById('photoPreview').style.display = 'block';
+      document.getElementById('photoTxt').style.display = 'none';
     };
-    reader.readAsDataURL(file);
-}
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
 
-// --- 3. DATE TO WORDS LOGIC ---
+// ===== DATE TO WORDS =====
 window.convertDOB = function() {
-    const dob = document.getElementById("dob").value;
-    if (!dob) return;
-    const d = new Date(dob);
-    const day = d.getDate();
-    const month = d.toLocaleString('en-IN', { month: 'long' });
-    const year = d.getFullYear();
+  const dob = document.getElementById('dob').value;
+  if (!dob) return;
+  const d = new Date(dob);
+  const day = d.getDate();
+  const month = d.toLocaleString('en-IN', { month: 'long' });
+  const year = d.getFullYear();
 
-    const numWords = (n) => {
-        const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-        const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-        if (n < 20) return ones[n];
-        return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + ones[n % 10] : "");
-    };
+  const numWords = (n) => {
+    const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+    const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+    if (n < 20) return ones[n];
+    return tens[Math.floor(n/10)] + (n%10!==0 ? " "+ones[n%10] : "");
+  };
+  const yearToWords = (y) => {
+    const first = Math.floor(y/100);
+    const second = y%100;
+    return numWords(first) + " Hundred " + numWords(second);
+  };
+  const ordinals = ["","First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth","Ninth","Tenth","Eleventh","Twelfth","Thirteenth","Fourteenth","Fifteenth","Sixteenth","Seventeenth","Eighteenth","Nineteen","Twentieth","Twenty First","Twenty Second","Twenty Third","Twenty Fourth","Twenty Fifth","Twenty Sixth","Twenty Seventh","Twenty Eighth","Twenty Ninth","Thirtieth","Thirty First"];
+  document.getElementById('dobWords').value = `${ordinals[day]} ${month} ${yearToWords(year)}`;
+};
 
-    const yearToWords = (y) => {
-        const first = Math.floor(y / 100);
-        const second = y % 100;
-        return numWords(first) + " Hundred " + numWords(second);
-    };
+// ===== SIGNATURE PAD =====
+let sigTargetField = '';
+let sigCanvas, sigCtx, isDrawing = false;
 
-    const ordinals = ["", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteen", "Twentieth", "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth", "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"];
-    document.getElementById("dobWords").value = `${ordinals[day]} ${month} ${yearToWords(year)}`;
+function initSignatureCanvas() {
+  sigCanvas = document.getElementById('sigCanvas');
+  sigCtx = sigCanvas.getContext('2d');
+  sigCanvas.width = 400;
+  sigCanvas.height = 150;
+  sigCtx.lineWidth = 2;
+  sigCtx.strokeStyle = '#000';
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+
+  sigCanvas.addEventListener('mousedown', startDraw);
+  sigCanvas.addEventListener('mousemove', draw);
+  sigCanvas.addEventListener('mouseup', stopDraw);
+  sigCanvas.addEventListener('mo      <h1>Government Primary School Pethgam Wagoora</h1>
+  sigCanvas.addEventListener('mouseleave', stopDraw);
+  sigCanvas.addEventListener('touchstart', handleTouch, { passive: false });
+  sigCanvas.addEventListener('touchmove', handleTouch, { passive: false });
+  sigCanvas.addEventListener('touchend', handleTouchEnd, { passive: false });
 }
 
-// --- 4. DATA PERSISTENCE (FIREBASE) ---
+function getPos(e) {
+  const rect = sigCanvas.getBoundingClientRect();
+  const scaleX = sigCanvas.width / rect.width;
+  const scaleY = sigCanvas.height / rect.height;
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+}
+function startDraw(e) { isDrawing = true; const pos = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(pos.x, pos.y); }
+function draw(e) { if (!isDrawing) return; const pos = getPos(e); sigCtx.lineTo(pos.x, pos.y); sigCtx.stroke(); }
+function stopDraw() { isDrawing = false; sigCtx.closePath(); }
+function handleTouch(e) { e.preventDefault(); const touch = e.touches[0]; sigCanvas.dispatchEvent(new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', { clientX: touch.clientX, clientY: touch.clientY })); }
+function handleTouchEnd(e) { e.preventDefault(); sigCanvas.dispatchEvent(new MouseEvent('mouseup')); }
+
+window.openSignaturePad = function(fieldId) {
+  sigTargetField = fieldId;
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  const labelMap = {
+    'parentSig':'Parent Signature',
+    'studentSig':'Student Signature',
+    'admInchargeSig':'Admission Incharge',
+    'headmasterSig':'Headmaster Signature'
+  };
+  document.getElementById('sigModalTitle').textContent = labelMap[fieldId] || 'Sign Here';
+  document.getElementById('sigModal').classList.add('active');
+};
+window.closeSignatureModal = function() {
+  document.getElementById('sigModal').classList.remove('active');
+  sigTargetField = '';
+};
+window.clearSignature = function() {
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+};
+window.saveSignature = function() {
+  const dataUrl = sigCanvas.toDataURL('image/png');
+  if (dataUrl === 'data:,') { alert('Please draw a signature first.'); return; }
+  document.getElementById(sigTargetField).value = dataUrl;
+  const thumbId = sigTargetField + 'Thumb';
+  const placeholderId = sigTargetField + 'Placeholder';
+  const thumb = document.getElementById(thumbId);
+  const placeholder = document.getElementById(placeholderId);
+  thumb.src = dataUrl;
+  thumb.style.display = 'inline-block';
+  placeholder.style.display = 'none';
+  closeSignatureModal();
+};
+
+// ===== LOAD EXISTING DATA (if edit mode) =====
 window.addEventListener('DOMContentLoaded', async () => {
-    const role = localStorage.getItem("userRole") || "HOI"; 
-    document.getElementById("officeSection").style.display = (role === "HOI" || role === "INCHARGE") ? "block" : "none";
+  initSignatureCanvas();
 
-    const params = new URLSearchParams(window.location.search);
-    const studentId = params.get('id');
-
-    if (studentId) {
-        // Fetch specific document from Firebase
-        const docRef = doc(db, "admissions", studentId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const student = docSnap.data();
-            document.getElementById("studentName").value = student.studentName || "";
-            document.getElementById("aadhaarName").value = student.aadhaarName || "";
-            document.getElementById("dob").value = student.dob || "";
-            document.getElementById("gender").value = student.gender || "";
-            document.getElementById("bloodGroup").value = student.bloodGroup || "";
-            document.getElementById("category").value = student.category || "";
-            document.getElementById("studentClass").value = student.studentClass || "";
-            document.getElementById("aadhaarNo").value = student.aadhaarNo || "";
-            document.getElementById("apaarId").value = student.apaarId || "";
-            document.getElementById("penId").value = student.penId || "";
-            document.getElementById("fatherName").value = student.fatherName || "";
-            document.getElementById("motherName").value = student.motherName || "";
-            document.getElementById("fatherContact").value = student.fatherContact || "";
-            document.getElementById("motherContact").value = student.motherContact || "";
-            document.getElementById("bankName").value = student.bankName || "";
-            document.getElementById("bankAcc").value = student.bankAcc || "";
-            document.getElementById("ifsc").value = student.ifsc || "";
-            document.getElementById("village").value = student.village || "";
-            document.getElementById("mohallah").value = student.mohallah || "";
-            document.getElementById("admNo").value = student.admNo || "";
-            document.getElementById("admDate").value = student.admDate || "";
-            document.getElementById("remarks").value = student.remarks || "";
-            
-            if (student.studentPhoto) {
-                compressedPhotoBase64 = student.studentPhoto;
-                document.getElementById("photoPreview").src = student.studentPhoto;
-                document.getElementById("photoPreview").style.display = "block";
-                document.getElementById("photoTxt").style.display = "none";
-            }
-            window.convertDOB();
+  const params = new URLSearchParams(window.location.search);
+  const studentId = params.get('id');
+  if (studentId) {
+    const docRef = doc(db, "admissions", studentId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const s = docSnap.data();
+      document.getElementById('studentName').value = s.studentName || '';
+      document.getElementById('aadhaarName').value = s.aadhaarName || '';
+      document.getElementById('dob').value = s.dob || '';
+      document.getElementById('gender').value = s.gender || 'Male';
+      document.getElementById('bloodGroup').value = s.bloodGroup || '';
+      document.getElementById('category').value = s.category || 'General';
+      document.getElementById('studentClass').value = s.studentClass || '';
+      document.getElementById('aadhaarNo').value = s.aadhaarNo || '';
+      document.getElementById('apaarId').value = s.apaarId || '';
+      document.getElementById('penId').value = s.penId || '';
+      document.getElementById('fatherName').value = s.fatherName || '';
+      document.getElementById('motherName').value = s.motherName || '';
+      document.getElementById('fatherContact').value = s.fatherContact || '';
+      document.getElementById('motherContact').value = s.motherContact || '';
+      document.getElementById('bankName').value = s.bankName || '';
+      document.getElementById('bankAcc').value = s.bankAcc || '';
+      document.getElementById('ifsc').value = s.ifsc || '';
+      document.getElementById('mohallah').value = s.mohallah || '';
+      document.getElementById('village').value = s.village || '';
+      document.getElementById('dist').value = s.dist || 'Baramulla';
+      document.getElementById('tehsil').value = s.tehsil || 'Wagoora';
+      document.getElementById('pincode').value = s.pincode || '193109';
+      document.getElementById('state').value = s.state || 'Jammu & Kashmir';
+      document.getElementById('admNo').value = s.admNo || '';
+      document.getElementById('admDate').value = s.admDate || '';
+      document.getElementById('remarks').value = s.remarks || '';
+      if (s.studentPhoto) {
+        compressedPhotoBase64 = s.studentPhoto;
+        document.getElementById('photoPreview').src = s.studentPhoto;
+        document.getElementById('photoPreview').style.display = 'block';
+        document.getElementById('photoTxt').style.display = 'none';
+      }
+      // Signatures (if any)
+      ['parentSig','studentSig','admInchargeSig','headmasterSig'].forEach(field => {
+        if (s[field]) {
+          document.getElementById(field).value = s[field];
+          const thumb = document.getElementById(field+'Thumb');
+          const placeholder = document.getElementById(field+'Placeholder');
+          thumb.src = s[field];
+          thumb.style.display = 'inline-block';
+          placeholder.style.display = 'none';
         }
-    } else {
-        document.getElementById("admNo").value = "GPSPW/" + Date.now().toString().slice(-4);
+      });
+      window.convertDOB();
     }
+  } else {
+    // Generate admission number
+    document.getElementById('admNo').value = 'GPSPW/' + Date.now().toString().slice(-4);
+  }
 });
 
-// --- 5. SUBMIT TO FIREBASE ---
+// ===== SUBMIT TO FIREBASE =====
 window.submitAdmission = async function() {
-    const admNo = document.getElementById("admNo").value;
-    if(!admNo) return alert("Admission Number is required!");
-
-    const data = {
-        studentName: document.getElementById("studentName").value,
-        aadhaarName: document.getElementById("aadhaarName").value,
-        dob: document.getElementById("dob").value,
-        gender: document.getElementById("gender").value,
-        bloodGroup: document.getElementById("bloodGroup").value,
-        category: document.getElementById("category").value,
-        studentClass: document.getElementById("studentClass").value,
-        aadhaarNo: document.getElementById("aadhaarNo").value,
-        apaarId: document.getElementById("apaarId").value,
-        penId: document.getElementById("penId").value,
-        fatherName: document.getElementById("fatherName").value,
-        motherName: document.getElementById("motherName").value,
-        fatherContact: document.getElementById("fatherContact").value,
-        motherContact: document.getElementById("motherContact").value,
-        bankName: document.getElementById("bankName").value,
-        bankAcc: document.getElementById("bankAcc").value,
-        ifsc: document.getElementById("ifsc").value,
-        village: document.getElementById("village").value,
-        mohallah: document.getElementById("mohallah").value,
-        admNo: admNo,
-        admDate: document.getElementById("admDate").value,
-        remarks: document.getElementById("remarks").value,
-        status: "Approved",
-        studentPhoto: compressedPhotoBase64,
-        updatedAt: new Date().toISOString()
-    };
-
-    try {
-        // Save to Firebase Cloud Firestore
-        await setDoc(doc(db, "admissions", admNo), data);
-        alert("Record Saved to Cloud Successfully!");
-    } catch (e) {
-        console.error("Error saving document: ", e);
-        alert("Error saving to cloud. check console.");
+  const admNo = document.getElementById('admNo').value;
+  if (!admNo) return alert('Admission Number is required!');
+  const required = ['studentName','dob','studentClass','aadhaarNo','fatherName','motherName','fatherContact','village','dist'];
+  for (let id of required) {
+    if (!document.getElementById(id).value.trim()) {
+      alert(`Please fill in required field: ${id}`);
+      return;
     }
-}
+  }
+  if (!document.getElementById('declaration').checked) {
+    alert('Please accept the Parents Declaration.');
+    return;
+  }
+
+  const data = {
+    studentName: document.getElementById('studentName').value,
+    aadhaarName: document.getElementById('aadhaarName').value,
+    dob: document.getElementById('dob').value,
+    gender: document.getElementById('gender').value,
+    bloodGroup: document.getElementById('bloodGroup').value,
+    category: document.getElementById('category').value,
+    studentClass: document.getElementById('studentClass').value,
+    aadhaarNo: document.getElementById('aadhaarNo').value,
+    apaarId: document.getElementById('apaarId').value,
+    penId: document.getElementById('penId').value,
+    fatherName: document.getElementById('fatherName').value,
+    motherName: document.getElementById('motherName').value,
+    fatherContact: document.getElementById('fatherContact').value,
+    motherContact: document.getElementById('motherContact').value,
+    bankName: document.getElementById('bankName').value,
+    bankAcc: document.getElementById('bankAcc').value,
+    ifsc: document.getElementById('ifsc').value,
+    mohallah: document.getElementById('mohallah').value,
+    village: document.getElementById('village').value,
+    tehsil: document.getElementById('tehsil').value,
+    dist: document.getElementById('dist').value,
+    pincode: document.getElementById('pincode').value,
+    state: document.getElementById('state').value,
+    admNo: admNo,
+    admDate: document.getElementById('admDate').value,
+    remarks: document.getElementById('remarks').value,
+    studentPhoto: compressedPhotoBase64,
+    parentSig: document.getElementById('parentSig').value,
+    studentSig: document.getElementById('studentSig').value,
+    admInchargeSig: document.getElementById('admInchargeSig').value,
+    headmasterSig: document.getElementById('headmasterSig').value,
+    status: 'Approved',
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    await setDoc(doc(db, "admissions", admNo), data);
+    alert("✅ Record Saved to Cloud Successfully!");
+  } catch (e) {
+    console.error("Error saving:", e);
+    alert("❌ Error saving to cloud. Check console.");
+  }
+};
+
+// ===== PDF DOWNLOAD =====
+window.downloadPDF = function() {
+  const element = document.getElementById('formPage');
+  // Temporarily hide no-print elements inside the page (they are hidden via CSS but may still show)
+  const noPrintElements = element.querySelectorAll('.no-print');
+  noPrintElements.forEach(el => el.style.display = 'none');
+  
+  const opt = {
+    margin:        [0, 0, 0, 0],
+    filename:     'Admission_Form_GPS_Pethgam.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save().then(function() {
+    // Restore no-print elements
+    noPrintElements.forEach(el => el.style.display = '');
+  });
+};
+
 </script>
 </body>
 </html>
- 
-      
