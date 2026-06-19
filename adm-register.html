@@ -2,561 +2,411 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admission Form - GPS Pethgam Wagoora</title>
+  <title>Admission Register - GPS Pethgam Wagoora</title>
   <style>
+    /* === all previous register styles === */
     * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      background: #f4f7f6;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
+    body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+    .nav-bar { background: #1a5d1a; padding: 12px; display: flex; gap: 15px; justify-content: center; border-bottom: 4px solid #ffcc00; margin: -20px -20px 30px -20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
+    .nav-bar a { color: white; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 5px; background: rgba(255,255,255,0.15); font-size: 14px; transition: 0.3s; }
+    .nav-bar a:hover { background: rgba(255,255,255,0.3); }
+    .nav-bar a.active { background: #ffcc00; color: #1a5d1a; }
+    .register-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 6px solid darkgreen; max-width: 100%; margin: 0 auto; overflow-x: auto; }
+    .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .branding { display: flex; align-items: center; gap: 20px; }
+    .school-logo { width: 70px; height: 70px; object-fit: contain; }
+    .school-title h1 { margin: 0; color: #1a5d1a; font-size: 24px; text-transform: uppercase; }
+    .school-title h2 { margin: 5px 0; color: #444; font-size: 18px; font-weight: 400; }
+    .school-title small { color: #666; font-size: 13px; font-family: monospace; }
+    .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap; }
+    .search-input { padding: 10px 15px; width: 350px; border: 2px solid #ddd; border-radius: 6px; outline: none; transition: 0.3s; font-size: 14px; }
+    .search-input:focus { border-color: darkgreen; box-shadow: 0 0 5px rgba(0,100,0,0.2); }
+    .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-print { background: #2c3e50; color: white; }
+    .btn-print:hover { background: #000; }
+    .btn-add { background: #1a5d1a; color: white; }
+    .btn-add:hover { background: #0f4a0f; }
+    .btn-edit { background: #f39c12; color: white; }
+    .btn-edit:hover { background: #d68910; }
+    .btn-sign { background: #2c3e50; color: white; font-size: 12px; padding: 6px 14px; }
+    .btn-sign:hover { background: #1a2632; }
+    .table-wrapper { overflow-x: auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1600px; }
+    th { background: #f8fbf8; color: #1a5d1a; padding: 10px 6px; text-align: left; border-bottom: 3px solid darkgreen; font-weight: 700; position: sticky; top: 0; z-index: 10; white-space: nowrap; text-transform: uppercase; }
+    td { padding: 8px 6px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    tr:hover { background-color: #f9fff9; }
+    .student-thumb { width: 40px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; }
+    .adm-no { font-family: monospace; font-weight: bold; color: #1a5d1a; font-size: 12px; }
+    .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+    .status-approved { background: #e6f4ea; color: #1e7e34; border: 1px solid #b7e1cd; }
+    .status-pending { background: #fff4e5; color: #664d03; border: 1px solid #ffeeba; }
+    .cell-wrap { max-width: 120px; word-break: break-word; }
+    .sig-thumb { max-height: 35px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; background: white; }
+    .sig-placeholder { color: #999; font-style: italic; font-size: 11px; }
 
-    /* Navigation */
-    .nav-bar {
-      background: #1a5d1a;
-      padding: 12px;
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      border-bottom: 4px solid #ffcc00;
-      margin: -20px -20px 30px -20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .nav-bar a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 5px;
-      background: rgba(255,255,255,0.15);
-      font-size: 14px;
-      transition: 0.3s;
-    }
-    .nav-bar a:hover {
-      background: rgba(255,255,255,0.3);
-    }
-    .nav-bar a.active {
-      background: #ffcc00;
-      color: #1a5d1a;
-    }
+    /* === Modal styles (same as admission) === */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: white; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative; }
+    .modal-box h2 { color: #1a5d1a; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+    .modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #999; transition: 0.2s; }
+    .modal-close:hover { color: #333; }
+    .modal-body form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .modal-body .full-width { grid-column: 1 / -1; }
+    .modal-body label { font-weight: 600; font-size: 13px; color: #333; display: block; margin-bottom: 3px; }
+    .modal-body input, .modal-body select, .modal-body textarea { width: 100%; padding: 7px 10px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
+    .modal-body input:focus, .modal-body select:focus { border-color: #1a5d1a; outline: none; box-shadow: 0 0 0 3px rgba(26,93,26,0.1); }
+    .modal-body .file-upload-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .modal-body .file-upload-wrapper input[type="file"] { flex: 1; padding: 6px 0; }
+    .modal-body .file-upload-wrapper img { max-height: 80px; border: 1px solid #ddd; border-radius: 6px; padding: 4px; }
+    .modal-body .radio-group { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; padding-top: 4px; }
+    .modal-body .radio-group label { font-weight: 400; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .modal-body .radio-group input[type="radio"] { width: 16px; height: 16px; accent-color: #1a5d1a; }
+    .modal-body .declaration-box { background: #f8fbf8; border-left: 4px solid #1a5d1a; padding: 12px 16px; border-radius: 4px; }
+    .modal-body .declaration-box label { display: flex; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 13px; line-height: 1.5; }
+    .modal-body .declaration-box input[type="checkbox"] { width: 18px; height: 18px; margin-top: 3px; accent-color: #1a5d1a; }
+    .modal-actions { grid-column: 1 / -1; display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 18px; }
+    .modal-actions .btn { padding: 10px 28px; }
+    .btn-cancel { background: #6c7a8d; color: white; }
+    .btn-cancel:hover { background: #556270; }
+    .btn-submit { background: #1a5d1a; color: white; }
+    .btn-submit:hover { background: #0f4a0f; }
 
-    /* Form Container */
-    .form-card {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      padding: 30px 35px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border-top: 6px solid #1a5d1a;
-    }
+    /* Signature Modal (same) */
+    .sig-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+    .sig-modal-overlay.active { display: flex; }
+    .sig-modal-box { background: white; max-width: 500px; width: 100%; border-radius: 12px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); text-align: center; }
+    .sig-modal-box h3 { margin-top: 0; color: #1a5d1a; }
+    .sig-modal-box canvas { border: 2px solid #ccc; border-radius: 8px; background: white; width: 100%; height: auto; touch-action: none; cursor: crosshair; }
+    .sig-modal-box .sig-actions { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
 
-    .form-header {
-      text-align: center;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 15px;
-      margin-bottom: 25px;
-    }
-    .form-header h1 {
-      color: #1a5d1a;
-      margin: 0;
-      font-size: 26px;
-      text-transform: uppercase;
-    }
-    .form-header h2 {
-      margin: 5px 0;
-      color: #444;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    .form-header small {
-      color: #666;
-      font-size: 13px;
-    }
-
-    /* Form Grid */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px 30px;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .form-group label {
-      font-weight: 600;
-      font-size: 13px;
-      color: #1a5d1a;
-    }
-    .form-group label .required {
-      color: #c00;
-      margin-left: 2px;
-    }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 8px 12px;
-      border: 1.5px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      background: #fafafa;
-      transition: 0.2s;
-    }
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: #1a5d1a;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(26,93,26,0.1);
-      background: white;
-    }
-    .form-group .hint {
-      font-size: 12px;
-      color: #888;
-    }
-
-    /* Name sections (inline) */
-    .name-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
-    .name-group .form-group {
-      grid-column: auto;
-    }
-
-    /* Radio / checkbox groups */
-    .radio-group {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      align-items: center;
-      padding-top: 6px;
-    }
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 400;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .radio-group input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      accent-color: #1a5d1a;
-    }
-
-    /* Declaration */
-    .declaration-box {
-      background: #f8fbf8;
-      border-left: 4px solid #1a5d1a;
-      padding: 15px 20px;
-      border-radius: 6px;
-      margin: 10px 0;
-    }
-    .declaration-box label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .declaration-box input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 3px;
-      accent-color: #1a5d1a;
-    }
-
-    /* Office use */
-    .office-section {
-      background: #f0f4f8;
-      padding: 20px 25px;
-      border-radius: 8px;
-      margin-top: 20px;
-      border: 1px solid #d0d7de;
-    }
-    .office-section h3 {
-      margin-top: 0;
-      color: #1a5d1a;
-      font-size: 16px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 8px;
-    }
-    .office-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 15px;
-    }
-    .office-grid .form-group input {
-      background: white;
-    }
-
-    /* Signature row */
-    .sig-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 30px;
-      margin-top: 15px;
-    }
-    .sig-row .form-group {
-      flex: 1;
-    }
-    .sig-row .form-group input {
-      background: white;
-      border-style: dashed;
-    }
-
-    /* Submit */
-    .form-actions {
-      grid-column: 1 / -1;
-      display: flex;
-      gap: 15px;
-      justify-content: flex-end;
-      margin-top: 20px;
-      border-top: 1px solid #eee;
-      padding-top: 20px;
-    }
-    .btn {
-      padding: 10px 28px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.3s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-primary {
-      background: #1a5d1a;
-      color: white;
-    }
-    .btn-primary:hover {
-      background: #0f4a0f;
-    }
-    .btn-secondary {
-      background: #6c7a8d;
-      color: white;
-    }
-    .btn-secondary:hover {
-      background: #556270;
-    }
-    .btn-reset {
-      background: #e0e0e0;
-      color: #333;
-    }
-    .btn-reset:hover {
-      background: #ccc;
-    }
-
-    /* Photo upload (optional) */
-    .photo-upload {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .photo-upload input[type="file"] {
-      flex: 1;
-      padding: 6px 0;
-    }
-    .photo-upload img {
-      max-height: 80px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 4px;
-      background: white;
-    }
-
-    @media (max-width: 700px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .name-group { grid-template-columns: 1fr; }
-      .office-grid { grid-template-columns: 1fr; }
-      .sig-row { flex-direction: column; gap: 10px; }
-      .radio-group { gap: 12px; }
-      .form-card { padding: 20px; }
-    }
-    @media print {
-      .no-print { display: none !important; }
-      body { background: white; }
-      .form-card { box-shadow: none; border: 1px solid #ccc; }
-    }
+    @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .register-card { box-shadow: none; border: none; padding: 10px; } table { font-size: 9px; min-width: auto; } th, td { padding: 4px; border: 1px solid #ccc; } .student-thumb { width: 30px; height: 35px; } @page { size: landscape; margin: 8mm; } }
+    @media (max-width: 700px) { .modal-body form { grid-template-columns: 1fr; } .controls-row { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .header-container { flex-direction: column; align-items: center; text-align: center; } .branding { flex-direction: column; } }
   </style>
 </head>
 <body>
 
 <div class="nav-bar no-print">
-  <a href="admission.html" class="active">📝 Admission Form</a>
-  <a href="adm-register.html">📋 View Register</a>
+  <a href="admission.html">📝 Admission Form</a>
+  <a href="adm-register.html" class="active">📋 Admission Register</a>
 </div>
 
-<div class="form-card">
-  <div class="form-header">
-    <h1>Government Primary School Pethgam Wagoora</h1>
-    <h2>Student Admission Form – 2026</h2>
-    <small>UDISE: 01022202207 | Zone: Wagoora | Dist: Baramulla</small>
+<div class="register-card">
+  <div class="header-container">
+    <div class="branding">
+      <img src="logo.png" alt="School Logo" class="school-logo">
+      <div class="school-title">
+        <h1>Government Primary School Pethgam Wagoora</h1>
+        <h2>Student Admission Register – 2026</h2>
+        <small>UDISE: 01022202207 | Zone: Wagoora | Dist: Baramulla</small>
+      </div>
+    </div>
+    <div class="no-print" style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <button onclick="openAddModal()" class="btn btn-add">➕ Add Admission</button>
+      <button onclick="window.print()" class="btn btn-print">🖨️ Print Register</button>
+    </div>
   </div>
 
-  <form id="admissionForm">
-    <!-- ========== STUDENT PHOTO (optional) ========== -->
-    <div class="form-group full-width">
-      <label>Student Photo (optional)</label>
-      <div class="photo-upload">
-        <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
-        <img id="photoPreview" style="display:none;" alt="Preview">
-      </div>
-    </div>
+  <div class="controls-row no-print">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search any field..." onkeyup="searchTable()">
+    <div style="font-size: 13px; color: #666;">Total Records: <span id="recordCount" style="font-weight:bold; color:darkgreen;">0</span></div>
+  </div>
 
-    <!-- ========== STUDENT'S NAME ========== -->
-    <div class="full-width">
-      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Student's Name <span class="required">*</span></label>
-      <div class="name-group">
-        <div class="form-group">
-          <label>First Name <span class="required">*</span></label>
-          <input type="text" id="sFirstName" placeholder="First" required>
-        </div>
-        <div class="form-group">
-          <label>Middle Name</label>
-          <input type="text" id="sMiddleName" placeholder="Middle">
-        </div>
-        <div class="form-group">
-          <label>Last Name <span class="required">*</span></label>
-          <input type="text" id="sLastName" placeholder="Last" required>
-        </div>
-      </div>
-    </div>
+  <div class="table-wrapper">
+    <table id="regTable">
+      <thead>
+        <tr>
+          <th>Photo</th><th>Adm No</th><th>Student Name</th><th>Aadhaar Name</th><th>Father's Name</th><th>Mother's Name</th>
+          <th>Residence</th><th>District</th><th>Father Contact</th><th>Mother Contact</th><th>Aadhaar</th><th>DOB</th>
+          <th>DOB Words</th><th>Bank A/C</th><th>Bank Name</th><th>Branch</th><th>IFSC</th><th>Category</th>
+          <th>Blood Group</th><th>Ration No</th><th>Ration Type</th><th>Class</th><th>PEN</th><th>Declaration</th>
+          <th>Office Class</th><th>Office Date</th><th>Parent Sig</th><th>Adm Incharge Sig</th><th>Headmaster Sig</th><th>Status</th>
+          <th class="no-print">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableContent">
+        <tr><td colspan="31">Loading from Cloud...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    <!-- ========== NAME AS PER AADHAAR ========== -->
-    <div class="full-width">
-      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Name As Per Aadhaar <span class="required">*</span></label>
-      <div class="name-group">
-        <div class="form-group">
-          <label>First Name <span class="required">*</span></label>
-          <input type="text" id="aadhaarFirstName" placeholder="First" required>
+<!-- ===== ADD ADMISSION MODAL (full form with signature buttons) ===== -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <span class="modal-close" onclick="closeAddModal()">&times;</span>
+    <h2>📝 Add New Admission (Full Details)</h2>
+    <div class="modal-body">
+      <form id="addForm">
+        <!-- Photo -->
+        <div class="full-width">
+          <label>Student Photo (optional)</label>
+          <div class="file-upload-wrapper">
+            <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+            <img id="photoPreview" style="display:none;" alt="Preview">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Middle Name</label>
-          <input type="text" id="aadhaarMiddleName" placeholder="Middle">
-        </div>
-        <div class="form-group">
-          <label>Last Name <span class="required">*</span></label>
-          <input type="text" id="aadhaarLastName" placeholder="Last" required>
-        </div>
-      </div>
-    </div>
 
-    <!-- ========== FATHER'S NAME ========== -->
-    <div class="full-width">
-      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Father's Name <span class="required">*</span></label>
-      <div class="name-group">
-        <div class="form-group">
-          <label>First Name <span class="required">*</span></label>
-          <input type="text" id="fFirstName" placeholder="First" required>
+        <!-- Student Name -->
+        <div class="full-width">
+          <label>Student's Name <span style="color:red;">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <input type="text" id="sFirstName" placeholder="First" required>
+            <input type="text" id="sMiddleName" placeholder="Middle">
+            <input type="text" id="sLastName" placeholder="Last" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Middle Name</label>
-          <input type="text" id="fMiddleName" placeholder="Middle">
+
+        <!-- Aadhaar Name -->
+        <div class="full-width">
+          <label>Name As Per Aadhaar <span style="color:red;">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <input type="text" id="aadhaarFirstName" placeholder="First" required>
+            <input type="text" id="aadhaarMiddleName" placeholder="Middle">
+            <input type="text" id="aadhaarLastName" placeholder="Last" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Last Name <span class="required">*</span></label>
-          <input type="text" id="fLastName" placeholder="Last" required>
+
+        <!-- Father -->
+        <div class="full-width">
+          <label>Father's Name <span style="color:red;">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <input type="text" id="fFirstName" placeholder="First" required>
+            <input type="text" id="fMiddleName" placeholder="Middle">
+            <input type="text" id="fLastName" placeholder="Last" required>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ========== MOTHER'S NAME ========== -->
-    <div class="full-width">
-      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Mother's Name <span class="required">*</span></label>
-      <div class="name-group">
-        <div class="form-group">
-          <label>First Name <span class="required">*</span></label>
-          <input type="text" id="mFirstName" placeholder="First" required>
+        <!-- Mother -->
+        <div class="full-width">
+          <label>Mother's Name <span style="color:red;">*</span></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <input type="text" id="mFirstName" placeholder="First" required>
+            <input type="text" id="mMiddleName" placeholder="Middle">
+            <input type="text" id="mLastName" placeholder="Last" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Middle Name</label>
-          <input type="text" id="mMiddleName" placeholder="Middle">
+
+        <!-- Residence & District -->
+        <div><label>Residence (Village/Town) <span style="color:red;">*</span></label><input type="text" id="residence" required></div>
+        <div><label>District <span style="color:red;">*</span></label><input type="text" id="district" required></div>
+
+        <!-- Contacts -->
+        <div><label>Father's Contact <span style="color:red;">*</span></label><input type="text" id="fatherContact" placeholder="10-digit" required></div>
+        <div><label>Mother's Contact</label><input type="text" id="motherContact" placeholder="10-digit"></div>
+
+        <!-- Aadhaar & DOB -->
+        <div><label>Aadhaar Number <span style="color:red;">*</span></label><input type="text" id="aadhaarNo" placeholder="12-digit" required></div>
+        <div><label>Date of Birth (figures) <span style="color:red;">*</span></label><input type="date" id="dob" required></div>
+        <div class="full-width"><label>Date of Birth in Words</label><input type="text" id="dobWords" placeholder="e.g. 15th January 2015"></div>
+
+        <!-- Bank -->
+        <div><label>Bank Account No.</label><input type="text" id="bankAcc"></div>
+        <div><label>Bank Name</label><input type="text" id="bankName"></div>
+        <div><label>Bank Branch</label><input type="text" id="bankBranch"></div>
+        <div><label>IFSC Code</label><input type="text" id="ifsc"></div>
+
+        <!-- Category -->
+        <div class="full-width">
+          <label>Category <span style="color:red;">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="category" value="SC" required> SC</label>
+            <label><input type="radio" name="category" value="ST"> ST</label>
+            <label><input type="radio" name="category" value="OBC"> OBC</label>
+            <label><input type="radio" name="category" value="General"> General</label>
+            <label><input type="radio" name="category" value="Other"> Other</label>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Last Name <span class="required">*</span></label>
-          <input type="text" id="mLastName" placeholder="Last" required>
+
+        <!-- Blood Group -->
+        <div><label>Blood Group</label><input type="text" id="bloodGroup" placeholder="e.g. O+"></div>
+        <div></div>
+
+        <!-- Ration Card -->
+        <div><label>Ration Card No.</label><input type="text" id="rationCardNo"></div>
+        <div><label>Ration Card Type</label><input type="text" id="rationCardType"></div>
+
+        <!-- Class & PEN -->
+        <div>
+          <label>Class Joining <span style="color:red;">*</span></label>
+          <select id="classJoining" required>
+            <option value="">-- Select --</option>
+            <option value="Pre Primary – 3 (PP-3)">Pre Primary – 3 (PP-3)</option>
+            <option value="Pre Primary – 2 (PP-2)">Pre Primary – 2 (PP-2)</option>
+            <option value="Balvatika">Balvatika</option>
+            <option value="1st Class">1st Class</option>
+            <option value="2nd Class">2nd Class</option>
+            <option value="3rd Class">3rd Class</option>
+            <option value="4th Class">4th Class</option>
+            <option value="5th Class">5th Class</option>
+          </select>
         </div>
-      </div>
-    </div>
+        <div><label>PEN Number (transfer)</label><input type="text" id="penId"></div>
 
-    <!-- ========== RESIDENCE & DISTRICT ========== -->
-    <div class="form-group">
-      <label>Residence (Village / Town) <span class="required">*</span></label>
-      <input type="text" id="residence" placeholder="Village / Town" required>
-    </div>
-    <div class="form-group">
-      <label>District <span class="required">*</span></label>
-      <input type="text" id="district" placeholder="District" required>
-    </div>
-
-    <!-- ========== CONTACTS ========== -->
-    <div class="form-group">
-      <label>Father's Contact Number <span class="required">*</span></label>
-      <input type="text" id="fatherContact" placeholder="10-digit mobile" required>
-    </div>
-    <div class="form-group">
-      <label>Mother's Contact Number</label>
-      <input type="text" id="motherContact" placeholder="10-digit mobile">
-    </div>
-
-    <!-- ========== AADHAAR & DOB ========== -->
-    <div class="form-group">
-      <label>Aadhaar Number <span class="required">*</span></label>
-      <input type="text" id="aadhaarNo" placeholder="12-digit Aadhaar" required>
-    </div>
-    <div class="form-group">
-      <label>Date of Birth (in figures) <span class="required">*</span></label>
-      <input type="date" id="dob" required>
-    </div>
-    <div class="form-group full-width">
-      <label>Date of Birth in Words</label>
-      <input type="text" id="dobWords" placeholder="e.g. 15th January 2015">
-    </div>
-
-    <!-- ========== BANK DETAILS ========== -->
-    <div class="form-group">
-      <label>Bank Account Number</label>
-      <input type="text" id="bankAcc" placeholder="Account number">
-    </div>
-    <div class="form-group">
-      <label>Bank Name</label>
-      <input type="text" id="bankName" placeholder="Bank name">
-    </div>
-    <div class="form-group">
-      <label>Bank Branch</label>
-      <input type="text" id="bankBranch" placeholder="Branch name">
-    </div>
-    <div class="form-group">
-      <label>IFSC Code</label>
-      <input type="text" id="ifsc" placeholder="e.g. SBIN0001234">
-    </div>
-
-    <!-- ========== CATEGORY ========== -->
-    <div class="form-group full-width">
-      <label>Category <span class="required">*</span></label>
-      <div class="radio-group">
-        <label><input type="radio" name="category" value="SC" required> SC</label>
-        <label><input type="radio" name="category" value="ST"> ST</label>
-        <label><input type="radio" name="category" value="OBC"> OBC</label>
-        <label><input type="radio" name="category" value="General"> General</label>
-        <label><input type="radio" name="category" value="Other"> Other</label>
-      </div>
-    </div>
-
-    <!-- ========== BLOOD GROUP ========== -->
-    <div class="form-group">
-      <label>Blood Group</label>
-      <input type="text" id="bloodGroup" placeholder="e.g. O+">
-    </div>
-    <div class="form-group">
-      <!-- empty for alignment -->
-    </div>
-
-    <!-- ========== RATION CARD ========== -->
-    <div class="form-group">
-      <label>Ration Card Number</label>
-      <input type="text" id="rationCardNo" placeholder="Ration card number">
-    </div>
-    <div class="form-group">
-      <label>Ration Card Type</label>
-      <input type="text" id="rationCardType" placeholder="e.g. BPL/APL">
-    </div>
-
-    <!-- ========== CLASS JOINING & PEN ========== -->
-    <div class="form-group">
-      <label>Class Joining <span class="required">*</span></label>
-      <select id="classJoining" required>
-        <option value="">-- Select --</option>
-        <option value="Pre Primary – 3 (PP-3)">Pre Primary – 3 (PP-3)</option>
-        <option value="Pre Primary – 2 (PP-2)">Pre Primary – 2 (PP-2)</option>
-        <option value="Balvatika">Balvatika</option>
-        <option value="1st Class">1st Class</option>
-        <option value="2nd Class">2nd Class</option>
-        <option value="3rd Class">3rd Class</option>
-        <option value="4th Class">4th Class</option>
-        <option value="5th Class">5th Class</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>PEN Number (for transferring students)</label>
-      <input type="text" id="penId" placeholder="PEN number if applicable">
-    </div>
-
-    <!-- ========== PARENTS DECLARATION ========== -->
-    <div class="full-width declaration-box">
-      <label>
-        <input type="checkbox" id="declaration" required>
-        <span>
-          <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
-        </span>
-      </label>
-    </div>
-
-    <!-- ========== FOR OFFICE USE ONLY ========== -->
-    <div class="full-width office-section">
-      <h3>For Office Use Only</h3>
-      <div class="office-grid">
-        <div class="form-group">
-          <label>Admitted to Class</label>
-          <input type="text" id="officeClass" placeholder="Class">
+        <!-- Declaration -->
+        <div class="full-width declaration-box">
+          <label>
+            <input type="checkbox" id="declaration" required>
+            <span><strong>Parents Declaration:</strong> I do hereby declare that the above information... (full text)</span>
+          </label>
         </div>
-        <div class="form-group">
-          <label>Admission No.</label>
-          <input type="text" id="admNo" placeholder="e.g. 2026-001">
-        </div>
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date" id="officeDate">
-        </div>
-      </div>
-      <div style="margin-top:10px; font-size:14px; color:#444;">
-        <p>All required documents, including the Birth Certificate, Residence Proof, and Transfer Certificate (if applicable), have been duly verified and found satisfactory.</p>
-      </div>
-      <div class="sig-row">
-        <div class="form-group">
-          <label>Signature of Parent</label>
-          <input type="text" id="parentSig" placeholder="Parent's signature">
-        </div>
-        <div class="form-group">
-          <label>Signature of Adm. Incharge</label>
-          <input type="text" id="admInchargeSig" placeholder="Incharge signature">
-        </div>
-        <div class="form-group">
-          <label>Signature of Headmaster</label>
-          <input type="text" id="headmasterSig" placeholder="Headmaster signature">
-        </div>
-      </div>
-    </div>
 
-    <!-- ========== FORM ACTIONS ========== -->
-    <div class="form-actions no-print">
-      <button type="reset" class="btn btn-reset">🗑️ Clear All</button>
-      <button type="button" class="btn btn-secondary" onclick="window.location.href='adm-register.html'">📋 View Register</button>
-      <button type="submit" class="btn btn-primary">💾 Save Admission</button>
+        <!-- Office Use with Signature Buttons -->
+        <div class="full-width" style="background:#f0f4f8; padding:12px; border-radius:6px;">
+          <h4 style="margin-top:0; color:#1a5d1a;">For Office Use Only</h4>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+            <div><label>Admitted to Class</label><input type="text" id="officeClass"></div>
+            <div><label>Admission No.</label><input type="text" id="admNo"></div>
+            <div><label>Date</label><input type="date" id="officeDate"></div>
+          </div>
+          <div style="margin:10px 0 8px; font-size:13px; color:#444;">
+            All required documents verified.
+          </div>
+          <!-- Signatures -->
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px;">
+            <div>
+              <label>Signature of Parent</label>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-sign" onclick="openSignaturePad('parentSig')">✍️ Sign</button>
+                <span id="parentSigPlaceholder" class="sig-placeholder">No signature</span>
+                <img id="parentSigThumb" class="sig-thumb" style="display:none;">
+              </div>
+              <input type="hidden" id="parentSig" value="">
+            </div>
+            <div>
+              <label>Signature of Adm. Incharge</label>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-sign" onclick="openSignaturePad('admInchargeSig')">✍️ Sign</button>
+                <span id="admInchargeSigPlaceholder" class="sig-placeholder">No signature</span>
+                <img id="admInchargeSigThumb" class="sig-thumb" style="display:none;">
+              </div>
+              <input type="hidden" id="admInchargeSig" value="">
+            </div>
+            <div>
+              <label>Signature of Headmaster</label>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-sign" onclick="openSignaturePad('headmasterSig')">✍️ Sign</button>
+                <span id="headmasterSigPlaceholder" class="sig-placeholder">No signature</span>
+                <img id="headmasterSigThumb" class="sig-thumb" style="display:none;">
+              </div>
+              <input type="hidden" id="headmasterSig" value="">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-submit">💾 Save Admission</button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
+</div>
+
+<!-- ===== SIGNATURE MODAL (shared) ===== -->
+<div class="sig-modal-overlay" id="sigModal">
+  <div class="sig-modal-box">
+    <h3 id="sigModalTitle">Sign Here</h3>
+    <canvas id="sigCanvas" width="400" height="150"></canvas>
+    <div class="sig-actions">
+      <button class="btn btn-reset" onclick="clearSignature()">🗑️ Clear</button>
+      <button class="btn btn-primary" onclick="saveSignature()">✅ Save</button>
+      <button class="btn btn-secondary" onclick="closeSignatureModal()">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
-  // ----- Firebase Imports -----
+  // ===== Firebase =====
   import { db } from './init-firebase.js';
-  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ----- Photo Preview -----
+  // ===== DOM refs =====
+  const tbody = document.getElementById('tableContent');
+  const recordSpan = document.getElementById('recordCount');
+
+  // ===== Load data =====
+  async function loadData() {
+    tbody.innerHTML = "<tr><td colspan='31'>Loading from Cloud...</td></tr>";
+    try {
+      const querySnapshot = await getDocs(collection(db, "admissions"));
+      const records = [];
+      querySnapshot.forEach(docSnap => records.push({ id: docSnap.id, ...docSnap.data() }));
+      recordSpan.innerText = records.length;
+      if (records.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='31'>No records found.</td></tr>";
+        return;
+      }
+      let html = '';
+      records.forEach(s => {
+        const photo = s.studentPhoto || 'https://via.placeholder.com/40x45?text=NA';
+        const fullStudentName = `${s.sFirstName||''} ${s.sMiddleName||''} ${s.sLastName||''}`.trim();
+        const fullAadhaarName = `${s.aadhaarFirstName||''} ${s.aadhaarMiddleName||''} ${s.aadhaarLastName||''}`.trim();
+        const fullFatherName = `${s.fFirstName||''} ${s.fMiddleName||''} ${s.fLastName||''}`.trim();
+        const fullMotherName = `${s.mFirstName||''} ${s.mMiddleName||''} ${s.mLastName||''}`.trim();
+
+        // Signature thumbnails
+        const parentSig = s.parentSig ? `<img src="${s.parentSig}" class="sig-thumb">` : '—';
+        const admSig = s.admInchargeSig ? `<img src="${s.admInchargeSig}" class="sig-thumb">` : '—';
+        const headSig = s.headmasterSig ? `<img src="${s.headmasterSig}" class="sig-thumb">` : '—';
+
+        html += `
+          <tr>
+            <td><img src="${photo}" class="student-thumb" onerror="this.src='https://via.placeholder.com/40x45?text=NA'"></td>
+            <td class="adm-no">${s.admNo || '---'}</td>
+            <td class="cell-wrap">${fullStudentName}</td>
+            <td class="cell-wrap">${fullAadhaarName}</td>
+            <td class="cell-wrap">${fullFatherName}</td>
+            <td class="cell-wrap">${fullMotherName}</td>
+            <td>${s.residence||''}</td><td>${s.district||''}</td>
+            <td>${s.fatherContact||''}</td><td>${s.motherContact||''}</td>
+            <td>${s.aadhaarNo||''}</td><td>${s.dob||''}</td>
+            <td class="cell-wrap">${s.dobWords||''}</td>
+            <td>${s.bankAcc||''}</td><td>${s.bankName||''}</td><td>${s.bankBranch||''}</td><td>${s.ifsc||''}</td>
+            <td>${s.category||''}</td><td>${s.bloodGroup||''}</td>
+            <td>${s.rationCardNo||''}</td><td>${s.rationCardType||''}</td>
+            <td>${s.classJoining||''}</td><td>${s.penId||''}</td>
+            <td>${s.declaration ? '✅' : '❌'}</td>
+            <td>${s.officeClass||''}</td><td>${s.officeDate||''}</td>
+            <td>${parentSig}</td><td>${admSig}</td><td>${headSig}</td>
+            <td><span class="status-pill ${s.status === 'Approved' ? 'status-approved' : 'status-pending'}">${s.status||'Pending'}</span></td>
+            <td class="no-print"><a href="admission.html?id=${s.id}" style="color:#1a5d1a; text-decoration:none; font-weight:bold;">📝 Edit</a></td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    } catch (err) {
+      console.error("Error loading data:", err);
+      tbody.innerHTML = "<tr><td colspan='31'>⚠️ Error loading data. Check console.</td></tr>";
+    }
+  }
+
+  // ===== Search =====
+  window.searchTable = function() {
+    const input = document.getElementById('searchInput').value.toUpperCase();
+    const rows = document.getElementById('regTable').getElementsByTagName('tr');
+    for (let i = 1; i < rows.length; i++) {
+      const text = rows[i].textContent || rows[i].innerText;
+      rows[i].style.display = text.toUpperCase().includes(input) ? '' : 'none';
+    }
+  };
+
+  // ===== Modal controls =====
+  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); };
+  window.closeAddModal = function() {
+    document.getElementById('addModal').classList.remove('active');
+    document.getElementById('addForm').reset();
+    document.getElementById('photoPreview').style.display = 'none';
+    document.getElementById('photoPreview').src = '';
+    // Reset signature thumbnails
+    ['parentSig','admInchargeSig','headmasterSig'].forEach(id => {
+      document.getElementById(id).value = '';
+      document.getElementById(id+'Thumb').style.display = 'none';
+      document.getElementById(id+'Placeholder').style.display = 'inline';
+    });
+  };
+
+  // ===== Photo preview =====
   window.previewPhoto = function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -570,122 +420,118 @@
     }
   };
 
-  // ----- Form Submission -----
-  document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+  // ===== Signature Pad (shared with admission) =====
+  let sigTargetField = '';
+  let sigCanvas, sigCtx, isDrawing = false;
+
+  function initSignatureCanvas() {
+    sigCanvas = document.getElementById('sigCanvas');
+    sigCtx = sigCanvas.getContext('2d');
+    sigCanvas.width = 400;
+    sigCanvas.height = 150;
+    sigCtx.lineWidth = 2;
+    sigCtx.strokeStyle = '#000';
+    sigCtx.lineCap = 'round';
+    sigCtx.lineJoin = 'round';
+
+    sigCanvas.addEventListener('mousedown', startDraw);
+    sigCanvas.addEventListener('mousemove', draw);
+    sigCanvas.addEventListener('mouseup', stopDraw);
+    sigCanvas.addEventListener('mouseleave', stopDraw);
+    sigCanvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    sigCanvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    sigCanvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+  }
+
+  function getPos(e) {
+    const rect = sigCanvas.getBoundingClientRect();
+    const scaleX = sigCanvas.width / rect.width;
+    const scaleY = sigCanvas.height / rect.height;
+    return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+  }
+  function startDraw(e) { isDrawing = true; const pos = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(pos.x, pos.y); }
+  function draw(e) { if (!isDrawing) return; const pos = getPos(e); sigCtx.lineTo(pos.x, pos.y); sigCtx.stroke(); }
+  function stopDraw() { isDrawing = false; sigCtx.closePath(); }
+  function handleTouchStart(e) { e.preventDefault(); const touch = e.touches[0]; sigCanvas.dispatchEvent(new MouseEvent('mousedown', { clientX: touch.clientX, clientY: touch.clientY })); }
+  function handleTouchMove(e) { e.preventDefault(); const touch = e.touches[0]; sigCanvas.dispatchEvent(new MouseEvent('mousemove', { clientX: touch.clientX, clientY: touch.clientY })); }
+  function handleTouchEnd(e) { e.preventDefault(); sigCanvas.dispatchEvent(new MouseEvent('mouseup')); }
+
+  window.openSignaturePad = function(fieldId) {
+    sigTargetField = fieldId;
+    sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    const labelMap = { 'parentSig':'Parent Signature','admInchargeSig':'Adm. Incharge Signature','headmasterSig':'Headmaster Signature' };
+    document.getElementById('sigModalTitle').textContent = labelMap[fieldId] || 'Sign Here';
+    document.getElementById('sigModal').classList.add('active');
+  };
+  window.closeSignatureModal = function() { document.getElementById('sigModal').classList.remove('active'); sigTargetField = ''; };
+  window.clearSignature = function() { sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height); };
+  window.saveSignature = function() {
+    const dataUrl = sigCanvas.toDataURL('image/png');
+    if (dataUrl === 'data:,') { alert('Please draw a signature first.'); return; }
+    document.getElementById(sigTargetField).value = dataUrl;
+    const thumbId = sigTargetField + 'Thumb';
+    const placeholderId = sigTargetField + 'Placeholder';
+    const thumb = document.getElementById(thumbId);
+    const placeholder = document.getElementById(placeholderId);
+    thumb.src = dataUrl;
+    thumb.style.display = 'inline-block';
+    placeholder.style.display = 'none';
+    closeSignatureModal();
+  };
+
+  // ===== Add Form Submission =====
+  document.getElementById('addForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    const getVal = id => document.getElementById(id).value.trim();
+    const getRadio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
 
-    // Helper to get value
-    const getVal = (id) => document.getElementById(id).value.trim();
-    const getRadio = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
-
-    // Build data object
     const data = {
-      // Photo
       studentPhoto: document.getElementById('photoPreview').src || '',
-
-      // Student Name
-      sFirstName: getVal('sFirstName'),
-      sMiddleName: getVal('sMiddleName'),
-      sLastName: getVal('sLastName'),
-
-      // Aadhaar Name
-      aadhaarFirstName: getVal('aadhaarFirstName'),
-      aadhaarMiddleName: getVal('aadhaarMiddleName'),
-      aadhaarLastName: getVal('aadhaarLastName'),
-
-      // Father
-      fFirstName: getVal('fFirstName'),
-      fMiddleName: getVal('fMiddleName'),
-      fLastName: getVal('fLastName'),
-
-      // Mother
-      mFirstName: getVal('mFirstName'),
-      mMiddleName: getVal('mMiddleName'),
-      mLastName: getVal('mLastName'),
-
-      // Residence
-      residence: getVal('residence'),
-      district: getVal('district'),
-
-      // Contacts
-      fatherContact: getVal('fatherContact'),
-      motherContact: getVal('motherContact'),
-
-      // Aadhaar & DOB
-      aadhaarNo: getVal('aadhaarNo'),
-      dob: getVal('dob'),
-      dobWords: getVal('dobWords'),
-
-      // Bank
-      bankAcc: getVal('bankAcc'),
-      bankName: getVal('bankName'),
-      bankBranch: getVal('bankBranch'),
-      ifsc: getVal('ifsc'),
-
-      // Category & Blood
-      category: getRadio('category'),
-      bloodGroup: getVal('bloodGroup'),
-
-      // Ration
-      rationCardNo: getVal('rationCardNo'),
-      rationCardType: getVal('rationCardType'),
-
-      // Class & PEN
-      classJoining: getVal('classJoining'),
-      penId: getVal('penId'),
-
-      // Declaration (checkbox)
+      sFirstName: getVal('sFirstName'), sMiddleName: getVal('sMiddleName'), sLastName: getVal('sLastName'),
+      aadhaarFirstName: getVal('aadhaarFirstName'), aadhaarMiddleName: getVal('aadhaarMiddleName'), aadhaarLastName: getVal('aadhaarLastName'),
+      fFirstName: getVal('fFirstName'), fMiddleName: getVal('fMiddleName'), fLastName: getVal('fLastName'),
+      mFirstName: getVal('mFirstName'), mMiddleName: getVal('mMiddleName'), mLastName: getVal('mLastName'),
+      residence: getVal('residence'), district: getVal('district'),
+      fatherContact: getVal('fatherContact'), motherContact: getVal('motherContact'),
+      aadhaarNo: getVal('aadhaarNo'), dob: getVal('dob'), dobWords: getVal('dobWords'),
+      bankAcc: getVal('bankAcc'), bankName: getVal('bankName'), bankBranch: getVal('bankBranch'), ifsc: getVal('ifsc'),
+      category: getRadio('category'), bloodGroup: getVal('bloodGroup'),
+      rationCardNo: getVal('rationCardNo'), rationCardType: getVal('rationCardType'),
+      classJoining: getVal('classJoining'), penId: getVal('penId'),
       declaration: document.getElementById('declaration').checked,
-
-      // Office use
-      officeClass: getVal('officeClass'),
-      admNo: getVal('admNo'),
-      officeDate: getVal('officeDate'),
-      parentSig: getVal('parentSig'),
-      admInchargeSig: getVal('admInchargeSig'),
-      headmasterSig: getVal('headmasterSig'),
-
-      // Status (default pending)
-      status: 'Pending',
-      timestamp: new Date().toISOString()
+      officeClass: getVal('officeClass'), admNo: getVal('admNo'), officeDate: getVal('officeDate'),
+      parentSig: document.getElementById('parentSig').value,
+      admInchargeSig: document.getElementById('admInchargeSig').value,
+      headmasterSig: document.getElementById('headmasterSig').value,
+      status: 'Pending', timestamp: new Date().toISOString()
     };
 
-    // Basic validation
-    if (!data.sFirstName || !data.sLastName || !data.aadhaarFirstName || !data.aadhaarLastName ||
-        !data.fFirstName || !data.fLastName || !data.mFirstName || !data.mLastName ||
-        !data.residence || !data.district || !data.fatherContact || !data.aadhaarNo ||
-        !data.dob || !data.classJoining || !data.declaration) {
-      alert('Please fill in all required fields (marked with *).');
-      return;
-    }
-
-    // Validate contact number
-    if (!/^\d{10}$/.test(data.fatherContact)) {
-      alert('Father\'s Contact must be a 10-digit number.');
-      return;
-    }
-    if (data.motherContact && !/^\d{10}$/.test(data.motherContact)) {
-      alert('Mother\'s Contact must be a 10-digit number (or leave blank).');
-      return;
-    }
+    // Validate required
+    const required = ['sFirstName','sLastName','aadhaarFirstName','aadhaarLastName','fFirstName','fLastName','mFirstName','mLastName','residence','district','fatherContact','aadhaarNo','dob','classJoining'];
+    for (let f of required) { if (!data[f]) { alert(`Missing required field: ${f}`); return; } }
+    if (!data.declaration) { alert('Please accept the declaration.'); return; }
+    if (!/^\d{10}$/.test(data.fatherContact)) { alert('Father\'s contact must be 10 digits.'); return; }
 
     try {
-      // Save to Firestore
-      const docRef = await addDoc(collection(db, "admissions"), data);
-      console.log("Document written with ID:", docRef.id);
-      alert(`✅ Admission saved successfully! (Ref: ${docRef.id})`);
-      // Reset form (except photo preview)
-      this.reset();
-      document.getElementById('photoPreview').style.display = 'none';
-      document.getElementById('photoPreview').src = '';
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await addDoc(collection(db, "admissions"), data);
+      alert('✅ Admission saved!');
+      closeAddModal();
+      loadData();
     } catch (error) {
-      console.error("Error adding document:", error);
-      alert(`❌ Error saving admission: ${error.message}`);
+      console.error("Error adding:", error);
+      alert(`❌ Error: ${error.message}`);
     }
   });
-</script>
 
+  // ===== Close modal on overlay click =====
+  document.getElementById('addModal').addEventListener('click', function(e) { if (e.target === this) closeAddModal(); });
+  document.getElementById('sigModal').addEventListener('click', function(e) { if (e.target === this) closeSignatureModal(); });
+
+  // ===== Init =====
+  window.addEventListener('load', function() {
+    initSignatureCanvas();
+    loadData();
+  });
+</script>
 </body>
 </html>
