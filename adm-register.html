@@ -2,174 +2,690 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admission Register - GPS Pethgam Wagoora</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admission Form - GPS Pethgam Wagoora</title>
   <style>
-    /* Global Styles */
-    body { font-family: 'Segoe UI', SegoeUI, Roboto, Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #333; }
-    
-    /* Navigation Bar */
-    .nav-bar { background: #1a5d1a; padding: 12px; display: flex; gap: 15px; justify-content: center; border-bottom: 4px solid #ffcc00; margin: -20px -20px 30px -20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .nav-bar a { color: white; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 5px; background: rgba(255,255,255,0.15); font-size: 14px; transition: 0.3s; }
-    .nav-bar a:hover { background: rgba(255,255,255,0.3); }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #f4f7f6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
 
-    /* School Header */
-    .register-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 6px solid darkgreen; max-width: 98%; margin: 0 auto; }
-    
-    .header-container { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-    .branding { display: flex; align-items: center; gap: 20px; }
-    .school-logo { width: 70px; height: 70px; object-fit: contain; }
-    
-    .school-title h1 { margin: 0; color: #1a5d1a; font-size: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .school-title h2 { margin: 5px 0; color: #444; font-size: 18px; font-weight: 500; }
-    .school-title small { color: #666; font-size: 13px; font-family: monospace; }
+    /* Navigation */
+    .nav-bar {
+      background: #1a5d1a;
+      padding: 12px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      border-bottom: 4px solid #ffcc00;
+      margin: -20px -20px 30px -20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .nav-bar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.15);
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .nav-bar a:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .nav-bar a.active {
+      background: #ffcc00;
+      color: #1a5d1a;
+    }
 
-    /* Controls */
-    .controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }
-    .search-input { padding: 10px 15px; width: 350px; border: 2px solid #ddd; border-radius: 6px; outline: none; transition: 0.3s; }
-    .search-input:focus { border-color: darkgreen; box-shadow: 0 0 5px rgba(0,100,0,0.2); }
+    /* Form Container */
+    .form-card {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-top: 6px solid #1a5d1a;
+    }
 
-    .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 13px; transition: 0.3s; }
-    .btn-print { background: #2c3e50; color: white; display: flex; align-items: center; gap: 8px; }
-    .btn-print:hover { background: #000; }
+    .form-header {
+      text-align: center;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    .form-header h1 {
+      color: #1a5d1a;
+      margin: 0;
+      font-size: 26px;
+      text-transform: uppercase;
+    }
+    .form-header h2 {
+      margin: 5px 0;
+      color: #444;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    .form-header small {
+      color: #666;
+      font-size: 13px;
+    }
 
-    /* Table Styles */
-    .table-wrapper { overflow-x: auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th { background: #f8fbf8; color: #1a5d1a; padding: 14px 10px; text-align: left; border-bottom: 3px solid darkgreen; font-weight: 700; position: sticky; top: 0; text-transform: uppercase; }
-    td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
-    tr:hover { background-color: #f9fff9; }
-    
-    .student-thumb { width: 45px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; box-shadow: 1px 1px 3px rgba(0,0,0,0.1); }
-    .adm-no { font-family: monospace; font-weight: bold; color: #1a5d1a; font-size: 14px; }
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 30px;
+    }
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 13px;
+      color: #1a5d1a;
+    }
+    .form-group label .required {
+      color: #c00;
+      margin-left: 2px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fafafa;
+      transition: 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #1a5d1a;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26,93,26,0.1);
+      background: white;
+    }
+    .form-group .hint {
+      font-size: 12px;
+      color: #888;
+    }
 
-    .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-    .status-approved { background: #e6f4ea; color: #1e7e34; border: 1px solid #b7e1cd; }
-    .status-pending { background: #fff4e5; color: #664d03; border: 1px solid #ffeeba; }
+    /* Name sections (inline) */
+    .name-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .name-group .form-group {
+      grid-column: auto;
+    }
 
-    /* Print Optimization */
+    /* Radio / checkbox groups */
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding-top: 6px;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 400;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .radio-group input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a5d1a;
+    }
+
+    /* Declaration */
+    .declaration-box {
+      background: #f8fbf8;
+      border-left: 4px solid #1a5d1a;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin: 10px 0;
+    }
+    .declaration-box label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .declaration-box input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      accent-color: #1a5d1a;
+    }
+
+    /* Office use */
+    .office-section {
+      background: #f0f4f8;
+      padding: 20px 25px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border: 1px solid #d0d7de;
+    }
+    .office-section h3 {
+      margin-top: 0;
+      color: #1a5d1a;
+      font-size: 16px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+    }
+    .office-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+    .office-grid .form-group input {
+      background: white;
+    }
+
+    /* Signature row */
+    .sig-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      margin-top: 15px;
+    }
+    .sig-row .form-group {
+      flex: 1;
+    }
+    .sig-row .form-group input {
+      background: white;
+      border-style: dashed;
+    }
+
+    /* Submit */
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .btn {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #1a5d1a;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0f4a0f;
+    }
+    .btn-secondary {
+      background: #6c7a8d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #556270;
+    }
+    .btn-reset {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .btn-reset:hover {
+      background: #ccc;
+    }
+
+    /* Photo upload (optional) */
+    .photo-upload {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .photo-upload input[type="file"] {
+      flex: 1;
+      padding: 6px 0;
+    }
+    .photo-upload img {
+      max-height: 80px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 4px;
+      background: white;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .name-group { grid-template-columns: 1fr; }
+      .office-grid { grid-template-columns: 1fr; }
+      .sig-row { flex-direction: column; gap: 10px; }
+      .radio-group { gap: 12px; }
+      .form-card { padding: 20px; }
+    }
     @media print {
       .no-print { display: none !important; }
-      body { padding: 0; background: white; }
-      .register-card { border: none; box-shadow: none; width: 100%; padding: 0; }
-      table { font-size: 10px; border: 1px solid #000; }
-      th, td { border: 1px solid #ddd; padding: 6px; white-space: normal; }
-      .student-thumb { width: 40px; height: 45px; }
-      @page { size: landscape; margin: 10mm; }
+      body { background: white; }
+      .form-card { box-shadow: none; border: 1px solid #ccc; }
     }
   </style>
 </head>
 <body>
 
 <div class="nav-bar no-print">
-    <a href="admission.html">📝 Admission Form</a>
-    <a href="adm-register.html">📋 View Register</a>
+  <a href="admission.html" class="active">📝 Admission Form</a>
+  <a href="adm-register.html">📋 View Register</a>
 </div>
 
-<div class="register-card">
-  <div class="header-container">
-    <div class="branding">
-      <img src="logo.png" alt="School Logo" class="school-logo">
-      <div class="school-title">
-        <h1>Government Primary School Pethgam Wagoora</h1>
-        <h2>Student Admission Register - 2026</h2>
-        <small>UDISE: 01022202207 | Zone: Wagoora | Dist: Baramulla</small>
+<div class="form-card">
+  <div class="form-header">
+    <h1>Government Primary School Pethgam Wagoora</h1>
+    <h2>Student Admission Form – 2026</h2>
+    <small>UDISE: 01022202207 | Zone: Wagoora | Dist: Baramulla</small>
+  </div>
+
+  <form id="admissionForm">
+    <!-- ========== STUDENT PHOTO (optional) ========== -->
+    <div class="form-group full-width">
+      <label>Student Photo (optional)</label>
+      <div class="photo-upload">
+        <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)">
+        <img id="photoPreview" style="display:none;" alt="Preview">
       </div>
     </div>
-    <div class="no-print">
-      <button onclick="window.print()" class="btn btn-print">🖨️ Print Full Register</button>
+
+    <!-- ========== STUDENT'S NAME ========== -->
+    <div class="full-width">
+      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Student's Name <span class="required">*</span></label>
+      <div class="name-group">
+        <div class="form-group">
+          <label>First Name <span class="required">*</span></label>
+          <input type="text" id="sFirstName" placeholder="First" required>
+        </div>
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" id="sMiddleName" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label>Last Name <span class="required">*</span></label>
+          <input type="text" id="sLastName" placeholder="Last" required>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="controls-row no-print">
-    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search Name, Aadhaar, Class or Adm No..." onkeyup="searchTable()">
-    <div style="font-size: 13px; color: #666;">Total Records: <span id="recordCount" style="font-weight:bold; color:darkgreen;">0</span></div>
-  </div>
+    <!-- ========== NAME AS PER AADHAAR ========== -->
+    <div class="full-width">
+      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Name As Per Aadhaar <span class="required">*</span></label>
+      <div class="name-group">
+        <div class="form-group">
+          <label>First Name <span class="required">*</span></label>
+          <input type="text" id="aadhaarFirstName" placeholder="First" required>
+        </div>
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" id="aadhaarMiddleName" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label>Last Name <span class="required">*</span></label>
+          <input type="text" id="aadhaarLastName" placeholder="Last" required>
+        </div>
+      </div>
+    </div>
 
-  <div class="table-wrapper">
-    <table id="regTable">
-      <thead>
-        <tr>
-          <th>Photo</th>
-          <th>Adm No</th>
-          <th>Student Details</th>
-          <th>Parentage</th>
-          <th>Class</th>
-          <th>DOB</th>
-          <th>ID Numbers</th>
-          <th>Contacts</th>
-          <th>Bank / Address</th>
-          <th>Status</th>
-          <th class="no-print">Action</th>
-        </tr>
-      </thead>
-      <tbody id="tableContent">
-          </tbody>
-    </table>
-  </div>
+    <!-- ========== FATHER'S NAME ========== -->
+    <div class="full-width">
+      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Father's Name <span class="required">*</span></label>
+      <div class="name-group">
+        <div class="form-group">
+          <label>First Name <span class="required">*</span></label>
+          <input type="text" id="fFirstName" placeholder="First" required>
+        </div>
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" id="fMiddleName" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label>Last Name <span class="required">*</span></label>
+          <input type="text" id="fLastName" placeholder="Last" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== MOTHER'S NAME ========== -->
+    <div class="full-width">
+      <label style="font-size:15px; font-weight:700; color:#1a5d1a;">Mother's Name <span class="required">*</span></label>
+      <div class="name-group">
+        <div class="form-group">
+          <label>First Name <span class="required">*</span></label>
+          <input type="text" id="mFirstName" placeholder="First" required>
+        </div>
+        <div class="form-group">
+          <label>Middle Name</label>
+          <input type="text" id="mMiddleName" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label>Last Name <span class="required">*</span></label>
+          <input type="text" id="mLastName" placeholder="Last" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RESIDENCE & DISTRICT ========== -->
+    <div class="form-group">
+      <label>Residence (Village / Town) <span class="required">*</span></label>
+      <input type="text" id="residence" placeholder="Village / Town" required>
+    </div>
+    <div class="form-group">
+      <label>District <span class="required">*</span></label>
+      <input type="text" id="district" placeholder="District" required>
+    </div>
+
+    <!-- ========== CONTACTS ========== -->
+    <div class="form-group">
+      <label>Father's Contact Number <span class="required">*</span></label>
+      <input type="text" id="fatherContact" placeholder="10-digit mobile" required>
+    </div>
+    <div class="form-group">
+      <label>Mother's Contact Number</label>
+      <input type="text" id="motherContact" placeholder="10-digit mobile">
+    </div>
+
+    <!-- ========== AADHAAR & DOB ========== -->
+    <div class="form-group">
+      <label>Aadhaar Number <span class="required">*</span></label>
+      <input type="text" id="aadhaarNo" placeholder="12-digit Aadhaar" required>
+    </div>
+    <div class="form-group">
+      <label>Date of Birth (in figures) <span class="required">*</span></label>
+      <input type="date" id="dob" required>
+    </div>
+    <div class="form-group full-width">
+      <label>Date of Birth in Words</label>
+      <input type="text" id="dobWords" placeholder="e.g. 15th January 2015">
+    </div>
+
+    <!-- ========== BANK DETAILS ========== -->
+    <div class="form-group">
+      <label>Bank Account Number</label>
+      <input type="text" id="bankAcc" placeholder="Account number">
+    </div>
+    <div class="form-group">
+      <label>Bank Name</label>
+      <input type="text" id="bankName" placeholder="Bank name">
+    </div>
+    <div class="form-group">
+      <label>Bank Branch</label>
+      <input type="text" id="bankBranch" placeholder="Branch name">
+    </div>
+    <div class="form-group">
+      <label>IFSC Code</label>
+      <input type="text" id="ifsc" placeholder="e.g. SBIN0001234">
+    </div>
+
+    <!-- ========== CATEGORY ========== -->
+    <div class="form-group full-width">
+      <label>Category <span class="required">*</span></label>
+      <div class="radio-group">
+        <label><input type="radio" name="category" value="SC" required> SC</label>
+        <label><input type="radio" name="category" value="ST"> ST</label>
+        <label><input type="radio" name="category" value="OBC"> OBC</label>
+        <label><input type="radio" name="category" value="General"> General</label>
+        <label><input type="radio" name="category" value="Other"> Other</label>
+      </div>
+    </div>
+
+    <!-- ========== BLOOD GROUP ========== -->
+    <div class="form-group">
+      <label>Blood Group</label>
+      <input type="text" id="bloodGroup" placeholder="e.g. O+">
+    </div>
+    <div class="form-group">
+      <!-- empty for alignment -->
+    </div>
+
+    <!-- ========== RATION CARD ========== -->
+    <div class="form-group">
+      <label>Ration Card Number</label>
+      <input type="text" id="rationCardNo" placeholder="Ration card number">
+    </div>
+    <div class="form-group">
+      <label>Ration Card Type</label>
+      <input type="text" id="rationCardType" placeholder="e.g. BPL/APL">
+    </div>
+
+    <!-- ========== CLASS JOINING & PEN ========== -->
+    <div class="form-group">
+      <label>Class Joining <span class="required">*</span></label>
+      <select id="classJoining" required>
+        <option value="">-- Select --</option>
+        <option value="Pre Primary – 3 (PP-3)">Pre Primary – 3 (PP-3)</option>
+        <option value="Pre Primary – 2 (PP-2)">Pre Primary – 2 (PP-2)</option>
+        <option value="Balvatika">Balvatika</option>
+        <option value="1st Class">1st Class</option>
+        <option value="2nd Class">2nd Class</option>
+        <option value="3rd Class">3rd Class</option>
+        <option value="4th Class">4th Class</option>
+        <option value="5th Class">5th Class</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>PEN Number (for transferring students)</label>
+      <input type="text" id="penId" placeholder="PEN number if applicable">
+    </div>
+
+    <!-- ========== PARENTS DECLARATION ========== -->
+    <div class="full-width declaration-box">
+      <label>
+        <input type="checkbox" id="declaration" required>
+        <span>
+          <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations laid down by the school and the department from time to time and I will co-operate with the institution for the betterment of my ward and institution under rules when sought. I hereby declare that as the Parent of above mentioned student am giving my consent to provide the AADHAAR for the demographic authentication of the student.
+        </span>
+      </label>
+    </div>
+
+    <!-- ========== FOR OFFICE USE ONLY ========== -->
+    <div class="full-width office-section">
+      <h3>For Office Use Only</h3>
+      <div class="office-grid">
+        <div class="form-group">
+          <label>Admitted to Class</label>
+          <input type="text" id="officeClass" placeholder="Class">
+        </div>
+        <div class="form-group">
+          <label>Admission No.</label>
+          <input type="text" id="admNo" placeholder="e.g. 2026-001">
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="officeDate">
+        </div>
+      </div>
+      <div style="margin-top:10px; font-size:14px; color:#444;">
+        <p>All required documents, including the Birth Certificate, Residence Proof, and Transfer Certificate (if applicable), have been duly verified and found satisfactory.</p>
+      </div>
+      <div class="sig-row">
+        <div class="form-group">
+          <label>Signature of Parent</label>
+          <input type="text" id="parentSig" placeholder="Parent's signature">
+        </div>
+        <div class="form-group">
+          <label>Signature of Adm. Incharge</label>
+          <input type="text" id="admInchargeSig" placeholder="Incharge signature">
+        </div>
+        <div class="form-group">
+          <label>Signature of Headmaster</label>
+          <input type="text" id="headmasterSig" placeholder="Headmaster signature">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FORM ACTIONS ========== -->
+    <div class="form-actions no-print">
+      <button type="reset" class="btn btn-reset">🗑️ Clear All</button>
+      <button type="button" class="btn btn-secondary" onclick="window.location.href='adm-register.html'">📋 View Register</button>
+      <button type="submit" class="btn btn-primary">💾 Save Admission</button>
+    </div>
+  </form>
 </div>
 
-  <script type="module">
-  // 1. Import db AND the functions needed to read data
+<script type="module">
+  // ----- Firebase Imports -----
   import { db } from './init-firebase.js';
-  import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // 2. Modified loadData to use Firebase
-  async function loadData() {
-      const tbody = document.getElementById("tableContent");
-      tbody.innerHTML = "<tr><td colspan='11'>Loading from Cloud...</td></tr>";
-
-      try {
-          // Fetch from your "admissions" collection in Firebase
-          const querySnapshot = await getDocs(collection(db, "admissions"));
-          const records = [];
-          querySnapshot.forEach((doc) => {
-              records.push({ id: doc.id, ...doc.data() });
-          });
-
-          document.getElementById("recordCount").innerText = records.length;
-          tbody.innerHTML = "";
-
-          records.forEach(student => {
-              const row = document.createElement("tr");
-              const photoSrc = student.studentPhoto || 'https://via.placeholder.com/45x50?text=NA';
-
-              row.innerHTML = `
-                  <td><img src="${photoSrc}" class="student-thumb"></td>
-                  <td class="adm-no">${student.admNo || '---'}</td>
-                  <td><strong>${student.studentName}</strong><br><small>${student.gender} | ${student.bloodGroup || 'O+'}</small></td>
-                  <td>F: ${student.fatherName}<br>M: ${student.motherName}</td>
-                  <td><strong>${student.studentClass}</strong></td>
-                  <td>${student.dob}</td>
-                  <td><small>AAD: ${student.aadhaarNo}</small><br><small>PEN: ${student.penId || '---'}</small></td>
-                  <td>${student.fatherContact}<br><small>Res: ${student.motherContact}</small></td>
-                  <td><small>${student.bankAcc} (${student.ifsc})</small><br><em>${student.village}</em></td>
-                  <td><span class="status-pill ${student.status === 'Approved' ? 'status-approved' : 'status-pending'}">${student.status}</span></td>
-                  <td class="no-print">
-                      <a href="admission.html?id=${student.id}" style="color:#1a5d1a; text-decoration:none; font-weight:bold;">📝 Edit</a>
-                  </td>
-              `;
-              tbody.appendChild(row);
-          });
-      } catch (error) {
-          console.error("Error fetching Firebase data:", error);
-          tbody.innerHTML = "<tr><td colspan='11'>Error loading data. Check console.</td></tr>";
-      }
-  }
-
-  // 3. Search function attached to 'window' so HTML can see it
-  window.searchTable = function() {
-      let input = document.getElementById("searchInput").value.toUpperCase();
-      let rows = document.getElementById("regTable").getElementsByTagName("tr");
-      for (let i = 1; i < rows.length; i++) {
-          let text = rows[i].textContent || rows[i].innerText;
-          rows[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
-      }
+  // ----- Photo Preview -----
+  window.previewPhoto = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById('photoPreview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  // 4. Initialize
-  window.addEventListener('load', loadData);
-</script>
+  // ----- Form Submission -----
+  document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
+    // Helper to get value
+    const getVal = (id) => document.getElementById(id).value.trim();
+    const getRadio = (name) => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+
+    // Build data object
+    const data = {
+      // Photo
+      studentPhoto: document.getElementById('photoPreview').src || '',
+
+      // Student Name
+      sFirstName: getVal('sFirstName'),
+      sMiddleName: getVal('sMiddleName'),
+      sLastName: getVal('sLastName'),
+
+      // Aadhaar Name
+      aadhaarFirstName: getVal('aadhaarFirstName'),
+      aadhaarMiddleName: getVal('aadhaarMiddleName'),
+      aadhaarLastName: getVal('aadhaarLastName'),
+
+      // Father
+      fFirstName: getVal('fFirstName'),
+      fMiddleName: getVal('fMiddleName'),
+      fLastName: getVal('fLastName'),
+
+      // Mother
+      mFirstName: getVal('mFirstName'),
+      mMiddleName: getVal('mMiddleName'),
+      mLastName: getVal('mLastName'),
+
+      // Residence
+      residence: getVal('residence'),
+      district: getVal('district'),
+
+      // Contacts
+      fatherContact: getVal('fatherContact'),
+      motherContact: getVal('motherContact'),
+
+      // Aadhaar & DOB
+      aadhaarNo: getVal('aadhaarNo'),
+      dob: getVal('dob'),
+      dobWords: getVal('dobWords'),
+
+      // Bank
+      bankAcc: getVal('bankAcc'),
+      bankName: getVal('bankName'),
+      bankBranch: getVal('bankBranch'),
+      ifsc: getVal('ifsc'),
+
+      // Category & Blood
+      category: getRadio('category'),
+      bloodGroup: getVal('bloodGroup'),
+
+      // Ration
+      rationCardNo: getVal('rationCardNo'),
+      rationCardType: getVal('rationCardType'),
+
+      // Class & PEN
+      classJoining: getVal('classJoining'),
+      penId: getVal('penId'),
+
+      // Declaration (checkbox)
+      declaration: document.getElementById('declaration').checked,
+
+      // Office use
+      officeClass: getVal('officeClass'),
+      admNo: getVal('admNo'),
+      officeDate: getVal('officeDate'),
+      parentSig: getVal('parentSig'),
+      admInchargeSig: getVal('admInchargeSig'),
+      headmasterSig: getVal('headmasterSig'),
+
+      // Status (default pending)
+      status: 'Pending',
+      timestamp: new Date().toISOString()
+    };
+
+    // Basic validation
+    if (!data.sFirstName || !data.sLastName || !data.aadhaarFirstName || !data.aadhaarLastName ||
+        !data.fFirstName || !data.fLastName || !data.mFirstName || !data.mLastName ||
+        !data.residence || !data.district || !data.fatherContact || !data.aadhaarNo ||
+        !data.dob || !data.classJoining || !data.declaration) {
+      alert('Please fill in all required fields (marked with *).');
+      return;
+    }
+
+    // Validate contact number
+    if (!/^\d{10}$/.test(data.fatherContact)) {
+      alert('Father\'s Contact must be a 10-digit number.');
+      return;
+    }
+    if (data.motherContact && !/^\d{10}$/.test(data.motherContact)) {
+      alert('Mother\'s Contact must be a 10-digit number (or leave blank).');
+      return;
+    }
+
+    try {
+      // Save to Firestore
+      const docRef = await addDoc(collection(db, "admissions"), data);
+      console.log("Document written with ID:", docRef.id);
+      alert(`✅ Admission saved successfully! (Ref: ${docRef.id})`);
+      // Reset form (except photo preview)
+      this.reset();
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('photoPreview').src = '';
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error("Error adding document:", error);
+      alert(`❌ Error saving admission: ${error.message}`);
+    }
+  });
+</script>
 
 </body>
 </html>
