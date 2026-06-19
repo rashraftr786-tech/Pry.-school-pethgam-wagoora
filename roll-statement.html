@@ -37,6 +37,14 @@
         .nav-header a:hover {
             background: rgba(255, 255, 255, 0.15);
         }
+        .nav-header a .badge {
+            background: #ffd700;
+            color: #002366;
+            border-radius: 12px;
+            padding: 0 8px;
+            font-size: 11px;
+            margin-left: 4px;
+        }
 
         /* ---- REPORT PAPER ---- */
         .report-paper {
@@ -90,10 +98,14 @@
             text-transform: uppercase;
         }
         .header-sub {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             margin: 5px 0;
             color: #333;
+            line-height: 1.6;
+        }
+        .header-sub .highlight {
+            color: #002366;
         }
 
         /* ---- META ---- */
@@ -112,6 +124,9 @@
             border-bottom: 1px solid #000;
             display: inline-block;
             min-width: 150px;
+        }
+        .underline-sm {
+            min-width: 100px;
         }
 
         /* ---- TABLE ---- */
@@ -236,6 +251,7 @@
             display: flex;
             background: #f0f4f8;
             border-bottom: 2px solid #d0d7de;
+            flex-wrap: wrap;
         }
         .admin-tab {
             padding: 12px 24px;
@@ -347,6 +363,13 @@
         .btn-secondary:hover {
             background: #556270;
         }
+        .btn-success {
+            background: #1a7a5a;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #0f5f45;
+        }
 
         /* admin table */
         .admin-table-wrap {
@@ -394,6 +417,7 @@
             padding-top: 12px;
             border-top: 1px solid #e0e0e0;
             color: #333;
+            flex-wrap: wrap;
         }
         .admin-stats strong {
             color: #002366;
@@ -442,6 +466,43 @@
             font-size: 13px;
         }
 
+        /* Report Settings form */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 30px;
+            margin-bottom: 18px;
+        }
+        .settings-grid .form-group {
+            flex-direction: column;
+            display: flex;
+            gap: 4px;
+        }
+        .settings-grid .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #002366;
+        }
+        .settings-grid .form-group input {
+            padding: 8px 12px;
+            border: 1.5px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+        .settings-grid .form-group input:focus {
+            border-color: #002366;
+            outline: none;
+            background: white;
+        }
+        .settings-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
         /* editing highlight */
         .editing-row {
             background: #fff9e0 !important;
@@ -469,6 +530,9 @@
         @media (max-width: 700px) {
             .form-grid {
                 grid-template-columns: 1fr 1fr;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr;
             }
             .meta-container {
                 flex-direction: column;
@@ -538,9 +602,11 @@
         <a href="reports-hub.html">⬅️ Reports Hub</a>
         <a href="#" onclick="window.print()">📥 Download PDF / Print</a>
         <a href="#" id="toggleAdminBtn" style="background: #ffd700; color: #002366; border-color: #ffd700;">📝 Manage Students</a>
+        <a href="#" id="uploadSigBtn" style="background: #6c7a8d; color: white; border-color: #6c7a8d;">🖊️ Upload Signatures</a>
+        <a href="#" id="settingsBtn" style="background: #1a7a5a; color: white; border-color: #1a7a5a;">⚙️ Report Settings</a>
     </div>
 
-    <!-- ===== ADMIN PANEL (tabs: Students + Signatures) ===== -->
+    <!-- ===== ADMIN PANEL (tabs: Students + Signatures + Settings) ===== -->
     <div class="admin-panel no-print" id="adminPanel">
         <button class="admin-toggle" id="adminToggleBtn">
             <span>⚙️ Admin Dashboard</span>
@@ -552,6 +618,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="students">👨‍🎓 Student Records</button>
                 <button class="admin-tab" data-tab="signatures">🖊️ Signatures &amp; Seal</button>
+                <button class="admin-tab" data-tab="settings">⚙️ Report Settings</button>
             </div>
 
             <!-- TAB 1: STUDENT RECORDS -->
@@ -646,6 +713,42 @@
                     ⚡ Images are stored locally in your browser. They will persist until you clear your browser data or click "Remove".
                 </div>
             </div>
+
+            <!-- TAB 3: REPORT SETTINGS -->
+            <div class="admin-tab-content" id="tab-settings">
+                <div style="margin-bottom: 18px; color: #333; font-size: 14px;">
+                    Update report metadata. All fields are saved automatically.
+                </div>
+
+                <form id="settingsForm" autocomplete="off">
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label for="refNo">📄 Reference No.</label>
+                            <input type="text" id="refNo" placeholder="e.g. GPS/W/2026/001">
+                        </div>
+                        <div class="form-group">
+                            <label for="preparedBy">✍️ Prepared By</label>
+                            <input type="text" id="preparedBy" placeholder="e.g. Mr. Ahmad Rather">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailId">📧 Email ID</label>
+                            <input type="text" id="emailId" placeholder="school@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactNo">📞 Contact No.</label>
+                            <input type="text" id="contactNo" placeholder="e.g. 7006261694">
+                        </div>
+                    </div>
+                    <div class="settings-actions">
+                        <button type="submit" class="btn btn-success">💾 Save Settings</button>
+                        <button type="button" class="btn btn-outline" id="resetSettingsBtn">↩️ Reset to Defaults</button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 18px; font-size: 13px; color: #666; background: #f8faff; padding: 12px; border-radius: 6px;">
+                    ⚡ All settings are stored locally in your browser and will persist until you clear your data.
+                </div>
+            </div>
         </div>
     </div>
 
@@ -659,18 +762,31 @@
             <img src="logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
             <div class="header-text">
                 <h1 class="school-name">Government Primary School Pethgam Wagoora</h1>
-                <div class="header-sub">Cluster: Wagoora | Zone: Wagoora | UDISE Code: <span class="underline">01022202207</span></div>
+                <div class="header-sub">
+                    Cluster: Wagoora | Zone: Wagoora | UDISE Code: 01022202207
+                    <br>
+                    <span class="highlight">📧 Email:</span> <span id="headerEmail">pspethgam@gmail.com</span> &nbsp;|&nbsp;
+                    <span class="highlight">📞 Contact:</span> <span id="headerContact">7006261694</span>
+                </div>
             </div>
         </div>
 
         <div class="meta-container">
             <div class="meta-left">
-                <div><span class="field-label">Reference No:</span> <span class="underline">GPS/W/2026/____</span></div>
-                <div><span class="field-label">Date:</span> <span class="underline" id="currentDate"></span></div>
+                <div>
+                    <span class="field-label">Reference No:</span>
+                    <span class="underline" id="refNoDisplay">GPS/W/2026/____</span>
+                </div>
+                <div>
+                    <span class="field-label">Date:</span>
+                    <span class="underline" id="currentDate"></span>
+                </div>
             </div>
             <div class="meta-right" style="text-align: right;">
-                <div><span class="field-label">Month / Year:</span> <span class="underline">January 2026</span></div>
-                <div><span class="field-label">Prepared By:</span> <span class="underline">________________</span></div>
+                <div>
+                    <span class="field-label">Prepared By:</span>
+                    <span class="underline" id="preparedByDisplay">________________</span>
+                </div>
             </div>
         </div>
 
@@ -726,6 +842,7 @@
             const STORAGE_KEY = 'admissions';
             const SIG_DEALING_KEY = 'sigDealing';
             const SIG_HEADMASTER_KEY = 'sigHeadmaster';
+            const SETTINGS_KEY = 'reportSettings';
 
             const classStructure = [
                 "Pre Primary – 3 (PP-3)",
@@ -738,12 +855,24 @@
                 "5th Class"
             ];
 
+            // Default settings
+            const DEFAULT_SETTINGS = {
+                refNo: 'GPS/W/2026/____',
+                preparedBy: '________________',
+                emailId: 'pspethgam@gmail.com',
+                contactNo: '7006261694'
+            };
+
             // ---- DOM REFS (MAIN) ----
             const tbody = document.getElementById('summaryBody');
             const grandBoys = document.getElementById('grandBoys');
             const grandGirls = document.getElementById('grandGirls');
             const grandTotal = document.getElementById('grandTotal');
             const currentDateEl = document.getElementById('currentDate');
+            const refNoDisplay = document.getElementById('refNoDisplay');
+            const preparedByDisplay = document.getElementById('preparedByDisplay');
+            const headerEmail = document.getElementById('headerEmail');
+            const headerContact = document.getElementById('headerContact');
 
             // Footer sig boxes
             const sigDealingBox = document.getElementById('sigDealingBox');
@@ -757,10 +886,11 @@
             const tabs = document.querySelectorAll('.admin-tab');
             const tabContents = {
                 students: document.getElementById('tab-students'),
-                signatures: document.getElementById('tab-signatures')
+                signatures: document.getElementById('tab-signatures'),
+                settings: document.getElementById('tab-settings')
             };
 
-            // Student form
+             // Student form
             const studentForm = document.getElementById('studentForm');
             const studentName = document.getElementById('studentName');
             const studentClass = document.getElementById('studentClass');
@@ -783,6 +913,14 @@
             const placeholderHeadmaster = document.getElementById('placeholderHeadmaster');
             const removeDealing = document.getElementById('removeDealing');
             const removeHeadmaster = document.getElementById('removeHeadmaster');
+
+            // Settings
+            const settingsForm = document.getElementById('settingsForm');
+            const refNoInput = document.getElementById('refNo');
+            const preparedByInput = document.getElementById('preparedBy');
+            const emailInput = document.getElementById('emailId');
+            const contactInput = document.getElementById('contactNo');
+            const resetSettingsBtn = document.getElementById('resetSettingsBtn');
 
             // ---- HELPERS ----
             function getData() {
@@ -807,6 +945,35 @@
                 } else {
                     localStorage.removeItem(key);
                 }
+            }
+
+            function getSettings() {
+                try {
+                    const stored = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+                    if (stored && typeof stored === 'object') {
+                        return { ...DEFAULT_SETTINGS, ...stored };
+                    }
+                } catch {}
+                return { ...DEFAULT_SETTINGS };
+            }
+
+            function saveSettings(settings) {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+            }
+
+            // ---- RENDER: Report Settings (meta + header) ----
+            function renderSettings() {
+                const settings = getSettings();
+                refNoDisplay.textContent = settings.refNo || DEFAULT_SETTINGS.refNo;
+                preparedByDisplay.textContent = settings.preparedBy || DEFAULT_SETTINGS.preparedBy;
+                headerEmail.textContent = settings.emailId || DEFAULT_SETTINGS.emailId;
+                headerContact.textContent = settings.contactNo || DEFAULT_SETTINGS.contactNo;
+
+                // Populate form fields
+                refNoInput.value = settings.refNo || '';
+                preparedByInput.value = settings.preparedBy || '';
+                emailInput.value = settings.emailId || '';
+                contactInput.value = settings.contactNo || '';
             }
 
             // ---- RENDER: Roll Summary (main report) ----
@@ -849,7 +1016,7 @@
                 grandTotal.innerText = totalB + totalG;
             }
 
-            // ---- RENDER: Signatures in footer ----
+               // ---- RENDER: Signatures in footer ----
             function renderSignatures() {
                 // Dealing
                 const dealingData = getSig(SIG_DEALING_KEY);
@@ -899,7 +1066,7 @@
                 }
             }
 
-            // ---- RENDER: Admin student list ----
+              // ---- RENDER: Admin student list ----
             function renderAdminList() {
                 const data = getData();
                 if (data.length === 0) {
@@ -987,7 +1154,6 @@
                 formCancelBtn.style.display = 'inline-block';
                 document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 studentName.focus();
-                // switch to student tab
                 switchTab('students');
                 renderAdminList();
             };
@@ -1015,8 +1181,36 @@
                 renderAdminList();
             }
 
+            // ---- SETTINGS HANDLERS ----
+            function handleSettingsSubmit(e) {
+                e.preventDefault();
+                const settings = {
+                    refNo: refNoInput.value.trim() || DEFAULT_SETTINGS.refNo,
+                    preparedBy: preparedByInput.value.trim() || DEFAULT_SETTINGS.preparedBy,
+                    emailId: emailInput.value.trim() || DEFAULT_SETTINGS.emailId,
+                    contactNo: contactInput.value.trim() || DEFAULT_SETTINGS.contactNo
+                };
+                saveSettings(settings);
+                renderSettings();
+                // Show a brief feedback
+                const btn = settingsForm.querySelector('button[type="submit"]');
+                const origText = btn.textContent;
+                btn.textContent = '✅ Saved!';
+                setTimeout(() => { btn.textContent = origText; }, 1500);
+            }
+
+            function resetToDefaults() {
+                if (!confirm('Reset all report settings to default values?')) return;
+                saveSettings({ ...DEFAULT_SETTINGS });
+                renderSettings();
+                const btn = resetSettingsBtn;
+                const origText = btn.textContent;
+                btn.textContent = '↩️ Reset!';
+                setTimeout(() => { btn.textContent = origText; }, 1200);
+            }
+
             // ---- SIGNATURE UPLOAD HANDLERS ----
-            function handleFileUpload(file, key, previewEl, placeholderEl) {
+            function handleFileUpload(file, key) {
                 if (!file) return;
                 if (!file.type.startsWith('image/png')) {
                     alert('Please upload a PNG image.');
@@ -1033,14 +1227,14 @@
 
             uploadDealing.addEventListener('change', function(e) {
                 if (this.files && this.files[0]) {
-                    handleFileUpload(this.files[0], SIG_DEALING_KEY, previewDealing, placeholderDealing);
+                    handleFileUpload(this.files[0], SIG_DEALING_KEY);
                 }
-                this.value = ''; // allow re-upload same file
+                this.value = '';
             });
 
             uploadHeadmaster.addEventListener('change', function(e) {
                 if (this.files && this.files[0]) {
-                    handleFileUpload(this.files[0], SIG_HEADMASTER_KEY, previewHeadmaster, placeholderHeadmaster);
+                    handleFileUpload(this.files[0], SIG_HEADMASTER_KEY);
                 }
                 this.value = '';
             });
@@ -1085,13 +1279,14 @@
                 });
             });
 
-               // ---- TOGGLE ADMIN PANEL ----
+            // ---- TOGGLE ADMIN PANEL ----
             adminToggleBtn.addEventListener('click', function() {
                 const isOpen = adminBody.classList.toggle('open');
                 this.classList.toggle('open');
                 if (isOpen) {
                     renderAdminList();
                     renderSignatures();
+                    renderSettings();
                     const data = getData();
                     if (data.length === 0) {
                         studentName.focus();
@@ -1104,6 +1299,8 @@
 
             // ---- FORM SUBMIT ----
             studentForm.addEventListener('submit', handleFormSubmit);
+            settingsForm.addEventListener('submit', handleSettingsSubmit);
+            resetSettingsBtn.addEventListener('click', resetToDefaults);
 
             // ---- INIT ----
             function init() {
@@ -1111,6 +1308,7 @@
                 currentDateEl.innerText = today;
                 renderSummary();
                 renderSignatures();
+                renderSettings();
             }
 
             // ---- STORAGE LISTENER (sync across tabs) ----
@@ -1124,14 +1322,32 @@
                 if (e.key === SIG_DEALING_KEY || e.key === SIG_HEADMASTER_KEY) {
                     renderSignatures();
                 }
+                if (e.key === SETTINGS_KEY) {
+                    renderSettings();
+                }
             });
 
-            // ---- NAV "Manage Students" ----
+            // ---- NAV LINKS ----
             document.getElementById('toggleAdminBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 adminToggleBtn.click();
-                // switch to student tab after opening
                 setTimeout(() => switchTab('students'), 100);
+            });
+
+            document.getElementById('uploadSigBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!adminBody.classList.contains('open')) {
+                    adminToggleBtn.click();
+                }
+                setTimeout(() => switchTab('signatures'), 200);
+            });
+
+            document.getElementById('settingsBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!adminBody.classList.contains('open')) {
+                    adminToggleBtn.click();
+                }
+                setTimeout(() => switchTab('settings'), 200);
             });
 
             // ---- Expose for inline onclick ----
