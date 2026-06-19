@@ -10,7 +10,7 @@
       background: #f0f0f0;
       margin: 0;
       padding: 0;
-      font-size: 13px; /* Increased base font */
+      font-size: 13px;
     }
 
     /* ===== NO-PRINT NAV ===== */
@@ -21,6 +21,7 @@
       gap: 15px;
       justify-content: center;
       border-bottom: 3px solid #ffcc00;
+      flex-wrap: wrap;
     }
     .no-print a,
     .no-print button {
@@ -39,6 +40,8 @@
     .no-print button:hover { background: rgba(255,255,255,0.3); }
     .no-print .btn-pdf { background: #d4a017; color: #000; }
     .no-print .btn-pdf:hover { background: #b8890e; }
+    .no-print .btn-submit { background: #1a5d1a; color: white; border: 1px solid #ffcc00; }
+    .no-print .btn-submit:hover { background: #0f4a0f; }
 
     /* ===== PAGE ===== */
     .page-border {
@@ -46,7 +49,7 @@
       width: 210mm;
       height: 297mm;
       margin: 10px auto;
-      padding: 6mm 10mm; /* reduced padding to use more space */
+      padding: 6mm 10mm;
       box-sizing: border-box;
       border: 2px solid darkgreen;
       position: relative;
@@ -285,11 +288,12 @@
 </head>
 <body>
 
-<!-- ===== NAV ===== -->
+<!-- ===== NAV (includes Submit Admission button) ===== -->
 <div class="no-print">
   <a href="admission.html">📝 New Admission</a>
   <a href="adm-register.html">📋 View Register</a>
   <a href="apaar-input.html" style="background: #ffcc00; color: #1a5d1a;">🆔 Proceed to APAAR</a>
+  <button class="btn-submit" onclick="submitAdmission()">💾 Submit Admission</button>
   <button class="btn-pdf" onclick="downloadPDF()">📄 Download Pre‑filled PDF</button>
 </div>
 
@@ -322,7 +326,7 @@
       <div class="photo-box">
         <img id="photoPreview" style="display:none;">
         <p id="photoTxt" style="font-size:10px;">Passport Photo</p>
-        <input type="file" onchange="processPhoto(event)" class="no-print" style="width:90px; font-size:8px;">
+        <input type="file" id="photoInput" onchange="processPhoto(event)" class="no-print" style="width:90px; font-size:8px;">
       </div>
     </div>
 
@@ -385,7 +389,7 @@
       <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
     </div>
 
-    <!-- ===== SIGNATURES (Parent & Student) with fingerprint ===== -->
+    <!-- ===== SIGNATURES (Parent & Student) ===== -->
     <div class="sig-section">
       <div class="sig-placeholder">
         <span>Signature of Parent</span>
@@ -433,7 +437,7 @@
       </div>
     </div>
 
-    <!-- ===== ACTION BUTTONS ===== -->
+    <!-- ===== BOTTOM BUTTONS (kept for convenience) ===== -->
     <div class="no-print" style="text-align:center; margin-top:12px;">
       <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">💾 Save Record</button>
       <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; margin-left:10px; font-size:14px;">🖨️ Print A4</button>
@@ -465,7 +469,7 @@ import { collection, addDoc, doc, getDoc, setDoc } from "https://www.gstatic.com
 // ===== DOM REFS =====
 const form = document.getElementById('admissionForm');
 
-// ===== PHOTO COMPRESSION =====
+// ===== PHOTO UPLOAD (fixed) =====
 let compressedPhotoBase64 = "";
 
 window.processPhoto = function(event) {
@@ -483,8 +487,9 @@ window.processPhoto = function(event) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       compressedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-      document.getElementById('photoPreview').src = compressedPhotoBase64;
-      document.getElementById('photoPreview').style.display = 'block';
+      const preview = document.getElementById('photoPreview');
+      preview.src = compressedPhotoBase64;
+      preview.style.display = 'block';
       document.getElementById('photoTxt').style.display = 'none';
     };
     img.src = e.target.result;
@@ -492,7 +497,7 @@ window.processPhoto = function(event) {
   reader.readAsDataURL(file);
 };
 
-// ===== DATE TO WORDS =====
+// ===== DATE TO WORDS (exact format: "twenty third of March Nineteen Hundred and seventy Nine") =====
 window.convertDOB = function() {
   const dob = document.getElementById('dob').value;
   if (!dob) return;
@@ -501,22 +506,46 @@ window.convertDOB = function() {
   const month = d.toLocaleString('en-IN', { month: 'long' });
   const year = d.getFullYear();
 
+  // Number to words (1-31)
   const numWords = (n) => {
     const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
     const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
     if (n < 20) return ones[n];
-    return tens[Math.floor(n/10)] + (n%10!==0 ? " "+ones[n%10] : "");
+    if (n < 100) return tens[Math.floor(n/10)] + (n%10!==0 ? " " + ones[n%10] : "");
+    return ones[Math.floor(n/100)] + " Hundred " + (n%100!==0 ? numWords(n%100) : "");
   };
-  const yearToWords = (y) => {
-    const first = Math.floor(y/100);
-    const second = y%100;
-    return numWords(first) + " Hundred " + numWords(second);
+
+  // Ordinal for day
+  const ordinals = ["", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
+    "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteenth",
+    "Twentieth", "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth",
+    "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"];
+  const dayWords = ordinals[day] || numWords(day);
+
+ // Year in words (e.g., "Nineteen Hundred and seventy Nine")
+  const yearWords = (y) => {
+    const first = Math.floor(y / 100);
+    const second = y % 100;
+    let result = numWords(first) + " Hundred";
+    if (second > 0) {
+      result += " and " + numWords(second);
+    }
+    return result;
   };
-  const ordinals = ["","First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth","Ninth","Tenth","Eleventh","Twelfth","Thirteenth","Fourteenth","Fifteenth","Sixteenth","Seventeenth","Eighteenth","Nineteen","Twentieth","Twenty First","Twenty Second","Twenty Third","Twenty Fourth","Twenty Fifth","Twenty Sixth","Twenty Seventh","Twenty Eighth","Twenty Ninth","Thirtieth","Thirty First"];
-  document.getElementById('dobWords').value = `${ordinals[day]} ${month} ${yearToWords(year)}`;
+
+  // Capitalize first letter of each word
+  const toTitleCase = (str) => {
+    return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
+  // Format: "twenty third of March Nineteen Hundred and seventy Nine"
+  let final = `${dayWords.toLowerCase()} of ${month} ${yearWords(year)}`;
+  // Capitalize the entire string (first letter of each word)
+  final = toTitleCase(final);
+  document.getElementById('dobWords').value = final;
 };
 
-// ===== SIGNATURE PAD =====
+// ===== SIGNATURE PAD (global functions for HTML onclick) =====
 let sigTargetField = '';
 let sigCanvas, sigCtx, isDrawing = false;
 
@@ -533,7 +562,6 @@ function initSignatureCanvas() {
   sigCanvas.addEventListener('mousedown', startDraw);
   sigCanvas.addEventListener('mousemove', draw);
   sigCanvas.addEventListener('mouseup', stopDraw);
-  sigCanvas.addEventListener('mo      <h1>Government Primary School Pethgam Wagoora</h1>
   sigCanvas.addEventListener('mouseleave', stopDraw);
   sigCanvas.addEventListener('touchstart', handleTouch, { passive: false });
   sigCanvas.addEventListener('touchmove', handleTouch, { passive: false });
@@ -628,7 +656,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('photoPreview').style.display = 'block';
         document.getElementById('photoTxt').style.display = 'none';
       }
-      // Signatures (if any)
+       // Signatures (if any)
       ['parentSig','studentSig','admInchargeSig','headmasterSig'].forEach(field => {
         if (s[field]) {
           document.getElementById(field).value = s[field];
@@ -711,7 +739,6 @@ window.submitAdmission = async function() {
 // ===== PDF DOWNLOAD =====
 window.downloadPDF = function() {
   const element = document.getElementById('formPage');
-  // Temporarily hide no-print elements inside the page (they are hidden via CSS but may still show)
   const noPrintElements = element.querySelectorAll('.no-print');
   noPrintElements.forEach(el => el.style.display = 'none');
   
@@ -723,7 +750,6 @@ window.downloadPDF = function() {
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
   html2pdf().set(opt).from(element).save().then(function() {
-    // Restore no-print elements
     noPrintElements.forEach(el => el.style.display = '');
   });
 };
