@@ -1,197 +1,1147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Roll Statement | GPS Pethgam Wagoora</title>
-  <style>
-    @page { size: A4 portrait; margin: 10mm; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <title>Roll Statement | GPS Pethgam Wagoora</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; }
-    .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid white; padding: 4px 10px; border-radius: 4px; }
+        /* ---- NAV ---- */
+        .nav-header {
+            background: #1a5d1a;
+            padding: 10px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .nav-header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            border: 1px solid white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .nav-header a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
 
-    .report-paper {
-      background: white;
-      width: 210mm;
-      min-height: 297mm;
-      margin: 20px auto;
-      padding: 30px;
-      position: relative;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      box-sizing: border-box;
-    }
+        /* ---- REPORT PAPER ---- */
+        .report-paper {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
 
-    /* Logo Watermark Styling */
-    .watermark-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.06;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .watermark-container img { width: 400px; height: auto; }
+        /* ---- WATERMARK ---- */
+        .watermark-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .watermark-container img {
+            width: 400px;
+            height: auto;
+        }
 
-    /* Header Styling with Logo */
-    .header-section { 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        border-bottom: 2px solid #002366; 
-        padding-bottom: 15px; 
-        margin-bottom: 20px; 
-    }
-    .header-logo { width: 80px; height: 80px; margin-right: 20px; }
-    .header-text { text-align: center; }
-    .school-name { color: #002366; font-size: 26px; margin: 0; font-weight: 800; text-transform: uppercase; }
-    .header-sub { font-size: 14px; font-weight: bold; margin: 5px 0; color: #333; }
+        /* ---- HEADER ---- */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid #002366;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+        }
+        .header-text {
+            text-align: center;
+        }
+        .school-name {
+            color: #002366;
+            font-size: 26px;
+            margin: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .header-sub {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #333;
+        }
 
-    .meta-container { display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px; line-height: 1.8; }
-    .field-label { font-weight: bold; color: #002366; }
-    .underline { border-bottom: 1px solid #000; display: inline-block; min-width: 150px; }
+        /* ---- META ---- */
+        .meta-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #002366;
+        }
+        .underline {
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 150px;
+        }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; position: relative; z-index: 1; }
-    th, td { border: 1.5px solid #000; padding: 10px; text-align: center; font-size: 14px; }
-    th { background: #002366 !important; color: white !important; text-transform: uppercase; }
-    .total-row { background: #f0f0f0; font-weight: 900; }
-    .class-col { text-align: left; padding-left: 15px; font-weight: bold; }
+        /* ---- TABLE ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        th,
+        td {
+            border: 1.5px solid #000;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background: #002366 !important;
+            color: white !important;
+            text-transform: uppercase;
+        }
+        .total-row {
+            background: #f0f0f0;
+            font-weight: 900;
+        }
+        .class-col {
+            text-align: left;
+            padding-left: 15px;
+            font-weight: bold;
+        }
 
-    /* Note Styling */
-    .note-section { margin-top: 20px; font-size: 13px; font-weight: bold; color: #000; position: relative; z-index: 1; }
+        /* ---- NOTE ---- */
+        .note-section {
+            margin-top: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+            z-index: 1;
+        }
 
-    .footer-section { margin-top: 60px; display: flex; justify-content: space-between; position: relative; z-index: 1; }
-    .sig-box { text-align: center; width: 220px; border-top: 1.5px solid #000; padding-top: 10px; font-weight: bold; font-size: 13px; }
+        /* ---- FOOTER (signature boxes) ---- */
+        .footer-section {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        .sig-box {
+            text-align: center;
+            width: 220px;
+            border-top: 1.5px solid #000;
+            padding-top: 10px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+        }
+        .sig-box .sig-text {
+            display: block;
+        }
+        .sig-box .sig-image {
+            max-height: 65px;
+            width: auto;
+            max-width: 180px;
+            object-fit: contain;
+            margin-top: 4px;
+        }
 
-    @media print {
-      .no-print { display: none !important; }
-      body { background: white; }
-      .report-paper { margin: 0; box-shadow: none; width: 100%; }
-      th { -webkit-print-color-adjust: exact; }
-    }
-  </style>
+        /* ================================================================
+               ADMIN PANEL – tabs + upload
+               ================================================================ */
+        .admin-panel {
+            max-width: 210mm;
+            margin: 10px auto 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+            overflow: hidden;
+        }
+        .admin-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #002366;
+            color: white;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.2s;
+        }
+        .admin-toggle:hover {
+            background: #001a4a;
+        }
+        .admin-toggle .arrow {
+            transition: transform 0.25s;
+            font-size: 18px;
+        }
+        .admin-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+        .admin-body {
+            padding: 0;
+            display: none;
+            border-top: 2px solid #e0e0e0;
+        }
+        .admin-body.open {
+            display: block;
+        }
+
+        /* tabs */
+        .admin-tabs {
+            display: flex;
+            background: #f0f4f8;
+            border-bottom: 2px solid #d0d7de;
+        }
+        .admin-tab {
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            background: transparent;
+            color: #445566;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        .admin-tab:hover {
+            background: #e2e8f0;
+        }
+        .admin-tab.active {
+            color: #002366;
+            background: white;
+            border-bottom-color: #002366;
+        }
+        .admin-tab-content {
+            display: none;
+            padding: 24px 28px;
+            background: white;
+        }
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        /* form grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 14px;
+            align-items: end;
+            margin-bottom: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #002366;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 8px 10px;
+            border: 1.5px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border 0.2s;
+            background: #fafafa;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #002366;
+            outline: none;
+            background: white;
+        }
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: #1a5d1a;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0f4a0f;
+        }
+        .btn-danger {
+            background: #b22222;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #8b1a1a;
+        }
+        .btn-warning {
+            background: #d4a017;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #b8890e;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #002366;
+            border: 1.5px solid #002366;
+        }
+        .btn-outline:hover {
+            background: #002366;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c7a8d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #556270;
+        }
+
+        /* admin table */
+        .admin-table-wrap {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .admin-table th {
+            background: #f0f4f8 !important;
+            color: #002366 !important;
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .admin-table td {
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        .admin-table .actions-cell {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .admin-table .actions-cell .btn {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+        .admin-empty {
+            text-align: center;
+            padding: 30px 0;
+            color: #888;
+            font-style: italic;
+        }
+        .admin-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            color: #333;
+        }
+        .admin-stats strong {
+            color: #002366;
+        }
+
+        /* signature upload row */
+        .sig-upload-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 24px;
+            padding: 18px 0;
+            border-bottom: 1px solid #e9edf2;
+        }
+        .sig-upload-row:last-child {
+            border-bottom: none;
+        }
+        .sig-upload-row label {
+            font-weight: 700;
+            color: #002366;
+            min-width: 170px;
+            font-size: 14px;
+        }
+        .sig-upload-row input[type="file"] {
+            font-size: 13px;
+            padding: 6px 0;
+            max-width: 220px;
+        }
+        .sig-upload-row .preview-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .sig-upload-row .preview-box img {
+            max-height: 60px;
+            max-width: 150px;
+            border: 1px dashed #aaa;
+            padding: 4px;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+        .sig-upload-row .preview-box .placeholder-text {
+            color: #999;
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        /* editing highlight */
+        .editing-row {
+            background: #fff9e0 !important;
+        }
+
+        /* ---- PRINT HIDE ---- */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .report-paper {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+            }
+            th {
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .meta-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .meta-right {
+                text-align: left !important;
+            }
+            .admin-body {
+                padding: 0;
+            }
+            .admin-tab-content {
+                padding: 16px;
+            }
+            .report-paper {
+                width: 100%;
+                padding: 16px;
+                min-height: auto;
+            }
+            .header-section {
+                flex-wrap: wrap;
+            }
+            .header-logo {
+                margin-right: 0;
+                margin-bottom: 8px;
+            }
+            .school-name {
+                font-size: 20px;
+            }
+            .sig-upload-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .sig-upload-row label {
+                min-width: unset;
+            }
+            .admin-tab {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            .admin-table th,
+            .admin-table td {
+                font-size: 12px;
+                padding: 6px 8px;
+            }
+            .sig-upload-row input[type="file"] {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="nav-header no-print">
-    <a href="reports-hub.html">⬅️ Reports Hub</a>
-    <a href="#" onclick="window.print()">📥 Download PDF / Print</a>
-</div>
-
-<div class="report-paper">
-  <div class="watermark-container">
-      <img src="logo.png" alt="School Watermark" onerror="this.style.display='none'">
-  </div>
-
-  <div class="header-section">
-    <img src="logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
-    <div class="header-text">
-        <h1 class="school-name">Government Primary School Pethgam Wagoora</h1>
-        <div class="header-sub">Cluster: Wagoora | Zone: Wagoora | UDISE Code: <span class="underline">01022202207</span></div>
+    <!-- ===== TOP NAV ===== -->
+    <div class="nav-header no-print">
+        <a href="reports-hub.html">⬅️ Reports Hub</a>
+        <a href="#" onclick="window.print()">📥 Download PDF / Print</a>
+        <a href="#" id="toggleAdminBtn" style="background: #ffd700; color: #002366; border-color: #ffd700;">📝 Manage Students</a>
     </div>
-  </div>
 
-  <div class="meta-container">
-    <div class="meta-left">
-      <div><span class="field-label">Reference No:</span> <span class="underline">GPS/W/2026/____</span></div>
-      <div><span class="field-label">Date:</span> <span class="underline" id="currentDate"></span></div>
+    <!-- ===== ADMIN PANEL (tabs: Students + Signatures) ===== -->
+    <div class="admin-panel no-print" id="adminPanel">
+        <button class="admin-toggle" id="adminToggleBtn">
+            <span>⚙️ Admin Dashboard</span>
+            <span class="arrow">▼</span>
+        </button>
+        <div class="admin-body" id="adminBody">
+
+            <!-- Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="students">👨‍🎓 Student Records</button>
+                <button class="admin-tab" data-tab="signatures">🖊️ Signatures &amp; Seal</button>
+            </div>
+
+            <!-- TAB 1: STUDENT RECORDS -->
+            <div class="admin-tab-content active" id="tab-students">
+                <form id="studentForm" autocomplete="off">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="studentName">Student Name *</label>
+                            <input type="text" id="studentName" placeholder="e.g. Aamir Khan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentClass">Class *</label>
+                            <select id="studentClass" required>
+                                <option value="">— Select —</option>
+                                <option value="Pre Primary – 3 (PP-3)">Pre Primary – 3 (PP-3)</option>
+                                <option value="Pre Primary – 2 (PP-2)">Pre Primary – 2 (PP-2)</option>
+                                <option value="Balvatika">Balvatika</option>
+                                <option value="1st Class">1st Class</option>
+                                <option value="2nd Class">2nd Class</option>
+                                <option value="3rd Class">3rd Class</option>
+                                <option value="4th Class">4th Class</option>
+                                <option value="5th Class">5th Class</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentGender">Gender *</label>
+                            <select id="studentGender" required>
+                                <option value="">— Select —</option>
+                                <option value="Boy">Boy</option>
+                                <option value="Girl">Girl</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: row; gap: 8px; align-items: center;">
+                            <button type="submit" class="btn btn-primary" id="formSubmitBtn">➕ Add Student</button>
+                            <button type="button" class="btn btn-outline" id="formCancelBtn" style="display:none;">Cancel</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="editIndex" value="-1">
+                </form>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width:30px;">#</th>
+                                <th>Name</th>
+                                <th style="width:22%;">Class</th>
+                                <th style="width:12%;">Gender</th>
+                                <th style="width:28%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminStudentList"></tbody>
+                    </table>
+                    <div id="adminEmpty" class="admin-empty">No students added yet. Use the form above to add.</div>
+                </div>
+
+                <div class="admin-stats">
+                    <span>👦 <strong id="statBoys">0</strong> Boys</span>
+                    <span>👧 <strong id="statGirls">0</strong> Girls</span>
+                    <span>📚 <strong id="statTotal">0</strong> Total Students</span>
+                    <span style="margin-left:auto; color:#888; font-size:12px;">💾 Data stored in your browser (localStorage)</span>
+                </div>
+            </div>
+
+            <!-- TAB 2: SIGNATURES & SEAL -->
+            <div class="admin-tab-content" id="tab-signatures">
+                <div style="margin-bottom: 18px; color: #333; font-size: 14px;">
+                    Upload PNG images for the signature and seal. They will appear in the report footer.
+                </div>
+
+                <div class="sig-upload-row">
+                    <label for="uploadDealing">✍️ Dealing Assistant</label>
+                    <input type="file" id="uploadDealing" accept="image/png">
+                    <div class="preview-box">
+                        <div class="placeholder-text" id="placeholderDealing">No image uploaded</div>
+                        <img id="previewDealing" style="display:none;" alt="Dealing signature">
+                        <button class="btn btn-danger" id="removeDealing" style="font-size:12px; padding:4px 12px;">Remove</button>
+                    </div>
+                </div>
+
+                <div class="sig-upload-row">
+                    <label for="uploadHeadmaster">🛡️ Headmaster / Seal</label>
+                    <input type="file" id="uploadHeadmaster" accept="image/png">
+                    <div class="preview-box">
+                        <div class="placeholder-text" id="placeholderHeadmaster">No image uploaded</div>
+                        <img id="previewHeadmaster" style="display:none;" alt="Headmaster seal">
+                        <button class="btn btn-danger" id="removeHeadmaster" style="font-size:12px; padding:4px 12px;">Remove</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 18px; font-size: 13px; color: #666; background: #f8faff; padding: 12px; border-radius: 6px;">
+                    ⚡ Images are stored locally in your browser. They will persist until you clear your browser data or click "Remove".
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="meta-right" style="text-align: right;">
-      <div><span class="field-label">Month / Year:</span> <span class="underline">January 2026</span></div>
-      <div><span class="field-label">Prepared By:</span> <span class="underline">________________</span></div>
+
+    <!-- ===== REPORT PAPER ===== -->
+    <div class="report-paper" id="reportPaper">
+        <div class="watermark-container">
+            <img src="logo.png" alt="School Watermark" onerror="this.style.display='none'">
+        </div>
+
+        <div class="header-section">
+            <img src="logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
+            <div class="header-text">
+                <h1 class="school-name">Government Primary School Pethgam Wagoora</h1>
+                <div class="header-sub">Cluster: Wagoora | Zone: Wagoora | UDISE Code: <span class="underline">01022202207</span></div>
+            </div>
+        </div>
+
+        <div class="meta-container">
+            <div class="meta-left">
+                <div><span class="field-label">Reference No:</span> <span class="underline">GPS/W/2026/____</span></div>
+                <div><span class="field-label">Date:</span> <span class="underline" id="currentDate"></span></div>
+            </div>
+            <div class="meta-right" style="text-align: right;">
+                <div><span class="field-label">Month / Year:</span> <span class="underline">January 2026</span></div>
+                <div><span class="field-label">Prepared By:</span> <span class="underline">________________</span></div>
+            </div>
+        </div>
+
+        <h3 style="text-align:center; text-decoration: underline; color: #002366; margin-top: 0;">CLASS-WISE ROLL SUMMARY STATEMENT</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%;">S.No</th>
+                    <th>Class</th>
+                    <th style="width: 15%;">Boys</th>
+                    <th style="width: 15%;">Girls</th>
+                    <th style="width: 15%;">Total</th>
+                    <th style="width: 25%;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2">GRAND TOTAL</td>
+                    <td id="grandBoys">0</td>
+                    <td id="grandGirls">0</td>
+                    <td id="grandTotal">0</td>
+                    <td>-</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="note-section">
+            Submitted in original to ZEO Wagoora/Cluster Head Wagoora for information.
+        </div>
+
+        <!-- FOOTER with signature containers -->
+        <div class="footer-section">
+            <div class="sig-box" id="sigDealingBox">
+                <span class="sig-text">Dealing Assistant</span>
+                <img class="sig-image" style="display:none;" alt="Signature" />
+            </div>
+            <div class="sig-box" id="sigHeadmasterBox">
+                <span class="sig-text">Headmaster / Seal</span>
+                <img class="sig-image" style="display:none;" alt="Seal" />
+            </div>
+        </div>
     </div>
-  </div>
 
-  <h3 style="text-align:center; text-decoration: underline; color: #002366; margin-top: 0;">CLASS-WISE ROLL SUMMARY STATEMENT</h3>
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
 
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 8%;">S.No</th>
-        <th>Class</th>
-        <th style="width: 15%;">Boys</th>
-        <th style="width: 15%;">Girls</th>
-        <th style="width: 15%;">Total</th>
-        <th style="width: 25%;">Remarks</th>
-      </tr>
-    </thead>
-    <tbody id="summaryBody"></tbody>
-    <tfoot>
-      <tr class="total-row">
-        <td colspan="2">GRAND TOTAL</td>
-        <td id="grandBoys">0</td>
-        <td id="grandGirls">0</td>
-        <td id="grandTotal">0</td>
-        <td>-</td>
-      </tr>
-    </tfoot>
-  </table>
+            // ---- STORAGE KEYS ----
+            const STORAGE_KEY = 'admissions';
+            const SIG_DEALING_KEY = 'sigDealing';
+            const SIG_HEADMASTER_KEY = 'sigHeadmaster';
 
-  <div class="note-section">
-    Submitted in original to ZEO Wagoora/Cluster Head Wagoora for information.
-  </div>
+            const classStructure = [
+                "Pre Primary – 3 (PP-3)",
+                "Pre Primary – 2 (PP-2)",
+                "Balvatika",
+                "1st Class",
+                "2nd Class",
+                "3rd Class",
+                "4th Class",
+                "5th Class"
+            ];
 
-  <div class="footer-section">
-    <div class="sig-box">Dealing Assistant</div>
-    <div class="sig-box">Headmaster / Seal</div>
-  </div>
-</div>
+            // ---- DOM REFS (MAIN) ----
+            const tbody = document.getElementById('summaryBody');
+            const grandBoys = document.getElementById('grandBoys');
+            const grandGirls = document.getElementById('grandGirls');
+            const grandTotal = document.getElementById('grandTotal');
+            const currentDateEl = document.getElementById('currentDate');
 
-<script>
-  const classStructure = [
-    "Pre Primary – 3 (PP-3)",
-    "Pre Primary – 2 (PP-2)",
-    "Balvatika",
-    "1st Class",
-    "2nd Class",
-    "3rd Class",
-    "4th Class",
-    "5th Class"
-  ];
+            // Footer sig boxes
+            const sigDealingBox = document.getElementById('sigDealingBox');
+            const sigHeadmasterBox = document.getElementById('sigHeadmasterBox');
 
-  function calculateSummary() {
-    // Fetches data specifically from the 'admissions' key used by your register
-    const admissions = JSON.parse(localStorage.getItem("admissions")) || [];
-    const tbody = document.getElementById('summaryBody');
-    tbody.innerHTML = "";
+            // ---- DOM REFS (ADMIN) ----
+            const adminToggleBtn = document.getElementById('adminToggleBtn');
+            const adminBody = document.getElementById('adminBody');
 
-    let totalB = 0, totalG = 0;
-    const today = new Date().toLocaleDateString('en-GB');
-    document.getElementById('currentDate').innerText = today;
+            // Tabs
+            const tabs = document.querySelectorAll('.admin-tab');
+            const tabContents = {
+                students: document.getElementById('tab-students'),
+                signatures: document.getElementById('tab-signatures')
+            };
 
-    classStructure.forEach((className, index) => {
-      // Filters students based on the class saved in adm-register.html
-      const studentsInClass = admissions.filter(s => s.studentClass === className);
-      
-      const boys = studentsInClass.filter(s => s.gender?.toLowerCase() === 'boy' || s.gender?.toLowerCase() === 'male').length;
-      const girls = studentsInClass.filter(s => s.gender?.toLowerCase() === 'girl' || s.gender?.toLowerCase() === 'female').length;
-      const sum = boys + girls;
+            // Student form
+            const studentForm = document.getElementById('studentForm');
+            const studentName = document.getElementById('studentName');
+            const studentClass = document.getElementById('studentClass');
+            const studentGender = document.getElementById('studentGender');
+            const editIndex = document.getElementById('editIndex');
+            const formSubmitBtn = document.getElementById('formSubmitBtn');
+            const formCancelBtn = document.getElementById('formCancelBtn');
+            const adminList = document.getElementById('adminStudentList');
+            const adminEmpty = document.getElementById('adminEmpty');
+            const statBoys = document.getElementById('statBoys');
+            const statGirls = document.getElementById('statGirls');
+            const statTotal = document.getElementById('statTotal');
 
-      totalB += boys;
-      totalG += girls;
+            // Signature uploads
+            const uploadDealing = document.getElementById('uploadDealing');
+            const uploadHeadmaster = document.getElementById('uploadHeadmaster');
+            const previewDealing = document.getElementById('previewDealing');
+            const previewHeadmaster = document.getElementById('previewHeadmaster');
+            const placeholderDealing = document.getElementById('placeholderDealing');
+            const placeholderHeadmaster = document.getElementById('placeholderHeadmaster');
+            const removeDealing = document.getElementById('removeDealing');
+            const removeHeadmaster = document.getElementById('removeHeadmaster');
 
-      tbody.innerHTML += `
-        <tr>
-          <td>${index + 1}</td>
-          <td class="class-col">${className}</td>
-          <td>${boys}</td>
-          <td>${girls}</td>
-          <td style="font-weight:bold;">${sum}</td>
-          <td></td>
-        </tr>
-      `;
-    });
+            // ---- HELPERS ----
+            function getData() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                } catch {
+                    return [];
+                }
+            }
 
-    document.getElementById('grandBoys').innerText = totalB;
-    document.getElementById('grandGirls').innerText = totalG;
-    document.getElementById('grandTotal').innerText = totalB + totalG;
-  }
+            function saveData(data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
 
-  window.onload = calculateSummary;
-</script>
+            function getSig(key) {
+                return localStorage.getItem(key) || null;
+            }
+
+            function setSig(key, base64) {
+                if (base64) {
+                    localStorage.setItem(key, base64);
+                } else {
+                    localStorage.removeItem(key);
+                }
+            }
+
+            // ---- RENDER: Roll Summary (main report) ----
+            function renderSummary() {
+                const admissions = getData();
+                let totalB = 0,
+                    totalG = 0;
+
+                const today = new Date().toLocaleDateString('en-GB');
+                currentDateEl.innerText = today;
+
+                let html = '';
+                classStructure.forEach((className, index) => {
+                    const studentsInClass = admissions.filter(s => s.studentClass === className);
+                    const boys = studentsInClass.filter(s =>
+                        s.gender?.toLowerCase() === 'boy' || s.gender?.toLowerCase() === 'male'
+                    ).length;
+                    const girls = studentsInClass.filter(s =>
+                        s.gender?.toLowerCase() === 'girl' || s.gender?.toLowerCase() === 'female'
+                    ).length;
+                    const sum = boys + girls;
+                    totalB += boys;
+                    totalG += girls;
+
+                    html += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td class="class-col">${className}</td>
+                                <td>${boys}</td>
+                                <td>${girls}</td>
+                                <td style="font-weight:bold;">${sum}</td>
+                                <td></td>
+                            </tr>
+                        `;
+                });
+
+                tbody.innerHTML = html;
+                grandBoys.innerText = totalB;
+                grandGirls.innerText = totalG;
+                grandTotal.innerText = totalB + totalG;
+            }
+
+            // ---- RENDER: Signatures in footer ----
+            function renderSignatures() {
+                // Dealing
+                const dealingData = getSig(SIG_DEALING_KEY);
+                const dealingImg = sigDealingBox.querySelector('.sig-image');
+                const dealingText = sigDealingBox.querySelector('.sig-text');
+                if (dealingData) {
+                    dealingImg.src = dealingData;
+                    dealingImg.style.display = 'block';
+                    dealingText.style.display = 'none';
+                } else {
+                    dealingImg.style.display = 'none';
+                    dealingImg.src = '';
+                    dealingText.style.display = 'block';
+                }
+
+                // Headmaster
+                const headmasterData = getSig(SIG_HEADMASTER_KEY);
+                const headmasterImg = sigHeadmasterBox.querySelector('.sig-image');
+                const headmasterText = sigHeadmasterBox.querySelector('.sig-text');
+                if (headmasterData) {
+                    headmasterImg.src = headmasterData;
+                    headmasterImg.style.display = 'block';
+                    headmasterText.style.display = 'none';
+                } else {
+                    headmasterImg.style.display = 'none';
+                    headmasterImg.src = '';
+                    headmasterText.style.display = 'block';
+                }
+
+                // Update admin previews
+                updatePreview('Dealing', dealingData);
+                updatePreview('Headmaster', headmasterData);
+            }
+
+            function updatePreview(type, data) {
+                const isDealing = type === 'Dealing';
+                const preview = isDealing ? previewDealing : previewHeadmaster;
+                const placeholder = isDealing ? placeholderDealing : placeholderHeadmaster;
+                if (data) {
+                    preview.src = data;
+                    preview.style.display = 'inline-block';
+                    placeholder.style.display = 'none';
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '';
+                    placeholder.style.display = 'inline';
+                }
+            }
+
+            // ---- RENDER: Admin student list ----
+            function renderAdminList() {
+                const data = getData();
+                if (data.length === 0) {
+                    adminList.innerHTML = '';
+                    adminEmpty.style.display = 'block';
+                    statBoys.textContent = '0';
+                    statGirls.textContent = '0';
+                    statTotal.textContent = '0';
+                    return;
+                }
+                adminEmpty.style.display = 'none';
+
+                let boys = 0,
+                    girls = 0;
+                let html = '';
+                data.forEach((s, idx) => {
+                    const gender = s.gender || '';
+                    if (gender.toLowerCase() === 'boy' || gender.toLowerCase() === 'male') boys++;
+                    else if (gender.toLowerCase() === 'girl' || gender.toLowerCase() === 'female') girls++;
+
+                    const isEditing = (parseInt(editIndex.value) === idx);
+                    html += `
+                            <tr class="${isEditing ? 'editing-row' : ''}">
+                                <td>${idx + 1}</td>
+                                <td><strong>${escapeHtml(s.studentName || '')}</strong></td>
+                                <td>${escapeHtml(s.studentClass || '')}</td>
+                                <td>${escapeHtml(gender)}</td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="btn btn-warning" onclick="editStudent(${idx})">✏️ Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteStudent(${idx})">🗑️ Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                });
+
+                adminList.innerHTML = html;
+                statBoys.textContent = boys;
+                statGirls.textContent = girls;
+                statTotal.textContent = data.length;
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+
+            // ---- CRUD STUDENTS ----
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                const name = studentName.value.trim();
+                const cls = studentClass.value;
+                const gender = studentGender.value;
+                if (!name || !cls || !gender) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+                const data = getData();
+                const idx = parseInt(editIndex.value);
+                const record = { studentName: name, studentClass: cls, gender: gender };
+
+                if (idx >= 0 && idx < data.length) {
+                    data[idx] = record;
+                } else {
+                    data.push(record);
+                }
+                saveData(data);
+                resetForm();
+                renderSummary();
+                renderAdminList();
+                studentName.focus();
+            }
+
+            window.editStudent = function(index) {
+                const data = getData();
+                if (index < 0 || index >= data.length) return;
+                const record = data[index];
+                studentName.value = record.studentName || '';
+                studentClass.value = record.studentClass || '';
+                studentGender.value = record.gender || '';
+                editIndex.value = index;
+                formSubmitBtn.textContent = '💾 Update Student';
+                formCancelBtn.style.display = 'inline-block';
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                studentName.focus();
+                // switch to student tab
+                switchTab('students');
+                renderAdminList();
+            };
+
+            window.deleteStudent = function(index) {
+                if (!confirm('Delete this student record?')) return;
+                const data = getData();
+                if (index < 0 || index >= data.length) return;
+                data.splice(index, 1);
+                saveData(data);
+                if (parseInt(editIndex.value) === index) {
+                    resetForm();
+                } else if (parseInt(editIndex.value) > index) {
+                    editIndex.value = parseInt(editIndex.value) - 1;
+                }
+                renderSummary();
+                renderAdminList();
+            };
+
+            function resetForm() {
+                studentForm.reset();
+                editIndex.value = '-1';
+                formSubmitBtn.textContent = '➕ Add Student';
+                formCancelBtn.style.display = 'none';
+                renderAdminList();
+            }
+
+            // ---- SIGNATURE UPLOAD HANDLERS ----
+            function handleFileUpload(file, key, previewEl, placeholderEl) {
+                if (!file) return;
+                if (!file.type.startsWith('image/png')) {
+                    alert('Please upload a PNG image.');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    setSig(key, base64);
+                    renderSignatures();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            uploadDealing.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleFileUpload(this.files[0], SIG_DEALING_KEY, previewDealing, placeholderDealing);
+                }
+                this.value = ''; // allow re-upload same file
+            });
+
+            uploadHeadmaster.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleFileUpload(this.files[0], SIG_HEADMASTER_KEY, previewHeadmaster, placeholderHeadmaster);
+                }
+                this.value = '';
+            });
+
+            removeDealing.addEventListener('click', function() {
+                if (confirm('Remove Dealing Assistant signature?')) {
+                    setSig(SIG_DEALING_KEY, null);
+                    renderSignatures();
+                }
+            });
+
+            removeHeadmaster.addEventListener('click', function() {
+                if (confirm('Remove Headmaster seal?')) {
+                    setSig(SIG_HEADMASTER_KEY, null);
+                    renderSignatures();
+                }
+            });
+
+            // ---- TAB SWITCHING ----
+            function switchTab(tabId) {
+                tabs.forEach(tab => {
+                    const t = tab.dataset.tab;
+                    if (t === tabId) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+                Object.keys(tabContents).forEach(key => {
+                    if (key === tabId) {
+                        tabContents[key].classList.add('active');
+                    } else {
+                        tabContents[key].classList.remove('active');
+                    }
+                });
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+
+               // ---- TOGGLE ADMIN PANEL ----
+            adminToggleBtn.addEventListener('click', function() {
+                const isOpen = adminBody.classList.toggle('open');
+                this.classList.toggle('open');
+                if (isOpen) {
+                    renderAdminList();
+                    renderSignatures();
+                    const data = getData();
+                    if (data.length === 0) {
+                        studentName.focus();
+                    }
+                }
+            });
+
+            // ---- CANCEL EDIT ----
+            formCancelBtn.addEventListener('click', resetForm);
+
+            // ---- FORM SUBMIT ----
+            studentForm.addEventListener('submit', handleFormSubmit);
+
+            // ---- INIT ----
+            function init() {
+                const today = new Date().toLocaleDateString('en-GB');
+                currentDateEl.innerText = today;
+                renderSummary();
+                renderSignatures();
+            }
+
+            // ---- STORAGE LISTENER (sync across tabs) ----
+            window.addEventListener('storage', function(e) {
+                if (e.key === STORAGE_KEY) {
+                    renderSummary();
+                    if (adminBody.classList.contains('open') && tabContents.students.classList.contains('active')) {
+                        renderAdminList();
+                    }
+                }
+                if (e.key === SIG_DEALING_KEY || e.key === SIG_HEADMASTER_KEY) {
+                    renderSignatures();
+                }
+            });
+
+            // ---- NAV "Manage Students" ----
+            document.getElementById('toggleAdminBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                adminToggleBtn.click();
+                // switch to student tab after opening
+                setTimeout(() => switchTab('students'), 100);
+            });
+
+            // ---- Expose for inline onclick ----
+            window.resetForm = resetForm;
+            window.renderAdminList = renderAdminList;
+
+            init();
+
+        })();
+    </script>
 
 </body>
 </html>
-  
-
-    
