@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>15-Second Stopwatch</title>
+    <title>15‑Second Stopwatch · Round Counter</title>
     <style>
-        /* ─── Reset & Base ─── */
+        /* ───────────────────────────────────────────────
+                   RESET & BASE
+                ─────────────────────────────────────────────── */
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +24,9 @@
             user-select: none;
         }
 
-        /* ─── Stopwatch Card ─── */
+        /* ───────────────────────────────────────────────
+                   CARD – dark glass with subtle glow
+                ─────────────────────────────────────────────── */
         .stopwatch {
             background: radial-gradient(ellipse at 50% 30%, #1a202a, #0f1219);
             padding: 2.8rem 3.2rem 3.2rem;
@@ -33,7 +37,7 @@
                 0 0 0 1px rgba(255, 255, 255, 0.03);
             text-align: center;
             min-width: 400px;
-            transition: box-shadow 0.3s;
+            transition: box-shadow 0.4s ease, border-color 0.4s ease;
         }
 
         .stopwatch.round-complete {
@@ -44,7 +48,9 @@
                 0 0 40px rgba(255, 215, 0, 0.08);
         }
 
-        /* ─── Title ─── */
+        /* ───────────────────────────────────────────────
+                   TITLE
+                ─────────────────────────────────────────────── */
         .title {
             color: rgba(255, 255, 255, 0.25);
             font-size: 0.7rem;
@@ -54,7 +60,9 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ─── Time Display ─── */
+        /* ───────────────────────────────────────────────
+                   TIME DISPLAY  (SS.cc)
+                ─────────────────────────────────────────────── */
         .display {
             font-size: 5.2rem;
             font-weight: 300;
@@ -70,10 +78,12 @@
 
         .display .sec {
             color: #b0c7e0;
+            transition: color 0.3s;
         }
         .display .cent {
             color: #6a8bb0;
             font-size: 0.6em;
+            transition: color 0.3s;
         }
         .display .colon {
             color: #4a6a8a;
@@ -94,7 +104,9 @@
             color: #d4b82a;
         }
 
-        /* ─── Round Counter ─── */
+        /* ───────────────────────────────────────────────
+                   ROUND COUNTER
+                ─────────────────────────────────────────────── */
         .round-counter {
             margin-top: 0.5rem;
             display: flex;
@@ -146,7 +158,9 @@
             color: rgba(255, 255, 255, 0.2);
         }
 
-        /* ─── Status Message ─── */
+        /* ───────────────────────────────────────────────
+                   STATUS MESSAGE
+                ─────────────────────────────────────────────── */
         .status {
             margin-top: 0.4rem;
             font-size: 0.7rem;
@@ -167,7 +181,9 @@
             color: rgba(245, 215, 66, 0.7);
         }
 
-        /* ─── Controls ─── */
+        /* ───────────────────────────────────────────────
+                   CONTROLS
+                ─────────────────────────────────────────────── */
         .controls {
             display: flex;
             justify-content: center;
@@ -224,7 +240,7 @@
             transform: none;
         }
 
-        /* Start / Stop button states */
+        /* Start button – states */
         .btn-start {
             color: rgba(100, 200, 255, 0.7);
             background: rgba(100, 200, 255, 0.06);
@@ -261,6 +277,7 @@
             }
         }
 
+        /* Reset button */
         .btn-reset {
             color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.02);
@@ -272,7 +289,9 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        /* ─── Responsive ─── */
+        /* ───────────────────────────────────────────────
+                   RESPONSIVE
+                ─────────────────────────────────────────────── */
         @media (max-width: 500px) {
             .stopwatch {
                 padding: 2rem 1.5rem 2.2rem;
@@ -359,14 +378,16 @@
             const resetBtn = document.getElementById('resetBtn');
             const card = document.getElementById('stopwatchCard');
 
-            // ─── State ───
+            // ─── Constants ───
             const LIMIT_SECONDS = 15;
+            const LIMIT_CENTS = LIMIT_SECONDS * 100;
+
+            // ─── State ───
             let time = 0; // in centiseconds (100 = 1s)
             let running = false;
             let roundCount = 0;
             let complete = false; // true when we hit 15s
             let intervalId = null;
-            let animFrameId = null;
 
             // ─── Helpers ───
             function formatTime(centiseconds) {
@@ -384,14 +405,12 @@
                 secondsEl.textContent = sec;
                 centsEl.textContent = cent;
 
-                // Update visual classes
                 display.classList.remove('running', 'complete');
                 if (running) display.classList.add('running');
                 if (complete) display.classList.add('complete');
             }
 
             function updateUI() {
-                // Update display
                 updateDisplay();
 
                 // Round badge
@@ -417,66 +436,61 @@
                 startBtn.className = 'btn btn-start' + (running ? ' running' : '') + (complete ? ' complete' : '');
                 startBtn.disabled = false;
 
-                // Reset button
+                // Reset button – enabled only if there's something to reset
                 resetBtn.disabled = (time === 0 && roundCount === 0 && !running && !complete);
-
-                // Card glow when complete
-                if (complete) {
-                    card.classList.add('round-complete');
-                } else {
-                    card.classList.remove('round-complete');
-                }
             }
 
-            // ─── Core Logic ───
+            // ─── Core: tick ───
             function tick() {
                 if (!running) return;
 
                 time += 1; // +1 centisecond
 
                 // Check if we hit the limit
-                if (time >= LIMIT_SECONDS * 100) {
-                    time = LIMIT_SECONDS * 100;
+                if (time >= LIMIT_CENTS) {
+                    time = LIMIT_CENTS;
                     running = false;
                     complete = true;
                     roundCount += 1;
 
                     // Animate badge
                     roundBadge.classList.remove('pop');
-                    void roundBadge.offsetWidth; // force reflow
+                    void roundBadge.offsetWidth;
                     roundBadge.classList.add('pop');
 
-                    // Stop the interval
+                    // Stop interval
                     if (intervalId) {
                         clearInterval(intervalId);
                         intervalId = null;
                     }
 
-                    // Update UI
                     updateUI();
-
-                    // Play a subtle visual feedback (already handled by class)
                     return;
                 }
 
-                // Normal update
                 updateUI();
             }
 
+            // ─── Start / Stop toggle ───
             function startStop() {
-                // If complete, reset first then start
+                // ── Case 1: Round is complete → start a NEW round
+                //     preserve roundCount, reset time only
                 if (complete) {
-                    // Reset and then start
-                    resetStopwatch();
-                    // Small delay then start
-                    requestAnimationFrame(() => {
-                        startStop();
-                    });
+                    running = true;
+                    complete = false;
+                    time = 0;
+
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                    intervalId = setInterval(tick, 10);
+                    updateUI();
                     return;
                 }
 
+                // ── Case 2: Currently running → stop
                 if (running) {
-                    // ── Stop ──
                     running = false;
                     if (intervalId) {
                         clearInterval(intervalId);
@@ -486,48 +500,23 @@
                     return;
                 }
 
-                // ── Start ──
-                // If time is at limit (shouldn't happen if complete is false, but safety)
-                if (time >= LIMIT_SECONDS * 100) {
+                // ── Case 3: Not running, not complete → start (or resume)
+                //     If time is at limit (should not happen if complete is false,
+                //     but guard against it)
+                if (time >= LIMIT_CENTS) {
                     return;
                 }
 
                 running = true;
-                complete = false;
-
                 if (intervalId) {
                     clearInterval(intervalId);
                     intervalId = null;
                 }
-
-                // Use setInterval for smooth updates
-                intervalId = setInterval(tick, 10); // 10ms = 100Hz
-
+                intervalId = setInterval(tick, 10);
                 updateUI();
             }
 
-            function resetStopwatch() {
-                // Stop any running timer
-                if (intervalId) {
-                    clearInterval(intervalId);
-                    intervalId = null;
-                }
-
-                running = false;
-                complete = false;
-                time = 0;
-                // roundCount is NOT reset — we keep the counter
-                // (only reset rounds when explicitly resetting the whole thing)
-                // Actually let's reset rounds too when user clicks reset — that's more intuitive
-                roundCount = 0;
-
-                display.classList.remove('running', 'complete');
-                card.classList.remove('round-complete');
-
-                updateUI();
-            }
-
-            // ─── Full reset (including rounds) ───
+            // ─── Full reset (time + rounds) ───
             function fullReset() {
                 if (intervalId) {
                     clearInterval(intervalId);
@@ -537,12 +526,13 @@
                 complete = false;
                 time = 0;
                 roundCount = 0;
+
                 display.classList.remove('running', 'complete');
                 card.classList.remove('round-complete');
                 updateUI();
             }
 
-            // ─── Keyboard support ───
+            // ─── Keyboard shortcuts ───
             function onKeydown(e) {
                 if (e.key === ' ' || e.key === 'Space') {
                     e.preventDefault();
@@ -557,12 +547,10 @@
             function init() {
                 updateUI();
 
-                // Event listeners
                 startBtn.addEventListener('click', startStop);
                 resetBtn.addEventListener('click', fullReset);
                 document.addEventListener('keydown', onKeydown);
 
-                // Cleanup on page unload
                 window.addEventListener('beforeunload', function() {
                     if (intervalId) {
                         clearInterval(intervalId);
@@ -571,11 +559,10 @@
                 });
             }
 
-            // ─── Go ───
             init();
 
         })();
     </script>
 
 </body>
-</html>
+</html> 
