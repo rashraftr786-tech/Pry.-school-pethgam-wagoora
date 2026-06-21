@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>GPS Pethgam Wagoora | Royal School ERP Dashboard</title>
-    <!-- Tailwind CSS + Font Awesome + Google Fonts -->
+    <meta name="description" content="Complete School ERP for Government Primary School Pethgam Wagoora – Manage surveys, academics, students, staff, communication, and reports with Firebase integration." />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Tailwind CSS + Font Awesome + Google Fonts with font-display: swap -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        
-        /* === ROYAL, ELEGANT, GLASS & 3D ENHANCEMENTS === */
+        /* ===== BASE ===== */
+        * {
+            font-family: 'Inter', sans-serif;
+        }
         body {
             background: radial-gradient(circle at 10% 20%, #f0f4fa 0%, #dce4f0 100%);
             scroll-behavior: smooth;
         }
-        
-        /* subtle royal pattern overlay */
+
+        /* Royal pattern overlay – now with proper z‑index and pointer‑events */
         body::before {
             content: '';
             position: fixed;
@@ -25,10 +34,15 @@
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.04"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="none" stroke="%231a3a6a" stroke-width="0.5"/><path d="M50 10 L90 50 L50 90 L10 50 Z" fill="none" stroke="%23d4af37" stroke-width="0.5"/></svg>');
             background-size: 120px 120px;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
-        
-        /* Glassmorphism base */
+        /* Ensure main content is above overlay */
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== GLASS ===== */
         .glass {
             background: rgba(255, 255, 255, 0.55);
             backdrop-filter: blur(12px) saturate(150%);
@@ -36,21 +50,19 @@
             border: 1px solid rgba(255, 215, 0, 0.25);
             box-shadow: 0 8px 32px 0 rgba(10, 26, 58, 0.15);
         }
-        
         .glass-dark {
             background: rgba(10, 26, 58, 0.7);
             backdrop-filter: blur(12px) saturate(180%);
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-        
-        /* Royal hero gradient with gold accent */
+
+        /* ===== HERO ===== */
         .hero-gradient {
             background: linear-gradient(145deg, #0a1a3a 0%, #1a3a6a 40%, #2a4a7a 100%);
             position: relative;
             overflow: hidden;
         }
-        
         .hero-gradient::after {
             content: '';
             position: absolute;
@@ -62,13 +74,18 @@
             pointer-events: none;
             animation: royalGlow 18s infinite alternate;
         }
-        
         @keyframes royalGlow {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-            100% { transform: translate(5%, 5%) scale(1.1); opacity: 1; }
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(5%, 5%) scale(1.1);
+                opacity: 1;
+            }
         }
-        
-        /* 3D Buttons */
+
+        /* ===== 3D BUTTONS ===== */
         .btn-3d {
             position: relative;
             display: inline-flex;
@@ -79,100 +96,135 @@
             border-radius: 9999px;
             background: linear-gradient(145deg, #d4af37, #f5d742);
             color: #0a1a3a;
-            box-shadow: 0 8px 0 #8b6d1f, 0 10px 25px -5px rgba(0,0,0,0.3);
-            transition: all 0.08s linear;
+            box-shadow: 0 8px 0 #8b6d1f, 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: all 0.15s ease;
             border: none;
             cursor: pointer;
             text-decoration: none;
         }
-        
         .btn-3d:active {
             transform: translateY(6px);
-            box-shadow: 0 2px 0 #8b6d1f, 0 8px 20px -5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 0 #8b6d1f, 0 8px 20px -5px rgba(0, 0, 0, 0.3);
         }
-        
         .btn-3d:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 0 #8b6d1f, 0 15px 30px -5px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 0 #8b6d1f, 0 15px 30px -5px rgba(0, 0, 0, 0.4);
             background: linear-gradient(145deg, #e6c84a, #fae14a);
         }
-        
+        /* Ensure touch devices don't get sticky hover */
+        @media (hover: hover) {
+            .btn-3d:hover {
+                transform: translateY(-2px);
+            }
+        }
+
         .btn-3d-outline {
             background: transparent;
             color: #fff;
-            box-shadow: 0 8px 0 rgba(212, 175, 55, 0.3), 0 10px 25px -5px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 0 rgba(212, 175, 55, 0.3), 0 10px 25px -5px rgba(0, 0, 0, 0.2);
             border: 2px solid #d4af37;
             backdrop-filter: blur(4px);
         }
-        
         .btn-3d-outline:active {
             transform: translateY(6px);
-            box-shadow: 0 2px 0 rgba(212, 175, 55, 0.3), 0 8px 20px -5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 0 rgba(212, 175, 55, 0.3), 0 8px 20px -5px rgba(0, 0, 0, 0.2);
         }
-        
         .btn-3d-outline:hover {
             background: rgba(212, 175, 55, 0.15);
-            box-shadow: 0 10px 0 rgba(212, 175, 55, 0.3), 0 15px 30px -5px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 0 rgba(212, 175, 55, 0.3), 0 15px 30px -5px rgba(0, 0, 0, 0.3);
         }
-        
-        /* Glass cards with gold accent */
+
+        .hero-btn-gold {
+            background: linear-gradient(145deg, #d4af37, #f5d742);
+            color: #0a1a3a;
+            box-shadow: 0 8px 0 #8b6d1f, 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+        .hero-btn-outline {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 2px solid #d4af37;
+            color: #fff;
+            box-shadow: 0 8px 0 rgba(212, 175, 55, 0.2);
+        }
+        .hero-btn-outline:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 rgba(212, 175, 55, 0.2);
+        }
+        .hero-btn-outline:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        /* ===== CARDS ===== */
         .card-royal {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px) saturate(180%);
             -webkit-backdrop-filter: blur(12px) saturate(180%);
             border: 1px solid rgba(212, 175, 55, 0.3);
             box-shadow: 0 12px 35px -8px rgba(10, 26, 58, 0.2);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
             border-radius: 1.5rem;
+            will-change: transform;
         }
-        
         .card-royal:hover {
-            transform: translateY(-8px) scale(1.01);
+            transform: translateY(-8px);
             border-color: #d4af37;
             box-shadow: 0 25px 45px -12px rgba(10, 26, 58, 0.3);
             background: rgba(255, 255, 255, 0.85);
         }
-        
-        /* Stat cards glass */
+        /* Prevent hover on touch devices */
+        @media (hover: hover) {
+            .card-royal:hover {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* ===== STATS ===== */
         .stat-royal {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 2rem;
-            box-shadow: 0 6px 20px -6px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.08);
             transition: all 0.25s ease;
         }
-        
         .stat-royal:hover {
             transform: translateY(-5px);
             border-color: #d4af37;
             box-shadow: 0 12px 30px -8px rgba(10, 26, 58, 0.15);
             background: rgba(255, 255, 255, 0.8);
         }
-        
-        /* Modern navigation */
+        @media (hover: hover) {
+            .stat-royal:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* ===== NAV ===== */
         .nav-link {
             transition: all 0.2s ease;
             font-weight: 500;
             letter-spacing: 0.01em;
             border-radius: 9999px;
         }
-        
         .nav-link:not(.active-nav):hover {
             background: rgba(212, 175, 55, 0.12);
             color: #d4af37;
             transform: translateY(-1px);
             box-shadow: 0 2px 10px rgba(212, 175, 55, 0.15);
         }
-        
+        @media (hover: hover) {
+            .nav-link:not(.active-nav):hover {
+                transform: translateY(-1px);
+            }
+        }
         .active-nav {
             background: linear-gradient(135deg, #d4af37, #f5d742);
             color: #0a1a3a;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
-        
-        /* Dropdown glass */
+
+        /* Dropdown */
         .dropdown-menu {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -182,40 +234,41 @@
             box-shadow: 0 20px 40px -12px rgba(10, 26, 58, 0.25);
             padding: 0.4rem 0;
         }
-        
         .dropdown-menu a {
             transition: all 0.15s ease;
             border-left: 3px solid transparent;
             font-weight: 500;
         }
-        
         .dropdown-menu a:hover {
             background: rgba(212, 175, 55, 0.1);
             border-left-color: #d4af37;
             padding-left: 1.2rem;
             color: #0a1a3a;
         }
-        
-        /* Header glass */
+        @media (hover: hover) {
+            .dropdown-menu a:hover {
+                padding-left: 1.2rem;
+            }
+        }
+
+        /* ===== HEADER ===== */
         .header-glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
             border-bottom: 2px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
-        
-        /* Mobile menu glass */
         .mobile-menu-royal {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 1.5rem;
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
         }
-        
-        /* Gold underline */
+
+        /* ===== GOLD UNDERLINE ===== */
         .gold-underline {
             width: 80px;
             height: 4px;
@@ -223,43 +276,57 @@
             border-radius: 4px;
             margin: 0.5rem auto 0;
         }
-        
-        /* 3D icon float */
+
+        /* ===== ICON 3D ===== */
         .icon-3d {
             filter: drop-shadow(0 4px 6px rgba(10, 26, 58, 0.2));
             transition: 0.2s;
         }
-        
         .icon-3d:hover {
             transform: scale(1.1) translateY(-3px);
             filter: drop-shadow(0 8px 12px rgba(212, 175, 55, 0.3));
         }
-        
-        /* Footer royal */
+        @media (hover: hover) {
+            .icon-3d:hover {
+                transform: scale(1.1) translateY(-3px);
+            }
+        }
+
+        /* ===== FOOTER ===== */
         .footer-royal {
             background: linear-gradient(145deg, #0a1a3a, #1a2a4a);
             border-top: 3px solid #d4af37;
         }
-        
         .footer-royal a {
             transition: 0.2s;
         }
-        
         .footer-royal a:hover {
             color: #f5d742;
             transform: translateY(-3px);
         }
-        
-        /* subtle gold glow on interactive */
-        .glow-gold {
-            transition: 0.25s;
+        @media (hover: hover) {
+            .footer-royal a:hover {
+                transform: translateY(-3px);
+            }
         }
-        
-        .glow-gold:hover {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+
+        /* ===== BADGES ===== */
+        .badge-royal {
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
         }
-        
-        /* Custom scrollbar royal */
+        .badge-royal:hover {
+            transform: translateY(-2px);
+            border-color: #d4af37;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+        }
+        @media (hover: hover) {
+            .badge-royal:hover {
+                transform: translateY(-2px);
+            }
+        }
+
+        /* ===== SCROLLBAR (cross‑browser) ===== */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -270,169 +337,180 @@
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(145deg, #d4af37, #f5d742);
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
-        /* badge links modern */
-        .badge-royal {
-            transition: all 0.15s ease;
-            border: 1px solid transparent;
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #d4af37 #dce4f0;
         }
-        
-        .badge-royal:hover {
-            transform: translateY(-2px);
-            border-color: #d4af37;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+
+        /* ===== FOCUS VISIBLE ===== */
+        :focus-visible {
+            outline: 3px solid #d4af37;
+            outline-offset: 2px;
         }
-        
-        /* fix for 3D button in hero */
-        .hero-btn-gold {
-            background: linear-gradient(145deg, #d4af37, #f5d742);
-            color: #0a1a3a;
-            box-shadow: 0 8px 0 #8b6d1f, 0 10px 25px -5px rgba(0,0,0,0.4);
+        /* Ensure dropdown buttons have focus */
+        .dropdown-toggle:focus-visible {
+            outline: 3px solid #d4af37;
+            outline-offset: 2px;
         }
-        
-        .hero-btn-gold:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #8b6d1f, 0 8px 20px -5px rgba(0,0,0,0.3);
-        }
-        
-        .hero-btn-outline {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
-            border: 2px solid #d4af37;
-            color: #fff;
-            box-shadow: 0 8px 0 rgba(212, 175, 55, 0.2);
-        }
-        
-        .hero-btn-outline:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 rgba(212, 175, 55, 0.2);
-        }
-        
-        .hero-btn-outline:hover {
-            background: rgba(212, 175, 55, 0.15);
+
+        /* ===== RESPONSIVE TWEAKS ===== */
+        @media (max-width: 768px) {
+            .mobile-menu-royal {
+                max-height: 80vh;
+                overflow-y: auto;
+            }
         }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- ==================== HEADER & NAVIGATION (GLASS + ROYAL) ==================== -->
-    <header class="header-glass sticky top-0 z-50 transition-all">
+    <!-- ===== SKIP TO CONTENT ===== -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:p-4 focus:rounded-lg focus:shadow-lg focus:border-2 focus:border-[#d4af37]">
+        Skip to main content
+    </a>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header-glass sticky top-0 z-50" role="banner">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-3 md:py-4">
                 <!-- Logo & School Name -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-gradient-to-br from-[#d4af37] to-[#f5d742] text-[#0a1a3a] p-2.5 rounded-xl shadow-xl transform transition hover:scale-105 duration-300">
-                        <i class="fas fa-school text-xl md:text-2xl"></i>
+                        <i class="fas fa-school text-xl md:text-2xl" aria-hidden="true"></i>
+                        <span class="sr-only">School logo</span>
                     </div>
                     <div>
                         <h1 class="text-base md:text-xl font-extrabold text-[#0a1a3a] tracking-tight">Government Primary School</h1>
                         <p class="text-xs text-gray-600 font-medium">Pethgam Wagoora | UDISE: 01022202207</p>
                     </div>
                 </div>
+
                 <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-1">
-                    <a href="index.html" class="nav-link active-nav px-4 py-2 rounded-full text-sm font-medium">Home</a>
-                    
-                    <!-- Surveys & Registers Dropdown -->
+                <nav class="hidden md:flex space-x-1" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link active-nav px-4 py-2 rounded-full text-sm font-medium" aria-current="page">Home</a>
+
+                    <!-- Surveys Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Surveys <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-surveys">
+                            Surveys <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-56 z-20">
-                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 rounded-t-xl">🏘️ Village Education Register (VER)</a>
-                            <a href="child-population.html" class="block px-4 py-2 text-sm text-gray-700">👥 Child Population Register</a>
-                            <a href="roll-analyzer.html" class="block px-4 py-2 text-sm text-gray-700">📊 Roll Analyzer</a>
-                            <a href="roll-statement.html" class="block px-4 py-2 text-sm text-gray-700">📄 Roll Statement</a>
-                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">✅ Attendance Register</a>
+                        <div id="dropdown-surveys" class="dropdown-menu hidden absolute mt-1 w-56 z-20" role="menu">
+                            <a href="VER.html" class="block px-4 py-2 text-sm text-gray-700 rounded-t-xl" role="menuitem">🏘️ Village Education Register (VER)</a>
+                            <a href="child-population.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">👥 Child Population Register</a>
+                            <a href="roll-analyzer.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📊 Roll Analyzer</a>
+                            <a href="roll-statement.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📄 Roll Statement</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">✅ Attendance Register</a>
                         </div>
                     </div>
-                    
+
                     <!-- Academics Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Academics <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-academics">
+                            Academics <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-56 z-20">
-                            <a href="results.html" class="block px-4 py-2 text-sm text-gray-700">📝 Exam Results</a>
-                            <a href="upload-results.html" class="block px-4 py-2 text-sm text-gray-700">📤 Upload Results</a>
-                            <a href="marks-sheet.html" class="block px-4 py-2 text-sm text-gray-700">📑 Marksheet</a>
-                            <a href="timetable.html" class="block px-4 py-2 text-sm text-gray-700">⏰ Class Timetable</a>
-                            <a href="textbook-issue.html" class="block px-4 py-2 text-sm text-gray-700">📚 Textbook Issue</a>
-                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">📖 Digital Library</a>
+                        <div id="dropdown-academics" class="dropdown-menu hidden absolute mt-1 w-56 z-20" role="menu">
+                            <a href="results.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📝 Exam Results</a>
+                            <a href="upload-results.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📤 Upload Results</a>
+                            <a href="marks-sheet.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📑 Marksheet</a>
+                            <a href="timetable.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">⏰ Class Timetable</a>
+                            <a href="textbook-issue.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📚 Textbook Issue</a>
+                            <a href="library.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">📖 Digital Library</a>
                         </div>
                     </div>
-                    
-                    <!-- Students & Parents Dropdown -->
+
+                    <!-- Students Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Students <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-students">
+                            Students <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-64 z-20">
-                            <a href="student-id.html" class="block px-4 py-2 text-sm text-gray-700">🆔 Student ID Card</a>
-                            <a href="tc.html" class="block px-4 py-2 text-sm text-gray-700">📜 Transfer Certificate (TC)</a>
-                            <a href="bonafide.html" class="block px-4 py-2 text-sm text-gray-700">📄 Bonafide Certificate</a>
-                            <a href="student-diary-parent.html" class="block px-4 py-2 text-sm text-gray-700">📓 Student Diary (Parent)</a>
-                            <a href="student-diary-teacher.html" class="block px-4 py-2 text-sm text-gray-700">✏️ Student Diary (Teacher)</a>
-                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">🔢 APAAR ID Entry</a>
+                        <div id="dropdown-students" class="dropdown-menu hidden absolute mt-1 w-64 z-20" role="menu">
+                            <a href="student-id.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">🆔 Student ID Card</a>
+                            <a href="tc.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📜 Transfer Certificate (TC)</a>
+                            <a href="bonafide.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📄 Bonafide Certificate</a>
+                            <a href="student-diary-parent.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📓 Student Diary (Parent)</a>
+                            <a href="student-diary-teacher.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">✏️ Student Diary (Teacher)</a>
+                            <a href="apaar-input.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">🔢 APAAR ID Entry</a>
                         </div>
                     </div>
-                    
-                    <!-- Staff & Admin Dropdown -->
+
+                    <!-- Staff Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Staff <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-staff">
+                            Staff <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-56 z-20">
-                            <a href="staff-entry.html" class="block px-4 py-2 text-sm text-gray-700">👩‍🏫 Staff Entry</a>
-                            <a href="staff-statement.html" class="block px-4 py-2 text-sm text-gray-700">📋 Staff Statement</a>
-                            <a href="teaching-id.html" class="block px-4 py-2 text-sm text-gray-700">🪪 Teaching ID</a>
-                            <a href="leave-management.html" class="block px-4 py-2 text-sm text-gray-700">🏖️ Leave Management</a>
-                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">✅ Staff Attendance</a>
+                        <div id="dropdown-staff" class="dropdown-menu hidden absolute mt-1 w-56 z-20" role="menu">
+                            <a href="staff-entry.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">👩‍🏫 Staff Entry</a>
+                            <a href="staff-statement.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📋 Staff Statement</a>
+                            <a href="teaching-id.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">🪪 Teaching ID</a>
+                            <a href="leave-management.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">🏖️ Leave Management</a>
+                            <a href="attendance.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">✅ Staff Attendance</a>
                         </div>
                     </div>
-                    
+
                     <!-- Communication Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Communication <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-comm">
+                            Communication <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-56 z-20">
-                            <a href="broadcast-whatsapp.html" class="block px-4 py-2 text-sm text-gray-700">📱 WhatsApp Broadcast</a>
-                            <a href="send-email.html" class="block px-4 py-2 text-sm text-gray-700">📧 Send Email</a>
-                            <a href="send-sms.html" class="block px-4 py-2 text-sm text-gray-700">💬 Send SMS</a>
-                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">📜 Communication Logs</a>
+                        <div id="dropdown-comm" class="dropdown-menu hidden absolute mt-1 w-56 z-20" role="menu">
+                            <a href="broadcast-whatsapp.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📱 WhatsApp Broadcast</a>
+                            <a href="send-email.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📧 Send Email</a>
+                            <a href="send-sms.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">💬 Send SMS</a>
+                            <a href="comm-logs.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">📜 Communication Logs</a>
                         </div>
                     </div>
-                    
-                    <!-- Reports & Analytics Dropdown -->
+
+                    <!-- Reports Dropdown -->
                     <div class="relative dropdown">
-                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1">
-                            Reports <i class="fas fa-chevron-down text-xs"></i>
+                        <button class="nav-link px-4 py-2 rounded-full text-sm font-medium text-gray-700 inline-flex items-center gap-1 dropdown-toggle"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="dropdown-reports">
+                            Reports <i class="fas fa-chevron-down text-xs" aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown-menu hidden absolute mt-1 w-56 z-20">
-                            <a href="reports-hub.html" class="block px-4 py-2 text-sm text-gray-700">📈 Reports Hub</a>
-                            <a href="mdm-statement.html" class="block px-4 py-2 text-sm text-gray-700">🍽️ MDM Statement</a>
-                            <a href="master-profile.html" class="block px-4 py-2 text-sm text-gray-700">👤 Master Profile</a>
-                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl">📁 Document Vault</a>
+                        <div id="dropdown-reports" class="dropdown-menu hidden absolute mt-1 w-56 z-20" role="menu">
+                            <a href="reports-hub.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">📈 Reports Hub</a>
+                            <a href="mdm-statement.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">🍽️ MDM Statement</a>
+                            <a href="master-profile.html" class="block px-4 py-2 text-sm text-gray-700" role="menuitem">👤 Master Profile</a>
+                            <a href="document-vault.html" class="block px-4 py-2 text-sm text-gray-700 rounded-b-xl" role="menuitem">📁 Document Vault</a>
                         </div>
                     </div>
-                    
+
                     <a href="signin.html" class="btn-3d text-sm px-5 py-2">Login</a>
                 </nav>
-                
+
                 <!-- Mobile Menu Button -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none bg-white/30 p-2 rounded-full shadow-md backdrop-blur-sm border border-white/40">
-                    <i class="fas fa-bars"></i>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700 text-2xl focus:outline-none bg-white/30 p-2 rounded-full shadow-md backdrop-blur-sm border border-white/40"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded="false"
+                        aria-controls="mobileMenu">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
                 </button>
             </div>
-            
-            <!-- Mobile Menu (glass) -->
-            <div id="mobileMenu" class="hidden md:hidden pb-4 max-h-96 overflow-y-auto mobile-menu-royal shadow-xl my-2">
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4 mobile-menu-royal shadow-xl my-2" role="navigation" aria-label="Mobile navigation">
                 <div class="space-y-1 p-3">
-                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#f5d742] text-[#0a1a3a] font-bold">Home</a>
-                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">📋 SURVEYS & REGISTERS</p>
+                    <a href="index.html" class="block px-3 py-2 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#f5d742] text-[#0a1a3a] font-bold" aria-current="page">Home</a>
+                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">📋 SURVEYS &amp; REGISTERS</p>
                         <a href="VER.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">VER Survey</a>
                         <a href="child-population.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Child Population Register</a>
                         <a href="roll-analyzer.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Roll Analyzer</a>
@@ -447,7 +525,7 @@
                         <a href="textbook-issue.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Textbook Issue</a>
                         <a href="library.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Library</a>
                     </div>
-                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">🎓 STUDENTS & PARENTS</p>
+                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">🎓 STUDENTS &amp; PARENTS</p>
                         <a href="student-id.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Student ID Card</a>
                         <a href="tc.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Transfer Certificate</a>
                         <a href="bonafide.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Bonafide Certificate</a>
@@ -455,7 +533,7 @@
                         <a href="student-diary-teacher.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Student Diary (Teacher)</a>
                         <a href="apaar-input.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">APAAR ID Entry</a>
                     </div>
-                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">👥 STAFF & ADMIN</p>
+                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">👥 STAFF &amp; ADMIN</p>
                         <a href="staff-entry.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Staff Entry</a>
                         <a href="staff-statement.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Staff Statement</a>
                         <a href="teaching-id.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Teaching ID</a>
@@ -467,7 +545,7 @@
                         <a href="send-sms.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Send SMS</a>
                         <a href="comm-logs.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Communication Logs</a>
                     </div>
-                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">📊 REPORTS & SETTINGS</p>
+                    <div class="border-t border-gray-200 pt-2"><p class="text-xs font-bold text-[#d4af37] px-3">📊 REPORTS &amp; SETTINGS</p>
                         <a href="reports-hub.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Reports Hub</a>
                         <a href="mdm-statement.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">MDM Statement</a>
                         <a href="master-profile.html" class="block px-3 py-1.5 text-sm hover:bg-[#d4af37]/10 rounded-lg">Master Profile</a>
@@ -479,48 +557,48 @@
         </div>
     </header>
 
-    <!-- ==================== HERO SECTION (ROYAL WITH 3D BUTTONS) ==================== -->
-    <section class="hero-gradient text-white py-14 md:py-24 relative overflow-hidden">
+     <!-- ===== HERO ===== -->
+    <section class="hero-gradient text-white py-14 md:py-24 relative overflow-hidden" aria-labelledby="hero-title">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <div class="inline-flex items-center gap-2 glass-dark px-5 py-1.5 rounded-full text-sm font-semibold mb-5 shadow-lg border border-[#d4af37]/40">
-                <i class="fas fa-school text-[#d4af37]"></i> UDISE: 01022202207 | Zone Wagoora, Baramulla
+                <i class="fas fa-school text-[#d4af37]" aria-hidden="true"></i> UDISE: 01022202207 | Zone Wagoora, Baramulla
             </div>
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-5 drop-shadow-xl">Government Primary School<br><span class="text-[#f5d742]">Pethgam Wagoora</span></h1>
+            <h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-5 drop-shadow-xl">Government Primary School<br><span class="text-[#f5d742]">Pethgam Wagoora</span></h1>
             <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                Complete School ERP with Firebase – Manage admissions, results, attendance, surveys, communication & more.
+                Complete School ERP with Firebase – Manage admissions, results, attendance, surveys, communication &amp; more.
             </p>
             <div class="flex flex-wrap justify-center gap-5">
                 <a href="VER.html" class="btn-3d hero-btn-gold px-7 py-3 text-base">
-                    <i class="fas fa-clipboard-list"></i> VER Survey
+                    <i class="fas fa-clipboard-list" aria-hidden="true"></i> VER Survey
                 </a>
                 <a href="results.html" class="btn-3d hero-btn-outline px-7 py-3 text-base">
-                    <i class="fas fa-chart-line"></i> Check Results
+                    <i class="fas fa-chart-line" aria-hidden="true"></i> Check Results
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- ==================== STATS BADGES (GLASS ROYAL) ==================== -->
-    <section class="py-10 bg-transparent">
+    <!-- ===== STATS ===== -->
+    <section class="py-10 bg-transparent" aria-label="School statistics">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 <div class="stat-royal p-4 flex flex-col items-center gap-2">
-                    <i class="fas fa-users text-3xl text-[#d4af37] icon-3d"></i>
+                    <i class="fas fa-users text-3xl text-[#d4af37] icon-3d" aria-hidden="true"></i>
                     <p class="font-black text-2xl text-[#0a1a3a]">120+</p>
                     <p class="font-semibold text-gray-700">Enrolled Students</p>
                 </div>
                 <div class="stat-royal p-4 flex flex-col items-center gap-2">
-                    <i class="fas fa-chalkboard-user text-3xl text-[#d4af37] icon-3d"></i>
+                    <i class="fas fa-chalkboard-user text-3xl text-[#d4af37] icon-3d" aria-hidden="true"></i>
                     <p class="font-black text-2xl text-[#0a1a3a]">8+</p>
                     <p class="font-semibold text-gray-700">Qualified Teachers</p>
                 </div>
                 <div class="stat-royal p-4 flex flex-col items-center gap-2">
-                    <i class="fas fa-file-excel text-3xl text-[#d4af37] icon-3d"></i>
+                    <i class="fas fa-file-excel text-3xl text-[#d4af37] icon-3d" aria-hidden="true"></i>
                     <p class="font-black text-2xl text-[#0a1a3a]">100%</p>
                     <p class="font-semibold text-gray-700">Digital Registers</p>
                 </div>
                 <div class="stat-royal p-4 flex flex-col items-center gap-2">
-                    <i class="fas fa-cloud-upload-alt text-3xl text-[#d4af37] icon-3d"></i>
+                    <i class="fas fa-cloud-upload-alt text-3xl text-[#d4af37] icon-3d" aria-hidden="true"></i>
                     <p class="font-black text-2xl text-[#0a1a3a]">Real-time</p>
                     <p class="font-semibold text-gray-700">Firebase Sync</p>
                 </div>
@@ -528,37 +606,36 @@
         </div>
     </section>
 
-    <!-- ==================== MAIN GRID CARDS (GLASS + ROYAL) ==================== -->
-    <section class="py-14">
+    <!-- ===== MAIN CONTENT (CARDS) ===== -->
+    <main id="main-content" class="py-14">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-black text-[#0a1a3a]">Complete ERP Modules</h2>
-                <div class="gold-underline"></div>
-                <p class="text-gray-600 mt-4 text-lg">One‑click access to all school management tools — royal, refined & modern</p>
+                <div class="gold-underline" aria-hidden="true"></div>
+                <p class="text-gray-600 mt-4 text-lg">One‑click access to all school management tools — royal, refined &amp; modern</p>
             </div>
-            
+
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card: Surveys -->
+                <!-- Surveys -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-clipboard-list text-3xl text-[#d4af37]"></i>
-                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Household & Child Surveys</h3>
+                        <i class="fas fa-clipboard-list text-3xl text-[#d4af37]" aria-hidden="true"></i>
+                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Household &amp; Child Surveys</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
                         <a href="VER.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">VER</a>
-                        <a href="child_population.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Child Population</a>
                         <a href="child-population.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Child Population</a>
                         <a href="roll-analyzer.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Roll Analyzer</a>
                         <a href="roll-statement.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Roll Statement</a>
                         <a href="attendance.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Attendance</a>
                     </div>
                 </div>
-                
-                <!-- Card: Academics -->
+
+                <!-- Academics -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-graduation-cap text-3xl text-[#d4af37]"></i>
-                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Academics & Results</h3>
+                        <i class="fas fa-graduation-cap text-3xl text-[#d4af37]" aria-hidden="true"></i>
+                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Academics &amp; Results</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
                         <a href="results.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Results</a>
@@ -569,11 +646,11 @@
                         <a href="library.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Library</a>
                     </div>
                 </div>
-                
-                <!-- Card: Student Services -->
+
+                <!-- Student Services -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-id-card text-3xl text-[#d4af37]"></i>
+                        <i class="fas fa-id-card text-3xl text-[#d4af37]" aria-hidden="true"></i>
                         <h3 class="font-extrabold text-xl text-[#0a1a3a]">Student Services</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
@@ -585,11 +662,11 @@
                         <a href="apaar-input.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">APAAR ID</a>
                     </div>
                 </div>
-                
-                <!-- Card: Staff & HR -->
+
+                <!-- Staff -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-users-between text-3xl text-[#d4af37]"></i>
+                        <i class="fas fa-users-between text-3xl text-[#d4af37]" aria-hidden="true"></i>
                         <h3 class="font-extrabold text-xl text-[#0a1a3a]">Staff Management</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
@@ -600,11 +677,11 @@
                         <a href="attendance.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Attendance</a>
                     </div>
                 </div>
-                
-                <!-- Card: Communication -->
+
+                <!-- Communication -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-bullhorn text-3xl text-[#d4af37]"></i>
+                        <i class="fas fa-bullhorn text-3xl text-[#d4af37]" aria-hidden="true"></i>
                         <h3 class="font-extrabold text-xl text-[#0a1a3a]">Bulk Communication</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
@@ -614,23 +691,22 @@
                         <a href="comm-logs.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Logs</a>
                     </div>
                 </div>
-                
-                <!-- Card: Reports & Admin -->
+
+                <!-- Reports -->
                 <div class="card-royal p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-chart-pie text-3xl text-[#d4af37]"></i>
-                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Reports & Administration</h3>
+                        <i class="fas fa-chart-pie text-3xl text-[#d4af37]" aria-hidden="true"></i>
+                        <h3 class="font-extrabold text-xl text-[#0a1a3a]">Reports &amp; Administration</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 text-sm">
                         <a href="reports-hub.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Reports Hub</a>
                         <a href="mdm-statement.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">MDM Statement</a>
                         <a href="master-profile.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Master Profile</a>
                         <a href="document-vault.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Document Vault</a>
-                        <a href="forgot-password.html" class="badge-royal bg-white/60 px-3 py-1.5 rounded-full hover:bg-[#d4af37]/10 text-[#0a1a3a]">Forgot Password</a>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Additional Quick Links -->
             <div class="mt-12 text-center">
                 <p class="text-gray-700 font-semibold mb-3">Other Utilities:</p>
@@ -643,13 +719,13 @@
                 </div>
             </div>
         </div>
-    </section>
-    
-    <!-- ==================== FIREBASE INTEGRATION NOTE (GLASS) ==================== -->
-    <section class="py-10 bg-transparent">
+    </main>
+
+       <!-- ===== FIREBASE INTEGRATION NOTE ===== -->
+    <section class="py-10 bg-transparent" aria-label="Firebase integration">
         <div class="max-w-4xl mx-auto px-4 text-center">
             <div class="glass card-royal p-6 shadow-2xl">
-                <i class="fas fa-fire text-4xl text-[#d4af37] mb-3 animate-pulse"></i>
+                <i class="fas fa-fire text-4xl text-[#d4af37] mb-3 animate-pulse" aria-hidden="true"></i>
                 <h3 class="font-black text-[#0a1a3a] text-xl">🔥 Firebase Connected ERP</h3>
                 <p class="text-gray-700 mt-2">Authentication, Firestore Database, and Storage active. All modules integrated with real-time sync.</p>
                 <div class="mt-4 flex justify-center gap-3 text-xs flex-wrap">
@@ -661,48 +737,111 @@
         </div>
     </section>
 
-    <!-- ==================== FOOTER (ROYAL) ==================== -->
-    <footer class="footer-royal text-gray-300 py-8 mt-8">
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-royal text-gray-300 py-8 mt-8" role="contentinfo">
         <div class="max-w-7xl mx-auto px-4 text-center text-sm">
-            <p class="font-medium">© 2026 Government Primary School Pethgam Wagoora | Samagra Shiksha Abhiyan</p>
-            <p class="text-xs mt-1 opacity-80">UDISE: 01022202207 | Zone Wagoora, District Baramulla, J&K</p>
+            <p class="font-medium">&copy; 2026 Government Primary School Pethgam Wagoora | Samagra Shiksha Abhiyan</p>
+            <p class="text-xs mt-1 opacity-80">UDISE: 01022202207 | Zone Wagoora, District Baramulla, J&amp;K</p>
             <div class="flex justify-center gap-6 mt-4">
-                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1"><i class="fab fa-github"></i></a>
-                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1" aria-label="GitHub" rel="noopener noreferrer">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1" aria-label="Twitter" rel="noopener noreferrer">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-[#f5d742] transition-all text-xl transform hover:-translate-y-1" aria-label="Facebook" rel="noopener noreferrer">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
             </div>
         </div>
     </footer>
 
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // Mobile menu toggle
-        const mobileBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileBtn) {
-            mobileBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-        const mobileLinks = mobileMenu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-        // Dropdown hover desktop
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dd => {
-            dd.addEventListener('mouseenter', () => {
+        (function() {
+            'use strict';
+
+            // ----- Mobile Menu Toggle -----
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            function toggleMobileMenu(expanded) {
+                const isOpen = expanded !== undefined ? expanded : mobileMenu.classList.contains('hidden');
+                if (isOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileBtn.setAttribute('aria-expanded', 'true');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileBtn.setAttribute('aria-expanded', 'false');
+                }
+            }
+
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    toggleMobileMenu(isHidden);
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        toggleMobileMenu(false);
+                    });
+                });
+
+                // Close mobile menu on outside click
+                document.addEventListener('click', function(e) {
+                    if (!mobileBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        toggleMobileMenu(false);
+                    }
+                });
+            }
+
+            // ----- Desktop Dropdowns (hover + click toggle for accessibility) -----
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(function(dd) {
+                const toggle = dd.querySelector('.dropdown-toggle');
                 const menu = dd.querySelector('.dropdown-menu');
-                if (menu) menu.style.display = 'block';
+                if (!toggle || !menu) return;
+
+                // Hover behavior for desktop (keep existing)
+                dd.addEventListener('mouseenter', function() {
+                    menu.style.display = 'block';
+                    toggle.setAttribute('aria-expanded', 'true');
+                });
+                dd.addEventListener('mouseleave', function() {
+                    menu.style.display = 'none';
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+
+                // Click/tap toggle for touch devices and keyboard
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isVisible = menu.style.display === 'block';
+                    menu.style.display = isVisible ? 'none' : 'block';
+                    toggle.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
+                });
+
+                // Close on Escape key
+                toggle.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        menu.style.display = 'none';
+                        toggle.setAttribute('aria-expanded', 'false');
+                        toggle.focus();
+                    }
+                });
+
+                // Close on focus loss
+                dd.addEventListener('focusout', function(e) {
+                    if (!dd.contains(e.relatedTarget)) {
+                        menu.style.display = 'none';
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
             });
-            dd.addEventListener('mouseleave', () => {
-                const menu = dd.querySelector('.dropdown-menu');
-                if (menu) menu.style.display = 'none';
-            });
-        });
+
+        })();
     </script>
 </body>
 </html>
-
-
