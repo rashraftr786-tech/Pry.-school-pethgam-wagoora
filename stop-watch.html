@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>15-Second Stopwatch</title>
+    <style>
+        /* ─── Reset & Base ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0b0e14;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            user-select: none;
+        }
+
+        /* ─── Stopwatch Card ─── */
+        .stopwatch {
+            background: radial-gradient(ellipse at 50% 30%, #1a202a, #0f1219);
+            padding: 2.8rem 3.2rem 3.2rem;
+            border-radius: 3.5rem;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.06),
+                0 0 0 1px rgba(255, 255, 255, 0.03);
+            text-align: center;
+            min-width: 400px;
+            transition: box-shadow 0.3s;
+        }
+
+        .stopwatch.round-complete {
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                inset 0 1px 2px rgba(255, 255, 255, 0.06),
+                0 0 0 1px rgba(255, 215, 0, 0.3),
+                0 0 40px rgba(255, 215, 0, 0.08);
+        }
+
+        /* ─── Title ─── */
+        .title {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ─── Time Display ─── */
+        .display {
+            font-size: 5.2rem;
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            color: #e8edf5;
+            text-shadow: 0 0 30px rgba(100, 180, 255, 0.08);
+            padding: 0.2rem 0 0.1rem;
+            line-height: 1.1;
+            transition: color 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .display .sec {
+            color: #b0c7e0;
+        }
+        .display .cent {
+            color: #6a8bb0;
+            font-size: 0.6em;
+        }
+        .display .colon {
+            color: #4a6a8a;
+            margin: 0 0.05em;
+        }
+
+        .display.running .sec {
+            color: #7fc4ff;
+        }
+        .display.running .cent {
+            color: #4a9eff;
+        }
+
+        .display.complete .sec {
+            color: #f5d742;
+        }
+        .display.complete .cent {
+            color: #d4b82a;
+        }
+
+        /* ─── Round Counter ─── */
+        .round-counter {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .round-counter .badge {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #b0c7e0;
+            min-width: 2.8rem;
+            display: inline-block;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .round-counter .badge.pop {
+            animation: pop 0.35s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+                color: #f5d742;
+            }
+            50% {
+                transform: scale(1.4);
+                color: #ffd700;
+            }
+            100% {
+                transform: scale(1);
+                color: #b0c7e0;
+            }
+        }
+
+        .round-counter .label {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ─── Status Message ─── */
+        .status {
+            margin-top: 0.4rem;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.15);
+            height: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .status.active {
+            color: rgba(100, 180, 255, 0.5);
+        }
+        .status.complete {
+            color: rgba(245, 215, 66, 0.7);
+        }
+
+        /* ─── Controls ─── */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 1.8rem;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            padding: 0.7rem 2.4rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 60px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Start / Stop button states */
+        .btn-start {
+            color: rgba(100, 200, 255, 0.7);
+            background: rgba(100, 200, 255, 0.06);
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: rgba(100, 200, 255, 0.12);
+            color: rgba(100, 200, 255, 0.9);
+        }
+
+        .btn-start.running {
+            color: rgba(255, 120, 100, 0.7);
+            background: rgba(255, 120, 100, 0.06);
+        }
+
+        .btn-start.running:hover:not(:disabled) {
+            background: rgba(255, 120, 100, 0.12);
+            color: rgba(255, 120, 100, 0.9);
+        }
+
+        .btn-start.complete {
+            color: rgba(245, 215, 66, 0.6);
+            background: rgba(245, 215, 66, 0.06);
+            animation: pulse-gold 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 215, 66, 0);
+            }
+            50% {
+                box-shadow: 0 0 20px 4px rgba(245, 215, 66, 0.06);
+            }
+        }
+
+        .btn-reset {
+            color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+            min-width: 90px;
+        }
+
+        .btn-reset:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 500px) {
+            .stopwatch {
+                padding: 2rem 1.5rem 2.2rem;
+                min-width: unset;
+                width: 94%;
+                border-radius: 2.5rem;
+            }
+
+            .display {
+                font-size: 3.8rem;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.6rem;
+                min-width: 100px;
+                font-size: 0.75rem;
+            }
+
+            .btn-reset {
+                min-width: 70px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .display {
+                font-size: 2.8rem;
+            }
+            .stopwatch {
+                padding: 1.5rem 1rem 1.8rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                min-width: 70px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stopwatch" id="stopwatchCard">
+        <!-- Title -->
+        <div class="title">⏱️ Round Timer</div>
+
+        <!-- Time Display -->
+        <div class="display" id="display">
+            <span class="sec" id="secondsDisplay">00</span>
+            <span class="colon">.</span>
+            <span class="cent" id="centsDisplay">00</span>
+        </div>
+
+        <!-- Round Counter -->
+        <div class="round-counter">
+            <span class="label">Rounds</span>
+            <span class="badge" id="roundBadge">0</span>
+        </div>
+
+        <!-- Status -->
+        <div class="status" id="status">Ready</div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn">Start</button>
+            <button class="btn btn-reset" id="resetBtn">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ───
+            const display = document.getElementById('display');
+            const secondsEl = document.getElementById('secondsDisplay');
+            const centsEl = document.getElementById('centsDisplay');
+            const roundBadge = document.getElementById('roundBadge');
+            const statusEl = document.getElementById('status');
+            const startBtn = document.getElementById('startBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const card = document.getElementById('stopwatchCard');
+
+            // ─── State ───
+            const LIMIT_SECONDS = 15;
+            let time = 0; // in centiseconds (100 = 1s)
+            let running = false;
+            let roundCount = 0;
+            let complete = false; // true when we hit 15s
+            let intervalId = null;
+            let animFrameId = null;
+
+            // ─── Helpers ───
+            function formatTime(centiseconds) {
+                const totalSec = Math.floor(centiseconds / 100);
+                const sec = totalSec % 60;
+                const cent = centiseconds % 100;
+                return {
+                    sec: String(sec).padStart(2, '0'),
+                    cent: String(cent).padStart(2, '0'),
+                };
+            }
+
+            function updateDisplay() {
+                const { sec, cent } = formatTime(time);
+                secondsEl.textContent = sec;
+                centsEl.textContent = cent;
+
+                // Update visual classes
+                display.classList.remove('running', 'complete');
+                if (running) display.classList.add('running');
+                if (complete) display.classList.add('complete');
+            }
+
+            function updateUI() {
+                // Update display
+                updateDisplay();
+
+                // Round badge
+                roundBadge.textContent = roundCount;
+
+                // Status
+                if (complete) {
+                    statusEl.textContent = '🎯 Round complete! Press Start again';
+                    statusEl.className = 'status complete';
+                    card.classList.add('round-complete');
+                } else if (running) {
+                    statusEl.textContent = '⏳ Running...';
+                    statusEl.className = 'status active';
+                    card.classList.remove('round-complete');
+                } else {
+                    statusEl.textContent = time === 0 ? 'Ready' : 'Paused';
+                    statusEl.className = 'status';
+                    card.classList.remove('round-complete');
+                }
+
+                // Start button
+                startBtn.textContent = complete ? 'Start' : (running ? 'Stop' : 'Start');
+                startBtn.className = 'btn btn-start' + (running ? ' running' : '') + (complete ? ' complete' : '');
+                startBtn.disabled = false;
+
+                // Reset button
+                resetBtn.disabled = (time === 0 && roundCount === 0 && !running && !complete);
+
+                // Card glow when complete
+                if (complete) {
+                    card.classList.add('round-complete');
+                } else {
+                    card.classList.remove('round-complete');
+                }
+            }
+
+            // ─── Core Logic ───
+            function tick() {
+                if (!running) return;
+
+                time += 1; // +1 centisecond
+
+                // Check if we hit the limit
+                if (time >= LIMIT_SECONDS * 100) {
+                    time = LIMIT_SECONDS * 100;
+                    running = false;
+                    complete = true;
+                    roundCount += 1;
+
+                    // Animate badge
+                    roundBadge.classList.remove('pop');
+                    void roundBadge.offsetWidth; // force reflow
+                    roundBadge.classList.add('pop');
+
+                    // Stop the interval
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+
+                    // Update UI
+                    updateUI();
+
+                    // Play a subtle visual feedback (already handled by class)
+                    return;
+                }
+
+                // Normal update
+                updateUI();
+            }
+
+            function startStop() {
+                // If complete, reset first then start
+                if (complete) {
+                    // Reset and then start
+                    resetStopwatch();
+                    // Small delay then start
+                    requestAnimationFrame(() => {
+                        startStop();
+                    });
+                    return;
+                }
+
+                if (running) {
+                    // ── Stop ──
+                    running = false;
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                    updateUI();
+                    return;
+                }
+
+                // ── Start ──
+                // If time is at limit (shouldn't happen if complete is false, but safety)
+                if (time >= LIMIT_SECONDS * 100) {
+                    return;
+                }
+
+                running = true;
+                complete = false;
+
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+
+                // Use setInterval for smooth updates
+                intervalId = setInterval(tick, 10); // 10ms = 100Hz
+
+                updateUI();
+            }
+
+            function resetStopwatch() {
+                // Stop any running timer
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+
+                running = false;
+                complete = false;
+                time = 0;
+                // roundCount is NOT reset — we keep the counter
+                // (only reset rounds when explicitly resetting the whole thing)
+                // Actually let's reset rounds too when user clicks reset — that's more intuitive
+                roundCount = 0;
+
+                display.classList.remove('running', 'complete');
+                card.classList.remove('round-complete');
+
+                updateUI();
+            }
+
+            // ─── Full reset (including rounds) ───
+            function fullReset() {
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+                running = false;
+                complete = false;
+                time = 0;
+                roundCount = 0;
+                display.classList.remove('running', 'complete');
+                card.classList.remove('round-complete');
+                updateUI();
+            }
+
+            // ─── Keyboard support ───
+            function onKeydown(e) {
+                if (e.key === ' ' || e.key === 'Space') {
+                    e.preventDefault();
+                    startBtn.click();
+                } else if (e.key === 'r' || e.key === 'R') {
+                    e.preventDefault();
+                    resetBtn.click();
+                }
+            }
+
+            // ─── Init ───
+            function init() {
+                updateUI();
+
+                // Event listeners
+                startBtn.addEventListener('click', startStop);
+                resetBtn.addEventListener('click', fullReset);
+                document.addEventListener('keydown', onKeydown);
+
+                // Cleanup on page unload
+                window.addEventListener('beforeunload', function() {
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                });
+            }
+
+            // ─── Go ───
+            init();
+
+        })();
+    </script>
+
+</body>
+</html>
