@@ -215,38 +215,51 @@
       margin-top:10px;
     }
 
-    button{
-      border:none;
-      padding:16px 28px;
-      border-radius:22px;
-      font-size:1.1rem;
-      font-weight:900;
-      letter-spacing:.04em;
-      cursor:pointer;
-      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
-      position:relative;
-      overflow:hidden;
-      min-width:160px;
-    }
+    .buttons{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
 
-    button::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(135deg, rgba(255,255,255,.45), transparent 35%, transparent 65%, rgba(255,255,255,.18));
-      opacity:.35;
-      mix-blend-mode:screen;
-    }
+button{
+  border:none;
+  /* REDUCED BY 20%: 16px -> 12.8px, 28px -> 22.4px */
+  padding:12.8px 22.4px; 
+  /* REDUCED BY 20%: 22px -> 17.6px */
+  border-radius:17.6px;
+  /* REDUCED BY 20%: 1.1rem -> 0.88rem */
+  font-size:0.88rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  position:relative;
+  overflow:hidden;
+  /* REDUCED BY 20%: 160px -> 128px */
+  min-width:128px;
+}
 
-    .start{
-      color:#4c3000;
-      background:linear-gradient(180deg, #ffe49b, #f3bb50 55%, #b97a18);
-      box-shadow:
-        0 10px 0 #8b5812,
-        0 18px 28px rgba(0,0,0,.35),
-        inset 0 2px 0 rgba(255,255,255,.45),
-        inset 0 -8px 18px rgba(95,40,0,.15);
-    }
+button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.45), transparent 35%, transparent 65%, rgba(255,255,255,.18));
+  opacity:.35;
+  mix-blend-mode:screen;
+}
+
+.start{
+  color:#4c3000;
+  background:linear-gradient(180deg, #ffe49b, #f3bb50 55%, #b97a18);
+  /* REDUCED SHADOW VALUES BY 20% to maintain the 3D aspect ratio */
+  box-shadow:
+    0 8px 0 #8b5812,                /* 10px -> 8px */
+    0 14.4px 22.4px rgba(0,0,0,.35), /* 18px -> 14.4px, 28px -> 22.4px */
+    inset 0 1.6px 0 rgba(255,255,255,.45), /* 2px -> 1.6px */
+    inset 0 -6.4px 14.4px rgba(95,40,0,.15); /* -8px -> -6.4px, 18px -> 14.4px */
+}
 
     .reset{
       color:#4d4230;
