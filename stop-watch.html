@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>15‑Second Stopwatch · Round Counter</title>
+    <title>Round Timer · 15‑Second Interval</title>
     <style>
         /* ───────────────────────────────────────────────
                    RESET & BASE
@@ -107,27 +107,29 @@
         .stopwatch {
             position: relative;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            padding: 3rem 3.5rem 3.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            padding: 2.8rem 3.2rem 3rem;
             border-radius: 3.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow:
                 0 30px 80px -20px rgba(0, 0, 0, 0.8),
-                0 0 0 1px rgba(255, 255, 255, 0.04),
+                0 0 0 1px rgba(255, 255, 255, 0.03),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
             text-align: center;
-            min-width: 440px;
+            min-width: 420px;
+            max-width: 520px;
+            width: 100%;
             transition: box-shadow 0.5s ease, border-color 0.5s ease, transform 0.4s ease;
             animation: cardEntry 0.9s ease both;
         }
 
         .stopwatch:hover {
-            border-color: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.12);
             box-shadow:
                 0 40px 90px -16px rgba(0, 0, 0, 0.9),
-                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
@@ -177,35 +179,47 @@
         }
 
         .stopwatch.round-complete {
-            border-color: rgba(245, 215, 66, 0.15);
+            border-color: rgba(245, 215, 66, 0.12);
             box-shadow:
                 0 30px 80px -20px rgba(0, 0, 0, 0.8),
-                0 0 0 1px rgba(245, 215, 66, 0.12),
+                0 0 0 1px rgba(245, 215, 66, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06),
-                0 0 60px rgba(245, 215, 66, 0.04);
+                0 0 60px rgba(245, 215, 66, 0.03);
         }
 
         /* ───────────────────────────────────────────────
-                   TITLE
+                   HEADER: ROUND TIMER
                 ─────────────────────────────────────────────── */
-        .title {
-            color: rgba(255, 255, 255, 0.30);
-            font-size: 0.8rem;
-            letter-spacing: 5px;
+        .header-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 6px;
             text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 0.6rem;
         }
 
         /* ───────────────────────────────────────────────
-                   TIME DISPLAY  (SS.cc) – LARGER & BOLDER
+                   WORK INTERVAL LABEL
+                ─────────────────────────────────────────────── */
+        .interval-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.20);
+            margin-bottom: 0.2rem;
+        }
+
+        /* ───────────────────────────────────────────────
+                   TIME DISPLAY – LARGE & BOLD
                 ─────────────────────────────────────────────── */
         .display {
-            font-size: 6.2rem;
+            font-size: 6.4rem;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             letter-spacing: 3px;
-            padding: 0.2rem 0 0.1rem;
+            padding: 0.1rem 0 0.1rem;
             line-height: 1.05;
             transition: all 0.4s ease;
             font-family: 'Courier New', 'Fira Code', monospace;
@@ -213,8 +227,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: none;
-            filter: drop-shadow(0 0 40px rgba(108, 140, 255, 0.08));
+            filter: drop-shadow(0 0 40px rgba(108, 140, 255, 0.06));
         }
 
         .display .sec,
@@ -224,7 +237,7 @@
         }
 
         .display .colon {
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.15);
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.10);
             margin: 0 0.05em;
         }
 
@@ -261,10 +274,10 @@
         @keyframes goldPulse {
             0%,
             100% {
-                filter: drop-shadow(0 0 20px rgba(245, 215, 66, 0.1));
+                filter: drop-shadow(0 0 20px rgba(245, 215, 66, 0.08));
             }
             50% {
-                filter: drop-shadow(0 0 50px rgba(245, 215, 66, 0.25));
+                filter: drop-shadow(0 0 50px rgba(245, 215, 66, 0.20));
             }
         }
 
@@ -273,47 +286,39 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 40px rgba(74, 158, 255, 0.10));
+            filter: drop-shadow(0 0 40px rgba(74, 158, 255, 0.08));
         }
 
         /* ───────────────────────────────────────────────
-                   ROUND COUNTER – with glass badge
+                   ROUNDS COMPLETED
                 ─────────────────────────────────────────────── */
-        .round-counter {
-            margin-top: 0.6rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.8rem;
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 0.85rem;
+        .rounds-display {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
             letter-spacing: 1.5px;
-            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
         }
 
-        .round-counter .badge {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 0.25rem 1.2rem;
-            border-radius: 30px;
-            font-size: 1.4rem;
-            font-weight: 700;
+        .rounds-display .count {
             color: #b0c7e0;
-            min-width: 3.2rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.05rem 0.8rem;
+            border-radius: 20px;
             display: inline-block;
+            min-width: 2.4rem;
             text-align: center;
-            font-family: 'Courier New', monospace;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        .round-counter .badge.pop {
-            animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .rounds-display .count.pop {
+            animation: countPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes pop {
+        @keyframes countPop {
             0% {
                 transform: scale(1);
                 color: #f5d742;
@@ -321,69 +326,91 @@
                 border-color: rgba(245, 215, 66, 0.15);
             }
             50% {
-                transform: scale(1.5);
+                transform: scale(1.4);
                 color: #ffd700;
                 background: rgba(245, 215, 66, 0.15);
-                border-color: rgba(245, 215, 66, 0.25);
+                border-color: rgba(245, 215, 66, 0.20);
             }
             100% {
                 transform: scale(1);
                 color: #b0c7e0;
-                background: rgba(255, 255, 255, 0.06);
-                border-color: rgba(255, 255, 255, 0.04);
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.03);
             }
         }
 
-        .round-counter .label {
-            font-size: 0.7rem;
-            letter-spacing: 3px;
+        .rounds-display .total {
             color: rgba(255, 255, 255, 0.20);
-            font-weight: 600;
         }
 
         /* ───────────────────────────────────────────────
                    STATUS MESSAGE
                 ─────────────────────────────────────────────── */
-        .status {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
+        .status-area {
+            margin-top: 0.8rem;
+            min-height: 3.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-main {
+            font-size: 1.2rem;
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.15);
-            height: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: all 0.4s ease;
-            font-weight: 500;
         }
 
-        .status.active {
+        .status-main.active {
             color: rgba(100, 180, 255, 0.6);
         }
-        .status.complete {
-            color: rgba(245, 215, 66, 0.7);
-            animation: statusGlow 1.2s ease-in-out infinite;
+
+        .status-main.complete {
+            color: rgba(245, 215, 66, 0.8);
+            animation: statusPulse 1.2s ease-in-out infinite;
         }
 
-        @keyframes statusGlow {
+        @keyframes statusPulse {
             0%,
             100% {
                 opacity: 0.7;
+                transform: scale(1);
             }
             50% {
                 opacity: 1;
+                transform: scale(1.02);
             }
         }
 
+        .status-sub {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.12);
+            margin-top: 0.15rem;
+            transition: all 0.4s ease;
+        }
+
+        .status-sub.complete {
+            color: rgba(245, 215, 66, 0.35);
+        }
+
+        .status-sub.active {
+            color: rgba(100, 180, 255, 0.20);
+        }
+
         /* ───────────────────────────────────────────────
-                   3D CONTROLS – with depth & glow
+                   3D CONTROLS
                 ─────────────────────────────────────────────── */
         .controls {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
-            margin-top: 2rem;
+            margin-top: 1.8rem;
         }
 
         .btn {
@@ -393,7 +420,7 @@
             border-radius: 60px;
             font-size: 1rem;
             font-weight: 700;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
@@ -406,7 +433,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
-        /* 3D depth effect on hover */
         .btn:hover:not(:disabled) {
             transform: perspective(800px) rotateX(2deg) translateZ(8px) scale(1.03);
             box-shadow:
@@ -443,7 +469,7 @@
             pointer-events: none;
         }
 
-        /* ─── Start Button ─── */
+        /* ─── START Button ─── */
         .btn-start {
             background: linear-gradient(145deg, #6c8cff, #4a6fd6);
             color: #fff;
@@ -498,14 +524,14 @@
         @keyframes btnGoldPulse {
             0%,
             100% {
-                box-shadow: 0 4px 0 #b49820, 0 8px 32px rgba(245, 215, 66, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                box-shadow: 0 4px 0 #b49820, 0 8px 32px rgba(245, 215, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             }
             50% {
-                box-shadow: 0 4px 0 #b49820, 0 8px 48px rgba(245, 215, 66, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+                box-shadow: 0 4px 0 #b49820, 0 8px 48px rgba(245, 215, 66, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.20);
             }
         }
 
-        /* ─── Reset Button ─── */
+        /* ─── RESET Button ─── */
         .btn-reset {
             background: rgba(255, 255, 255, 0.04);
             color: rgba(255, 255, 255, 0.35);
@@ -514,7 +540,7 @@
                 0 8px 24px rgba(0, 0, 0, 0.10),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            min-width: 110px;
+            min-width: 120px;
         }
 
         .btn-reset:hover:not(:disabled) {
@@ -528,27 +554,42 @@
         }
 
         /* ───────────────────────────────────────────────
-                   KEYBOARD HINT
+                   KEYBOARD SHORTCUTS
                 ─────────────────────────────────────────────── */
         .keyboard-hint {
-            margin-top: 1.2rem;
-            font-size: 0.6rem;
+            margin-top: 1.4rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.65rem;
             color: rgba(255, 255, 255, 0.10);
-            letter-spacing: 2px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             font-weight: 500;
         }
 
+        .keyboard-hint .hint-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
         .keyboard-hint kbd {
             display: inline-block;
-            padding: 0.1rem 0.6rem;
+            padding: 0.1rem 0.7rem;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.04);
             font-family: inherit;
             font-size: 0.6rem;
             color: rgba(255, 255, 255, 0.15);
-            margin: 0 0.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .keyboard-hint .hint-sep {
+            color: rgba(255, 255, 255, 0.04);
         }
 
         /* ───────────────────────────────────────────────
@@ -556,15 +597,47 @@
                 ─────────────────────────────────────────────── */
         @media (max-width: 540px) {
             .stopwatch {
-                padding: 2.2rem 1.8rem 2.5rem;
+                padding: 2rem 1.6rem 2.2rem;
+                border-radius: 2.5rem;
                 min-width: unset;
-                width: 96%;
+                max-width: 100%;
+            }
+
+            .stopwatch::before {
+                border-radius: 2.5rem;
+            }
+            .stopwatch.round-complete::before {
                 border-radius: 2.5rem;
             }
 
-            .display {
-                font-size: 4.4rem;
+               .display {
+                font-size: 4.6rem;
                 letter-spacing: 1px;
+            }
+
+            .header-title {
+                font-size: 0.7rem;
+                letter-spacing: 4px;
+            }
+
+            .interval-label {
+                font-size: 0.6rem;
+                letter-spacing: 3px;
+            }
+
+            .rounds-display {
+                font-size: 0.85rem;
+            }
+            .rounds-display .count {
+                font-size: 1rem;
+                padding: 0.05rem 0.6rem;
+            }
+
+            .status-main {
+                font-size: 1rem;
+            }
+            .status-sub {
+                font-size: 0.65rem;
             }
 
             .controls {
@@ -576,37 +649,62 @@
                 padding: 0.8rem 1.8rem;
                 min-width: 110px;
                 font-size: 0.85rem;
+                letter-spacing: 1.5px;
             }
 
             .btn-reset {
                 min-width: 90px;
             }
 
-            .round-counter .badge {
-                font-size: 1.2rem;
-                min-width: 2.8rem;
-                padding: 0.2rem 1rem;
+            .keyboard-hint {
+                gap: 1rem;
+                font-size: 0.55rem;
             }
-
-            .stopwatch::before {
-                border-radius: 2.5rem;
-            }
-            .stopwatch.round-complete::before {
-                border-radius: 2.5rem;
+            .keyboard-hint kbd {
+                font-size: 0.5rem;
+                padding: 0.05rem 0.5rem;
             }
         }
 
         @media (max-width: 400px) {
             .stopwatch {
-                padding: 1.6rem 1.2rem 2rem;
+                padding: 1.6rem 1rem 1.8rem;
+                border-radius: 2rem;
+            }
+
+            .stopwatch::before {
+                border-radius: 2rem;
+            }
+            .stopwatch.round-complete::before {
                 border-radius: 2rem;
             }
 
             .display {
-                font-size: 3.4rem;
+                font-size: 3.6rem;
             }
 
-                      .btn {
+            .header-title {
+                font-size: 0.6rem;
+                letter-spacing: 3px;
+            }
+
+            .rounds-display {
+                font-size: 0.75rem;
+            }
+            .rounds-display .count {
+                font-size: 0.85rem;
+                padding: 0.05rem 0.5rem;
+                min-width: 1.8rem;
+            }
+
+            .status-main {
+                font-size: 0.85rem;
+            }
+            .status-sub {
+                font-size: 0.55rem;
+            }
+
+            .btn {
                 padding: 0.6rem 1.2rem;
                 min-width: 80px;
                 font-size: 0.7rem;
@@ -617,20 +715,14 @@
                 min-width: 70px;
             }
 
-            .title {
-                font-size: 0.6rem;
-                letter-spacing: 3px;
+            .keyboard-hint {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.3rem;
+                font-size: 0.5rem;
             }
-
-            .round-counter .badge {
-                font-size: 1rem;
-                min-width: 2.4rem;
-                padding: 0.15rem 0.8rem;
-            }
-
-            .status {
-                font-size: 0.65rem;
-                height: 1.6rem;
+            .keyboard-hint .hint-item {
+                gap: 0.3rem;
             }
         }
     </style>
@@ -648,35 +740,49 @@
     <!-- ─── Stopwatch ─── -->
     <div class="stopwatch" id="stopwatchCard">
 
-        <!-- Title -->
-        <div class="title">⏱️ Round Timer</div>
+        <!-- Header: ROUND TIMER -->
+        <div class="header-title">⏱️ Round Timer</div>
 
-        <!-- Time Display – LARGER & BOLDER -->
+        <!-- WORK INTERVAL label -->
+        <div class="interval-label">Work Interval</div>
+
+        <!-- Time Display -->
         <div class="display" id="display">
             <span class="sec" id="secondsDisplay">00</span>
             <span class="colon">.</span>
             <span class="cent" id="centsDisplay">00</span>
         </div>
 
-        <!-- Round Counter -->
-        <div class="round-counter">
-            <span class="label">Rounds</span>
-            <span class="badge" id="roundBadge">0</span>
+        <!-- Rounds Completed -->
+        <div class="rounds-display">
+            Rounds Completed:&nbsp;
+            <span class="count" id="roundBadge">0</span>
+            <span class="total">of 18</span>
         </div>
 
-        <!-- Status -->
-        <div class="status" id="status">Ready</div>
+        <!-- Status Area -->
+        <div class="status-area">
+            <div class="status-main" id="statusMain">Ready</div>
+            <div class="status-sub" id="statusSub">Press START to begin</div>
+        </div>
 
-        <!-- Controls – 3D Buttons -->
+        <!-- Controls -->
         <div class="controls">
             <button class="btn btn-start" id="startBtn">Start</button>
             <button class="btn btn-reset" id="resetBtn">Reset</button>
         </div>
 
-        <!-- Keyboard Hint -->
+        <!-- Keyboard Shortcuts -->
         <div class="keyboard-hint">
-            <kbd>Space</kbd> start/stop &nbsp;·&nbsp; <kbd>R</kbd> reset
+            <span class="hint-item">
+                <kbd>Space</kbd> to Start/Pause
+            </span>
+            <span class="hint-sep">·</span>
+            <span class="hint-item">
+                <kbd>R</kbd> to Reset
+            </span>
         </div>
+
     </div>
 
     <script>
@@ -688,7 +794,8 @@
             const secondsEl = document.getElementById('secondsDisplay');
             const centsEl = document.getElementById('centsDisplay');
             const roundBadge = document.getElementById('roundBadge');
-            const statusEl = document.getElementById('status');
+            const statusMain = document.getElementById('statusMain');
+            const statusSub = document.getElementById('statusSub');
             const startBtn = document.getElementById('startBtn');
             const resetBtn = document.getElementById('resetBtn');
             const card = document.getElementById('stopwatchCard');
@@ -696,6 +803,7 @@
             // ─── Constants ───
             const LIMIT_SECONDS = 15;
             const LIMIT_CENTS = LIMIT_SECONDS * 100;
+            const TOTAL_ROUNDS = 18;
 
             // ─── State ───
             let time = 0;
@@ -729,24 +837,33 @@
                 updateDisplay();
                 roundBadge.textContent = roundCount;
 
+                // Status
                 if (complete) {
-                    statusEl.textContent = '🎯 Round complete! Press Start again';
-                    statusEl.className = 'status complete';
+                    statusMain.textContent = '🎯 Round Complete!';
+                    statusMain.className = 'status-main complete';
+                    statusSub.textContent = 'Press START Again';
+                    statusSub.className = 'status-sub complete';
                     card.classList.add('round-complete');
                 } else if (running) {
-                    statusEl.textContent = '⏳ Running...';
-                    statusEl.className = 'status active';
+                    statusMain.textContent = '⏳ Running...';
+                    statusMain.className = 'status-main active';
+                    statusSub.textContent = 'Press SPACE to pause';
+                    statusSub.className = 'status-sub active';
                     card.classList.remove('round-complete');
                 } else {
-                    statusEl.textContent = time === 0 ? 'Ready' : 'Paused';
-                    statusEl.className = 'status';
+                    statusMain.textContent = time === 0 ? 'Ready' : 'Paused';
+                    statusMain.className = 'status-main';
+                    statusSub.textContent = time === 0 ? 'Press START to begin' : 'Press START to resume';
+                    statusSub.className = 'status-sub';
                     card.classList.remove('round-complete');
                 }
 
+                // Start button
                 startBtn.textContent = complete ? 'Start' : (running ? 'Stop' : 'Start');
                 startBtn.className = 'btn btn-start' + (running ? ' running' : '') + (complete ? ' complete' : '');
                 startBtn.disabled = false;
 
+                // Reset button
                 resetBtn.disabled = (time === 0 && roundCount === 0 && !running && !complete);
             }
 
@@ -762,6 +879,7 @@
                     complete = true;
                     roundCount += 1;
 
+                    // Animate badge
                     roundBadge.classList.remove('pop');
                     void roundBadge.offsetWidth;
                     roundBadge.classList.add('pop');
@@ -780,6 +898,7 @@
 
             // ─── Start / Stop toggle ───
             function startStop() {
+                // If complete, start a new round
                 if (complete) {
                     running = true;
                     complete = false;
@@ -794,6 +913,7 @@
                     return;
                 }
 
+                // If running, stop
                 if (running) {
                     running = false;
                     if (intervalId) {
@@ -804,6 +924,7 @@
                     return;
                 }
 
+                // Not running, not complete → start
                 if (time >= LIMIT_CENTS) {
                     return;
                 }
