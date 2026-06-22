@@ -102,7 +102,7 @@
         }
 
         /* ───────────────────────────────────────────────
-                   GLASS CARD – premium glass-morphism
+                   CARD – clean glass-morphism
                 ─────────────────────────────────────────────── */
         .stopwatch {
             position: relative;
@@ -110,23 +110,23 @@
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
-            padding: 2.8rem 3.2rem 3rem;
-            border-radius: 3.5rem;
+            padding: 2.6rem 2.8rem 2.8rem;
+            border-radius: 3rem;
             border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow:
                 0 30px 80px -20px rgba(0, 0, 0, 0.8),
                 0 0 0 1px rgba(255, 255, 255, 0.03),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
             text-align: center;
-            min-width: 420px;
-            max-width: 520px;
+            min-width: 380px;
+            max-width: 480px;
             width: 100%;
-            transition: box-shadow 0.5s ease, border-color 0.5s ease, transform 0.4s ease;
+            transition: box-shadow 0.5s ease, border-color 0.5s ease;
             animation: cardEntry 0.9s ease both;
         }
 
         .stopwatch:hover {
-            border-color: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.10);
             box-shadow:
                 0 40px 90px -16px rgba(0, 0, 0, 0.9),
                 0 0 0 1px rgba(255, 255, 255, 0.05),
@@ -149,12 +149,12 @@
             content: '';
             position: absolute;
             inset: -2px;
-            border-radius: 3.5rem;
+            border-radius: 3rem;
             padding: 2px;
             background: conic-gradient(from 0deg,
                     transparent,
-                    rgba(108, 140, 255, 0.12),
-                    rgba(245, 215, 66, 0.06),
+                    rgba(108, 140, 255, 0.10),
+                    rgba(245, 215, 66, 0.05),
                     transparent 70%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -179,136 +179,114 @@
         }
 
         .stopwatch.round-complete {
-            border-color: rgba(245, 215, 66, 0.12);
+            border-color: rgba(245, 215, 66, 0.10);
             box-shadow:
                 0 30px 80px -20px rgba(0, 0, 0, 0.8),
-                0 0 0 1px rgba(245, 215, 66, 0.08),
+                0 0 0 1px rgba(245, 215, 66, 0.06),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06),
-                0 0 60px rgba(245, 215, 66, 0.03);
+                0 0 60px rgba(245, 215, 66, 0.02);
         }
 
         /* ───────────────────────────────────────────────
-                   HEADER: ROUND TIMER
+                   TITLE: ROUND TIMER
                 ─────────────────────────────────────────────── */
         .header-title {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 800;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.25);
-            margin-bottom: 0.6rem;
+            color: rgba(255, 255, 255, 0.20);
+            margin-bottom: 0.4rem;
         }
 
         /* ───────────────────────────────────────────────
-                   WORK INTERVAL LABEL
+                   WORK INTERVAL
                 ─────────────────────────────────────────────── */
         .interval-label {
             font-size: 0.7rem;
             font-weight: 600;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.20);
-            margin-bottom: 0.2rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 0.1rem;
         }
 
         /* ───────────────────────────────────────────────
-                   TIME DISPLAY – LARGE & BOLD
+                   TIME DISPLAY
                 ─────────────────────────────────────────────── */
         .display {
             font-size: 6.4rem;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             letter-spacing: 3px;
-            padding: 0.1rem 0 0.1rem;
+            padding: 0.05rem 0;
             line-height: 1.05;
             transition: all 0.4s ease;
             font-family: 'Courier New', 'Fira Code', monospace;
-            background: linear-gradient(135deg, #f0f4fe 30%, #6c8cff 70%, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 40px rgba(108, 140, 255, 0.06));
+            color: #e8edf5;
+            text-shadow: 0 0 40px rgba(100, 180, 255, 0.06);
         }
 
         .display .sec,
         .display .cent {
-            -webkit-text-fill-color: transparent;
             transition: all 0.4s ease;
         }
 
         .display .colon {
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.10);
+            color: rgba(255, 255, 255, 0.10);
             margin: 0 0.05em;
         }
 
         .display.running .sec {
-            background: linear-gradient(135deg, #7fc4ff, #4a9eff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #7fc4ff;
         }
-
         .display.running .cent {
-            background: linear-gradient(135deg, #4a9eff, #6c8cff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #4a9eff;
         }
 
         .display.complete .sec {
-            background: linear-gradient(135deg, #f5d742, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #f5d742;
             animation: goldPulse 1.2s ease-in-out infinite;
         }
-
         .display.complete .cent {
-            background: linear-gradient(135deg, #d4b82a, #f5d742);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #d4b82a;
             animation: goldPulse 1.2s ease-in-out infinite 0.1s;
         }
 
         @keyframes goldPulse {
             0%,
             100% {
-                filter: drop-shadow(0 0 20px rgba(245, 215, 66, 0.08));
+                text-shadow: 0 0 20px rgba(245, 215, 66, 0.08);
             }
             50% {
-                filter: drop-shadow(0 0 50px rgba(245, 215, 66, 0.20));
+                text-shadow: 0 0 50px rgba(245, 215, 66, 0.20);
             }
         }
 
         .display.running {
-            background: linear-gradient(135deg, #7fc4ff, #4a9eff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 40px rgba(74, 158, 255, 0.08));
+            text-shadow: 0 0 40px rgba(74, 158, 255, 0.08);
         }
 
         /* ───────────────────────────────────────────────
                    ROUNDS COMPLETED
                 ─────────────────────────────────────────────── */
         .rounds-display {
-            margin-top: 0.5rem;
+            margin-top: 0.3rem;
             font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.35);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.25);
         }
 
         .rounds-display .count {
             color: #b0c7e0;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             background: rgba(255, 255, 255, 0.04);
             padding: 0.05rem 0.8rem;
-            border-radius: 20px;
+            border-radius: 16px;
             display: inline-block;
-            min-width: 2.4rem;
+            min-width: 2.2rem;
             text-align: center;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -323,13 +301,13 @@
                 transform: scale(1);
                 color: #f5d742;
                 background: rgba(245, 215, 66, 0.10);
-                border-color: rgba(245, 215, 66, 0.15);
+                border-color: rgba(245, 215, 66, 0.12);
             }
             50% {
-                transform: scale(1.4);
+                transform: scale(1.35);
                 color: #ffd700;
                 background: rgba(245, 215, 66, 0.15);
-                border-color: rgba(245, 215, 66, 0.20);
+                border-color: rgba(245, 215, 66, 0.18);
             }
             100% {
                 transform: scale(1);
@@ -340,14 +318,14 @@
         }
 
         .rounds-display .total {
-            color: rgba(255, 255, 255, 0.20);
+            color: rgba(255, 255, 255, 0.15);
         }
 
         /* ───────────────────────────────────────────────
-                   STATUS MESSAGE
+                   STATUS AREA
                 ─────────────────────────────────────────────── */
         .status-area {
-            margin-top: 0.8rem;
+            margin-top: 0.6rem;
             min-height: 3.2rem;
             display: flex;
             flex-direction: column;
@@ -365,11 +343,11 @@
         }
 
         .status-main.active {
-            color: rgba(100, 180, 255, 0.6);
+            color: rgba(100, 180, 255, 0.5);
         }
 
         .status-main.complete {
-            color: rgba(245, 215, 66, 0.8);
+            color: #f5d742;
             animation: statusPulse 1.2s ease-in-out infinite;
         }
 
@@ -377,11 +355,9 @@
             0%,
             100% {
                 opacity: 0.7;
-                transform: scale(1);
             }
             50% {
                 opacity: 1;
-                transform: scale(1.02);
             }
         }
 
@@ -391,7 +367,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.12);
-            margin-top: 0.15rem;
+            margin-top: 0.05rem;
             transition: all 0.4s ease;
         }
 
@@ -404,7 +380,7 @@
         }
 
         /* ───────────────────────────────────────────────
-                   3D CONTROLS
+                   BUTTONS – clean, subtle 3D
                 ─────────────────────────────────────────────── */
         .controls {
             display: flex;
@@ -416,15 +392,15 @@
         .btn {
             border: none;
             outline: none;
-            padding: 0.9rem 2.8rem;
+            padding: 0.8rem 2.8rem;
             border-radius: 60px;
             font-size: 1rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-            min-width: 140px;
+            min-width: 130px;
             position: relative;
             transform: perspective(800px) rotateX(0deg) translateZ(0);
             box-shadow:
@@ -434,7 +410,7 @@
         }
 
         .btn:hover:not(:disabled) {
-            transform: perspective(800px) rotateX(2deg) translateZ(8px) scale(1.03);
+            transform: perspective(800px) rotateX(2deg) translateZ(8px) scale(1.02);
             box-shadow:
                 0 6px 0 rgba(0, 0, 0, 0.15),
                 0 12px 36px rgba(0, 0, 0, 0.25),
@@ -449,7 +425,7 @@
         }
 
         .btn:disabled {
-            opacity: 0.35;
+            opacity: 0.30;
             cursor: not-allowed;
             transform: perspective(800px) rotateX(0) translateZ(0);
             box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
@@ -461,7 +437,7 @@
             inset: 0;
             border-radius: 60px;
             padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 50%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
@@ -475,7 +451,7 @@
             color: #fff;
             box-shadow:
                 0 4px 0 #3a5bb5,
-                0 8px 32px rgba(108, 140, 255, 0.25),
+                0 8px 32px rgba(108, 140, 255, 0.20),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
@@ -484,7 +460,7 @@
             background: linear-gradient(145deg, #7a9aff, #5a7ae6);
             box-shadow:
                 0 6px 0 #3a5bb5,
-                0 12px 40px rgba(108, 140, 255, 0.35),
+                0 12px 40px rgba(108, 140, 255, 0.30),
                 inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
 
@@ -492,7 +468,7 @@
             background: linear-gradient(145deg, #ff7a6a, #e65a4a);
             box-shadow:
                 0 4px 0 #b54a3a,
-                0 8px 32px rgba(255, 120, 100, 0.25),
+                0 8px 32px rgba(255, 120, 100, 0.20),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
@@ -500,7 +476,7 @@
             background: linear-gradient(145deg, #ff8a7a, #f06a5a);
             box-shadow:
                 0 6px 0 #b54a3a,
-                0 12px 40px rgba(255, 120, 100, 0.35),
+                0 12px 40px rgba(255, 120, 100, 0.30),
                 inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
 
@@ -508,7 +484,7 @@
             background: linear-gradient(145deg, #f5d742, #d4b82a);
             box-shadow:
                 0 4px 0 #b49820,
-                0 8px 32px rgba(245, 215, 66, 0.25),
+                0 8px 32px rgba(245, 215, 66, 0.20),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15);
             animation: btnGoldPulse 1.6s ease-in-out infinite;
         }
@@ -517,35 +493,35 @@
             background: linear-gradient(145deg, #ffe74a, #e5c832);
             box-shadow:
                 0 6px 0 #b49820,
-                0 12px 40px rgba(245, 215, 66, 0.35),
+                0 12px 40px rgba(245, 215, 66, 0.30),
                 inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
 
         @keyframes btnGoldPulse {
             0%,
             100% {
-                box-shadow: 0 4px 0 #b49820, 0 8px 32px rgba(245, 215, 66, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                box-shadow: 0 4px 0 #b49820, 0 8px 32px rgba(245, 215, 66, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             }
             50% {
-                box-shadow: 0 4px 0 #b49820, 0 8px 48px rgba(245, 215, 66, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+                box-shadow: 0 4px 0 #b49820, 0 8px 48px rgba(245, 215, 66, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.20);
             }
         }
 
         /* ─── RESET Button ─── */
         .btn-reset {
             background: rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.30);
             box-shadow:
                 0 4px 0 rgba(0, 0, 0, 0.15),
                 0 8px 24px rgba(0, 0, 0, 0.10),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            min-width: 120px;
+            min-width: 110px;
         }
 
         .btn-reset:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.5);
             border-color: rgba(255, 255, 255, 0.08);
             box-shadow:
                 0 6px 0 rgba(0, 0, 0, 0.12),
@@ -562,10 +538,9 @@
             justify-content: center;
             gap: 2rem;
             flex-wrap: wrap;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: rgba(255, 255, 255, 0.10);
             letter-spacing: 0.5px;
-            text-transform: uppercase;
             font-weight: 500;
         }
 
@@ -577,13 +552,13 @@
 
         .keyboard-hint kbd {
             display: inline-block;
-            padding: 0.1rem 0.7rem;
+            padding: 0.05rem 0.7rem;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.04);
             font-family: inherit;
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.12);
             font-weight: 700;
             letter-spacing: 0.5px;
         }
@@ -595,42 +570,43 @@
         /* ───────────────────────────────────────────────
                    RESPONSIVE
                 ─────────────────────────────────────────────── */
-        @media (max-width: 540px) {
+        @media (max-width: 500px) {
             .stopwatch {
                 padding: 2rem 1.6rem 2.2rem;
-                border-radius: 2.5rem;
+                border-radius: 2.4rem;
                 min-width: unset;
                 max-width: 100%;
             }
 
             .stopwatch::before {
-                border-radius: 2.5rem;
+                border-radius: 2.4rem;
             }
             .stopwatch.round-complete::before {
-                border-radius: 2.5rem;
+                border-radius: 2.4rem;
             }
 
-               .display {
-                font-size: 4.6rem;
+            .display {
+                font-size: 4.8rem;
                 letter-spacing: 1px;
             }
 
             .header-title {
-                font-size: 0.7rem;
-                letter-spacing: 4px;
+                font-size: 0.75rem;
+                letter-spacing: 6px;
             }
 
             .interval-label {
                 font-size: 0.6rem;
-                letter-spacing: 3px;
+                letter-spacing: 4px;
             }
 
             .rounds-display {
                 font-size: 0.85rem;
             }
             .rounds-display .count {
-                font-size: 1rem;
+                font-size: 0.95rem;
                 padding: 0.05rem 0.6rem;
+                min-width: 1.8rem;
             }
 
             .status-main {
@@ -646,37 +622,37 @@
             }
 
             .btn {
-                padding: 0.8rem 1.8rem;
-                min-width: 110px;
+                padding: 0.7rem 1.8rem;
+                min-width: 100px;
                 font-size: 0.85rem;
-                letter-spacing: 1.5px;
+                letter-spacing: 2px;
             }
 
             .btn-reset {
-                min-width: 90px;
+                min-width: 85px;
             }
 
             .keyboard-hint {
-                gap: 1rem;
-                font-size: 0.55rem;
+                gap: 1.2rem;
+                font-size: 0.6rem;
             }
             .keyboard-hint kbd {
-                font-size: 0.5rem;
+                font-size: 0.55rem;
                 padding: 0.05rem 0.5rem;
             }
         }
 
-        @media (max-width: 400px) {
+          @media (max-width: 380px) {
             .stopwatch {
-                padding: 1.6rem 1rem 1.8rem;
-                border-radius: 2rem;
+                padding: 1.5rem 1rem 1.8rem;
+                border-radius: 1.8rem;
             }
 
             .stopwatch::before {
-                border-radius: 2rem;
+                border-radius: 1.8rem;
             }
             .stopwatch.round-complete::before {
-                border-radius: 2rem;
+                border-radius: 1.8rem;
             }
 
             .display {
@@ -685,16 +661,16 @@
 
             .header-title {
                 font-size: 0.6rem;
-                letter-spacing: 3px;
+                letter-spacing: 4px;
             }
 
             .rounds-display {
                 font-size: 0.75rem;
             }
             .rounds-display .count {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 padding: 0.05rem 0.5rem;
-                min-width: 1.8rem;
+                min-width: 1.6rem;
             }
 
             .status-main {
@@ -708,7 +684,7 @@
                 padding: 0.6rem 1.2rem;
                 min-width: 80px;
                 font-size: 0.7rem;
-                letter-spacing: 1px;
+                letter-spacing: 1.5px;
             }
 
             .btn-reset {
@@ -740,10 +716,10 @@
     <!-- ─── Stopwatch ─── -->
     <div class="stopwatch" id="stopwatchCard">
 
-        <!-- Header: ROUND TIMER -->
+        <!-- ROUND TIMER -->
         <div class="header-title">⏱️ Round Timer</div>
 
-        <!-- WORK INTERVAL label -->
+        <!-- WORK INTERVAL -->
         <div class="interval-label">Work Interval</div>
 
         <!-- Time Display -->
@@ -879,7 +855,6 @@
                     complete = true;
                     roundCount += 1;
 
-                    // Animate badge
                     roundBadge.classList.remove('pop');
                     void roundBadge.offsetWidth;
                     roundBadge.classList.add('pop');
@@ -898,7 +873,6 @@
 
             // ─── Start / Stop toggle ───
             function startStop() {
-                // If complete, start a new round
                 if (complete) {
                     running = true;
                     complete = false;
@@ -913,7 +887,6 @@
                     return;
                 }
 
-                // If running, stop
                 if (running) {
                     running = false;
                     if (intervalId) {
@@ -924,7 +897,6 @@
                     return;
                 }
 
-                // Not running, not complete → start
                 if (time >= LIMIT_CENTS) {
                     return;
                 }
@@ -987,4 +959,5 @@
     </script>
 
 </body>
-</html>
+</html>                                                
+                            
