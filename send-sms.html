@@ -33,26 +33,33 @@
         import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         async function loadStudents() {
-            const snap = await getDocs(collection(db, "admissions")); // Accessing your admission records
+            const snap = await getDocs(collection(db, "admissions"));
             const select = document.getElementById('studentSelect');
             snap.forEach(doc => {
                 const s = doc.data();
+                // Build full name from split fields
+                const firstName = s.sFirstName || '';
+                const middleName = s.sMiddleName || '';
+                const lastName = s.sLastName || '';
+                const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim() || 'Unknown';
+
                 const opt = document.createElement('option');
-                opt.value = s.fatherContact; // Using the contact number field from your form
-                opt.dataset.name = s.studentName;
-                opt.textContent = `${s.studentName} (${s.fatherContact})`;
+                opt.value = s.fatherContact || ''; // phone number
+                opt.dataset.name = fullName;
+                opt.textContent = `${fullName} (${s.fatherContact || 'No Phone'})`;
                 select.appendChild(opt);
             });
         }
 
         window.sendSMS = async () => {
-            const phone = document.getElementById('studentSelect').value;
+            const select = document.getElementById('studentSelect');
+            const phone = select.value;
             const msg = document.getElementById('msgBody').value;
-            const name = document.getElementById('studentSelect').selectedOptions[0].dataset.name;
+            const name = select.selectedOptions[0]?.dataset.name || 'Unknown';
 
             if(!phone || !msg) return alert("Select student and enter message");
 
-            // Save this action to your Comm. Logs
+            // Save to comm_logs
             await addDoc(collection(db, "comm_logs"), {
                 recipient: name,
                 phone: phone,
@@ -62,11 +69,11 @@
                 timestamp: new Date()
             });
 
-            // Trigger the native SMS app
+            // Open native SMS app
             window.location.href = `sms:+91${phone}?body=${encodeURIComponent(msg)}`;
         };
+
         loadStudents();
     </script>
 </body>
 </html>
-
