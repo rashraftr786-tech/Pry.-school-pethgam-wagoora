@@ -3,14 +3,14 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCzxHme_3hrztrDuD7wupGwNilDtYLfENI",
-  authDomain: "studio-2729610945-4684b.firebaseapp.com",
-  projectId: "studio-2729610945-4684b",
-  storageBucket: "studio-2729610945-4684b.firebasestorage.app",
-  messagingSenderId: "711147405574",
-  appId: "1:711147405574:web:7b5597955b676a3e4d1e87"
+  apiKey: "AIzaSyDgVFdfKpCrLkoRsMI2gS7ajlJUzVdYLZU",
+  authDomain: "pry-school-pethgam-wagoora.firebaseapp.com",
+  projectId: "pry-school-pethgam-wagoora",
+  storageBucket: "pry-school-pethgam-wagoora.firebasestorage.app",
+  messagingSenderId: "255417366612",
+  appId: "1:255417366612:web:81cec46aa75cb7d4ba95c1",
+  measurementId: "G-JE9WY9T6FJ"
 };
-
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
