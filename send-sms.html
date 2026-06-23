@@ -31,51 +31,62 @@
     </div>
 
     <script type="module">
-        import { db } from './init-firebase.js';
-        import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  let students = [];
 
-        async function loadStudents() {
-            const snap = await getDocs(collection(db, "admissions"));
-            const select = document.getElementById('studentSelect');
-            snap.forEach(doc => {
-                const s = doc.data();
-                // Build full name from split fields
-                const firstName = s.sFirstName || '';
-                const middleName = s.sMiddleName || '';
-                const lastName = s.sLastName || '';
-                const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ').trim() || 'Unknown';
+  // Try to load from Firebase, but fallback gracefully
+  try {
+    const { db } = await import('./init-firebase.js');
+    const { collection, getDocs, addDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+    const snap = await getDocs(collection(db, "admissions"));
+    const select = document.getElementById('studentSelect');
+    snap.forEach(doc => {
+      const s = doc.data();
+      const fullName = [s.sFirstName, s.sMiddleName, s.sLastName].filter(Boolean).join(' ').trim() || 'Unknown';
+      const opt = document.createElement('option');
+      opt.value = s.fatherContact || '';
+      opt.dataset.name = fullName;
+      opt.textContent = `${fullName} (${s.fatherContact || 'No Phone'})`;
+      select.appendChild(opt);
+    });
+    // Store the db and addDoc for later use
+    window.__firebase = { db, addDoc };
+  } catch (err) {
+    console.warn("Firebase not loaded – SMS will open without logging.", err);
+    // Optionally show a message to the user
+    document.querySelector('.max-w-md').insertAdjacentHTML('beforeend', 
+      `<div class="bg-yellow-100 text-yellow-800 p-2 rounded mt-2 text-xs">⚠️ SMS will be sent but NOT logged to Firebase (init-firebase.js missing).</div>`
+    );
+  }
 
-                const opt = document.createElement('option');
-                opt.value = s.fatherContact || ''; // phone number
-                opt.dataset.name = fullName;
-                opt.textContent = `${fullName} (${s.fatherContact || 'No Phone'})`;
-                select.appendChild(opt);
-            });
-        }
+  window.sendSMS = async function() {
+    const select = document.getElementById('studentSelect');
+    const phone = select.value;
+    const msg = document.getElementById('msgBody').value;
+    const name = select.selectedOptions[0]?.dataset.name || 'Unknown';
 
-        window.sendSMS = async () => {
-            const select = document.getElementById('studentSelect');
-            const phone = select.value;
-            const msg = document.getElementById('msgBody').value;
-            const name = select.selectedOptions[0]?.dataset.name || 'Unknown';
+    if (!phone || !msg) return alert("Select student and enter message");
 
-            if(!phone || !msg) return alert("Select student and enter message");
+    // If Firebase is available, log the SMS
+    if (window.__firebase) {
+      try {
+        const { db, addDoc } = window.__firebase;
+        const { collection } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        await addDoc(collection(db, "comm_logs"), {
+          recipient: name,
+          phone: phone,
+          message: msg,
+          type: "SMS",
+          date: new Date().toLocaleDateString('en-GB'),
+          timestamp: new Date()
+        });
+      } catch (e) {
+        console.warn("Failed to log SMS:", e);
+      }
+    }
 
-            // Save to comm_logs
-            await addDoc(collection(db, "comm_logs"), {
-                recipient: name,
-                phone: phone,
-                message: msg,
-                type: "SMS",
-                date: new Date().toLocaleDateString('en-GB'),
-                timestamp: new Date()
-            });
-
-            // Open native SMS app
-            window.location.href = `sms:+91${phone}?body=${encodeURIComponent(msg)}`;
-        };
-
-        loadStudents();
+    // Open native SMS app
+    window.location.href = `sms:+91${phone}?body=${encodeURIComponent(msg)}`;
+  };
     </script>
 </body>
 </html>
