@@ -94,7 +94,7 @@
 <div class="register-card">
   <div class="header-container">
     <div class="branding">
-      <img src="logo.png" alt="School Logo" class="school-logo">
+      <img src="logo.png" alt="School Logo" class="school-logo" onerror="this.style.display='none'">
       <div class="school-title">
         <h1>Government Primary School Pethgam Wagoora</h1>
         <h2>Student Admission Register – 2026</h2>
@@ -321,7 +321,7 @@
   import { db } from './init-firebase.js';
   import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ===== DOM refs =====
+    // ===== DOM refs =====
   const tbody = document.getElementById('tableContent');
   const recordSpan = document.getElementById('recordCount');
 
@@ -535,3 +535,4 @@
 </script>
 </body>
 </html>
+                  
