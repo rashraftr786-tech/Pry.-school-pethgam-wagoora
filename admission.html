@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
-    /* ===== all previous styles (unchanged) ===== */
     @page { size: A4; margin: 0; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -13,6 +12,8 @@
       padding: 0;
       font-size: 13px;
     }
+
+    /* ===== NO-PRINT NAV ===== */
     .no-print {
       background: #1a5d1a;
       padding: 10px;
@@ -42,19 +43,22 @@
     .no-print .btn-submit { background: #1a5d1a; color: white; border: 1px solid #ffcc00; }
     .no-print .btn-submit:hover { background: #0f4a0f; }
 
+    /* ===== PAGE – now scrollable on screen ===== */
     .page-border {
       background: white;
       width: 210mm;
-      height: 297mm;
+      min-height: 297mm;          /* grows with content on screen */
       margin: 10px auto;
       padding: 6mm 10mm;
       box-sizing: border-box;
       border: 2px solid darkgreen;
       position: relative;
-      overflow: hidden;
+      overflow: visible;          /* no clipping */
       display: flex;
       flex-direction: column;
     }
+
+    /* ===== HEADER ===== */
     .header-container {
       display: flex;
       align-items: center;
@@ -74,6 +78,7 @@
       font-size: 12px;
       color: #333;
     }
+
     .form-title {
       text-align: center;
       font-weight: bold;
@@ -81,6 +86,8 @@
       margin-bottom: 10px;
       text-decoration: underline;
     }
+
+    /* ===== FIELDS ===== */
     h3 {
       font-size: 14px;
       margin: 8px 0 4px 0;
@@ -125,6 +132,8 @@
       outline: none;
       box-shadow: 0 0 0 2px rgba(26,93,26,0.15);
     }
+
+    /* ===== PHOTO BOX ===== */
     .photo-box {
       width: 110px;
       height: 130px;
@@ -140,6 +149,8 @@
     .photo-box img { max-width: 100%; max-height: 100%; }
     .photo-box p { font-size: 10px; margin: 0; }
     .photo-box input[type="file"] { font-size: 9px; width: 90px; }
+
+    /* ===== DECLARATION ===== */
     .declaration-box {
       font-size: 12px;
       line-height: 1.4;
@@ -156,11 +167,30 @@
       transform: scale(1.1);
       margin-right: 6px;
     }
+
+    /* ===== BIG SUBMIT BUTTON ===== */
+    .submit-btn-main {
+      background: #1a5d1a;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+      margin: 8px 0 12px 0;
+      box-shadow: 0 4px 8px rgba(0,80,0,0.2);
+    }
+    .submit-btn-main:hover { background: #0f4a0f; transform: scale(1.02); }
+
+    /* ===== SIGNATURE SECTION ===== */
     .sig-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 30px;
-      margin-top: 20px;
+      margin-top: 16px;
     }
     .sig-placeholder {
       border-top: 2px solid #000;
@@ -191,6 +221,8 @@
       margin-top: 4px;
     }
     .sig-placeholder .sig-btn:hover { background: #1a2632; }
+
+    /* ===== OFFICE SECTION ===== */
     #officeSection {
       border: 2px dashed darkred;
       padding: 10px 12px;
@@ -203,7 +235,9 @@
       padding-left: 0;
       margin-top: 0;
     }
-    #officeSection .sig-section { margin-top: 20px; }
+    #officeSection .sig-section { margin-top: 16px; }
+
+    /* ===== SIGNATURE MODAL ===== */
     .sig-modal-overlay {
       display: none;
       position: fixed;
@@ -252,41 +286,28 @@
     .btn-secondary { background: #6c7a8d; color: white; }
     .btn-danger { background: #b22222; color: white; }
 
-    /* NEW – big submit button */
-    .submit-btn-main {
-      background: #1a5d1a;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 100%;
-      transition: 0.2s;
-      margin-top: 12px;
-      box-shadow: 0 4px 8px rgba(0,80,0,0.2);
-    }
-    .submit-btn-main:hover { background: #0f4a0f; transform: scale(1.02); }
-
+    /* ===== PRINT OVERRIDE ===== */
     @media print {
       .no-print { display: none !important; }
       body { background: white; margin: 0; padding: 0; }
       .page-border {
+        height: 100vh;           /* exact A4 height */
+        min-height: 100vh;
+        overflow: hidden;        /* no scroll in print */
         margin: 0 !important;
         border: 2px solid darkgreen;
         width: 100%;
-        height: 100vh;
         box-sizing: border-box;
         page-break-after: avoid;
       }
       #officeSection { display: block !important; }
+      .submit-btn-main { display: none !important; } /* hide button when printing */
     }
   </style>
 </head>
 <body>
 
-<!-- ===== NAV (includes Submit Admission button) ===== -->
+<!-- ===== NAV ===== -->
 <div class="no-print">
   <a href="admission.html">📝 New Admission</a>
   <a href="adm-register.html">📋 View Register</a>
@@ -333,7 +354,9 @@
       <div class="field-group"><label>Gender <span style="color:red;">*</span></label>
         <select id="gender"><option>Male</option><option>Female</option></select>
       </div>
-      <div class="field-group"><label>Blood Group</label><input type="text" id="bloodGroup"></div>
+      <div class="field-group"><label>Blood Group</label>
+        <select id="bloodGroup"><option value="">--</option><option>A</option><option>B</option><option>AB</option><option>O</option></select>
+      </div>
       <div class="field-group"><label>Category <span style="color:red;">*</span></label>
         <select id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select>
       </div>
@@ -387,12 +410,12 @@
       <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
     </div>
 
-    <!-- ===== BIG SUBMIT BUTTON (NEW) ===== -->
+    <!-- ===== BIG SUBMIT BUTTON ===== -->
     <div class="no-print">
       <button type="button" class="submit-btn-main" onclick="submitAdmission()">📤 Submit Admission</button>
     </div>
 
-    <!-- ===== SIGNATURES (Parent & Student) ===== -->
+    <!-- ===== SIGNATURES ===== -->
     <div class="sig-section">
       <div class="sig-placeholder">
         <span>Signature of Parent</span>
@@ -422,7 +445,7 @@
         <label>Remarks / Recommendations</label>
         <textarea id="remarks" rows="2" style="width:100%; padding:4px; font-size:13px; border:1px solid #777; border-radius:4px;"></textarea>
       </div>
-      <div class="sig-section" style="margin-top:20px;">
+      <div class="sig-section" style="margin-top:16px;">
         <div class="sig-placeholder">
           <span>Admission Incharge</span>
           <button type="button" class="sig-btn no-print" onclick="openSignaturePad('admInchargeSig')">✍️ Sign</button>
@@ -440,9 +463,9 @@
       </div>
     </div>
 
-    <!-- ===== BOTTOM BUTTONS (kept for convenience) ===== -->
+    <!-- ===== BOTTOM BUTTONS ===== -->
     <div class="no-print" style="text-align:center; margin-top:12px;">
-      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; margin-left:10px; font-size:14px;">🖨️ Print A4</button>
+      <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">🖨️ Print A4</button>
       <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">💾 Save Record</button>
     </div>
   </form>
@@ -472,7 +495,7 @@ import { collection, addDoc, doc, getDoc, setDoc } from "https://www.gstatic.com
 // ===== DOM REFS =====
 const form = document.getElementById('admissionForm');
 
-// ===== PHOTO UPLOAD (fixed) =====
+// ===== PHOTO UPLOAD =====
 let compressedPhotoBase64 = "";
 
 window.processPhoto = function(event) {
