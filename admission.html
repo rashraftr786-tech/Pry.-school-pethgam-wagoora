@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Student Admission Form - GPS Pethgam Wagoora</title>
   <style>
+    /* ===== all previous styles (unchanged) ===== */
     @page { size: A4; margin: 0; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -12,8 +13,6 @@
       padding: 0;
       font-size: 13px;
     }
-
-    /* ===== NO-PRINT NAV ===== */
     .no-print {
       background: #1a5d1a;
       padding: 10px;
@@ -43,7 +42,6 @@
     .no-print .btn-submit { background: #1a5d1a; color: white; border: 1px solid #ffcc00; }
     .no-print .btn-submit:hover { background: #0f4a0f; }
 
-    /* ===== PAGE ===== */
     .page-border {
       background: white;
       width: 210mm;
@@ -57,8 +55,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* ===== HEADER ===== */
     .header-container {
       display: flex;
       align-items: center;
@@ -78,7 +74,6 @@
       font-size: 12px;
       color: #333;
     }
-
     .form-title {
       text-align: center;
       font-weight: bold;
@@ -86,8 +81,6 @@
       margin-bottom: 10px;
       text-decoration: underline;
     }
-
-    /* ===== FIELDS ===== */
     h3 {
       font-size: 14px;
       margin: 8px 0 4px 0;
@@ -96,7 +89,6 @@
       border-left: 5px solid darkgreen;
       text-transform: uppercase;
     }
-
     .row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -133,8 +125,6 @@
       outline: none;
       box-shadow: 0 0 0 2px rgba(26,93,26,0.15);
     }
-
-    /* ===== PHOTO BOX ===== */
     .photo-box {
       width: 110px;
       height: 130px;
@@ -150,8 +140,6 @@
     .photo-box img { max-width: 100%; max-height: 100%; }
     .photo-box p { font-size: 10px; margin: 0; }
     .photo-box input[type="file"] { font-size: 9px; width: 90px; }
-
-    /* ===== DECLARATION ===== */
     .declaration-box {
       font-size: 12px;
       line-height: 1.4;
@@ -168,8 +156,6 @@
       transform: scale(1.1);
       margin-right: 6px;
     }
-
-    /* ===== SIGNATURE SECTION ===== */
     .sig-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -205,8 +191,6 @@
       margin-top: 4px;
     }
     .sig-placeholder .sig-btn:hover { background: #1a2632; }
-
-    /* ===== OFFICE SECTION ===== */
     #officeSection {
       border: 2px dashed darkred;
       padding: 10px 12px;
@@ -220,8 +204,6 @@
       margin-top: 0;
     }
     #officeSection .sig-section { margin-top: 20px; }
-
-    /* ===== SIGNATURE MODAL (overlay) ===== */
     .sig-modal-overlay {
       display: none;
       position: fixed;
@@ -270,7 +252,23 @@
     .btn-secondary { background: #6c7a8d; color: white; }
     .btn-danger { background: #b22222; color: white; }
 
-    /* ===== PRINT & PDF ===== */
+    /* NEW – big submit button */
+    .submit-btn-main {
+      background: #1a5d1a;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+      margin-top: 12px;
+      box-shadow: 0 4px 8px rgba(0,80,0,0.2);
+    }
+    .submit-btn-main:hover { background: #0f4a0f; transform: scale(1.02); }
+
     @media print {
       .no-print { display: none !important; }
       body { background: white; margin: 0; padding: 0; }
@@ -389,6 +387,11 @@
       <strong>Parents Declaration:</strong> I do hereby declare that the above information provided by me is true to the best of my knowledge and belief. I further declare that I will abide by the rules and regulations of the school and department. I hereby give my consent to provide the AADHAAR for demographic authentication of the student for official educational purposes only.
     </div>
 
+    <!-- ===== BIG SUBMIT BUTTON (NEW) ===== -->
+    <div class="no-print">
+      <button type="button" class="submit-btn-main" onclick="submitAdmission()">📤 Submit Admission</button>
+    </div>
+
     <!-- ===== SIGNATURES (Parent & Student) ===== -->
     <div class="sig-section">
       <div class="sig-placeholder">
@@ -439,8 +442,8 @@
 
     <!-- ===== BOTTOM BUTTONS (kept for convenience) ===== -->
     <div class="no-print" style="text-align:center; margin-top:12px;">
-      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">💾 Save Record</button>
       <button type="button" onclick="window.print()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; margin-left:10px; font-size:14px;">🖨️ Print A4</button>
+      <button type="button" onclick="submitAdmission()" style="background:darkgreen; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;">💾 Save Record</button>
     </div>
   </form>
 </div>
@@ -497,7 +500,7 @@ window.processPhoto = function(event) {
   reader.readAsDataURL(file);
 };
 
-// ===== DATE TO WORDS (exact format: "twenty third of March Nineteen Hundred and seventy Nine") =====
+// ===== DATE TO WORDS =====
 window.convertDOB = function() {
   const dob = document.getElementById('dob').value;
   if (!dob) return;
@@ -506,7 +509,6 @@ window.convertDOB = function() {
   const month = d.toLocaleString('en-IN', { month: 'long' });
   const year = d.getFullYear();
 
-  // Number to words (1-31)
   const numWords = (n) => {
     const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
     const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
@@ -515,14 +517,12 @@ window.convertDOB = function() {
     return ones[Math.floor(n/100)] + " Hundred " + (n%100!==0 ? numWords(n%100) : "");
   };
 
-  // Ordinal for day
   const ordinals = ["", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
     "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth", "Sixteenth", "Seventeenth", "Eighteenth", "Nineteenth",
     "Twentieth", "Twenty First", "Twenty Second", "Twenty Third", "Twenty Fourth", "Twenty Fifth", "Twenty Sixth",
     "Twenty Seventh", "Twenty Eighth", "Twenty Ninth", "Thirtieth", "Thirty First"];
   const dayWords = ordinals[day] || numWords(day);
 
- // Year in words (e.g., "Nineteen Hundred and seventy Nine")
   const yearWords = (y) => {
     const first = Math.floor(y / 100);
     const second = y % 100;
@@ -533,19 +533,16 @@ window.convertDOB = function() {
     return result;
   };
 
-  // Capitalize first letter of each word
   const toTitleCase = (str) => {
     return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   };
 
-  // Format: "twenty third of March Nineteen Hundred and seventy Nine"
   let final = `${dayWords.toLowerCase()} of ${month} ${yearWords(year)}`;
-  // Capitalize the entire string (first letter of each word)
   final = toTitleCase(final);
   document.getElementById('dobWords').value = final;
 };
 
-// ===== SIGNATURE PAD (global functions for HTML onclick) =====
+// ===== SIGNATURE PAD =====
 let sigTargetField = '';
 let sigCanvas, sigCtx, isDrawing = false;
 
@@ -613,7 +610,7 @@ window.saveSignature = function() {
   closeSignatureModal();
 };
 
-// ===== LOAD EXISTING DATA (if edit mode) =====
+// ===== LOAD EXISTING DATA =====
 window.addEventListener('DOMContentLoaded', async () => {
   initSignatureCanvas();
 
@@ -656,7 +653,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('photoPreview').style.display = 'block';
         document.getElementById('photoTxt').style.display = 'none';
       }
-       // Signatures (if any)
       ['parentSig','studentSig','admInchargeSig','headmasterSig'].forEach(field => {
         if (s[field]) {
           document.getElementById(field).value = s[field];
@@ -670,7 +666,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       window.convertDOB();
     }
   } else {
-    // Generate admission number
     document.getElementById('admNo').value = 'GPSPW/' + Date.now().toString().slice(-4);
   }
 });
