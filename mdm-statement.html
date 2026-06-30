@@ -2,296 +2,383 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Automated MDM Statement - GPS Pethgam Wagoora</title>
+    <title>PM-POSHAN MDCF Generator</title>
     <style>
-        @page { size: A4 landscape; margin: 8mm; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 5mm; background: #f0f0f0; }
-        
-        .report-container {
-            width: 280mm; 
-            background: white;
-            padding: 10mm;
-            margin: auto;
-            border: 2px solid #000;
-            box-sizing: border-box;
-            min-height: 195mm;
-            display: flex;
-            flex-direction: column;
+        :root {
+            --border-col: #000;
         }
-
-        .header-section { 
+        body {
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+        }
+        
+        header { 
             display: flex; 
             align-items: center; 
-            border-bottom: 2px solid #000;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
+            justify-content: center; 
+            margin-bottom: 10px;
+            text-align: center;
+            gap: 20px;
         }
-        .school-logo { width: 85px; height: 85px; margin-right: 25px; }
-        .header-text { flex-grow: 1; text-align: left; }
-        .header-text h1 { margin: 0; font-size: 26px; color: #1a5d1a; text-transform: uppercase; font-family: 'Arial Black', sans-serif; }
-        .header-text .address-line { margin: 2px 0; font-size: 14px; color: #000; font-weight: bold; }
+        .header-content { flex-grow: 1; }
+        .school-logo { width: 80px; height: 80px; object-fit: contain; }
 
-        .header-details { 
-            text-align: right; 
-            font-size: 13px; 
-            line-height: 1.6; 
-            font-weight: bold;
-            min-width: 265px;
-        }
-
-        .form-title { 
-            text-align: center; 
-            font-weight: bold; 
-            font-size: 18px; 
-            margin: 12px 0; 
-            text-decoration: underline; 
-            text-transform: uppercase; 
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 10.5px; table-layout: fixed; margin-top: 5px; }
-        th, td { border: 1px solid #000; padding: 5px 2px; text-align: center; word-wrap: break-word; }
-        th { background-color: #f5f5f5; font-weight: bold; height: 55px; vertical-align: middle; }
+        h1 { font-size: 16px; margin: 5px 0; }
+        h2 { font-size: 14px; margin: 5px 0; text-decoration: underline; }
         
-        .scheme-cell { text-align: left; padding-left: 8px; font-weight: bold; background: #fafafa; }
-        .total-row { font-weight: bold; background: #f0f0f0; font-size: 12px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 10px;
+        }
 
-        .account-section { margin-top: 15px; font-size: 13px; font-weight: bold; }
-        .cooks-table { width: 55%; margin-top: 10px; }
-        .cooks-table th { height: 25px; background: #eee; }
+        th, td {
+            border: 1px solid var(--border-col);
+            padding: 6px;
+            text-align: left;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
 
-        .footer-sigs { margin-top: auto; padding-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .sig-box { width: 250px; text-align: left; font-size: 12px; line-height: 1.7; }
+        th { background-color: #f2f2f2; text-align: center; }
+        
+        .section-title {
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        input {
+            width: 95%;
+            border: none;
+            font-size: 12px;
+            outline: none;
+        }
+        
+        .calc-field { background-color: #f9f9f9; font-weight: bold; text-align: center; }
 
-        .no-print { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 13px; }
-        .btn-print { background: #333; }
-        .btn-finalize { background: #b71c1c; }
+        .inline-group {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+            align-items: center;
+        }
+        .inline-group label {
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-        @media print { .no-print { display: none; } body { background: white; padding: 0; } .report-container { border: 2px solid #000; margin: 0; width: 100%; } }
+        .no-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: white;
+            padding: 15px;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .no-print { display: none; }
+            .page { margin: 0; box-shadow: none; page-break-after: always; }
+            input { background: transparent; }
+        }
     </style>
 </head>
 <body>
 
-<div class="report-container">
-    <div class="header-section">
-        <img src="logo.png" class="school-logo" alt="Logo">
-        <div class="header-text">
-            <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
-            <div class="address-line">Address: Wagoora Babareshi Road Near Zonal Education Office</div>
-            <div class="address-line">Pethgam Wagoora Baramulla Jammu and Kashmir - 193109</div>
-        </div>
-        <div class="header-details">
-            <div>Udise Code: 01022202207</div>
-            <div>Contact: 9596449881</div>
-            <div>Email: pspethgam@gmail.com</div>
-            <div>Month: <span id="reportMonth" style="text-decoration: underline;">__________</span></div>
-        </div>
-    </div>
+<div class="no-print">
+    <button onclick="window.print()" style="padding: 10px 20px; cursor:pointer; background:#27ae60; color:white; border:none; border-radius:4px;">Print Report (2 Pages)</button>
+</div>
 
-    <div class="form-title">Month Wise/Department Wise Expenditure Statement under MDM Scheme</div>
+<div class="page">
+    <header>
+        <img src="new-logo.png" alt="School Logo" class="school-logo">
+        <div class="header-content">
+            <h1>(PM-POSHAN)Monthly Data Capture Format (MDCF)</h1>
+            <h2>Office of the Headmaster Government Primary School</h2>
+            <div class="school-info">
+                <span>Pethgam Wagoora (Zone Wagoora) 193109</span>
+            </div>
+        </div>
+        <div style="width:80px;"></div> 
+    </header>
 
+    <div class="section-title">1. School Details</div>
+<table>
+    <tr>
+        <th style="width: 15%;">Month-Year</th>
+        <td style="width: 18%;"><input type="text" value="March-2026"></td>
+        <th style="width: 15%;">UDISE Code</th>
+        <td style="width: 18%;"><input type="text" value="01022202207"></td>
+        <th style="width: 15%;">School Name</th>
+        <td style="width: 19%;"><input type="text" value="PS Pethgam Wagoora"></td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td colspan="5">
+            <div class="inline-group">
+                <label><input type="checkbox" checked> Government</label>
+                <label><input type="checkbox"> Local Body</label>
+                <label><input type="checkbox"> EGS/AIE Centers</label>
+                <label><input type="checkbox"> NCLP</label>
+                <label><input type="checkbox"> Madras / Maqtab</label>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>Category</th>
+        <td><label><input type="checkbox" checked> Primary</label></td>
+        <th>State / UT</th>
+        <td><input type="text" value="Jammu and Kashmir"></td>
+        <th>District</th>
+        <td><input type="text" value="Baramulla"></td>
+    </tr>
+    <tr>
+        <th>Block/NP</th>
+        <td><input type="text" value="Wagoora"></td>
+        <th>Village/Ward</th>
+        <td><input type="text" value="Wagoora"></td>
+        <th>Kitchen Type</th>
+        <td><input type="text" value="School Kitchen"></td>
+    </tr>
+    <tr>
+        <th>NGO/SHG</th>
+        <td><input type="text"></td>
+        <th>Enrolment</th>
+        <td colspan="3"><input type="text" placeholder="Total Students"></td>
+    </tr>
+</table>
+
+    <div class="section-title">2. Meals Availed Status</div>
     <table>
         <thead>
             <tr>
-                <th style="width: 135px;">Scheme</th>
-                <th style="width: 50px;">Total Roll</th>
-                <th>No. of Working Days</th>
-                <th>No. of days MDM Served</th>
-                <th>No of Students Covered</th>
-                <th>No. of Meals Served</th>
-                <th>Opening Balance of Rice</th>
-                <th>Food Grains Lifted</th>
-                <th>Food Grains Utilized</th>
-                <th>Closing Balance of Food Grains</th>
-                <th>Opening Balance of Funds</th>
-                <th>Funds Utilized (Cooking Cost)</th>
-                <th>Funds Received</th>
-                <th>Closing Balance of Funds</th>
-                <th style="width: 55px;">No. of Cooks</th>
+                <th>Detail</th>
+                <th>Bal Vatika</th>
+                <th>Primary (1-5)</th>
             </tr>
         </thead>
-        <tbody id="statementBody">
+        <tbody>
             <tr>
-                <td class="scheme-cell">Pre-Primary (Bal Vatika)</td>
-                <td id="rollPP">0</td>
-                <td id="ppWorkDays">0</td>
-                <td id="ppServedDays">0</td>
-                <td id="ppCovered">0</td>
-                <td id="ppMeals">0</td>
-                <td id="ppOpenRice">0.000</td>
-                <td id="ppLifted">0.000</td>
-                <td id="ppUtilized">0.000</td>
-                <td id="ppCloseRice">0.000</td>
-                <td id="ppOpenFunds">0.00</td>
-                <td id="ppUtilFunds">0.00</td>
-                <td id="ppRecFunds">0.00</td>
-                <td id="ppCloseFunds">0.00</td>
-                <td>1</td>
+                <td>Number of School days during the month</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
             </tr>
             <tr>
-                <td class="scheme-cell">Primary</td>
-                <td id="rollP">0</td>
-                <td id="pWorkDays">0</td>
-                <td id="pServedDays">0</td>
-                <td id="pCovered">0</td>
-                <td id="pMeals">0</td>
-                <td id="pOpenRice">0.000</td>
-                <td id="pLifted">0.000</td>
-                <td id="pUtilized">0.000</td>
-                <td id="pCloseRice">0.000</td>
-                <td id="pOpenFunds">0.00</td>
-                <td id="pUtilFunds">0.00</td>
-                <td id="pRecFunds">0.00</td>
-                <td id="pCloseFunds">0.00</td>
-                <td>0</td>
+                <td>Actual number of days MDM served</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
             </tr>
-            <tr class="total-row">
-                <td>TOTAL</td>
-                <td id="rollT">0</td>
-                <td id="tWorkDays">-</td>
-                <td id="tServedDays">-</td>
-                <td id="tCovered">0</td>
-                <td id="tMeals">0</td>
-                <td id="tOpenRice">0.000</td>
-                <td id="tLifted">0.000</td>
-                <td id="tUtilized">0.000</td>
-                <td id="tCloseRice">0.000</td>
-                <td id="tOpenFunds">0.00</td>
-                <td id="tUtilFunds">0.00</td>
-                <td id="tRecFunds">0.00</td>
-                <td id="tCloseFunds">0.00</td>
-                <td>1</td>
+            <tr>
+                <td>Total Meals served during month</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
             </tr>
         </tbody>
     </table>
 
-    <div class="account-section">
-        MDM A/C of School (16 digits): <span style="text-decoration: underline;">0486040500000273</span>
-    </div>
-
-    <div class="cooks-table">
-        <div style="font-weight: bold; margin-bottom: 5px;">Account Number of Cooks:</div>
-        <table>
-            <tr><th style="width: 60px;">S No</th><th>Name of the Cook</th><th>A/C No (16 digits)</th></tr>
-            <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
-        </table>
-    </div>
-
-    <div class="footer-sigs">
-        <div class="sig-box">
-            <strong>MDM I/C</strong><br>
-            Name: ____________________<br>
-            Contact No: ________________<br>
-            Sig: _____________________
-        </div>
-        <div style="text-align: right; font-weight: bold; font-size: 15px;">
-            Headmaster
-        </div>
-    </div>
+    <div class="section-title">3. Fund Details (In Rs.)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Opening Bal</th>
+                <th>Received</th>
+                <th>Expenditure</th>
+                <th>Closing Bal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Cooking Cost-Bal Vatika</td>
+                <td><input type="number" id="f_op1" oninput="calcFunds(1)"></td>
+                <td><input type="number" id="f_re1" oninput="calcFunds(1)"></td>
+                <td><input type="number" id="f_ex1" oninput="calcFunds(1)"></td>
+                <td><input type="number" id="f_cl1" class="calc-field" readonly></td>
+            </tr>
+            <tr>
+                <td>Cooking Cost-Primary</td>
+                <td><input type="number" id="f_op2" oninput="calcFunds(2)"></td>
+                <td><input type="number" id="f_re2" oninput="calcFunds(2)"></td>
+                <td><input type="number" id="f_ex2" oninput="calcFunds(2)"></td>
+                <td><input type="number" id="f_cl2" class="calc-field" readonly></td>
+            </tr>
+            <tr>
+                <td>Cook Cum Helper</td>
+                <td><input type="number" id="f_op3" oninput="calcFunds(3)"></td>
+                <td><input type="number" id="f_re3" oninput="calcFunds(3)"></td>
+                <td><input type="number" id="f_ex3" oninput="calcFunds(3)"></td>
+                <td><input type="number" id="f_cl3" class="calc-field" readonly></td>
+            </tr>
+            <tr>
+                <td>MME Expenses</td>
+                <td><input type="number" id="f_op4" oninput="calcFunds(4)"></td>
+                <td><input type="number" id="f_re4" oninput="calcFunds(4)"></td>
+                <td><input type="number" id="f_ex4" oninput="calcFunds(4)"></td>
+                <td><input type="number" id="f_cl4" class="calc-field" readonly></td>
+            </tr>
+            <tr>
+                <th colspan="3" style="text-align: left;">
+                    Whether the Sum of above Closing Balance matches with Bank Account Closing Balance?
+                </th>
+                <td colspan="2">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label style="display: flex; align-items: center; gap: 4px;">
+                            <input type="checkbox" style="width: auto;"> Yes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 4px;">
+                            <input type="checkbox" style="width: auto;"> No
+                        </label>
+                        <input type="text" placeholder="Remarks if any" style="border-bottom: 1px solid #ccc; width: 60%;">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="section-title">4. Cook Cum Helper Payment Details</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 40px;">S.No</th>
+                <th>Cook Name</th>
+                <th>Gender</th>
+                <th>Category</th>
+                <th>Mode</th>
+                <th>Amount (Rs)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:center;">1</td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="number"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="section-title">5. Food Grains (Rice) Details (In KG.)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Opening Bal</th>
+                <th>Received</th>
+                <th>Consumption</th>
+                <th>Closing Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Rice (Bal Vatika)</td>
+                <td><input type="number" id="g_op1" oninput="calcGrains(1)"></td>
+                <td><input type="number" id="g_re1" oninput="calcGrains(1)"></td>
+                <td><input type="number" id="g_co1" oninput="calcGrains(1)"></td>
+                <td><input type="number" id="g_cl1" class="calc-field" readonly></td>
+            </tr>
+            <tr>
+                <td>Rice (Primary)</td>
+                <td><input type="number" id="g_op2" oninput="calcGrains(2)"></td>
+                <td><input type="number" id="g_re2" oninput="calcGrains(2)"></td>
+                <td><input type="number" id="g_co2" oninput="calcGrains(2)"></td>
+                <td><input type="number" id="g_cl2" class="calc-field" readonly></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="section-title">6. Children Health Status</div>
+    <table>
+        <tr><td>No. of children Class 1 to 5 received 4 IFA tablets (Boys)</td><td><input type="number"></td></tr>
+        <tr><td>No. of children Class 1 to 5 received 4 IFA tablets (Girls)</td><td><input type="number"></td></tr>
+        <tr><td>No. of children screened by mobile health RBSK team</td><td><input type="number"></td></tr>
+        <tr><td>No. of children referred by mobile health RBSK team</td><td><input type="number"></td></tr>
+    </table>
 </div>
 
-<div class="no-print">
-    <button class="btn btn-finalize" onclick="finalizeBalances()">Finalize Month</button>
-    <button class="btn btn-print" onclick="window.print()">Print Statement</button>
+<div class="page">
+    
+    <div class="section-title">7. School Inspection</div>
+    <table>
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="width: 60%; text-align: left; padding: 8px;">School Inspection done during the month</th>
+                <th style="width: 10%; text-align: center;">Yes</th>
+                <th style="width: 10%; text-align: center;"><input type="checkbox" style="width: auto;"></th>
+                <th style="width: 10%; text-align: center;">No</th>
+                <th style="width: 10%; text-align: center;"><input type="checkbox" style="width: auto;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>By Members of Task Force</td>
+                <td colspan="4"><input type="text"></td>
+            </tr>
+            <tr>
+                <td>By District Officials</td>
+                <td colspan="4"><input type="text"></td>
+            </tr>
+            <tr>
+                <td>By Block/Taluka Level Officials</td>
+                <td colspan="4"><input type="text"></td>
+            </tr>
+            <tr>
+                <td>By SMC Members</td>
+                <td colspan="4"><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Number of untoward incidents occurred</td>
+                <td colspan="4"><input type="number"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 80px; display: flex; justify-content: space-between;">
+        <div style="border-top: 1px solid #000; width: 220px; text-align: center; padding-top: 5px;">
+            Signature of SMC Chairperson
+        </div>
+        <div style="border-top: 1px solid #000; width: 220px; text-align: center; padding-top: 5px;">
+            Signature of Head Teacher
+        </div>
+    </div>
 </div>
 
 <script>
-    window.onload = function() {
-        const now = new Date();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        document.getElementById('reportMonth').innerText = monthNames[now.getMonth()] + " " + now.getFullYear();
-        loadData();
-    };
-
-    function loadData() {
-        // 1. Fetch Dynamic Roll from Admissions
-        const students = JSON.parse(localStorage.getItem("admissionData")) || [];
-        // Adjust these strings if your admission form uses different names
-        const countPP = students.filter(s => s.sclass === "Bal-Vatika" || s.sclass === "Pre-Primary").length;
-        const countP = students.filter(s => ["1st", "2nd", "3rd", "4th", "5th"].includes(s.sclass)).length;
-        
-        document.getElementById('rollPP').innerText = countPP;
-        document.getElementById('rollP').innerText = countP;
-        document.getElementById('rollT').innerText = countPP + countP;
-
-        // 2. Load Daily Logs and Balances
-        const logs = JSON.parse(localStorage.getItem("mdmDailyLogs")) || [];
-        const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
-        const rate = parseFloat(localStorage.getItem("mdmRate")) || 5.45;
-        const now = new Date();
-        const currentKey = `${now.getFullYear()}-${now.getMonth()}`;
-
-        const openBal = balances[currentKey] || { rice: 0, funds: 0 };
-        const monthLogs = logs.filter(l => {
-            const d = new Date(l.date);
-            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-        });
-
-        let stats = { 
-            pp: 0, p: 0, lifted: 0, rec: 0,
-            ppDays: 0, pDays: 0 
-        };
-
-        monthLogs.forEach(l => {
-            stats.pp += parseInt(l.prePriCount || 0);
-            stats.p += parseInt(l.priCount || 0);
-            stats.lifted += parseFloat(l.grainsLifted || 0);
-            stats.rec += parseFloat(l.fundsReceived || 0);
-            
-            if(parseInt(l.prePriCount) > 0) stats.ppDays++;
-            if(parseInt(l.priCount) > 0) stats.pDays++;
-        });
-
-        // 3. Ratio Calculation for balanced distribution
-        const totalRoll = (countPP + countP) || 1;
-        const ppRatio = countPP / totalRoll;
-        const pRatio = countP / totalRoll;
-
-        // 4. Update Table Rows
-        updateRow('pp', stats.pp, openBal.rice * ppRatio, openBal.funds * ppRatio, stats.lifted * ppRatio, stats.rec * ppRatio, rate);
-        updateRow('p', stats.p, openBal.rice * pRatio, openBal.funds * pRatio, stats.lifted * pRatio, stats.rec * pRatio, rate);
-        updateRow('t', stats.pp + stats.p, openBal.rice, openBal.funds, stats.lifted, stats.rec, rate);
-
-        document.getElementById('ppWorkDays').innerText = stats.ppDays;
-        document.getElementById('ppServedDays').innerText = stats.ppDays;
-        document.getElementById('pWorkDays').innerText = stats.pDays;
-        document.getElementById('pServedDays').innerText = stats.pDays;
+    function calcFunds(row) {
+        const op = Number(document.getElementById('f_op' + row).value) || 0;
+        const re = Number(document.getElementById('f_re' + row).value) || 0;
+        const ex = Number(document.getElementById('f_ex' + row).value) || 0;
+        document.getElementById('f_cl' + row).value = (op + re) - ex;
     }
-
-    function updateRow(id, count, oRice, oFunds, lifted, rec, rate) {
-        const utilizedRice = count * 0.100;
-        const utilizedFunds = count * rate;
-        const cRice = (oRice + lifted) - utilizedRice;
-        const cFunds = (oFunds + rec) - utilizedFunds;
-
-        document.getElementById(id + 'Covered').innerText = count;
-        document.getElementById(id + 'Meals').innerText = count;
-        document.getElementById(id + 'OpenRice').innerText = oRice.toFixed(3);
-        document.getElementById(id + 'Lifted').innerText = lifted.toFixed(3);
-        document.getElementById(id + 'Utilized').innerText = utilizedRice.toFixed(3);
-        document.getElementById(id + 'CloseRice').innerText = cRice.toFixed(3);
-        document.getElementById(id + 'OpenFunds').innerText = oFunds.toFixed(2);
-        document.getElementById(id + 'UtilFunds').innerText = utilizedFunds.toFixed(2);
-        document.getElementById(id + 'RecFunds').innerText = rec.toFixed(2);
-        document.getElementById(id + 'CloseFunds').innerText = cFunds.toFixed(2);
-    }
-
-    function finalizeBalances() {
-        const rice = parseFloat(document.getElementById('tCloseRice').innerText);
-        const funds = parseFloat(document.getElementById('tCloseFunds').innerText);
-        const now = new Date();
-        let nextM = now.getMonth() + 1;
-        let nextY = now.getFullYear();
-        if(nextM > 11) { nextM = 0; nextY++; }
-        
-        const balances = JSON.parse(localStorage.getItem("mdmBalances")) || {};
-        balances[`${nextY}-${nextM}`] = { rice, funds };
-        localStorage.setItem("mdmBalances", JSON.stringify(balances));
-        alert("Success! Closing balances saved as next month's opening stock.");
+    function calcGrains(row) {
+        const op = Number(document.getElementById('g_op' + row).value) || 0;
+        const re = Number(document.getElementById('g_re' + row).value) || 0;
+        const co = Number(document.getElementById('g_co' + row).value) || 0;
+        document.getElementById('g_cl' + row).value = ((op + re) - co).toFixed(2);
     }
 </script>
-</body>
-</html>
-        
 
-    
+</body>
+</html>                        
