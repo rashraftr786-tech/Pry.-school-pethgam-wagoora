@@ -13,7 +13,8 @@
             background: #f0f0f0;
             margin: 0;
             padding: 0;
-            line-height: 1.3;
+            line-height: 1.5;
+            /* increased for better readability and vertical fill */
         }
 
         .page-border {
@@ -21,30 +22,30 @@
             width: 210mm;
             height: 297mm;
             margin: auto;
-            padding: 7mm 12mm 6mm 12mm;
+            padding: 10mm 15mm 8mm 15mm;
+            /* increased padding to use more space */
             box-sizing: border-box;
             border: 3px double darkgreen;
-            position: relative;
             display: flex;
             flex-direction: column;
         }
 
         .ref-box {
             text-align: right;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             padding: 2px 6px;
             border-bottom: 1px dashed #ccc;
             flex-shrink: 0;
         }
         .ref-box p {
             margin: 0;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: bold;
             color: #333;
         }
         .ref-id {
             color: darkred;
-            font-size: 12px;
+            font-size: 13px;
             text-decoration: underline;
         }
 
@@ -52,24 +53,24 @@
             display: flex;
             align-items: center;
             border-bottom: 2px solid darkgreen;
-            padding-bottom: 4px;
-            margin-bottom: 5px;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
             flex-shrink: 0;
         }
         .school-logo {
-            width: 68px;
-            height: 68px;
-            margin-right: 14px;
+            width: 72px;
+            height: 72px;
+            margin-right: 16px;
         }
         .header-text h1 {
             margin: 0;
-            font-size: 18px;
+            font-size: 20px;
             color: darkgreen;
             text-transform: uppercase;
         }
         .header-text p {
-            margin: 0px 0;
-            font-size: 10.5px;
+            margin: 1px 0;
+            font-size: 11px;
             color: #333;
             font-weight: bold;
         }
@@ -77,30 +78,34 @@
         .form-title {
             text-align: center;
             font-weight: bold;
-            font-size: 14.5px;
-            margin: 4px 0 2px 0;
+            font-size: 16px;
+            margin: 6px 0 2px 0;
             text-transform: uppercase;
             flex-shrink: 0;
         }
         .form-subtitle {
             text-align: center;
             font-weight: bold;
-            font-size: 13px;
-            margin: 0 0 6px 0;
+            font-size: 14px;
+            margin: 0 0 10px 0;
             flex-shrink: 0;
         }
 
         .consent-body {
-            font-size: 11.5px;
+            font-size: 13px;
+            /* increased from 11.5px */
             text-align: justify;
             color: #000;
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            /* pushes footer and HOI down */
         }
 
-        .consent-body .consent-paragraph {
-            margin-bottom: 4px;
+        .consent-paragraph {
+            margin-bottom: 8px;
+            /* increased spacing */
             flex-shrink: 0;
         }
 
@@ -108,47 +113,73 @@
             border: none;
             border-bottom: 1px solid #000;
             padding: 0 4px;
-            font-size: 12px;
+            font-size: 13px;
             font-family: inherit;
             background: transparent;
+            vertical-align: baseline;
+        }
+
+        /* Style for dropdowns to match input-line */
+        select.input-line {
+            appearance: none;
+            -webkit-appearance: none;
+            background: transparent;
+            border-radius: 0;
+            cursor: pointer;
+            padding-right: 16px;
+            /* space for dropdown arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M0 0l4 6 4-6z' fill='%23000'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
         }
 
         .footer-section {
-            margin-top: 6px;
+            margin-top: 12px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 30px;
             flex-shrink: 0;
             align-items: end;
         }
 
         .sig-line {
             border-top: 1px solid #000;
-            margin-top: 28px;
+            margin-top: 30px;
             text-align: center;
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: bold;
         }
 
         .hoi-section {
-            margin-top: 8px;
+            margin-top: 18px;
+            /* more space */
             border-top: 2px dashed #444;
-            padding-top: 8px;
+            padding-top: 12px;
             flex-shrink: 0;
         }
 
         .hoi-title {
             text-align: center;
             font-weight: bold;
-            font-size: 12.5px;
-            margin-bottom: 5px;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        /* Highlight the HoI name */
+        .hoi-name-highlight {
+            font-weight: bold;
+            font-size: 1.1em;
+            background-color: #ffff99;
+            padding: 0 4px;
+            border-radius: 3px;
+            display: inline-block;
         }
 
         .sig-block {
-            font-size: 11.5px;
+            font-size: 12px;
         }
         .sig-block .input-line {
-            font-size: 11.5px;
+            font-size: 12px;
         }
 
         @media print {
@@ -164,6 +195,11 @@
             }
             .input-line {
                 border-bottom: 1px solid #000 !important;
+            }
+            select.input-line {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M0 0l4 6 4-6z' fill='%23000'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 4px center;
             }
         }
     </style>
@@ -198,12 +234,24 @@
 
             <!-- ===== PARAGRAPH 1 ===== -->
             <div class="consent-paragraph">
-                I <input type="text" id="parentNameInput" class="input-line" style="width: 200px;"> as the
-                <input type="text" value="Father" class="input-line" style="width: 80px;"> (Father / Mother / Legal Guardian)
-                of <input type="text" id="studentNameDisplay" class="input-line" style="width: 200px;"> with my Identity
-                Proof as <input type="text" value="Aadhaar" class="input-line" style="width: 120px;">
+                I <input type="text" id="parentNameInput" class="input-line" style="width: 220px;"> as the
+                <select id="guardianType" class="input-line" style="width: 120px;">
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Legal Guardian">Legal Guardian</option>
+                </select>
+                (Father / Mother / Legal Guardian) of
+                <input type="text" id="studentNameDisplay" class="input-line" style="width: 210px;"> with my Identity
+                Proof as
+                <select id="idProofType" class="input-line" style="width: 140px;">
+                    <option value="Aadhar">Aadhar</option>
+                    <option value="PAN">PAN</option>
+                    <option value="EPIC Voter ID">EPIC Voter ID</option>
+                    <option value="Driving License">Driving License</option>
+                    <option value="Passport">Passport</option>
+                </select>
                 (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and Identity Proof Number
-                <input type="text" id="parentAadhaarInput" class="input-line" style="width: 180px;"> voluntarily give my
+                <input type="text" id="parentAadhaarInput" class="input-line" style="width: 190px;"> voluntarily give my
                 consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of
                 Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the
                 following intents and purposes.
@@ -239,11 +287,11 @@
                 processed shall remain unaffected on such withdrawal of consent.
             </div>
 
-            <!-- ===== FOOTER ===== -->
+            <!-- ===== FOOTER (Parent Guardian) ===== -->
             <div class="footer-section">
                 <div class="sig-block">
-                    Place of Physical Consent: <input type="text" value="Pethgam" class="input-line" style="width: 140px;"><br><br>
-                    Date of Physical Consent: <input type="text" id="consentDate" class="input-line" style="width: 140px;">
+                    Place of Physical Consent: <input type="text" value="Pethgam" class="input-line" style="width: 150px;"><br><br>
+                    Date of Physical Consent: <input type="text" id="consentDate" class="input-line" style="width: 150px;">
                 </div>
                 <div class="sig-line">Signature of Parent Guardian</div>
             </div>
@@ -252,15 +300,16 @@
             <div class="hoi-section">
                 <div class="hoi-title">***Consent by the Head of the School***</div>
                 <div class="consent-paragraph">
-                    I Mohmad Ashraf Rather as Head of the School or any authorized teacher/staff hereby declare that the
-                    Father/Mother /Legal Guardian of <input type="text" id="studentNameHOI" class="input-line"
-                    style="width: 220px;"> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID,
-                    opening of DIGILOCKER Account and Identity Verification in UDISE Plus.
+                    I <span class="hoi-name-highlight">Mohmad Ashraf Rather</span> as Head of the School or any authorized
+                    teacher/staff hereby declare that the Father/Mother /Legal Guardian of
+                    <input type="text" id="studentNameHOI" class="input-line" style="width: 230px;"> as mentioned above has
+                    given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity
+                    Verification in UDISE Plus.
                 </div>
 
-                <div class="footer-section" style="margin-top:4px;">
+                <div class="footer-section" style="margin-top:6px;">
                     <div class="sig-block">
-                        Date: <input type="text" id="todayDate" class="input-line" style="width: 140px;">
+                        Date: <input type="text" id="todayDate" class="input-line" style="width: 150px;">
                     </div>
                     <div class="sig-line">Signature of Hol</div>
                 </div>
@@ -317,3 +366,4 @@
 
 </body>
 </html>
+                    
