@@ -13,7 +13,7 @@
             background: #f0f0f0;
             margin: 0;
             padding: 0;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .page-border {
@@ -21,7 +21,7 @@
             width: 210mm;
             height: 297mm;
             margin: auto;
-            padding: 10mm 15mm;
+            padding: 7mm 12mm 6mm 12mm;
             box-sizing: border-box;
             border: 3px double darkgreen;
             position: relative;
@@ -31,20 +31,20 @@
 
         .ref-box {
             text-align: right;
-            margin-bottom: 5px;
-            padding: 4px 10px;
+            margin-bottom: 3px;
+            padding: 2px 6px;
             border-bottom: 1px dashed #ccc;
             flex-shrink: 0;
         }
         .ref-box p {
             margin: 0;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: bold;
             color: #333;
         }
         .ref-id {
             color: darkred;
-            font-size: 13px;
+            font-size: 12px;
             text-decoration: underline;
         }
 
@@ -52,24 +52,24 @@
             display: flex;
             align-items: center;
             border-bottom: 2px solid darkgreen;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
+            padding-bottom: 4px;
+            margin-bottom: 5px;
             flex-shrink: 0;
         }
         .school-logo {
-            width: 75px;
-            height: 75px;
-            margin-right: 20px;
+            width: 68px;
+            height: 68px;
+            margin-right: 14px;
         }
         .header-text h1 {
             margin: 0;
-            font-size: 20px;
+            font-size: 18px;
             color: darkgreen;
             text-transform: uppercase;
         }
         .header-text p {
-            margin: 1px 0;
-            font-size: 11px;
+            margin: 0px 0;
+            font-size: 10.5px;
             color: #333;
             font-weight: bold;
         }
@@ -77,15 +77,21 @@
         .form-title {
             text-align: center;
             font-weight: bold;
-            font-size: 16px;
-            margin: 12px 0 14px 0;
-            text-decoration: underline;
+            font-size: 14.5px;
+            margin: 4px 0 2px 0;
             text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .form-subtitle {
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            margin: 0 0 6px 0;
             flex-shrink: 0;
         }
 
         .consent-body {
-            font-size: 12.5px;
+            font-size: 11.5px;
             text-align: justify;
             color: #000;
             flex: 1;
@@ -94,46 +100,55 @@
         }
 
         .consent-body .consent-paragraph {
-            margin-bottom: 10px;
+            margin-bottom: 4px;
             flex-shrink: 0;
         }
 
         .input-line {
             border: none;
             border-bottom: 1px solid #000;
-            padding: 0 5px;
-            font-size: 13px;
+            padding: 0 4px;
+            font-size: 12px;
             font-family: inherit;
             background: transparent;
         }
 
         .footer-section {
-            margin-top: 16px;
+            margin-top: 6px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 20px;
             flex-shrink: 0;
+            align-items: end;
         }
 
         .sig-line {
             border-top: 1px solid #000;
-            margin-top: 40px;
+            margin-top: 28px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: bold;
         }
 
         .hoi-section {
-            margin-top: 20px;
+            margin-top: 8px;
             border-top: 2px dashed #444;
-            padding-top: 14px;
+            padding-top: 8px;
             flex-shrink: 0;
         }
 
         .hoi-title {
             text-align: center;
             font-weight: bold;
-            margin-bottom: 12px;
+            font-size: 12.5px;
+            margin-bottom: 5px;
+        }
+
+        .sig-block {
+            font-size: 11.5px;
+        }
+        .sig-block .input-line {
+            font-size: 11.5px;
         }
 
         @media print {
@@ -155,11 +170,11 @@
 </head>
 <body>
 
-    <div class="no-print" style="background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; border-bottom: 3px solid #ffcc00;">
-        <a href="index.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">🏠 Home</a>
-        <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 Admission Form</a>
-        <button onclick="window.print()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffcc00; color: #1a5d1a;">🖨️ Print Form</button>
-        <button onclick="downloadPDF()" style="cursor:pointer; font-weight:bold; padding: 8px 15px; border-radius: 4px; border:none; background: #ffffff; color: #1a5d1a; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📥 Download PDF</button>
+    <div class="no-print" style="background: #1a5d1a; padding: 8px; display: flex; gap: 12px; justify-content: center; border-bottom: 3px solid #ffcc00; flex-wrap: wrap;">
+        <a href="index.html" style="color: white; text-decoration: none; font-weight: bold; padding: 6px 14px; border-radius: 4px; background: rgba(255,255,255,0.1);">🏠 Home</a>
+        <a href="admission.html" style="color: white; text-decoration: none; font-weight: bold; padding: 6px 14px; border-radius: 4px; background: rgba(255,255,255,0.1);">📝 Admission Form</a>
+        <button onclick="window.print()" style="cursor:pointer; font-weight:bold; padding: 6px 14px; border-radius: 4px; border:none; background: #ffcc00; color: #1a5d1a;">🖨️ Print Form</button>
+        <button onclick="downloadPDF()" style="cursor:pointer; font-weight:bold; padding: 6px 14px; border-radius: 4px; border:none; background: #ffffff; color: #1a5d1a; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📥 Download PDF</button>
     </div>
 
     <div class="page-border">
@@ -172,103 +187,82 @@
             <div class="header-text">
                 <h1>Government Primary School Pethgam Wagoora</h1>
                 <p>Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
-                <p>UDISE Code: 01022202207. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zone: Wagoora</p>
+                <p>UDISE Code: 01022202207 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zone: Wagoora Baramulla</p>
             </div>
         </div>
 
-        <div class="form-title">Consent by Father/Mother/Legal Guardian of Student for APAAR ID Generation</div>
+        <div class="form-title">Consent by Father/Mother/Legal Guardian of Student for APAAR ID Generation.</div>
+        <div class="form-subtitle">***Consent Form***</div>
 
         <div class="consent-body">
 
             <!-- ===== PARAGRAPH 1 ===== -->
             <div class="consent-paragraph">
-                I <input type="text" id="parentNameInput" class="input-line" style="width: 260px;"> as the
-                <input type="text" value="Father" class="input-line" style="width: 100px;"> (Father / Mother / Legal Guardian)
-                of <input type="text" id="studentNameDisplay" class="input-line" style="width: 250px;"> with my identity proof
-                as <input type="text" value="Aadhaar" class="input-line" style="width: 150px;">
-                (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and identity Proof Number
-                <input type="text" id="parentAadhaarInput" class="input-line" style="width: 220px;"> voluntarily give my
-                free and informed consent to share his/her Aadhaar Number and demographic information issued by UIDAI with
-                the Ministry of Education for the sole purpose of creation of APAAR ID (Automated Permanent Academic Account
-                Registry) and opening of DIGILOCKER account of my child for the following intents and purposes. I confirm
-                that I have been explained the purpose and usage of APAAR ID and I agree to the terms and conditions
-                associated with the same.
+                I <input type="text" id="parentNameInput" class="input-line" style="width: 200px;"> as the
+                <input type="text" value="Father" class="input-line" style="width: 80px;"> (Father / Mother / Legal Guardian)
+                of <input type="text" id="studentNameDisplay" class="input-line" style="width: 200px;"> with my Identity
+                Proof as <input type="text" value="Aadhaar" class="input-line" style="width: 120px;">
+                (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and Identity Proof Number
+                <input type="text" id="parentAadhaarInput" class="input-line" style="width: 180px;"> voluntarily give my
+                consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of
+                Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the
+                following intents and purposes.
             </div>
 
             <!-- ===== PARAGRAPH 2 ===== -->
             <div class="consent-paragraph">
-                I understand that my APAAR ID may be used and shared for limited purposes as may be notified by the Ministry
-                of Education from time to time for educational and related activities, including but not limited to tracking
-                academic progress, examination records, scholarship disbursement, and skill development initiatives.
-                Further I am also aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender
-                and Photograph) may be made available to entities engaged in various educational activities such as the
-                UDISE+ database, scholarship authorities, maintenance of academic records, other stakeholders like
-                Educational Institutions, recruitment agencies, and government bodies for verification and authentication
-                purposes, strictly in accordance with applicable laws and data protection norms.
+                I understand that my APAAR ID may be used and shared for limited purposes as may be notified by Ministry of
+                Education from time-to-time for educational and related activities. Further I am also aware that my personal
+                identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to
+                entities engaged in various educational activities such as UDISE+ database, scholarships, maintenance
+                academic records, other stakeholders like Educational Institutions and recruitment agencies.
             </div>
 
             <!-- ===== PARAGRAPH 3 ===== -->
             <div class="consent-paragraph">
                 I authorise the Ministry of Education to use my Aadhaar number for performing Aadhaar based authentication
-                with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits,
+                with UIDAI as per provision of the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits,
                 and Services) Act, 2016 for the aforesaid purpose. I understand that UIDAI will share my e-KYC details, or
-                response of "Yes" with the Ministry of Education upon successful authentication. I further acknowledge that
-                this authentication is voluntary and is being done with my explicit consent for the specific purpose of
-                creating and maintaining a secure digital academic identity for my child. I also understand that the
-                authentication process is secure and complies with the data protection standards established under the
-                Aadhaar Act.
+                response of "Yes" with the Ministry of Education upon successful authentication.
             </div>
 
             <!-- ===== PARAGRAPH 4 ===== -->
             <div class="consent-paragraph">
                 I understand that the information shared by me shall be kept Confidential and shall not be divulged to any
-                third party except as may be required by law or for the purposes explicitly mentioned in this consent form.
-                The Ministry of Education and its authorised agencies shall take all reasonable measures to ensure the
-                security, integrity, and confidentiality of my child's personal data. I am aware that the data will be
-                stored in secure government databases with appropriate access controls and will be used only for the
-                educational and administrative purposes outlined herein, and shall not be used for any commercial or
-                unrelated purposes without my explicit consent.
+                third party except as may be required by law.
             </div>
 
             <!-- ===== PARAGRAPH 5 ===== -->
             <div class="consent-paragraph">
-                I understand that I can withdraw my consent for all or any of the purposes at any time by submitting a
-                written request to the Head of the School or the concerned educational authority. Upon withdrawal of my
-                consent, the processing of my shared information will stop, however, any personal data already processed
-                shall remain unaffected on such withdrawal of consent. I also acknowledge that withdrawal of consent may
-                impact the availability of certain educational services, benefits, or scholarships that are linked to the
-                APAAR ID and DIGILOCKER account, and I accept such consequences. I have read and understood all the clauses
-                mentioned above before signing this consent form.
+                I understand that I can withdraw my consent for all or any of the purposes at any time by and on withdrawal
+                of my consent, the processing of my shared information will stop, however, any personal data already
+                processed shall remain unaffected on such withdrawal of consent.
             </div>
 
             <!-- ===== FOOTER ===== -->
             <div class="footer-section">
                 <div class="sig-block">
-                    Place of Physical Consent: <input type="text" value="Pethgam" class="input-line" style="width: 150px;"><br><br>
-                    Date of Physical Consent: <input type="text" id="consentDate" class="input-line" style="width: 150px;">
+                    Place of Physical Consent: <input type="text" value="Pethgam" class="input-line" style="width: 140px;"><br><br>
+                    Date of Physical Consent: <input type="text" id="consentDate" class="input-line" style="width: 140px;">
                 </div>
                 <div class="sig-line">Signature of Parent Guardian</div>
             </div>
 
             <!-- ===== HOI SECTION ===== -->
             <div class="hoi-section">
-                <div class="hoi-title">******************** Consent by Head of the School ********************</div>
+                <div class="hoi-title">***Consent by the Head of the School***</div>
                 <div class="consent-paragraph">
-                    I <strong>Mohmad Ashraf Rather</strong> as Head of the School or any authorised teacher/staff hereby
-                    declare that the Father/Mother/Legal Guardian of <input type="text" id="studentNameHOI" class="input-line"
-                    style="width: 250px;"> as mentioned above has given their full and voluntary Consent for Providing
-                    AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus Data.
-                    I confirm that the consent was obtained in person, after explaining the purpose and usage of APAAR ID,
-                    and that the guardian had the opportunity to ask questions and clarify any doubts. I also certify that
-                    the identity proof submitted by the guardian has been verified and found to be genuine as per the
-                    school's records.
+                    I Mohmad Ashraf Rather as Head of the School or any authorized teacher/staff hereby declare that the
+                    Father/Mother /Legal Guardian of <input type="text" id="studentNameHOI" class="input-line"
+                    style="width: 220px;"> as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID,
+                    opening of DIGILOCKER Account and Identity Verification in UDISE Plus.
                 </div>
 
-                <div class="footer-section">
+                <div class="footer-section" style="margin-top:4px;">
                     <div class="sig-block">
-                        Date: <input type="text" id="todayDate" class="input-line" style="width: 150px;">
+                        Date: <input type="text" id="todayDate" class="input-line" style="width: 140px;">
                     </div>
-                    <div class="sig-line">Signature of HoI</div>
+                    <div class="sig-line">Signature of Hol</div>
                 </div>
             </div>
 
