@@ -1,494 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🚁 Fake Drone Dashboard</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 1000px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-      margin-bottom: 20px;
-      font-weight: 300;
-      letter-spacing: 1px;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 25px;
-    }
-    .stat-card {
-      background: #ecf0f1;
-      border-radius: 12px;
-      padding: 16px 12px;
-      text-align: center;
-    }
-    .stat-card .label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: #7f8c8d;
-      letter-spacing: 0.5px;
-    }
-    .stat-card .value {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: #2c3e50;
-      margin-top: 4px;
-    }
-    .stat-card .value.battery {
-      color: #27ae60;
-    }
-    .stat-card .value.warning {
-      color: #e67e22;
-    }
-    .stat-card .value.danger {
-      color: #e74c3c;
-    }
-    .canvas-wrapper {
-      background: #1e272e;
-      border-radius: 16px;
-      padding: 10px;
-      margin: 20px 0 25px;
-      display: flex;
-      justify-content: center;
-    }
-    canvas {
-      background: #2f3640;
-      border-radius: 8px;
-      width: 100%;
-      max-width: 700px;
-      height: auto;
-      aspect-ratio: 16 / 9;
-      display: block;
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    .controls button {
-      background: #3498db;
-      border: none;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      box-shadow: 0 2px 8px rgba(52,152,219,0.3);
-      flex: 0 1 auto;
-      min-width: 120px;
-    }
-    .controls button:hover {
-      background: #2980b9;
-    }
-    .controls button:active {
-      transform: scale(0.96);
-    }
-    .controls button.emergency {
-      background: #e74c3c;
-      box-shadow: 0 2px 8px rgba(231,76,60,0.3);
-    }
-    .controls button.emergency:hover {
-      background: #c0392b;
-    }
-    .controls button.land {
-      background: #f39c12;
-      box-shadow: 0 2px 8px rgba(243,156,18,0.3);
-    }
-    .controls button.land:hover {
-      background: #d68910;
-    }
-    .controls button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-    #statusText {
-      text-align: center;
-      margin-top: 16px;
-      font-size: 1.1rem;
-      color: #2c3e50;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 4px 16px;
-      border-radius: 30px;
-      font-weight: 600;
-    }
-    .status-badge.idle { background: #bdc3c7; color: #2c3e50; }
-    .status-badge.flying { background: #2ecc71; color: white; }
-    .status-badge.emergency { background: #e74c3c; color: white; }
-    .status-badge.landing { background: #f39c12; color: white; }
-    .footer {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #95a5a6;
-      margin-top: 20px;
-      border-top: 1px solid #ecf0f1;
-      padding-top: 16px;
-    }
-    @media (max-width: 600px) {
-      .container { padding: 16px; }
-      .controls button { min-width: 80px; padding: 10px 16px; font-size: 0.9rem; }
-      .stat-card .value { font-size: 1.4rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth Report Form No.1</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .form-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header-table {
+            width: 100%;
+            margin-bottom: 5px;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+        }
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #000;
+        }
+        .main-table th, .main-table td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            vertical-align: top;
+        }
+        .col-legal { width: 35%; }
+        .col-separator { width: 2%; text-align: center; vertical-align: middle; padding: 0 !important; }
+        .col-stat1 { width: 31.5%; }
+        .col-stat2 { width: 31.5%; }
+        
+        .title-h1 { font-size: 18px; font-weight: bold; margin: 0 0 5px 0; text-align: center; }
+        .title-h2 { font-size: 14px; font-weight: bold; margin: 0 0 5px 0; text-align: center; }
+        .italic-note { font-style: italic; text-align: center; margin: 5px 0; font-size: 10px; }
+        
+        input[type="text"], input[type="date"], input[type="number"] {
+            border: 1px solid #aaa;
+            border-bottom: 1px solid #000;
+            padding: 2px 4px;
+            font-family: inherit;
+            font-size: 11px;
+            background: #fdfdfd;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus, input[type="date"]:focus {
+            outline: 1px solid #007bff;
+            background: #fff;
+        }
+        .input-full { width: 100%; margin-top: 3px; }
+        .input-inline { width: auto; }
+        textarea {
+            width: 100%;
+            border: 1px solid #aaa;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 11px;
+            resize: vertical;
+            min-height: 40px;
+        }
+        .uid-container { display: flex; gap: 0; margin-top: 3px; }
+        .uid-box { width: 18px; height: 18px; border: 1px solid #000; border-right: none; text-align: center; padding: 0;}
+        .uid-box:last-child { border-right: 1px solid #000; }
+        
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            font-size: 10px;
+        }
+        .item-row { display: flex; margin-bottom: 10px; }
+        .item-num { font-weight: bold; width: 20px; flex-shrink: 0; }
+        .item-content { flex-grow: 1; }
+        .sub-item { margin-bottom: 5px; }
+        .radio-group { margin-top: 4px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;}
+        .instruction { font-size: 9px; color: #333; }
+        .right-edge-text {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            writing-mode: vertical-rl;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>🚁 Drone Telemetry</h1>
 
-  <!-- Stats Cards -->
-  <div class="dashboard" id="stats">
-    <div class="stat-card"><div class="label">Status</div><div class="value" id="statusDisplay">IDLE</div></div>
-    <div class="stat-card"><div class="label">Battery</div><div class="value battery" id="batteryDisplay">--%</div></div>
-    <div class="stat-card"><div class="label">Altitude</div><div class="value" id="altDisplay">0 m</div></div>
-    <div class="stat-card"><div class="label">Speed</div><div class="value" id="speedDisplay">0 m/s</div></div>
-    <div class="stat-card"><div class="label">Heading</div><div class="value" id="headingDisplay">0°</div></div>
-    <div class="stat-card"><div class="label">Position</div><div class="value" id="posDisplay" style="font-size:1rem;">--</div></div>
-  </div>
+<div class="form-container" style="position: relative;">
+    <!-- Right edge label -->
+    <div class="right-edge-text">(See Rule 5) <br> FORM No. 1</div>
 
-  <!-- Canvas Visualizer -->
-  <div class="canvas-wrapper">
-    <canvas id="droneCanvas" width="800" height="450"></canvas>
-  </div>
+    <!-- Header Section -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 20%; font-weight: bold;">FORM NO.1</td>
+            <td style="width: 30%;">
+                <h2 class="title-h2">BIRTH REPORT</h2>
+                <div style="text-align: center; font-weight: bold; font-size: 12px;">Legal information</div>
+                <div class="italic-note">This part to be added to the Birth Register</div>
+            </td>
+            <td style="width: 30%;">
+                <h1 class="title-h1">BIRTH REPORT</h1>
+                <div style="text-align: center; font-weight: bold; font-size: 12px;">Statistical information</div>
+                <div class="italic-note">This part to be detached and sent for statistical processing</div>
+            </td>
+            <td style="width: 20%; font-size: 10px;">
+                In the case of multiple births, fill in a separate form for each child and write 'Twin birth' or 'Triple birth' etc., as the case may be, in the remarks column in the box below left.<br><br>
+                <b style="font-size: 12px;">FORM NO.1</b>
+            </td>
+        </tr>
+    </table>
 
-  <!-- Control Buttons -->
-  <div class="controls">
-    <button id="btnTakeoff">🛫 Takeoff</button>
-    <button id="btnMove">📍 Move Waypoint</button>
-    <button id="btnEmergency" class="emergency">🆘 Emergency</button>
-    <button id="btnLand" class="land">🛬 Land</button>
-  </div>
+    <!-- Main Form Grid -->
+    <table class="main-table">
+        <!-- Section Headers -->
+        <tr>
+            <td class="col-legal" style="text-align: center; font-style: italic;">To be filled by the informant</td>
+            <td class="col-separator" rowspan="2">
+                <div class="vertical-text">To be detached and sent for statistical processing</div>
+            </td>
+            <td class="col-stat1" style="text-align: center; font-style: italic;">To be filled by the informant</td>
+            <td class="col-stat2" style="text-align: center; font-style: italic;">To be filled by the informant</td>
+        </tr>
 
-  <div id="statusText">
-    <span class="status-badge idle" id="statusBadge">IDLE</span>
-    <span id="extraInfo">Ready</span>
-  </div>
-  <div class="footer">Mock Drone Simulator | Data updates every 1s</div>
+        <!-- Main Body Row -->
+        <tr>
+            <!-- Left Column: Legal Info -->
+            <td class="col-legal">
+                <div class="item-row">
+                    <div class="item-num">1.</div>
+                    <div class="item-content">
+                        <b>Date of Birth :</b> <span class="instruction">(Enter the exact day, month and year the child was born e.g. 1-1-2000)</span><br>
+                        <input type="date" class="input-full" style="width: 50%;">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">2.</div>
+                    <div class="item-content">
+                        <b>Sex :</b> <span class="instruction">(Enter "male", "female") do not use abbreviation</span><br>
+                        <input type="text" class="input-full" style="width: 50%;">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">3.</div>
+                    <div class="item-content">
+                        <b>Name of the child, if any :</b><br>
+                        <span class="instruction">(If not named, leave blank)</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">4.</div>
+                    <div class="item-content">
+                        <b>Name of the father :</b><br>
+                        <span class="instruction">(Full name as usually written)</span><br>
+                        <input type="text" class="input-full"><br>
+                        UID No of Father (if any)
+                        <div class="uid-container">
+                            <input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">5.</div>
+                    <div class="item-content">
+                        <b>Name of the mother :</b><br>
+                        <span class="instruction">(Full name as usually written)</span><br>
+                        <input type="text" class="input-full"><br>
+                        UID No of Mother (if any)
+                        <div class="uid-container">
+                            <input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">6.</div>
+                    <div class="item-content">
+                        <b>Address of parents at the time of<br>Birth of the Child</b><br>
+                        <textarea></textarea>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">7.</div>
+                    <div class="item-content">
+                        <b>Permanent address of parents:</b><br>
+                        <textarea></textarea>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">8.</div>
+                    <div class="item-content">
+                        <b>Place of birth :</b> <span class="instruction">(Tick the appropriate entry 1 or 2 below and give the name of the Hospital/Institution or the address of the house where the birth took place)</span>
+                        <table style="width: 100%; margin-top: 5px; font-size: 11px;">
+                            <tr>
+                                <td style="border: none; padding: 2px;"><label><input type="radio" name="pob"> <b>1.Hospital/Institution</b></label></td>
+                                <td style="border: none; padding: 2px;"><b>Name :</b> <input type="text" style="width: 70%;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 2px;"><label><input type="radio" name="pob"> <b>2.House</b></label></td>
+                                <td style="border: none; padding: 2px;"><b>Address :</b> <input type="text" style="width: 70%;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">9.</div>
+                    <div class="item-content">
+                        <b>Informant's name :</b> <input type="text" class="input-full"><br><br>
+                        <b>Address :</b> <textarea></textarea>
+                        <div style="font-size: 10px; font-style: italic; margin-top: 10px;">
+                            (After completing all<br>columns 1 to 22,<br>informant will put date<br>and signature here :)
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+            <!-- Middle Column: Statistical Info 1 -->
+            <td class="col-stat1">
+                <div class="item-row">
+                    <div class="item-num">10.</div>
+                    <div class="item-content">
+                        <b>Town or Village of Residence of the mother :</b> <span class="instruction">(Place where the mother usually lives. This can be different from the place where the delivery occurred. The house address is not required to be entered.)</span>
+                        <div class="sub-item" style="margin-top: 5px;">
+                            <b>a) Name of Town/Village :</b><br>
+                            <input type="text" class="input-full">
+                        </div>
+                        <div class="sub-item">
+                            <b>b) Is it a town or village :</b> <span class="instruction">(Tick the appropriate entry below)</span>
+                            <div class="radio-group">
+                                <label><input type="radio" name="town_vill"> <b>1. Town</b></label>
+                                <label><input type="radio" name="town_vill"> <b>2. Village</b></label>
+                            </div>
+                        </div>
+                        <div class="sub-item">
+                            <b>c) Name of District :</b><br>
+                            <input type="text" class="input-full">
+                        </div>
+                        <div class="sub-item">
+                            <b>d) Name of State :</b><br>
+                            <input type="text" class="input-full">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">11.</div>
+                    <div class="item-content">
+                        <b>Religion of the Family :</b> <span class="instruction">(Tick the appropriate entry below)</span>
+                        <div class="radio-group" style="margin-bottom: 5px;">
+                            <label><input type="radio" name="religion"> <b>1.Hindu</b></label>
+                            <label><input type="radio" name="religion"> <b>2. Muslim</b></label>
+                            <label><input type="radio" name="religion"> <b>3.Christian</b></label>
+                        </div>
+                        <b>4. Any other religion :</b><span class="instruction">(write name of the religion)</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">12.</div>
+                    <div class="item-content">
+                        <b>Father's level of education :</b><br>
+                        <span class="instruction">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">13.</div>
+                    <div class="item-content">
+                        <b>Mother's level of education :</b><br>
+                        <span class="instruction">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">14.</div>
+                    <div class="item-content">
+                        <b>Father's occupation :</b><br>
+                        <span class="instruction">(If no occupation write 'Nil')</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">15.</div>
+                    <div class="item-content">
+                        <b>Mother's occupation :</b><br>
+                        <span class="instruction">(If no occupation write 'Nil')</span><br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+            </td>
+
+            <!-- Right Column: Statistical Info 2 -->
+            <td class="col-stat2">
+                <div class="item-row">
+                    <div class="item-num">16.</div>
+                    <div class="item-content">
+                        <b>Age of the mother (in completed<br>years) at the time of marriage :</b><br>
+                        <span class="instruction">(If married more than once, age at first marriage may be entered)</span><br>
+                        <input type="number" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">17.</div>
+                    <div class="item-content">
+                        <b>Age of the mother (in completed<br>years) at the time of this birth :</b><br>
+                        <input type="number" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">18.</div>
+                    <div class="item-content">
+                        <b>Number of children born alive to the<br>mother so far including this child :</b><br>
+                        <span class="instruction">(Number of children born alive to include also those from earlier marriage(s), if any)</span><br>
+                        <input type="number" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">19.</div>
+                    <div class="item-content">
+                        <b>Type of attention at delivery :</b> <span class="instruction">(Tick the appropriate entry below)</span>
+                        <div style="margin-top: 5px; line-height: 1.8;">
+                            <label><input type="radio" name="attention"> <b>1. Institutional – Government</b></label><br>
+                            <label><input type="radio" name="attention"> <b>2. Institutional– Private or Non-Government</b></label><br>
+                            <label><input type="radio" name="attention"> <b>3. Doctor, Nurse or Trained midwife</b></label><br>
+                            <label><input type="radio" name="attention"> <b>4. Traditional Birth Attendant</b></label><br>
+                            <label><input type="radio" name="attention"> <b>5. Relatives or others</b></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">20.</div>
+                    <div class="item-content">
+                        <b>Method of Delivery :</b> <span class="instruction">(Tick the appropriate entry below)</span>
+                        <div style="margin-top: 5px; line-height: 1.8;">
+                            <label><input type="radio" name="delivery"> <b>1. Natural</b></label><br>
+                            <label><input type="radio" name="delivery"> <b>2. Caesarean</b></label><br>
+                            <label><input type="radio" name="delivery"> <b>3. Forceps/Vacuum</b></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">21.</div>
+                    <div class="item-content">
+                        <b>Birth Weight (in kgs.)</b> (if available) :<br>
+                        <input type="text" class="input-full">
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-num">22.</div>
+                    <div class="item-content">
+                        <b>Duration of pregnancy (in weeks) :</b><br>
+                        <input type="number" class="input-full">
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Signatures Row -->
+        <tr>
+            <td colspan="4" style="padding: 0;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 35%; border: none; border-right: 1px solid #000; padding: 5px; text-align: center;">
+                            Date: <input type="date" style="width: 100px; margin-right: 20px;"> <b>Signature or left thumb mark of the informant</b>
+                        </td>
+                        <td style="width: 65%; border: none; padding: 5px; text-align: center; font-style: italic;">
+                            (Columns to be filled are over. Now put signature at left)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Registrar Headers -->
+        <tr>
+            <td colspan="2" style="text-align: center; font-style: italic; border-top: 1px solid #000;">To be filled by the Registrar</td>
+            <td colspan="2" style="text-align: center; font-style: italic; border-top: 1px solid #000; border-left: 1px solid #000;">To be filled by the Registrar</td>
+        </tr>
+
+        <!-- Registrar Details -->
+        <tr>
+            <td colspan="2" style="vertical-align: top;">
+                <table style="width: 100%; font-size: 11px;">
+                    <tr>
+                        <td style="border: none; padding: 2px; width: 50%;">Registration No. : <input type="text" style="width: 80px;"></td>
+                        <td style="border: none; padding: 2px;">Registration Date : <input type="date" style="width: 100px;"></td>
+                    </tr>
+                    <tr><td colspan="2" style="border: none; padding: 2px;">Registration Unit : <input type="text" style="width: 80%;"></td></tr>
+                    <tr>
+                        <td style="border: none; padding: 2px;">Town/Village : <input type="text" style="width: 80px;"></td>
+                        <td style="border: none; padding: 2px;">District : <input type="text" style="width: 120px;"></td>
+                    </tr>
+                    <tr><td colspan="2" style="border: none; padding: 2px;">Remarks : (if any) <input type="text" style="width: 80%;"></td></tr>
+                    <tr><td colspan="2" style="border: none; padding: 40px 2px 5px 2px; text-align: right;">Name and Signature of the Registrar</td></tr>
+                </table>
+            </td>
+            <td colspan="2" style="padding: 0; border-left: 1px solid #000;">
+                <table style="width: 100%; border-collapse: collapse; height: 100%;">
+                    <tr>
+                        <td style="width: 50%; border: none; border-right: 1px solid #000; padding: 5px; vertical-align: top;">
+                            <div style="text-align: center; margin-bottom: 5px;">Name <span style="float: right;">Code No.</span></div>
+                            District : <input type="text" style="width: 40px; float: right;"><br><br>
+                            Tahsil : <input type="text" style="width: 40px; float: right;"><br><br>
+                            Town/Village : <input type="text" style="width: 40px; float: right;"><br><br>
+                            Registration Unit : <input type="text" style="width: 40px; float: right;">
+                        </td>
+                        <td style="width: 50%; border: none; padding: 5px; vertical-align: top;">
+                            <table style="width: 100%; font-size: 11px;">
+                                <tr>
+                                    <td style="border: none; padding: 2px;">Registration No. : <input type="text" style="width: 50px;"></td>
+                                    <td style="border: none; padding: 2px; text-align: right;">Registration Date : <input type="date" style="width: 90px;"></td>
+                                </tr>
+                            </table>
+                            Date of Birth : <input type="date" style="width: 100px;"><br><br>
+                            Sex : <label><input type="radio" name="reg_sex"> 1.Male</label> <label><input type="radio" name="reg_sex"> 2.Female</label><br><br>
+                            Place of Birth : <label><input type="radio" name="reg_pob"> 1.Hospital/Institution</label> <label><input type="radio" name="reg_pob"> 2.House</label><br><br>
+                            <div style="text-align: right; margin-top: 20px;">Name and Signature of the Registrar</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </div>
 
-<script>
-  // ------------------------------------------------------------------
-  // Configuration
-  // ------------------------------------------------------------------
-  const API_BASE = 'http://localhost:3000/api';
-
-  // DOM references
-  const canvas = document.getElementById('droneCanvas');
-  const ctx = canvas.getContext('2d');
-
-  const statusDisplay = document.getElementById('statusDisplay');
-  const statusBadge = document.getElementById('statusBadge');
-  const batteryDisplay = document.getElementById('batteryDisplay');
-  const altDisplay = document.getElementById('altDisplay');
-  const speedDisplay = document.getElementById('speedDisplay');
-  const headingDisplay = document.getElementById('headingDisplay');
-  const posDisplay = document.getElementById('posDisplay');
-  const extraInfo = document.getElementById('extraInfo');
-
-  const btnTakeoff = document.getElementById('btnTakeoff');
-  const btnMove = document.getElementById('btnMove');
-  const btnEmergency = document.getElementById('btnEmergency');
-  const btnLand = document.getElementById('btnLand');
-
-  // ------------------------------------------------------------------
-  // State
-  // ------------------------------------------------------------------
-  let droneData = {
-    status: 'IDLE',
-    battery: 0,
-    position: { lat: 0, lng: 0, alt: 0 },
-    speed: 0,
-    heading: 0,
-    target: null
-  };
-
-  // ------------------------------------------------------------------
-  // Helper functions
-  // ------------------------------------------------------------------
-  function getStatusBadgeClass(status) {
-    const map = {
-      'IDLE': 'idle',
-      'FLYING': 'flying',
-      'EMERGENCY': 'emergency',
-      'LANDING': 'landing'
-    };
-    return map[status] || 'idle';
-  }
-
-  // ------------------------------------------------------------------
-  // Fetch telemetry
-  // ------------------------------------------------------------------
-  async function fetchTelemetry() {
-    try {
-      const resp = await fetch(`${API_BASE}/telemetry`);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-      droneData = data;
-      updateUI(data);
-      drawCanvas(data);
-    } catch (err) {
-      console.error('Telemetry fetch error:', err);
-      extraInfo.textContent = '⚠️ Connection error';
-    }
-  }
-
-  // ------------------------------------------------------------------
-  // Update UI cards
-  // ------------------------------------------------------------------
-  function updateUI(data) {
-    // Status
-    const status = data.status || 'IDLE';
-    statusDisplay.textContent = status;
-    statusBadge.textContent = status;
-    statusBadge.className = `status-badge ${getStatusBadgeClass(status)}`;
-
-    // Battery
-    const bat = data.battery || 0;
-    batteryDisplay.textContent = bat + '%';
-    batteryDisplay.className = 'value battery';
-    if (bat < 20) batteryDisplay.className += ' danger';
-    else if (bat < 50) batteryDisplay.className += ' warning';
-
-    // Altitude
-    const alt = data.position?.alt || 0;
-    altDisplay.textContent = alt.toFixed(1) + ' m';
-
-    // Speed
-    const speed = data.speed || 0;
-    speedDisplay.textContent = speed.toFixed(1) + ' m/s';
-
-    // Heading
-    const heading = data.heading || 0;
-    headingDisplay.textContent = Math.round(heading) + '°';
-
-    // Position
-    const pos = data.position;
-    if (pos) {
-      posDisplay.textContent = `${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)}`;
-    }
-
-    // Extra info (target if moving)
-    if (data.target) {
-      const t = data.target;
-      extraInfo.textContent = `🎯 Moving to (${t.lat.toFixed(5)}, ${t.lng.toFixed(5)}, ${t.alt}m)`;
-    } else {
-      extraInfo.textContent = data.status === 'FLYING' ? '⏳ Hovering' : '🟢 Ready';
-    }
-
-    // Enable/disable buttons based on state
-    const isFlying = status === 'FLYING';
-    const isIdle = status === 'IDLE';
-    btnTakeoff.disabled = isFlying || status === 'EMERGENCY';
-    btnMove.disabled = !isFlying;
-    btnEmergency.disabled = isIdle || status === 'EMERGENCY';
-    btnLand.disabled = !isFlying;
-  }
-
-  // ------------------------------------------------------------------
-  // Draw canvas (drone position on a 2D map)
-  // ------------------------------------------------------------------
-  function drawCanvas(data) {
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    // Background grid (simulated map)
-    ctx.strokeStyle = '#3a4a5a';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < w; i += 40) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, h);
-      ctx.stroke();
-    }
-    for (let i = 0; i < h; i += 40) {
-      ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(w, i);
-      ctx.stroke();
-    }
-
-    // If we have position, map lat/lng to canvas
-    const pos = data.position;
-    if (pos && pos.lat && pos.lng) {
-      // We'll center the view around the current position, but we need a scale.
-      // For simplicity, we use a fixed reference (Eiffel Tower area) and zoom.
-      // We'll translate lat/lng to pixel using a simple mercator-like projection.
-      // Center of canvas: (w/2, h/2). Scale factor: degrees per pixel.
-      // Use a scale of 0.0001 deg per pixel (approx 11m per pixel)
-      const scale = 0.0001; // degrees per pixel
-      const centerLat = 48.8584, centerLng = 2.2945; // Eiffel Tower
-      const dx = (pos.lng - centerLng) / scale;
-      const dy = (pos.lat - centerLat) / scale; // latitude increases north => y decreases
-
-      // Draw drone icon
-      const x = w/2 + dx;
-      const y = h/2 - dy; // invert y
-
-      // Clamp to canvas edges (with margin)
-      const margin = 20;
-      const cx = Math.min(Math.max(x, margin), w - margin);
-      const cy = Math.min(Math.max(y, margin), h - margin);
-
-      // Drone body (circle)
-      ctx.shadowColor = 'rgba(46, 204, 113, 0.5)';
-      ctx.shadowBlur = 20;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 14, 0, 2 * Math.PI);
-      ctx.fillStyle = data.status === 'FLYING' ? '#2ecc71' : '#95a5a6';
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      // Heading line
-      const headingRad = data.heading * Math.PI / 180;
-      const length = 30;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + length * Math.sin(headingRad), cy - length * Math.cos(headingRad));
-      ctx.strokeStyle = '#f1c40f';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // Label with altitude
-      ctx.fillStyle = 'white';
-      ctx.font = '12px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`alt: ${data.position.alt.toFixed(1)}m`, cx, cy - 28);
-
-      // Target if any
-      if (data.target) {
-        const tdx = (data.target.lng - centerLng) / scale;
-        const tdy = (data.target.lat - centerLat) / scale;
-        const tx = w/2 + tdx;
-        const ty = h/2 - tdy;
-        ctx.beginPath();
-        ctx.arc(tx, ty, 8, 0, 2 * Math.PI);
-        ctx.strokeStyle = '#e74c3c';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 5]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#e74c3c';
-        ctx.font = '10px sans-serif';
-        ctx.fillText('🎯', tx - 12, ty - 12);
-      }
-    } else {
-      ctx.fillStyle = '#95a5a6';
-      ctx.font = '18px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('No GPS data', w/2, h/2);
-    }
-  }
-
-  // ------------------------------------------------------------------
-  // Control API calls
-  // ------------------------------------------------------------------
-  async function sendCommand(endpoint, payload = {}) {
-    try {
-      const resp = await fetch(`${API_BASE}/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const result = await resp.json();
-      if (!resp.ok) {
-        alert(`Error: ${result.error || 'Unknown error'}`);
-      } else {
-        // Success – telemetry will update automatically
-        console.log('Command success:', result);
-      }
-    } catch (err) {
-      alert('Network error: ' + err.message);
-    }
-  }
-
-  // Takeoff (with default altitude 15m)
-  btnTakeoff.addEventListener('click', () => {
-    const alt = prompt('Enter takeoff altitude (meters):', '15');
-    if (alt === null) return;
-    const altNum = parseFloat(alt);
-    if (isNaN(altNum) || altNum <= 0) {
-      alert('Please enter a positive number.');
-      return;
-    }
-    sendCommand('takeoff', { altitude: altNum });
-  });
-
-  // Move to waypoint
-  btnMove.addEventListener('click', () => {
-    const lat = prompt('Enter target latitude (e.g., 48.8600):', '48.8600');
-    if (lat === null) return;
-    const lng = prompt('Enter target longitude (e.g., 2.2960):', '2.2960');
-    if (lng === null) return;
-    const alt = prompt('Enter target altitude (meters):', '25');
-    if (alt === null) return;
-    const speed = prompt('Enter speed (m/s, default 5):', '5');
-    if (speed === null) return;
-
-    const latNum = parseFloat(lat);
-    const lngNum = parseFloat(lng);
-    const altNum = parseFloat(alt);
-    const speedNum = parseFloat(speed) || 5;
-
-    if (isNaN(latNum) || isNaN(lngNum) || isNaN(altNum) || isNaN(speedNum)) {
-      alert('Invalid numbers entered.');
-      return;
-    }
-    sendCommand('move', {
-      latitude: latNum,
-      longitude: lngNum,
-      altitude: altNum,
-      speed: speedNum
-    });
-  });
-
-  // Emergency hover
-  btnEmergency.addEventListener('click', () => {
-    if (confirm('Engage emergency hover? (Stops all motion)')) {
-      sendCommand('emergency');
-    }
-  });
-
-  // Land
-  btnLand.addEventListener('click', () => {
-    if (confirm('Land the drone?')) {
-      sendCommand('land');
-    }
-  });
-
-  // ------------------------------------------------------------------
-  // Start periodic telemetry fetch
-  // ------------------------------------------------------------------
-  fetchTelemetry(); // initial call
-  setInterval(fetchTelemetry, 1000);
-</script>
 </body>
-  </html>
+</html>
