@@ -1,436 +1,1646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birth Report Form No.1</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birth Report Form – FORM NO.1</title>
+
+    <!-- ===== html2canvas + jsPDF from CDN ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 11px;
+        /* ===== GLOBAL RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 0;
         }
-        .form-container {
-            max-width: 1100px;
-            margin: 0 auto;
+
+        body {
+            background: #e6e9ef;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            font-family: 'Times New Roman', Times, serif;
         }
-        .header-table {
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 28px;
+            background: #ffffff;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
             width: 100%;
-            margin-bottom: 5px;
-            border-collapse: collapse;
+            max-width: 1050px;
         }
-        .header-table td {
-            vertical-align: top;
+
+        .toolbar button {
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #f0f2f5;
+            color: #1e2a3a;
+            transition: 0.15s;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            letter-spacing: 0.3px;
         }
-        .main-table {
+
+        .toolbar button:hover {
+            background: #dce0e8;
+            transform: scale(1.01);
+        }
+
+        .toolbar .btn-primary {
+            background: #1a3a6b;
+            color: #fff;
+        }
+        .toolbar .btn-primary:hover {
+            background: #0f2a4f;
+        }
+
+        .toolbar .btn-success {
+            background: #1e7e34;
+            color: #fff;
+        }
+        .toolbar .btn-success:hover {
+            background: #146128;
+        }
+
+        .toolbar .btn-danger {
+            background: #b22234;
+            color: #fff;
+        }
+        .toolbar .btn-danger:hover {
+            background: #8b1a1c;
+        }
+
+        .toolbar .btn-warning {
+            background: #b8860b;
+            color: #fff;
+        }
+        .toolbar .btn-warning:hover {
+            background: #8f6b08;
+        }
+
+        /* ===== FORM WRAPPER (A4 simulation) ===== */
+        #form-container {
             width: 100%;
-            border-collapse: collapse;
-            border: 2px solid #000;
+            max-width: 1050px;
+            background: #ffffff;
+            padding: 40px 42px 38px 42px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
         }
-        .main-table th, .main-table td {
-            border: 1px solid #000;
-            padding: 5px 8px;
-            vertical-align: top;
+
+        /* ===== THE FORM ITSELF (matches original) ===== */
+        #birth-form {
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            background: #ffffff;
+            font-size: 14px;
+            line-height: 1.45;
         }
-        .col-legal { width: 35%; }
-        .col-separator { width: 2%; text-align: center; vertical-align: middle; padding: 0 !important; }
-        .col-stat1 { width: 31.5%; }
-        .col-stat2 { width: 31.5%; }
-        
-        .title-h1 { font-size: 18px; font-weight: bold; margin: 0 0 5px 0; text-align: center; }
-        .title-h2 { font-size: 14px; font-weight: bold; margin: 0 0 5px 0; text-align: center; }
-        .italic-note { font-style: italic; text-align: center; margin: 5px 0; font-size: 10px; }
-        
-        input[type="text"], input[type="date"], input[type="number"] {
-            border: 1px solid #aaa;
-            border-bottom: 1px solid #000;
-            padding: 2px 4px;
-            font-family: inherit;
-            font-size: 11px;
-            background: #fdfdfd;
-            box-sizing: border-box;
+
+        /* ---------- HEADER ---------- */
+        .form-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 6px;
         }
-        input[type="text"]:focus, input[type="date"]:focus {
-            outline: 1px solid #007bff;
-            background: #fff;
+
+        .form-header .form-no {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
-        .input-full { width: 100%; margin-top: 3px; }
-        .input-inline { width: auto; }
-        textarea {
-            width: 100%;
-            border: 1px solid #aaa;
-            box-sizing: border-box;
-            font-family: inherit;
-            font-size: 11px;
-            resize: vertical;
-            min-height: 40px;
+        .form-header .form-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-top: 2px;
         }
-        .uid-container { display: flex; gap: 0; margin-top: 3px; }
-        .uid-box { width: 18px; height: 18px; border: 1px solid #000; border-right: none; text-align: center; padding: 0;}
-        .uid-box:last-child { border-right: 1px solid #000; }
-        
-        .vertical-text {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            white-space: nowrap;
-            font-size: 10px;
+        .form-header .legal-info {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 2px;
+            font-style: italic;
         }
-        .item-row { display: flex; margin-bottom: 10px; }
-        .item-num { font-weight: bold; width: 20px; flex-shrink: 0; }
-        .item-content { flex-grow: 1; }
-        .sub-item { margin-bottom: 5px; }
-        .radio-group { margin-top: 4px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;}
-        .instruction { font-size: 9px; color: #333; }
-        .right-edge-text {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            writing-mode: vertical-rl;
-            font-weight: bold;
+        .form-header .legal-sub {
             font-size: 12px;
+            font-weight: 400;
+            font-style: italic;
+            margin-top: 1px;
+        }
+
+        /* ---------- TABLE LAYOUT ---------- */
+        #birth-form table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        #birth-form table td,
+        #birth-form table th {
+            border: 1px solid #000;
+            padding: 5px 7px;
+            vertical-align: top;
+        }
+
+        /* ---- column widths (approx) ---- */
+        .col-left {
+            width: 50%;
+        }
+        .col-right {
+            width: 50%;
+        }
+
+        /* ---- labels ---- */
+        .field-label {
+            font-weight: 600;
+            font-size: 12.5px;
+            display: inline-block;
+            margin-right: 2px;
+        }
+
+        .field-label-sm {
+            font-weight: 600;
+            font-size: 11.5px;
+        }
+
+        /* ---- inputs / controls ---- */
+        .form-control {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            border: none;
+            border-bottom: 1px solid #888;
+            background: transparent;
+            padding: 1px 3px;
+            width: 100%;
+            outline: none;
+            color: #000;
+            min-height: 22px;
+        }
+
+        .form-control:focus {
+            border-bottom-color: #1a3a6b;
+            background: #f7f9fc;
+        }
+
+        .form-control-sm {
+            font-size: 12px;
+            min-height: 20px;
+        }
+
+        .form-control-inline {
+            display: inline-block;
+            width: auto;
+            min-width: 60px;
+        }
+
+        textarea.form-control {
+            border: 1px solid #888;
+            border-radius: 0;
+            resize: vertical;
+            min-height: 38px;
+            padding: 3px 5px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            background: transparent;
+        }
+
+        textarea.form-control:focus {
+            border-color: #1a3a6b;
+            background: #f7f9fc;
+        }
+
+        /* ---- radio / checkbox groups ---- */
+        .radio-group {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 12px;
+            margin: 2px 0;
+        }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 400;
+            font-size: 12.5px;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"],
+        .radio-group input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: #1a3a6b;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* ---- helper for inline blocks ---- */
+        .inline-block {
+            display: inline-block;
+        }
+        .block {
+            display: block;
+            width: 100%;
+        }
+        .mt-1 {
+            margin-top: 3px;
+        }
+        .mb-1 {
+            margin-bottom: 3px;
+        }
+        .ml-1 {
+            margin-left: 4px;
+        }
+        .mr-1 {
+            margin-right: 4px;
+        }
+
+        .uid-field {
+            display: inline-block;
+            width: 120px;
+            font-size: 12px;
+        }
+
+        /* ---- signature row ---- */
+        .signature-row td {
+            padding: 10px 7px 6px 7px;
+            vertical-align: middle;
+        }
+        .signature-row .sig-label {
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .signature-row .sig-line {
+            display: inline-block;
+            width: 180px;
+            border-bottom: 1px solid #000;
+            margin-left: 6px;
+            min-height: 22px;
+        }
+        .signature-row .sig-line input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            outline: none;
+            padding: 0 2px;
+        }
+
+        /* ---- registrar section ---- */
+        .registrar-section td {
+            padding: 5px 7px;
+            vertical-align: middle;
+            font-size: 12.5px;
+        }
+        .registrar-section .reg-label {
+            font-weight: 600;
+        }
+        .registrar-section .reg-field {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 1px solid #888;
+            padding: 0 2px;
+        }
+        .registrar-section .reg-field input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12.5px;
+            outline: none;
+            padding: 0 2px;
+        }
+
+        /* ---- small note ---- */
+        .note-italic {
+            font-style: italic;
+            font-size: 11.5px;
+            color: #333;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 800px) {
+            #form-container {
+                padding: 20px 14px;
+            }
+            #birth-form table td,
+            #birth-form table th {
+                padding: 4px 5px;
+                font-size: 12px;
+            }
+            .col-left,
+            .col-right {
+                width: 100%;
+                display: block;
+            }
+            .toolbar button {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+            .radio-group {
+                gap: 2px 8px;
+            }
+            .radio-group label {
+                font-size: 11.5px;
+            }
+            .uid-field {
+                width: 80px;
+            }
+            .signature-row .sig-line {
+                width: 100px;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
+            .toolbar {
+                display: none !important;
+            }
+            #form-container {
+                box-shadow: none;
+                padding: 20px 30px;
+                max-width: 100%;
+                border-radius: 0;
+            }
+            .form-control {
+                border-bottom-color: #000;
+            }
+            textarea.form-control {
+                border-color: #000;
+            }
+            .registrar-section .reg-field {
+                border-bottom-color: #000;
+            }
+        }
+
+        /* ===== HIDDEN CLONE FOR PDF ===== */
+        #pdf-clone {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 794px;
+            /* A4 width in px at 96dpi */
+            padding: 40px 42px 38px 42px;
+            background: #ffffff;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            color: #000;
+            line-height: 1.45;
+            z-index: -1;
+        }
+        #pdf-clone table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12.5px;
+        }
+        #pdf-clone table td,
+        #pdf-clone table th {
+            border: 1px solid #000;
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+        #pdf-clone .form-control {
+            border-bottom: 1px solid #000;
+            background: transparent;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12.5px;
+            padding: 1px 3px;
+            width: 100%;
+            outline: none;
+            color: #000;
+            min-height: 20px;
+        }
+        #pdf-clone textarea.form-control {
+            border: 1px solid #000;
+            border-radius: 0;
+            resize: none;
+            min-height: 34px;
+            padding: 2px 4px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12.5px;
+            background: transparent;
+        }
+        #pdf-clone .radio-group input[type="radio"] {
+            width: 13px;
+            height: 13px;
+            accent-color: #000;
+        }
+        #pdf-clone .registrar-section .reg-field {
+            border-bottom: 1px solid #000;
+        }
+        #pdf-clone .signature-row .sig-line {
+            border-bottom: 1px solid #000;
+        }
+        #pdf-clone .field-label {
+            font-weight: 600;
+            font-size: 12px;
+        }
+        #pdf-clone .field-label-sm {
+            font-weight: 600;
+            font-size: 11px;
+        }
+        #pdf-clone .form-header .form-no {
+            font-size: 17px;
+        }
+        #pdf-clone .form-header .form-title {
+            font-size: 20px;
+        }
+        #pdf-clone .form-header .legal-info {
+            font-size: 13px;
+        }
+        #pdf-clone .form-header .legal-sub {
+            font-size: 11px;
+        }
+        #pdf-clone .radio-group label {
+            font-size: 12px;
+        }
+        #pdf-clone .uid-field {
+            width: 110px;
+        }
+        #pdf-clone .signature-row .sig-line {
+            width: 160px;
+        }
+        #pdf-clone .registrar-section .reg-field {
+            min-width: 70px;
+        }
+        #pdf-clone .col-left {
+            width: 50%;
+        }
+        #pdf-clone .col-right {
+            width: 50%;
+        }
+        #pdf-clone .note-italic {
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
 
-<div class="form-container" style="position: relative;">
-    <!-- Right edge label -->
-    <div class="right-edge-text">(See Rule 5) <br> FORM No. 1</div>
+    <!-- ===== TOOLBAR ===== -->
+    <div class="toolbar" id="toolbar">
+        <button class="btn-warning" onclick="loadSampleData()">📋 Load Sample Data</button>
+        <button class="btn-danger" onclick="clearForm()">🗑️ Clear Form</button>
+        <button class="btn-primary" onclick="downloadPDF()">⬇ Download Filled PDF</button>
+        <button class="btn-success" onclick="window.print()">🖨️ Print Form</button>
+    </div>
 
-    <!-- Header Section -->
-    <table class="header-table">
-        <tr>
-            <td style="width: 20%; font-weight: bold;">FORM NO.1</td>
-            <td style="width: 30%;">
-                <h2 class="title-h2">BIRTH REPORT</h2>
-                <div style="text-align: center; font-weight: bold; font-size: 12px;">Legal information</div>
-                <div class="italic-note">This part to be added to the Birth Register</div>
-            </td>
-            <td style="width: 30%;">
-                <h1 class="title-h1">BIRTH REPORT</h1>
-                <div style="text-align: center; font-weight: bold; font-size: 12px;">Statistical information</div>
-                <div class="italic-note">This part to be detached and sent for statistical processing</div>
-            </td>
-            <td style="width: 20%; font-size: 10px;">
-                In the case of multiple births, fill in a separate form for each child and write 'Twin birth' or 'Triple birth' etc., as the case may be, in the remarks column in the box below left.<br><br>
-                <b style="font-size: 12px;">FORM NO.1</b>
-            </td>
-        </tr>
-    </table>
+    <!-- ===== FORM CONTAINER ===== -->
+    <div id="form-container">
 
-    <!-- Main Form Grid -->
-    <table class="main-table">
-        <!-- Section Headers -->
-        <tr>
-            <td class="col-legal" style="text-align: center; font-style: italic;">To be filled by the informant</td>
-            <td class="col-separator" rowspan="2">
-                <div class="vertical-text">To be detached and sent for statistical processing</div>
-            </td>
-            <td class="col-stat1" style="text-align: center; font-style: italic;">To be filled by the informant</td>
-            <td class="col-stat2" style="text-align: center; font-style: italic;">To be filled by the informant</td>
-        </tr>
+        <!-- ===== MAIN FORM ===== -->
+        <form id="birth-form" autocomplete="off">
 
-        <!-- Main Body Row -->
-        <tr>
-            <!-- Left Column: Legal Info -->
-            <td class="col-legal">
-                <div class="item-row">
-                    <div class="item-num">1.</div>
-                    <div class="item-content">
-                        <b>Date of Birth :</b> <span class="instruction">(Enter the exact day, month and year the child was born e.g. 1-1-2000)</span><br>
-                        <input type="date" class="input-full" style="width: 50%;">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">2.</div>
-                    <div class="item-content">
-                        <b>Sex :</b> <span class="instruction">(Enter "male", "female") do not use abbreviation</span><br>
-                        <input type="text" class="input-full" style="width: 50%;">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">3.</div>
-                    <div class="item-content">
-                        <b>Name of the child, if any :</b><br>
-                        <span class="instruction">(If not named, leave blank)</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">4.</div>
-                    <div class="item-content">
-                        <b>Name of the father :</b><br>
-                        <span class="instruction">(Full name as usually written)</span><br>
-                        <input type="text" class="input-full"><br>
-                        UID No of Father (if any)
-                        <div class="uid-container">
-                            <input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box">
-                        </div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">5.</div>
-                    <div class="item-content">
-                        <b>Name of the mother :</b><br>
-                        <span class="instruction">(Full name as usually written)</span><br>
-                        <input type="text" class="input-full"><br>
-                        UID No of Mother (if any)
-                        <div class="uid-container">
-                            <input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box"><input type="text" maxlength="1" class="uid-box">
-                        </div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">6.</div>
-                    <div class="item-content">
-                        <b>Address of parents at the time of<br>Birth of the Child</b><br>
-                        <textarea></textarea>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">7.</div>
-                    <div class="item-content">
-                        <b>Permanent address of parents:</b><br>
-                        <textarea></textarea>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">8.</div>
-                    <div class="item-content">
-                        <b>Place of birth :</b> <span class="instruction">(Tick the appropriate entry 1 or 2 below and give the name of the Hospital/Institution or the address of the house where the birth took place)</span>
-                        <table style="width: 100%; margin-top: 5px; font-size: 11px;">
+            <!-- HEADER -->
+            <div class="form-header">
+                <div class="form-no">FORM NO.1</div>
+                <div class="form-title">BIRTH REPORT</div>
+                <div class="legal-info">Legal information</div>
+                <div class="legal-sub"><em>This part to be added to the Birth Register</em></div>
+            </div>
+
+            <!-- ===== TOP SECTION: Fields 1–15 (two columns) ===== -->
+            <table>
+                <tr>
+                    <!-- LEFT COLUMN: Fields 1–9 -->
+                    <td class="col-left" style="width:50%;">
+
+                        <!-- Header row -->
+                        <table style="border:none; width:100%; margin-bottom:2px;">
                             <tr>
-                                <td style="border: none; padding: 2px;"><label><input type="radio" name="pob"> <b>1.Hospital/Institution</b></label></td>
-                                <td style="border: none; padding: 2px;"><b>Name :</b> <input type="text" style="width: 70%;"></td>
-                            </tr>
-                            <tr>
-                                <td style="border: none; padding: 2px;"><label><input type="radio" name="pob"> <b>2.House</b></label></td>
-                                <td style="border: none; padding: 2px;"><b>Address :</b> <input type="text" style="width: 70%;"></td>
+                                <td style="border:none; font-weight:700; font-size:13px; text-align:center; padding:2px 0;">
+                                    To be filled by the informant
+                                </td>
                             </tr>
                         </table>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">9.</div>
-                    <div class="item-content">
-                        <b>Informant's name :</b> <input type="text" class="input-full"><br><br>
-                        <b>Address :</b> <textarea></textarea>
-                        <div style="font-size: 10px; font-style: italic; margin-top: 10px;">
-                            (After completing all<br>columns 1 to 22,<br>informant will put date<br>and signature here :)
-                        </div>
-                    </div>
-                </div>
-            </td>
 
-            <!-- Middle Column: Statistical Info 1 -->
-            <td class="col-stat1">
-                <div class="item-row">
-                    <div class="item-num">10.</div>
-                    <div class="item-content">
-                        <b>Town or Village of Residence of the mother :</b> <span class="instruction">(Place where the mother usually lives. This can be different from the place where the delivery occurred. The house address is not required to be entered.)</span>
-                        <div class="sub-item" style="margin-top: 5px;">
-                            <b>a) Name of Town/Village :</b><br>
-                            <input type="text" class="input-full">
+                        <!-- Field 1 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">1. Date of Birth:</span>
+                            <span class="note-italic">(Enter the exact day, month and year the child was born e.g. 1-1-2000)</span>
+                            <input type="date" class="form-control form-control-sm" id="f1_dob" style="width:auto; min-width:140px; display:inline-block;" />
                         </div>
-                        <div class="sub-item">
-                            <b>b) Is it a town or village :</b> <span class="instruction">(Tick the appropriate entry below)</span>
-                            <div class="radio-group">
-                                <label><input type="radio" name="town_vill"> <b>1. Town</b></label>
-                                <label><input type="radio" name="town_vill"> <b>2. Village</b></label>
+
+                        <!-- Field 2 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">2. Sex:</span>
+                            <span class="note-italic">(Enter “male, “female”) do not use abbreviation</span>
+                            <div class="radio-group" style="display:inline-flex; margin-left:4px;">
+                                <label><input type="radio" name="sex" value="male" /> Male</label>
+                                <label><input type="radio" name="sex" value="female" /> Female</label>
                             </div>
                         </div>
-                        <div class="sub-item">
-                            <b>c) Name of District :</b><br>
-                            <input type="text" class="input-full">
-                        </div>
-                        <div class="sub-item">
-                            <b>d) Name of State :</b><br>
-                            <input type="text" class="input-full">
-                        </div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">11.</div>
-                    <div class="item-content">
-                        <b>Religion of the Family :</b> <span class="instruction">(Tick the appropriate entry below)</span>
-                        <div class="radio-group" style="margin-bottom: 5px;">
-                            <label><input type="radio" name="religion"> <b>1.Hindu</b></label>
-                            <label><input type="radio" name="religion"> <b>2. Muslim</b></label>
-                            <label><input type="radio" name="religion"> <b>3.Christian</b></label>
-                        </div>
-                        <b>4. Any other religion :</b><span class="instruction">(write name of the religion)</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">12.</div>
-                    <div class="item-content">
-                        <b>Father's level of education :</b><br>
-                        <span class="instruction">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">13.</div>
-                    <div class="item-content">
-                        <b>Mother's level of education :</b><br>
-                        <span class="instruction">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">14.</div>
-                    <div class="item-content">
-                        <b>Father's occupation :</b><br>
-                        <span class="instruction">(If no occupation write 'Nil')</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">15.</div>
-                    <div class="item-content">
-                        <b>Mother's occupation :</b><br>
-                        <span class="instruction">(If no occupation write 'Nil')</span><br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-            </td>
 
-            <!-- Right Column: Statistical Info 2 -->
-            <td class="col-stat2">
-                <div class="item-row">
-                    <div class="item-num">16.</div>
-                    <div class="item-content">
-                        <b>Age of the mother (in completed<br>years) at the time of marriage :</b><br>
-                        <span class="instruction">(If married more than once, age at first marriage may be entered)</span><br>
-                        <input type="number" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">17.</div>
-                    <div class="item-content">
-                        <b>Age of the mother (in completed<br>years) at the time of this birth :</b><br>
-                        <input type="number" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">18.</div>
-                    <div class="item-content">
-                        <b>Number of children born alive to the<br>mother so far including this child :</b><br>
-                        <span class="instruction">(Number of children born alive to include also those from earlier marriage(s), if any)</span><br>
-                        <input type="number" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">19.</div>
-                    <div class="item-content">
-                        <b>Type of attention at delivery :</b> <span class="instruction">(Tick the appropriate entry below)</span>
-                        <div style="margin-top: 5px; line-height: 1.8;">
-                            <label><input type="radio" name="attention"> <b>1. Institutional – Government</b></label><br>
-                            <label><input type="radio" name="attention"> <b>2. Institutional– Private or Non-Government</b></label><br>
-                            <label><input type="radio" name="attention"> <b>3. Doctor, Nurse or Trained midwife</b></label><br>
-                            <label><input type="radio" name="attention"> <b>4. Traditional Birth Attendant</b></label><br>
-                            <label><input type="radio" name="attention"> <b>5. Relatives or others</b></label>
+                        <!-- Field 3 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">3. Name of the child, if any:</span>
+                            <span class="note-italic">(If not named, leave blank)</span>
+                            <input type="text" class="form-control form-control-sm" id="f3_child_name" style="width:auto; min-width:160px; display:inline-block;" />
                         </div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">20.</div>
-                    <div class="item-content">
-                        <b>Method of Delivery :</b> <span class="instruction">(Tick the appropriate entry below)</span>
-                        <div style="margin-top: 5px; line-height: 1.8;">
-                            <label><input type="radio" name="delivery"> <b>1. Natural</b></label><br>
-                            <label><input type="radio" name="delivery"> <b>2. Caesarean</b></label><br>
-                            <label><input type="radio" name="delivery"> <b>3. Forceps/Vacuum</b></label>
+
+                        <!-- Field 4 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">4. Name of the father:</span>
+                            <span class="note-italic">(Full name as usually written)</span>
+                            <input type="text" class="form-control form-control-sm" id="f4_father_name" style="width:auto; min-width:140px; display:inline-block;" />
+                            <span class="field-label-sm" style="margin-left:6px;">UID No of Father</span>
+                            <input type="text" class="form-control form-control-sm uid-field" id="f4_father_uid" style="width:120px; display:inline-block;" />
                         </div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">21.</div>
-                    <div class="item-content">
-                        <b>Birth Weight (in kgs.)</b> (if available) :<br>
-                        <input type="text" class="input-full">
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-num">22.</div>
-                    <div class="item-content">
-                        <b>Duration of pregnancy (in weeks) :</b><br>
-                        <input type="number" class="input-full">
-                    </div>
-                </div>
-            </td>
-        </tr>
 
-        <!-- Signatures Row -->
-        <tr>
-            <td colspan="4" style="padding: 0;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="width: 35%; border: none; border-right: 1px solid #000; padding: 5px; text-align: center;">
-                            Date: <input type="date" style="width: 100px; margin-right: 20px;"> <b>Signature or left thumb mark of the informant</b>
-                        </td>
-                        <td style="width: 65%; border: none; padding: 5px; text-align: center; font-style: italic;">
-                            (Columns to be filled are over. Now put signature at left)
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+                        <!-- Field 5 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">5. Name of the mother:</span>
+                            <span class="note-italic">(Full name as usually written)</span>
+                            <input type="text" class="form-control form-control-sm" id="f5_mother_name" style="width:auto; min-width:140px; display:inline-block;" />
+                            <span class="field-label-sm" style="margin-left:6px;">UID No of Mother</span>
+                            <input type="text" class="form-control form-control-sm uid-field" id="f5_mother_uid" style="width:120px; display:inline-block;" />
+                        </div>
 
-        <!-- Registrar Headers -->
-        <tr>
-            <td colspan="2" style="text-align: center; font-style: italic; border-top: 1px solid #000;">To be filled by the Registrar</td>
-            <td colspan="2" style="text-align: center; font-style: italic; border-top: 1px solid #000; border-left: 1px solid #000;">To be filled by the Registrar</td>
-        </tr>
+                        <!-- Field 6 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">6. Address of parents at the time of Birth of the Child</span>
+                            <textarea class="form-control" id="f6_address_birth" rows="2" style="min-height:32px;"></textarea>
+                        </div>
 
-        <!-- Registrar Details -->
-        <tr>
-            <td colspan="2" style="vertical-align: top;">
-                <table style="width: 100%; font-size: 11px;">
-                    <tr>
-                        <td style="border: none; padding: 2px; width: 50%;">Registration No. : <input type="text" style="width: 80px;"></td>
-                        <td style="border: none; padding: 2px;">Registration Date : <input type="date" style="width: 100px;"></td>
-                    </tr>
-                    <tr><td colspan="2" style="border: none; padding: 2px;">Registration Unit : <input type="text" style="width: 80%;"></td></tr>
-                    <tr>
-                        <td style="border: none; padding: 2px;">Town/Village : <input type="text" style="width: 80px;"></td>
-                        <td style="border: none; padding: 2px;">District : <input type="text" style="width: 120px;"></td>
-                    </tr>
-                    <tr><td colspan="2" style="border: none; padding: 2px;">Remarks : (if any) <input type="text" style="width: 80%;"></td></tr>
-                    <tr><td colspan="2" style="border: none; padding: 40px 2px 5px 2px; text-align: right;">Name and Signature of the Registrar</td></tr>
-                </table>
-            </td>
-            <td colspan="2" style="padding: 0; border-left: 1px solid #000;">
-                <table style="width: 100%; border-collapse: collapse; height: 100%;">
-                    <tr>
-                        <td style="width: 50%; border: none; border-right: 1px solid #000; padding: 5px; vertical-align: top;">
-                            <div style="text-align: center; margin-bottom: 5px;">Name <span style="float: right;">Code No.</span></div>
-                            District : <input type="text" style="width: 40px; float: right;"><br><br>
-                            Tahsil : <input type="text" style="width: 40px; float: right;"><br><br>
-                            Town/Village : <input type="text" style="width: 40px; float: right;"><br><br>
-                            Registration Unit : <input type="text" style="width: 40px; float: right;">
-                        </td>
-                        <td style="width: 50%; border: none; padding: 5px; vertical-align: top;">
-                            <table style="width: 100%; font-size: 11px;">
-                                <tr>
-                                    <td style="border: none; padding: 2px;">Registration No. : <input type="text" style="width: 50px;"></td>
-                                    <td style="border: none; padding: 2px; text-align: right;">Registration Date : <input type="date" style="width: 90px;"></td>
-                                </tr>
-                            </table>
-                            Date of Birth : <input type="date" style="width: 100px;"><br><br>
-                            Sex : <label><input type="radio" name="reg_sex"> 1.Male</label> <label><input type="radio" name="reg_sex"> 2.Female</label><br><br>
-                            Place of Birth : <label><input type="radio" name="reg_pob"> 1.Hospital/Institution</label> <label><input type="radio" name="reg_pob"> 2.House</label><br><br>
-                            <div style="text-align: right; margin-top: 20px;">Name and Signature of the Registrar</div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
+                        <!-- Field 7 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">7. Permanent address of parents:</span>
+                            <textarea class="form-control" id="f7_address_permanent" rows="2" style="min-height:32px;"></textarea>
+                        </div>
+
+                        <!-- Field 8 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">8. Place of birth:</span>
+                            <span class="note-italic">(Tick the appropriate entry 1 or 2 below and give the name of the Hospital/Institution or the address of the house where the birth took place)</span>
+                            <div class="radio-group" style="margin-top:2px;">
+                                <label><input type="radio" name="birth_place_type" value="hospital" /> 1. Hospital/ Institution</label>
+                                <label><input type="radio" name="birth_place_type" value="house" /> 2. House</label>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" id="f8_place_detail" placeholder="Name / address" style="width:100%; margin-top:2px;" />
+                        </div>
+
+                          <!-- Field 9 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">9. Informant's name:</span>
+                            <input type="text" class="form-control form-control-sm" id="f9_informant_name" style="width:auto; min-width:120px; display:inline-block;" />
+                            <span class="field-label-sm" style="margin-left:6px;">Address:</span>
+                            <input type="text" class="form-control form-control-sm" id="f9_informant_address" style="width:auto; min-width:160px; display:inline-block;" />
+                        </div>
+
+                        <!-- signature placeholder (informant) -->
+                        <div style="margin-top:6px; border-top:1px solid #aaa; padding-top:4px; font-size:12px;">
+                            <span style="font-weight:600;">(After completing all columns 1 to 22, informant will put date and signature here:)</span>
+                            <div style="margin-top:3px;">
+                                <span class="field-label-sm">Date:</span>
+                                <input type="date" class="form-control form-control-sm" id="sig_date" style="width:auto; min-width:130px; display:inline-block;" />
+                                <span class="field-label-sm" style="margin-left:14px;">Signature or left thumb mark of the informant</span>
+                                <input type="text" class="form-control form-control-sm" id="sig_mark" style="width:auto; min-width:140px; display:inline-block; border-bottom:1px solid #000;" placeholder="(signature / thumb)" />
+                            </div>
+                        </div>
+
+                    </td>
+
+                    <!-- RIGHT COLUMN: Fields 10–15 -->
+                    <td class="col-right" style="width:50%;">
+
+                        <!-- Header row -->
+                        <table style="border:none; width:100%; margin-bottom:2px;">
+                            <tr>
+                                <td style="border:none; font-weight:700; font-size:13px; text-align:center; padding:2px 0;">
+                                    To be filled by the informant
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Field 10 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">10. Town or Village of Residence of the mother:</span>
+                            <span class="note-italic">(Place where the mother usually lives. This can be different from the place where the delivery occurred. The house address is not required to be entered.)</span>
+                            <div style="margin-top:2px;">
+                                <span class="field-label-sm">a) Name of Town/Village:</span>
+                                <input type="text" class="form-control form-control-sm" id="f10_town_village" style="width:auto; min-width:140px; display:inline-block;" />
+                            </div>
+                            <div style="margin-top:2px;">
+                                <span class="field-label-sm">b) Is it a town or village:</span>
+                                <span class="note-italic">(Tick the appropriate entry below)</span>
+                                <div class="radio-group" style="display:inline-flex; margin-left:4px;">
+                                    <label><input type="radio" name="town_village_type" value="town" /> 1. Town</label>
+                                    <label><input type="radio" name="town_village_type" value="village" /> 2. Village</label>
+                                </div>
+                            </div>
+                            <div style="margin-top:2px;">
+                                <span class="field-label-sm">c) Name of District:</span>
+                                <input type="text" class="form-control form-control-sm" id="f10_district" style="width:auto; min-width:140px; display:inline-block;" />
+                            </div>
+                            <div style="margin-top:2px;">
+                                <span class="field-label-sm">d) Name of State:</span>
+                                <input type="text" class="form-control form-control-sm" id="f10_state" style="width:auto; min-width:140px; display:inline-block;" />
+                            </div>
+                        </div>
+
+                        <!-- Field 11 -->
+                        <div style="margin-bottom:2px; margin-top:6px;">
+                            <span class="field-label">11. Religion of the Family:</span>
+                            <span class="note-italic">(Tick the appropriate entry below)</span>
+                            <div class="radio-group" style="display:inline-flex; margin-left:4px; flex-wrap:wrap;">
+                                <label><input type="radio" name="religion" value="hindu" /> 1.Hindu</label>
+                                <label><input type="radio" name="religion" value="muslim" /> 2. Muslim</label>
+                                <label><input type="radio" name="religion" value="christian" /> 3.Christian</label>
+                                <label><input type="radio" name="religion" value="other" /> 4. Any other religion:</label>
+                                <input type="text" class="form-control form-control-sm" id="f11_religion_other" style="width:auto; min-width:100px; display:inline-block; margin-left:2px;" placeholder="(specify)" />
+                            </div>
+                        </div>
+
+                        <!-- Field 12 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">12. Father's level of education:</span>
+                            <span class="note-italic">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span>
+                            <input type="text" class="form-control form-control-sm" id="f12_father_edu" style="width:auto; min-width:120px; display:inline-block;" />
+                        </div>
+
+                        <!-- Field 13 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">13. Mother's level of education:</span>
+                            <span class="note-italic">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span>
+                            <input type="text" class="form-control form-control-sm" id="f13_mother_edu" style="width:auto; min-width:120px; display:inline-block;" />
+                        </div>
+
+                        <!-- Field 14 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">14. Father's occupation:</span>
+                            <span class="note-italic">(If no occupation write ‘Nil’)</span>
+                            <input type="text" class="form-control form-control-sm" id="f14_father_occ" style="width:auto; min-width:140px; display:inline-block;" />
+                        </div>
+
+                        <!-- Field 15 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">15. Mother's occupation:</span>
+                            <span class="note-italic">(If no occupation write ‘Nil’)</span>
+                            <input type="text" class="form-control form-control-sm" id="f15_mother_occ" style="width:auto; min-width:140px; display:inline-block;" />
+                        </div>
+
+                    </td>
+                </tr>
+             </table>
+
+            <!-- ===== LOWER SECTION: Fields 16–22 (two columns) ===== -->
+            <table style="margin-top:2px;">
+                <tr>
+                    <!-- LEFT COLUMN: Fields 16,17,18 -->
+                    <td class="col-left" style="width:50%;">
+
+                        <!-- Field 16 (age at marriage) -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">16. Age of the mother (in completed years) at the time of marriage:</span>
+                            <span class="note-italic">(If married more than once, age at first marriage may be entered)</span>
+                            <input type="number" class="form-control form-control-sm" id="f16_age_marriage" style="width:auto; min-width:70px; display:inline-block;" min="0" max="99" />
+                        </div>
+
+                        <!-- Field 16 (age at birth) - same number in original -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">16. Age of the mother (in completed years) at the time of birth</span>
+                            <input type="number" class="form-control form-control-sm" id="f16_age_birth" style="width:auto; min-width:70px; display:inline-block;" min="0" max="99" />
+                        </div>
+
+                        <!-- Field 17 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">17. Number of children born alive to the mother so far including this child:</span>
+                            <span class="note-italic">(Number of children born alive to include also those from earlier marriage(s), if any)</span>
+                            <input type="number" class="form-control form-control-sm" id="f17_children_alive" style="width:auto; min-width:70px; display:inline-block;" min="0" max="30" />
+                        </div>
+
+                    </td>
+
+                    <!-- RIGHT COLUMN: Fields 18,20,21,22 -->
+                    <td class="col-right" style="width:50%;">
+
+                        <!-- Field 18 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">18. Type of attention at delivery:</span>
+                            <span class="note-italic">(Tick the appropriate entry below)</span>
+                            <div class="radio-group" style="margin-top:2px; flex-wrap:wrap;">
+                                <label><input type="radio" name="delivery_attention" value="inst_govt" /> 1. Institutional – Government</label>
+                                <label><input type="radio" name="delivery_attention" value="inst_private" /> 2. Institutional – Private or Non-Government</label>
+                                <label><input type="radio" name="delivery_attention" value="doctor_nurse" /> 3. Doctor, Nurse or Trained midwife</label>
+                                <label><input type="radio" name="delivery_attention" value="tba" /> 4. Traditional Birth Attendant</label>
+                                <label><input type="radio" name="delivery_attention" value="relatives" /> 5. Relatives or others</label>
+                            </div>
+                        </div>
+
+                        <!-- Field 20 (19 is skipped in original) -->
+                        <div style="margin-bottom:2px; margin-top:4px;">
+                            <span class="field-label">20. Method of Delivery:</span>
+                            <span class="note-italic">(Tick the appropriate entry below)</span>
+                            <div class="radio-group" style="display:inline-flex; margin-left:4px;">
+                                <label><input type="radio" name="delivery_method" value="natural" /> 1. Natural</label>
+                                <label><input type="radio" name="delivery_method" value="caesarean" /> 2. Caesarean</label>
+                                <label><input type="radio" name="delivery_method" value="forceps" /> 3. Forceps/Vacuum</label>
+                            </div>
+                        </div>
+
+                        <!-- Field 21 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">21. Birth Weight (in kgs.) (if available):</span>
+                            <input type="text" class="form-control form-control-sm" id="f21_birth_weight" style="width:auto; min-width:80px; display:inline-block;" placeholder="e.g. 3.2" />
+                        </div>
+
+                        <!-- Field 22 -->
+                        <div style="margin-bottom:2px;">
+                            <span class="field-label">22. Duration of pregnancy (in weeks):</span>
+                            <input type="number" class="form-control form-control-sm" id="f22_pregnancy_weeks" style="width:auto; min-width:70px; display:inline-block;" min="20" max="45" />
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== SIGNATURE ROW ===== -->
+            <table style="margin-top:2px;">
+                <tr class="signature-row">
+                    <td style="width:33%; border:1px solid #000; padding:6px 7px;">
+                        <span class="field-label">Date:</span>
+                        <input type="date" class="form-control form-control-sm" id="sig_date_bottom" style="width:auto; min-width:130px; display:inline-block;" />
+                    </td>
+                    <td style="width:44%; border:1px solid #000; padding:6px 7px; text-align:center;">
+                        <span class="sig-label">Signature or left thumb mark of the informant</span>
+                        <span class="sig-line"><input type="text" id="sig_mark_bottom" placeholder="(signature / thumb)" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" /></span>
+                    </td>
+                    <td style="width:23%; border:1px solid #000; padding:6px 7px; font-size:12px; text-align:center;">
+                        <em>(Columns to be filled are over. Now put signature at left)</em>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== REGISTRAR SECTION ===== -->
+            <table style="margin-top:2px;" class="registrar-section">
+                <tr>
+                    <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Registration No.:</span>
+                        <span class="reg-field"><input type="text" id="reg_no" /></span>
+                    </td>
+                    <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Registration Date:</span>
+                        <span class="reg-field"><input type="date" id="reg_date" style="width:auto; min-width:100px;" /></span>
+                    </td>
+                    <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Name</span>
+                        <span class="reg-field"><input type="text" id="reg_name" style="width:80px;" /></span>
+                        <span class="reg-label" style="margin-left:4px;">Code No.</span>
+                        <span class="reg-field"><input type="text" id="reg_code" style="width:60px;" /></span>
+                    </td>
+                    <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Registration No.:</span>
+                        <span class="reg-field"><input type="text" id="reg_no2" /></span>
+                        <span class="reg-label" style="margin-left:4px;">Registration Date:</span>
+                        <span class="reg-field"><input type="date" id="reg_date2" style="width:auto; min-width:90px;" /></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Registration Unit:</span>
+                        <span class="reg-field"><input type="text" id="reg_unit" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">District:</span>
+                        <span class="reg-field"><input type="text" id="reg_district" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Date of Birth:</span>
+                        <span class="reg-field"><input type="date" id="reg_dob" style="width:auto; min-width:100px;" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Sex:</span>
+                        <span class="reg-field" style="min-width:60px;">
+                            <select id="reg_sex" style="border:none; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none; width:100%;">
+                                <option value="">—</option>
+                                <option value="1">1.Male</option>
+                                <option value="2">2.Female</option>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Town/Village:</span>
+                        <span class="reg-field"><input type="text" id="reg_town_village" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">District:</span>
+                        <span class="reg-field"><input type="text" id="reg_district2" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Tahsil:</span>
+                        <span class="reg-field"><input type="text" id="reg_tahsil" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                        <span class="reg-label">Place of Birth:</span>
+                        <span class="reg-field" style="min-width:70px;">
+                            <select id="reg_place_birth" style="border:none; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none; width:100%;">
+                                <option value="">—</option>
+                                <option value="1">1.Hospital/Institution</option>
+                                <option value="2">2.House</option>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;" colspan="2">
+                        <span class="reg-label">Remarks: (if any)</span>
+                        <span class="reg-field" style="min-width:180px;"><input type="text" id="reg_remarks" style="width:100%;" /></span>
+                    </td>
+                    <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;" colspan="2">
+                        <span class="reg-label">Registration Unit:</span>
+                        <span class="reg-field"><input type="text" id="reg_unit2" /></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid #000; padding:8px 7px; vertical-align:middle; text-align:center;" colspan="2">
+                        <span class="reg-label" style="font-size:14px;">Name and Signature of the Registrar</span>
+                        <div style="margin-top:3px;">
+                            <span class="reg-field" style="min-width:140px; border-bottom:1px solid #000; display:inline-block; padding:0 4px;">
+                                <input type="text" id="reg_registrar_name" placeholder="Registrar name" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" />
+                            </span>
+                            <span style="margin-left:12px; font-size:13px;">Signature:</span>
+                            <span class="reg-field" style="min-width:120px; border-bottom:1px solid #000; display:inline-block; padding:0 4px;">
+                                <input type="text" id="reg_registrar_sig" placeholder="(signature)" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" />
+                            </span>
+                        </div>
+                    </td>
+                    <td style="border:1px solid #000; padding:8px 7px; vertical-align:middle; text-align:center;" colspan="2">
+                        <span class="reg-label" style="font-size:14px;">Name and Signature of the Registrar</span>
+                        <div style="margin-top:3px;">
+                            <span class="reg-field" style="min-width:140px; border-bottom:1px solid #000; display:inline-block; padding:0 4px;">
+                                <input type="text" id="reg_registrar_name2" placeholder="Registrar name" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" />
+                            </span>
+                            <span style="margin-left:12px; font-size:13px;">Signature:</span>
+                            <span class="reg-field" style="min-width:120px; border-bottom:1px solid #000; display:inline-block; padding:0 4px;">
+                                <input type="text" id="reg_registrar_sig2" placeholder="(signature)" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" />
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+        <!-- ===== END FORM ===== -->
+
+    </div>
+    <!-- ===== END FORM CONTAINER ===== -->
+
+    <!-- ===== HIDDEN CLONE FOR PDF GENERATION ===== -->
+    <div id="pdf-clone"></div>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- DOM refs ----
+            const $ = (id) => document.getElementById(id);
+
+            // ---- Helper: get radio value ----
+            function getRadioValue(name) {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : '';
+            }
+
+            function setRadioValue(name, value) {
+                const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                if (el) el.checked = true;
+            }
+
+            // ---- Helper: populate text/date/number inputs ----
+            function setVal(id, val) {
+                const el = $(id);
+                if (el) el.value = val || '';
+            }
+
+            function getVal(id) {
+                const el = $(id);
+                return el ? el.value : '';
+            }
+
+            // ============================================================
+            //  LOAD SAMPLE DATA
+            // ============================================================
+            window.loadSampleData = function() {
+                // Field 1
+                setVal('f1_dob', '2026-07-16');
+
+                // Field 2
+                setRadioValue('sex', 'male');
+
+                // Field 3
+                setVal('f3_child_name', 'Aarav Kumar Sharma');
+
+                // Field 4
+                setVal('f4_father_name', 'Rajesh Kumar Sharma');
+                setVal('f4_father_uid', '1234-5678-9012');
+
+                // Field 5
+                setVal('f5_mother_name', 'Priya Sharma');
+                setVal('f5_mother_uid', '9876-5432-1098');
+
+                // Field 6
+                setVal('f6_address_birth', '123, Green Valley Apartments, Near City Hospital, Mumbai - 400001');
+
+                // Field 7
+                setVal('f7_address_permanent', '456, Old Village Road, Post: Shahpur, District: Thane, Maharashtra - 421601');
+
+                // Field 8
+                setRadioValue('birth_place_type', 'hospital');
+                setVal('f8_place_detail', 'City General Hospital, Mumbai');
+
+                // Field 9
+                setVal('f9_informant_name', 'Rajesh Kumar Sharma');
+                setVal('f9_informant_address', '123, Green Valley Apartments, Mumbai');
+
+                // Field 10
+                setVal('f10_town_village', 'Mumbai');
+                setRadioValue('town_village_type', 'town');
+                setVal('f10_district', 'Mumbai City');
+                setVal('f10_state', 'Maharashtra');
+
+                // Field 11
+                setRadioValue('religion', 'hindu');
+                setVal('f11_religion_other', '');
+
+                // Field 12
+                setVal('f12_father_edu', 'Graduate (B.Com)');
+
+                // Field 13
+                setVal('f13_mother_edu', 'Post Graduate (M.A.)');
+
+                // Field 14
+                setVal('f14_father_occ', 'Businessman');
+
+                // Field 15
+                setVal('f15_mother_occ', 'Teacher');
+
+                // Field 16 (marriage)
+                setVal('f16_age_marriage', '22');
+
+                // Field 16 (birth)
+                setVal('f16_age_birth', '28');
+
+                // Field 17
+                setVal('f17_children_alive', '2');
+
+                // Field 18
+                setRadioValue('delivery_attention', 'inst_govt');
+
+                // Field 20
+                setRadioValue('delivery_method', 'natural');
+
+                // Field 21
+                setVal('f21_birth_weight', '3.2');
+
+                // Field 22
+                setVal('f22_pregnancy_weeks', '38');
+
+                // Signatures
+                setVal('sig_date', '2026-07-16');
+                setVal('sig_mark', 'R. Sharma');
+                setVal('sig_date_bottom', '2026-07-16');
+                setVal('sig_mark_bottom', 'R. Sharma');
+
+                // Registrar
+                setVal('reg_no', 'BR/2026/001');
+                setVal('reg_date', '2026-07-16');
+                setVal('reg_name', 'Dr. S. Gupta');
+                setVal('reg_code', 'RG-07');
+                setVal('reg_no2', 'BR/2026/001');
+                setVal('reg_date2', '2026-07-16');
+                setVal('reg_unit', 'Mumbai Central');
+                setVal('reg_district', 'Mumbai City');
+                setVal('reg_dob', '2026-07-16');
+                $('reg_sex').value = '1';
+                setVal('reg_town_village', 'Mumbai');
+                setVal('reg_district2', 'Mumbai City');
+                setVal('reg_tahsil', 'Mumbai');
+                $('reg_place_birth').value = '1';
+                setVal('reg_remarks', 'Normal delivery, healthy child');
+                setVal('reg_unit2', 'Mumbai Central');
+                setVal('reg_registrar_name', 'Dr. S. Gupta');
+                setVal('reg_registrar_sig', 'S. Gupta');
+                setVal('reg_registrar_name2', 'Dr. S. Gupta');
+                setVal('reg_registrar_sig2', 'S. Gupta');
+            };
+
+            // ============================================================
+            //  CLEAR FORM
+            // ============================================================
+            window.clearForm = function() {
+                // All text inputs, textareas, date, number
+                document.querySelectorAll('#birth-form input[type="text"], #birth-form input[type="number"], #birth-form input[type="date"], #birth-form textarea, #birth-form input[type="password"]')
+                    .forEach(el => {
+                        if (el.type !== 'radio' && el.type !== 'checkbox') {
+                            el.value = '';
+                        }
+                    });
+
+                // Selects
+                document.querySelectorAll('#birth-form select').forEach(el => {
+                    el.selectedIndex = 0;
+                });
+
+                // Radios
+                document.querySelectorAll('#birth-form input[type="radio"]').forEach(el => {
+                    el.checked = false;
+                });
+
+                // Checkboxes
+                document.querySelectorAll('#birth-form input[type="checkbox"]').forEach(el => {
+                    el.checked = false;
+                });
+
+                // Special: signature placeholders
+                // (already cleared by above)
+            };
+
+            // ============================================================
+            //  DOWNLOAD PDF  (using html2canvas + jsPDF)
+            // ============================================================
+            window.downloadPDF = function() {
+                // 1. Gather all current form values
+                const data = collectFormData();
+
+                // 2. Build the hidden clone with filled data
+                const clone = document.getElementById('pdf-clone');
+                clone.innerHTML = buildPdfHtml(data);
+
+                // 3. Render clone with html2canvas
+                html2canvas(clone, {
+                    scale: 2.5, // high quality
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: 794,
+                    height: clone.scrollHeight,
+                }).then((canvas) => {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+                    // 4. Create PDF (A4)
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = 210;
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('Birth_Report_Form_NO1_Filled.pdf');
+                }).catch((err) => {
+                    console.error('PDF generation error:', err);
+                    alert('Could not generate PDF. Please check console for errors.');
+                });
+            };
+
+            // ---- Collect all form data ----
+            function collectFormData() {
+                return {
+                    f1_dob: getVal('f1_dob'),
+                    sex: getRadioValue('sex'),
+                    f3_child_name: getVal('f3_child_name'),
+                    f4_father_name: getVal('f4_father_name'),
+                    f4_father_uid: getVal('f4_father_uid'),
+                    f5_mother_name: getVal('f5_mother_name'),
+                    f5_mother_uid: getVal('f5_mother_uid'),
+                    f6_address_birth: getVal('f6_address_birth'),
+                    f7_address_permanent: getVal('f7_address_permanent'),
+                    birth_place_type: getRadioValue('birth_place_type'),
+                    f8_place_detail: getVal('f8_place_detail'),
+                    f9_informant_name: getVal('f9_informant_name'),
+                    f9_informant_address: getVal('f9_informant_address'),
+                    f10_town_village: getVal('f10_town_village'),
+                    town_village_type: getRadioValue('town_village_type'),
+                    f10_district: getVal('f10_district'),
+                    f10_state: getVal('f10_state'),
+                    religion: getRadioValue('religion'),
+                    f11_religion_other: getVal('f11_religion_other'),
+                    f12_father_edu: getVal('f12_father_edu'),
+                    f13_mother_edu: getVal('f13_mother_edu'),
+                    f14_father_occ: getVal('f14_father_occ'),
+                    f15_mother_occ: getVal('f15_mother_occ'),
+                    f16_age_marriage: getVal('f16_age_marriage'),
+                    f16_age_birth: getVal('f16_age_birth'),
+                    f17_children_alive: getVal('f17_children_alive'),
+                    delivery_attention: getRadioValue('delivery_attention'),
+                    delivery_method: getRadioValue('delivery_method'),
+                    f21_birth_weight: getVal('f21_birth_weight'),
+                    f22_pregnancy_weeks: getVal('f22_pregnancy_weeks'),
+                    sig_date: getVal('sig_date'),
+                    sig_mark: getVal('sig_mark'),
+                    sig_date_bottom: getVal('sig_date_bottom'),
+                    sig_mark_bottom: getVal('sig_mark_bottom'),
+                    reg_no: getVal('reg_no'),
+                    reg_date: getVal('reg_date'),
+                    reg_name: getVal('reg_name'),
+                    reg_code: getVal('reg_code'),
+                    reg_no2: getVal('reg_no2'),
+                    reg_date2: getVal('reg_date2'),
+                    reg_unit: getVal('reg_unit'),
+                    reg_district: getVal('reg_district'),
+                    reg_dob: getVal('reg_dob'),
+                    reg_sex: document.getElementById('reg_sex') ? document.getElementById('reg_sex').value : '',
+                    reg_town_village: getVal('reg_town_village'),
+                    reg_district2: getVal('reg_district2'),
+                    reg_tahsil: getVal('reg_tahsil'),
+                    reg_place_birth: document.getElementById('reg_place_birth') ? document.getElementById('reg_place_birth')
+                        .value : '',
+                    reg_remarks: getVal('reg_remarks'),
+                    reg_unit2: getVal('reg_unit2'),
+                    reg_registrar_name: getVal('reg_registrar_name'),
+                    reg_registrar_sig: getVal('reg_registrar_sig'),
+                    reg_registrar_name2: getVal('reg_registrar_name2'),
+                    reg_registrar_sig2: getVal('reg_registrar_sig2'),
+                };
+            }
+
+            // ---- Build PDF HTML from data ----
+            function buildPdfHtml(d) {
+                // helper for radio checked
+                function radioChecked(name, val) {
+                    return (d[name] === val) ? 'checked' : '';
+                }
+
+                // helper for select selected
+                function selSelected(id, val) {
+                    return (d[id] === val) ? 'selected' : '';
+                }
+
+                // helper for text/date/number values
+                function v(key) {
+                    return d[key] || '';
+                }
+
+                return `
+                <div style="font-family:'Times New Roman',Times,serif; color:#000; background:#fff; font-size:13px; line-height:1.45; padding:40px 42px 38px 42px;">
+
+                      <!-- HEADER -->
+                    <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:6px;">
+                        <div style="font-size:18px; font-weight:700; letter-spacing:1px;">FORM NO.1</div>
+                        <div style="font-size:22px; font-weight:700; letter-spacing:1.5px; margin-top:2px;">BIRTH REPORT</div>
+                        <div style="font-size:14px; font-weight:600; margin-top:2px; font-style:italic;">Legal information</div>
+                        <div style="font-size:12px; font-weight:400; font-style:italic; margin-top:1px;"><em>This part to be added to the Birth Register</em></div>
+                    </div>
+
+                    <!-- TOP SECTION: two columns -->
+                    <table style="border-collapse:collapse; width:100%; font-size:12.5px;">
+                        <tr>
+                            <!-- LEFT COLUMN -->
+                            <td style="width:50%; border:1px solid #000; padding:5px 7px; vertical-align:top;">
+
+                                <table style="border:none; width:100%; margin-bottom:2px;">
+                                    <tr><td style="border:none; font-weight:700; font-size:13px; text-align:center; padding:2px 0;">To be filled by the informant</td></tr>
+                                </table>
+
+                                <!-- 1 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">1. Date of Birth:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Enter the exact day, month and year the child was born e.g. 1-1-2000)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f1_dob')}" readonly />
+                                </div>
+
+                                <!-- 2 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">2. Sex:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Enter “male, “female”) do not use abbreviation</span>
+                                    <span style="display:inline-flex; gap:6px 14px; margin-left:4px; flex-wrap:wrap;">
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('sex','male')} disabled /> Male</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('sex','female')} disabled /> Female</label>
+                                    </span>
+                                </div>
+
+                                <!-- 3 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">3. Name of the child, if any:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(If not named, leave blank)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:160px; display:inline-block;" value="${v('f3_child_name')}" readonly />
+                                </div>
+
+                                <!-- 4 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">4. Name of the father:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Full name as usually written)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f4_father_name')}" readonly />
+                                    <span style="font-weight:600; font-size:11.5px; margin-left:6px;">UID No of Father</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:120px; display:inline-block;" value="${v('f4_father_uid')}" readonly />
+                                </div>
+
+                                <!-- 5 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">5. Name of the mother:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Full name as usually written)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f5_mother_name')}" readonly />
+                                    <span style="font-weight:600; font-size:11.5px; margin-left:6px;">UID No of Mother</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:120px; display:inline-block;" value="${v('f5_mother_uid')}" readonly />
+                                </div>
+
+                                <!-- 6 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">6. Address of parents at the time of Birth of the Child</span>
+                                    <textarea style="border:1px solid #000; border-radius:0; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:2px 4px; width:100%; min-height:32px; resize:none;" readonly rows="2">${v('f6_address_birth')}</textarea>
+                                </div>
+
+                                <!-- 7 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">7. Permanent address of parents:</span>
+                                    <textarea style="border:1px solid #000; border-radius:0; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:2px 4px; width:100%; min-height:32px; resize:none;" readonly rows="2">${v('f7_address_permanent')}</textarea>
+                                </div>
+
+                                <!-- 8 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">8. Place of birth:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Tick the appropriate entry 1 or 2 below and give the name of the Hospital/Institution or the address of the house where the birth took place)</span>
+                                    <div style="margin-top:2px;">
+                                        <span style="display:inline-flex; gap:4px 12px; flex-wrap:wrap;">
+                                            <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('birth_place_type','hospital')} disabled /> 1. Hospital/ Institution</label>
+                                            <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('birth_place_type','house')} disabled /> 2. House</label>
+                                        </span>
+                                    </div>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:100%; margin-top:2px;" value="${v('f8_place_detail')}" readonly />
+                                </div>
+
+                                <!-- 9 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">9. Informant's name:</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:120px; display:inline-block;" value="${v('f9_informant_name')}" readonly />
+                                    <span style="font-weight:600; font-size:11.5px; margin-left:6px;">Address:</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; padding:1px 3px; width:auto; min-width:160px; display:inline-block;" value="${v('f9_informant_address')}" readonly />
+                                </div>
+
+                                <!-- signature placeholder -->
+                                <div style="margin-top:6px; border-top:1px solid #aaa; padding-top:4px; font-size:12px;">
+                                    <span style="font-weight:600;">(After completing all columns 1 to 22, informant will put date and signature here:)</span>
+                                    <div style="margin-top:3px;">
+                                        <span style="font-weight:600; font-size:11.5px;">Date:</span>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:130px; display:inline-block;" value="${v('sig_date')}" readonly />
+                                        <span style="font-weight:600; font-size:11.5px; margin-left:14px;">Signature or left thumb mark of the informant</span>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('sig_mark')}" readonly />
+                                    </div>
+                                </div>
+
+                            </td>
+
+                            <!-- RIGHT COLUMN -->
+                            <td style="width:50%; border:1px solid #000; padding:5px 7px; vertical-align:top;">
+
+                                <table style="border:none; width:100%; margin-bottom:2px;">
+                                    <tr><td style="border:none; font-weight:700; font-size:13px; text-align:center; padding:2px 0;">To be filled by the informant</td></tr>
+                                </table>
+
+                                <!-- 10 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">10. Town or Village of Residence of the mother:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Place where the mother usually lives. This can be different from the place where the delivery occurred. The house address is not required to be entered.)</span>
+                                    <div style="margin-top:2px;">
+                                        <span style="font-weight:600; font-size:11.5px;">a) Name of Town/Village:</span>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f10_town_village')}" readonly />
+                                    </div>
+                                    <div style="margin-top:2px;">
+                                        <span style="font-weight:600; font-size:11.5px;">b) Is it a town or village:</span>
+                                        <span style="font-style:italic; font-size:11px; color:#333;">(Tick the appropriate entry below)</span>
+                                        <span style="display:inline-flex; gap:4px 12px; margin-left:4px;">
+                                            <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('town_village_type','town')} disabled /> 1. Town</label>
+                                            <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('town_village_type','village')} disabled /> 2. Village</label>
+                                        </span>
+                                    </div>
+                                    <div style="margin-top:2px;">
+                                        <span style="font-weight:600; font-size:11.5px;">c) Name of District:</span>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f10_district')}" readonly />
+                                    </div>
+                                    <div style="margin-top:2px;">
+                                        <span style="font-weight:600; font-size:11.5px;">d) Name of State:</span>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f10_state')}" readonly />
+                                    </div>
+                                </div>
+
+                                <!-- 11 -->
+                                <div style="margin-bottom:2px; margin-top:6px;">
+                                    <span style="font-weight:600; font-size:12.5px;">11. Religion of the Family:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Tick the appropriate entry below)</span>
+                                    <span style="display:inline-flex; gap:4px 10px; margin-left:4px; flex-wrap:wrap;">
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('religion','hindu')} disabled /> 1.Hindu</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('religion','muslim')} disabled /> 2. Muslim</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('religion','christian')} disabled /> 3.Christian</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('religion','other')} disabled /> 4. Any other religion:</label>
+                                        <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:100px; display:inline-block;" value="${v('f11_religion_other')}" readonly />
+                                    </span>
+                                </div>
+
+                                <!-- 12 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">12. Father's level of education:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:120px; display:inline-block;" value="${v('f12_father_edu')}" readonly />
+                                </div>
+
+                                <!-- 13 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">13. Mother's level of education:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Enter the completed level of education e.g. if studied upto class VII but passed only class VI, write class VI)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:120px; display:inline-block;" value="${v('f13_mother_edu')}" readonly />
+                                </div>
+
+                                <!-- 14 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">14. Father's occupation:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(If no occupation write ‘Nil’)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f14_father_occ')}" readonly />
+                                </div>
+
+                                <!-- 15 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">15. Mother's occupation:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(If no occupation write ‘Nil’)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:140px; display:inline-block;" value="${v('f15_mother_occ')}" readonly />
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- LOWER SECTION: two columns -->
+                    <table style="border-collapse:collapse; width:100%; font-size:12.5px; margin-top:2px;">
+                        <tr>
+                            <td style="width:50%; border:1px solid #000; padding:5px 7px; vertical-align:top;">
+                                <!-- 16 marriage -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">16. Age of the mother (in completed years) at the time of marriage:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(If married more than once, age at first marriage may be entered)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:70px; display:inline-block;" value="${v('f16_age_marriage')}" readonly />
+                                </div>
+                                <!-- 16 birth -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">16. Age of the mother (in completed years) at the time of birth</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:70px; display:inline-block;" value="${v('f16_age_birth')}" readonly />
+                                </div>
+                                <!-- 17 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">17. Number of children born alive to the mother so far including this child:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Number of children born alive to include also those from earlier marriage(s), if any)</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:70px; display:inline-block;" value="${v('f17_children_alive')}" readonly />
+                                </div>
+                            </td>
+                            <td style="width:50%; border:1px solid #000; padding:5px 7px; vertical-align:top;">
+                                <!-- 18 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">18. Type of attention at delivery:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Tick the appropriate entry below)</span>
+                                    <div style="margin-top:2px; display:flex; flex-wrap:wrap; gap:2px 10px;">
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_attention','inst_govt')} disabled /> 1. Institutional – Government</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_attention','inst_private')} disabled /> 2. Institutional – Private or Non-Government</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_attention','doctor_nurse')} disabled /> 3. Doctor, Nurse or Trained midwife</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_attention','tba')} disabled /> 4. Traditional Birth Attendant</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_attention','relatives')} disabled /> 5. Relatives or others</label>
+                                    </div>
+                                </div>
+                                <!-- 20 -->
+                                <div style="margin-bottom:2px; margin-top:4px;">
+                                    <span style="font-weight:600; font-size:12.5px;">20. Method of Delivery:</span>
+                                    <span style="font-style:italic; font-size:11.5px; color:#333;">(Tick the appropriate entry below)</span>
+                                    <span style="display:inline-flex; gap:4px 12px; margin-left:4px;">
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_method','natural')} disabled /> 1. Natural</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_method','caesarean')} disabled /> 2. Caesarean</label>
+                                        <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px;"><input type="radio" ${radioChecked('delivery_method','forceps')} disabled /> 3. Forceps/Vacuum</label>
+                                    </span>
+                                </div>
+                                <!-- 21 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">21. Birth Weight (in kgs.) (if available):</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:80px; display:inline-block;" value="${v('f21_birth_weight')}" readonly />
+                                </div>
+                                <!-- 22 -->
+                                <div style="margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:12.5px;">22. Duration of pregnancy (in weeks):</span>
+                                    <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:70px; display:inline-block;" value="${v('f22_pregnancy_weeks')}" readonly />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- SIGNATURE ROW -->
+                    <table style="border-collapse:collapse; width:100%; margin-top:2px;">
+                        <tr>
+                            <td style="width:33%; border:1px solid #000; padding:6px 7px;">
+                                <span style="font-weight:600; font-size:12.5px;">Date:</span>
+                                <input type="text" style="border:none; border-bottom:1px solid #000; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12px; padding:1px 3px; width:auto; min-width:130px; display:inline-block;" value="${v('sig_date_bottom')}" readonly />
+                            </td>
+                            <td style="width:44%; border:1px solid #000; padding:6px 7px; text-align:center;">
+                                <span style="font-weight:600; font-size:13px;">Signature or left thumb mark of the informant</span>
+                                <span style="display:inline-block; width:160px; border-bottom:1px solid #000; margin-left:6px; padding:0 2px;">
+                                    <input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" value="${v('sig_mark_bottom')}" readonly />
+                                </span>
+                            </td>
+                            <td style="width:23%; border:1px solid #000; padding:6px 7px; font-size:12px; text-align:center;">
+                                <em>(Columns to be filled are over. Now put signature at left)</em>
+                            </td>
+                        </tr>
+                    </table>
+
+                     <!-- REGISTRAR SECTION -->
+                    <table style="border-collapse:collapse; width:100%; margin-top:2px; font-size:12.5px;">
+                        <tr>
+                            <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Registration No.:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_no')}" readonly /></span>
+                            </td>
+                            <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Registration Date:</span>
+                                <span style="display:inline-block; min-width:80px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_date')}" readonly /></span>
+                            </td>
+                            <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Name</span>
+                                <span style="display:inline-block; min-width:60px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_name')}" readonly /></span>
+                                <span style="font-weight:600; margin-left:4px;">Code No.</span>
+                                <span style="display:inline-block; min-width:50px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_code')}" readonly /></span>
+                            </td>
+                            <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Registration No.:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_no2')}" readonly /></span>
+                                <span style="font-weight:600; margin-left:4px;">Registration Date:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_date2')}" readonly /></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Registration Unit:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_unit')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">District:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_district')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Date of Birth:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_dob')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Sex:</span>
+                                <span style="display:inline-block; min-width:50px; border-bottom:1px solid #000; padding:0 2px;">
+                                    <select disabled style="border:none; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none; width:100%;">
+                                        <option value="">—</option>
+                                        <option value="1" ${selSelected('reg_sex','1')}>1.Male</option>
+                                        <option value="2" ${selSelected('reg_sex','2')}>2.Female</option>
+                                    </select>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Town/Village:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_town_village')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">District:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_district2')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Tahsil:</span>
+                                <span style="display:inline-block; min-width:60px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_tahsil')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;">
+                                <span style="font-weight:600;">Place of Birth:</span>
+                                <span style="display:inline-block; min-width:60px; border-bottom:1px solid #000; padding:0 2px;">
+                                    <select disabled style="border:none; background:transparent; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none; width:100%;">
+                                        <option value="">—</option>
+                                        <option value="1" ${selSelected('reg_place_birth','1')}>1.Hospital/Institution</option>
+                                        <option value="2" ${selSelected('reg_place_birth','2')}>2.House</option>
+                                    </select>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;" colspan="2">
+                                <span style="font-weight:600;">Remarks: (if any)</span>
+                                <span style="display:inline-block; min-width:140px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_remarks')}" readonly /></span>
+                            </td>
+                            <td style="border:1px solid #000; padding:5px 7px; vertical-align:middle;" colspan="2">
+                                <span style="font-weight:600;">Registration Unit:</span>
+                                <span style="display:inline-block; min-width:70px; border-bottom:1px solid #000; padding:0 2px;"><input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:12.5px; outline:none;" value="${v('reg_unit2')}" readonly /></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:8px 7px; vertical-align:middle; text-align:center;" colspan="2">
+                                <span style="font-weight:600; font-size:14px;">Name and Signature of the Registrar</span>
+                                <div style="margin-top:3px;">
+                                    <span style="display:inline-block; min-width:120px; border-bottom:1px solid #000; padding:0 4px;">
+                                        <input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" value="${v('reg_registrar_name')}" readonly />
+                                    </span>
+                                    <span style="margin-left:12px; font-size:13px;">Signature:</span>
+                                    <span style="display:inline-block; min-width:100px; border-bottom:1px solid #000; padding:0 4px;">
+                                        <input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" value="${v('reg_registrar_sig')}" readonly />
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="border:1px solid #000; padding:8px 7px; vertical-align:middle; text-align:center;" colspan="2">
+                                <span style="font-weight:600; font-size:14px;">Name and Signature of the Registrar</span>
+                                <div style="margin-top:3px;">
+                                    <span style="display:inline-block; min-width:120px; border-bottom:1px solid #000; padding:0 4px;">
+                                        <input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" value="${v('reg_registrar_name2')}" readonly />
+                                    </span>
+                                    <span style="margin-left:12px; font-size:13px;">Signature:</span>
+                                    <span style="display:inline-block; min-width:100px; border-bottom:1px solid #000; padding:0 4px;">
+                                        <input type="text" style="border:none; background:transparent; width:100%; font-family:'Times New Roman',Times,serif; font-size:13px; outline:none;" value="${v('reg_registrar_sig2')}" readonly />
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                `;
+            }
+
+            // ============================================================
+            //  AUTO-SAVE TO localStorage (temporary while editing)
+             // ============================================================
+            function autoSave() {
+                const data = collectFormData();
+                try {
+                    localStorage.setItem('birthFormData', JSON.stringify(data));
+                } catch (e) { /* ignore */ }
+            }
+
+            function restoreSaved() {
+                try {
+                    const raw = localStorage.getItem('birthFormData');
+                    if (!raw) return;
+                    const data = JSON.parse(raw);
+                    // restore all fields
+                    for (const [key, val] of Object.entries(data)) {
+                        if (key === 'sex' || key === 'birth_place_type' || key === 'town_village_type' ||
+                            key === 'religion' || key === 'delivery_attention' || key === 'delivery_method') {
+                            setRadioValue(key, val);
+                        } else if (key === 'reg_sex') {
+                            const el = document.getElementById('reg_sex');
+                            if (el) el.value = val || '';
+                        } else if (key === 'reg_place_birth') {
+                            const el = document.getElementById('reg_place_birth');
+                            if (el) el.value = val || '';
+                        } else {
+                            setVal(key, val);
+                        }
+                    }
+                } catch (e) { /* ignore */ }
+            }
+
+            // ---- auto-save on input change ----
+            document.addEventListener('input', function(e) {
+                if (e.target.closest('#birth-form')) {
+                    autoSave();
+                }
+            });
+            document.addEventListener('change', function(e) {
+                if (e.target.closest('#birth-form')) {
+                    autoSave();
+                }
+            });
+
+            // ---- restore on load ----
+            window.addEventListener('DOMContentLoaded', function() {
+                restoreSaved();
+                // If no data, load sample data as fallback
+                const hasData = Object.values(collectFormData()).some(v => v !== '' && v !== null && v !== undefined);
+                if (!hasData) {
+                    // optionally load sample? we'll let user click button.
+                }
+            });
+
+            // ---- also auto-save before PDF generation ----
+            const origDownload = window.downloadPDF;
+            window.downloadPDF = function() {
+                autoSave();
+                origDownload();
+            };
+
+        })();
+    </script>
 
 </body>
 </html>
