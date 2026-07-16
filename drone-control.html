@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Birth Report Form – FORM NO.1</title>
 
-    <!-- ===== html2canvas + jsPDF from CDN ===== -->
+    <!-- html2canvas + jsPDF from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
@@ -399,13 +399,14 @@
             }
         }
 
-        /* ===== HIDDEN CLONE FOR PDF ===== */
+        /* ===== HIDDEN CLONE FOR PDF ===== 
+             Now set to landscape width (1123px) */
         #pdf-clone {
             position: absolute;
             left: -9999px;
             top: 0;
-            width: 794px;
-            /* A4 width in px at 96dpi */
+            width: 1123px;
+            /* A4 landscape width at 96dpi */
             padding: 40px 42px 38px 42px;
             background: #ffffff;
             font-family: 'Times New Roman', Times, serif;
@@ -593,7 +594,7 @@
                             <textarea class="form-control" id="f7_address_permanent" rows="2" style="min-height:32px;"></textarea>
                         </div>
 
-                        <!-- Field 8 -->
+                          <!-- Field 8 -->
                         <div style="margin-bottom:2px;">
                             <span class="field-label">8. Place of birth:</span>
                             <span class="note-italic">(Tick the appropriate entry 1 or 2 below and give the name of the Hospital/Institution or the address of the house where the birth took place)</span>
@@ -604,7 +605,7 @@
                             <input type="text" class="form-control form-control-sm" id="f8_place_detail" placeholder="Name / address" style="width:100%; margin-top:2px;" />
                         </div>
 
-                          <!-- Field 9 -->
+                        <!-- Field 9 -->
                         <div style="margin-bottom:2px;">
                             <span class="field-label">9. Informant's name:</span>
                             <input type="text" class="form-control form-control-sm" id="f9_informant_name" style="width:auto; min-width:120px; display:inline-block;" />
@@ -706,7 +707,7 @@
 
                     </td>
                 </tr>
-             </table>
+            </table>
 
             <!-- ===== LOWER SECTION: Fields 16–22 (two columns) ===== -->
             <table style="margin-top:2px;">
@@ -763,7 +764,7 @@
                             </div>
                         </div>
 
-                        <!-- Field 21 -->
+                           <!-- Field 21 -->
                         <div style="margin-bottom:2px;">
                             <span class="field-label">21. Birth Weight (in kgs.) (if available):</span>
                             <input type="text" class="form-control form-control-sm" id="f21_birth_weight" style="width:auto; min-width:80px; display:inline-block;" placeholder="e.g. 3.2" />
@@ -948,7 +949,7 @@
 
             // ============================================================
             //  LOAD SAMPLE DATA
-            // ============================================================
+             // ============================================================
             window.loadSampleData = function() {
                 // Field 1
                 setVal('f1_dob', '2026-07-16');
@@ -1057,35 +1058,25 @@
             //  CLEAR FORM
             // ============================================================
             window.clearForm = function() {
-                // All text inputs, textareas, date, number
                 document.querySelectorAll('#birth-form input[type="text"], #birth-form input[type="number"], #birth-form input[type="date"], #birth-form textarea, #birth-form input[type="password"]')
                     .forEach(el => {
                         if (el.type !== 'radio' && el.type !== 'checkbox') {
                             el.value = '';
                         }
                     });
-
-                // Selects
                 document.querySelectorAll('#birth-form select').forEach(el => {
                     el.selectedIndex = 0;
                 });
-
-                // Radios
                 document.querySelectorAll('#birth-form input[type="radio"]').forEach(el => {
                     el.checked = false;
                 });
-
-                // Checkboxes
                 document.querySelectorAll('#birth-form input[type="checkbox"]').forEach(el => {
                     el.checked = false;
                 });
-
-                // Special: signature placeholders
-                // (already cleared by above)
             };
 
             // ============================================================
-            //  DOWNLOAD PDF  (using html2canvas + jsPDF)
+            //  DOWNLOAD PDF (LANDSCAPE A4)
             // ============================================================
             window.downloadPDF = function() {
                 // 1. Gather all current form values
@@ -1095,21 +1086,21 @@
                 const clone = document.getElementById('pdf-clone');
                 clone.innerHTML = buildPdfHtml(data);
 
-                // 3. Render clone with html2canvas
+                // 3. Render clone with html2canvas (landscape width = 1123px)
                 html2canvas(clone, {
-                    scale: 2.5, // high quality
+                    scale: 2.5,
                     useCORS: true,
                     logging: false,
                     backgroundColor: '#ffffff',
-                    width: 794,
+                    width: 1123, // landscape width
                     height: clone.scrollHeight,
                 }).then((canvas) => {
                     const imgData = canvas.toDataURL('image/jpeg', 0.98);
 
-                    // 4. Create PDF (A4)
+                    // 4. Create PDF (A4 landscape)
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const pdfWidth = 210;
+                    const pdf = new jsPDF('l', 'mm', 'a4'); // landscape
+                    const pdfWidth = 297; // A4 landscape width in mm
                     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
                     pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
@@ -1181,27 +1172,24 @@
                 };
             }
 
-            // ---- Build PDF HTML from data ----
+            // ---- Build PDF HTML from data (landscape-optimised) ----
             function buildPdfHtml(d) {
-                // helper for radio checked
                 function radioChecked(name, val) {
                     return (d[name] === val) ? 'checked' : '';
                 }
 
-                // helper for select selected
                 function selSelected(id, val) {
                     return (d[id] === val) ? 'selected' : '';
                 }
 
-                // helper for text/date/number values
                 function v(key) {
                     return d[key] || '';
                 }
 
                 return `
-                <div style="font-family:'Times New Roman',Times,serif; color:#000; background:#fff; font-size:13px; line-height:1.45; padding:40px 42px 38px 42px;">
+                <div style="font-family:'Times New Roman',Times,serif; color:#000; background:#fff; font-size:13px; line-height:1.45; padding:40px 42px 38px 42px; width:100%;">
 
-                      <!-- HEADER -->
+                    <!-- HEADER -->
                     <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:6px;">
                         <div style="font-size:18px; font-weight:700; letter-spacing:1px;">FORM NO.1</div>
                         <div style="font-size:22px; font-weight:700; letter-spacing:1.5px; margin-top:2px;">BIRTH REPORT</div>
@@ -1463,7 +1451,7 @@
                         </tr>
                     </table>
 
-                     <!-- REGISTRAR SECTION -->
+                    <!-- REGISTRAR SECTION -->
                     <table style="border-collapse:collapse; width:100%; margin-top:2px; font-size:12.5px;">
                         <tr>
                             <td style="width:25%; border:1px solid #000; padding:5px 7px; vertical-align:middle;">
@@ -1578,8 +1566,8 @@
             }
 
             // ============================================================
-            //  AUTO-SAVE TO localStorage (temporary while editing)
-             // ============================================================
+            //  AUTO-SAVE TO localStorage
+            // ============================================================
             function autoSave() {
                 const data = collectFormData();
                 try {
@@ -1592,7 +1580,6 @@
                     const raw = localStorage.getItem('birthFormData');
                     if (!raw) return;
                     const data = JSON.parse(raw);
-                    // restore all fields
                     for (const [key, val] of Object.entries(data)) {
                         if (key === 'sex' || key === 'birth_place_type' || key === 'town_village_type' ||
                             key === 'religion' || key === 'delivery_attention' || key === 'delivery_method') {
@@ -1610,7 +1597,6 @@
                 } catch (e) { /* ignore */ }
             }
 
-            // ---- auto-save on input change ----
             document.addEventListener('input', function(e) {
                 if (e.target.closest('#birth-form')) {
                     autoSave();
@@ -1622,17 +1608,11 @@
                 }
             });
 
-            // ---- restore on load ----
             window.addEventListener('DOMContentLoaded', function() {
                 restoreSaved();
-                // If no data, load sample data as fallback
-                const hasData = Object.values(collectFormData()).some(v => v !== '' && v !== null && v !== undefined);
-                if (!hasData) {
-                    // optionally load sample? we'll let user click button.
-                }
             });
 
-            // ---- also auto-save before PDF generation ----
+            // override download to save first
             const origDownload = window.downloadPDF;
             window.downloadPDF = function() {
                 autoSave();
@@ -1643,4 +1623,4 @@
     </script>
 
 </body>
-</html>
+</html>                                    
