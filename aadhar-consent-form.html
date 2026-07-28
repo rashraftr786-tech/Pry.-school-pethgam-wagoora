@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aadhaar Consent Form - Government Primary School Pethgam Wagoora</title>
+    <!-- Libraries for client-side PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-blue: #0d2b5e;
@@ -17,7 +20,8 @@
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container {
@@ -284,18 +288,12 @@
             justify-content: flex-end;
         }
 
-        .seal-circle {
+        /* UPDATED: Clear white space placeholder for Physical Stamp */
+        .stamp-space {
             width: 80px;
             height: 80px;
-            border: 1px dashed var(--text-black);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            text-align: center;
             margin-bottom: 10px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
         }
 
         .hoi-signature-line {
@@ -319,7 +317,7 @@
             margin-top: 5px;
         }
 
-        /* --- Footer --- */
+        /* --- Footer & Download Button --- */
         .footer {
             margin-top: 20px;
             border-top: 1px solid #ccc;
@@ -327,6 +325,44 @@
             text-align: center;
             font-size: 12px;
             color: #333;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        #downloadPdfBtn {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+
+        #downloadPdfBtn:hover {
+            background-color: #1a3d74;
+        }
+
+        /* Hide download button during printing */
+        @media print {
+            #downloadPdfBtn, .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
         }
 
         /* --- Responsive --- */
@@ -373,7 +409,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="formContainer">
     <div class="header">
         <div class="logo-container">
             <!-- ERP logo file -->
@@ -391,7 +427,7 @@
         <span>(For UDISE+ Student Records)</span>
     </div>
 
-    <form action="#" method="POST">
+    <form id="consentForm">
         <!-- School Basic Info -->
         <div class="section-box">
             <div class="form-row">
@@ -583,9 +619,8 @@
                     </div>
                 </div>
                 <div class="hoi-signature-container">
-                    <div class="seal-circle">
-                        School<br>Seal
-                    </div>
+                    <!-- Updated: White space placeholder for Physical Stamp -->
+                    <div class="stamp-space"></div>
                     <div class="hoi-signature-line">
                         <input type="text" name="hoi_signature">
                         <span>Signature of HOI</span>
@@ -599,8 +634,54 @@
     <div class="footer">
         This consent shall be preserved in the school record for audit and verification purposes.
     </div>
+    
+    <!-- Button to trigger PDF download -->
+    <div class="action-buttons no-print">
+        <button id="downloadPdfBtn" type="button">Download Filled Form as PDF</button>
+    </div>
 </div>
 
+<script>
+    document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+        const btn = this;
+        const form = document.getElementById('consentForm');
+        
+        // Temporarily hide the download button so it doesn't appear in the PDF
+        btn.style.display = 'none';
+        
+        // Ensure all inputs render visually (sometimes inputs need forcing in canvas)
+        const element = document.querySelector('.container');
+
+        html2canvas(element, { 
+            scale: 2,            // Generate high-quality image
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            
+            // Use jsPDF
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4'); // portrait, millimeters, A4
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            
+            // Calculate ratio to fit the content on a single A4 page
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = (pdfHeight - imgHeight * ratio) / 2;
+
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.save('aadhaar_consent_form.pdf');
+            
+            // Restore the download button
+            btn.style.display = 'block';
+        });
+    });
+</script>
 </body>
-</html>            
-                        
+</html>
