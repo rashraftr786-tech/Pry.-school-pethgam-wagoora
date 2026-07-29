@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SchoolERP · Full Module Dashboard</title>
+    <title>SchoolERP · Categorized Module Dashboard</title>
     <link rel="icon" type="image/png" href="logo.png" />
     <style>
         /* ──────────────────────────────────────────────────────────────
@@ -365,7 +365,7 @@
             }
         }
 
-        /* ─── Module Grid ─── */
+        /* ─── Module Section ─── */
         .module-section {
             margin-top: 1rem;
         }
@@ -439,6 +439,36 @@
             background: rgba(108, 140, 255, 0.3);
         }
 
+        /* ─── Category Group ─── */
+        .category-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .category-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+        }
+
+        .category-header .badge {
+            font-size: 0.65rem;
+            background: rgba(108, 140, 255, 0.15);
+            color: var(--text-secondary);
+            padding: 0.15rem 0.7rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -490,6 +520,30 @@
             opacity: 0.8;
         }
 
+        .module-card .merged-badge {
+            font-size: 0.5rem;
+            background: rgba(245, 215, 66, 0.12);
+            color: #f5d742;
+            padding: 0.1rem 0.6rem;
+            border-radius: 1rem;
+            margin-top: 0.1rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .module-card .new-badge {
+            font-size: 0.5rem;
+            background: rgba(108, 255, 140, 0.15);
+            color: #6cff8c;
+            padding: 0.1rem 0.6rem;
+            border-radius: 1rem;
+            margin-top: 0.1rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
         /* ─── Footer ─── */
         .footer {
             margin-top: 4rem;
@@ -532,6 +586,27 @@
 
         .footer .demo-cred strong {
             color: #fff;
+        }
+
+        .footer .version {
+            margin-top: 0.6rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ─── No results ─── */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .no-results span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         /* ─── Responsive ─── */
@@ -606,7 +681,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
             }
-            .module-card {
+             .module-card {
                 padding: 0.8rem 0.5rem;
                 border-radius: 1rem;
             }
@@ -631,6 +706,9 @@
             }
             .nav-actions {
                 gap: 0.4rem;
+            }
+            .category-header h3 {
+                font-size: 1rem;
             }
         }
 
@@ -684,21 +762,21 @@
                 <a href="#modules" class="btn-glass btn-primary">All Modules</a>
                 <span class="btn-glass btn-demo" style="cursor:default;">🔑 Demo: admin@demo.com / 123456</span>
             </div>
-            </nav>
+        </nav>
 
         <!-- ─── HERO ─── -->
         <section class="hero">
             <div class="hero-content">
                 <h1>
-                    Full‑featured<br />
+                    Smart <br />
                     <span class="highlight">School Management</span>
                 </h1>
                 <p>
-                    Every module you need — from admissions to transcripts,
-                    all in one glass‑styled dashboard. Built with Firebase.
+                    Categorized, streamlined, and future-ready — every module you need,
+                    from admissions to compliance, in one glass‑styled dashboard.
                 </p>
                 <div class="hero-actions">
-                    <a href="#modules" class="btn-glass btn-primary">Explore 40+ Modules →</a>
+                    <a href="#modules" class="btn-glass btn-primary">Explore Modules →</a>
                     <a href="signin.html" class="btn-glass">Sign In</a>
                 </div>
             </div>
@@ -708,19 +786,24 @@
                     <div class="glow-ring"></div>
                     <div class="card-grid">
                         <div class="grid-item">
+                            <span class="icon">📦</span>
+                            <span class="value">9</span>
+                            <span class="label">Categories</span>
+                        </div>
+                        <div class="grid-item">
                             <span class="icon">📋</span>
-                            <span class="value">40+</span>
+                            <span class="value">35+</span>
                             <span class="label">Modules</span>
                         </div>
                         <div class="grid-item">
-                            <span class="icon">👨‍🎓</span>
-                            <span class="value">1.2k</span>
-                            <span class="label">Students</span>
+                            <span class="icon">🔄</span>
+                            <span class="value">7</span>
+                            <span class="label">Merged</span>
                         </div>
                         <div class="grid-item">
-                            <span class="icon">👩‍🏫</span>
-                            <span class="value">86</span>
-                            <span class="label">Teachers</span>
+                            <span class="icon">✨</span>
+                            <span class="value">5</span>
+                            <span class="label">New</span>
                         </div>
                         <div class="grid-item">
                             <span class="icon">📊</span>
@@ -728,32 +811,27 @@
                             <span class="label">Attendance</span>
                         </div>
                         <div class="grid-item">
-                            <span class="icon">📚</span>
-                            <span class="value">32</span>
-                            <span class="label">Classes</span>
-                        </div>
-                        <div class="grid-item">
-                            <span class="icon">🏆</span>
-                            <span class="value">18</span>
-                            <span class="label">Awards</span>
+                            <span class="icon">🏛️</span>
+                            <span class="value">4</span>
+                            <span class="label">Compliance</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ─── MODULES ─── -->
+          <!-- ─── MODULES ─── -->
         <section class="module-section" id="modules">
             <div class="section-header">
-                <h2>📦 <span>All Modules</span></h2>
+                <h2>📦 <span>All Modules</span> <span style="font-size:0.7rem;font-weight:400;color:var(--text-secondary);">· categorized · merged · enhanced</span></h2>
                 <div class="search-box">
                     <input type="text" id="moduleSearch" placeholder="Search modules..." />
                     <button onclick="filterModules()">Filter</button>
                 </div>
             </div>
 
-            <div class="modules-grid" id="moduleGrid">
-                <!-- Each card will be generated from JS array for completeness -->
+            <div id="moduleContainer">
+                <!-- Rendered by JavaScript -->
             </div>
         </section>
 
@@ -775,6 +853,7 @@
             <p style="margin-top:1rem;">
                 &copy; 2026 SchoolERP · Firebase powered · Glass UI
             </p>
+            <div class="version">v2.0 · Categorized · Merged · Enhanced</div>
         </footer>
 
     </div>
@@ -783,81 +862,216 @@
         (function() {
             'use strict';
 
-            // ─── Complete list of modules from the file list ───
-            const modules = [
-                { name: 'Admission', icon: '📋', file: 'admission.html', desc: 'Student enrollment' },
-                { name: 'Adm Register', icon: '📝', file: 'adm-register.html', desc: 'Admin registration' },
-                { name: 'Apaar Input', icon: '🆔', file: 'apaar-input.html', desc: 'Apaar ID entry' },
-                { name: 'Attendance', icon: '✅', file: 'attendance.html', desc: 'Track presence' },
-                { name: 'Bonafide', icon: '📄', file: 'bonafide.html', desc: 'Bonafide certificate' },
-                { name: 'Broadcast WhatsApp', icon: '📱', file: 'broadcast-whatsapp.html', desc: 'WhatsApp messages' },
-                { name: 'Child Population', icon: '👶', file: 'child-population.html', desc: 'Demographics' },
-                { name: 'Comm Logs', icon: '📜', file: 'comm-logs.html', desc: 'Communication history' },
-                { name: 'Document Vault', icon: '📁', file: 'document-vault.html', desc: 'Secure storage' },
-                { name: 'Forgot Password', icon: '🔑', file: 'forgot-password.html', desc: 'Reset password' },
-                { name: 'Leave Management', icon: '📅', file: 'leave-management.html', desc: 'Leave requests' },
-                { name: 'Library', icon: '📚', file: 'library.html', desc: 'Book management' },
-                { name: 'Marks Sheet', icon: '📊', file: 'marks-sheet.html', desc: 'Marks & grades' },
-                { name: 'Master Profile', icon: '👤', file: 'master-profile.html', desc: 'Profile settings' },
-                { name: 'MDM', icon: '📱', file: 'mdm.html', desc: 'Mobile device mgmt' },
-                { name: 'MDM Statement', icon: '📋', file: 'mdm-statement.html', desc: 'MDM reports' },
-                { name: 'Reports Hub', icon: '📈', file: 'reports-hub.html', desc: 'All reports' },
-                { name: 'Results', icon: '🏅', file: 'results.html', desc: 'Exam results' },
-                { name: 'Roll Analyzer', icon: '🔍', file: 'roll-analyzer.html', desc: 'Roll analysis' },
-                { name: 'Roll Statement', icon: '📃', file: 'roll-statement.html', desc: 'Roll statements' },
-                { name: 'Send Email', icon: '✉️', file: 'send-email.html', desc: 'Email broadcast' },
-                { name: 'Send SMS', icon: '💬', file: 'send-sms.html', desc: 'SMS broadcast' },
-                { name: 'Sign In', icon: '🔐', file: 'signin.html', desc: 'Login page' },
-                { name: 'Staff Entry', icon: '👩‍🏫', file: 'staff-entry.html', desc: 'Add staff' },
-                { name: 'Staff Statement', icon: '📄', file: 'staff-statement.html', desc: 'Staff reports' },
-                { name: 'Stop Watch', icon: '⏱️', file: 'stop-watch.html', desc: 'Timer' },
-                { name: 'Student Diary (Parent)', icon: '📖', file: 'student-diary-parent.html', desc: 'Parent view' },
-                { name: 'Student Diary (Teacher)', icon: '📝', file: 'student-diary-teacher.html', desc: 'Teacher view' },
-                { name: 'Student ID', icon: '🆔', file: 'student-id.html', desc: 'ID card' },
-                { name: 'TC', icon: '📜', file: 'tc.html', desc: 'Transfer certificate' },
-                { name: 'Teaching ID', icon: '🪪', file: 'teaching-id.html', desc: 'Teacher ID' },
-                { name: 'Textbook Issue', icon: '📕', file: 'textbook-issue.html', desc: 'Book issue' },
-                { name: 'Timetable', icon: '⏰', file: 'timetable.html', desc: 'Schedule' },
-                { name: 'Upload Results', icon: '⬆️', file: 'upload-results.html', desc: 'Upload marks' },
-                { name: 'WB', icon: '📝', file: 'wb.html', desc: 'Workbook' },
-                { name: 'VER', icon: '🔍', file: 'VER.html', desc: 'Verification' },
-                { name: 'Dashboard (Admin)', icon: '📊', file: 'admin/dashboard.html', desc: 'Admin panel' },
-                { name: 'Dashboard (Teacher)', icon: '📊', file: 'teacher/dashboard.html', desc: 'Teacher panel' },
-                { name: 'Student Dashboard', icon: '📊', file: 'student/students.html', desc: 'Student panel' },
-                { name: 'Results Handler', icon: '⚙️', file: 'results-handler.js', desc: 'Grading logic' },
-                { name: 'Guard.js', icon: '🛡️', file: 'js/guard.js', desc: 'Auth guard' },
-                { name: 'Init Firebase', icon: '🔥', file: 'init-firebase.js', desc: 'Firebase init' },
-            ];
+            // ─── CATEGORIZED MODULE DATA ──────────────────────────────
+            //   Merged modules are marked with merged: true
+            //   New modules (not in original list) are marked with isNew: true
+            //   Non-modules (Sign In, Forgot Password, Stop Watch) are removed.
+            //   Adm Register → merged into User Role Management (System)
+            // ─────────────────────────────────────────────────────────────
 
-            const grid = document.getElementById('moduleGrid');
+            const categories = [{
+                name: '📊 Dashboard',
+                icon: '📊',
+                modules: [
+                    { name: 'Admin Dashboard', icon: '📊', file: 'admin/dashboard.html', desc: 'Full admin panel' },
+                    { name: 'Teacher Dashboard', icon: '📊', file: 'teacher/dashboard.html', desc: 'Teacher view' },
+                    { name: 'Student Dashboard', icon: '📊', file: 'student/students.html', desc: 'Student view' },
+                ]
+            }, {
+                name: '📚 Academic Core',
+                icon: '📚',
+                modules: [
+                    { name: 'Admission', icon: '📋', file: 'admission.html', desc: 'Student enrollment' },
+                    { name: 'Attendance', icon: '✅', file: 'attendance.html', desc: 'Track presence' },
+                    { name: 'Timetable', icon: '⏰', file: 'timetable.html', desc: 'Class schedules' },
+                    { name: 'Examination Management', icon: '🏅', file: 'examination.html', desc: 'Marks, results & grading',
+                        merged: true, mergedFrom: 'Marks Sheet · Results · Upload Results' },
+                    { name: 'Library Management', icon: '📚', file: 'library.html', desc: 'Books & textbook issue',
+                        merged: true, mergedFrom: 'Library · Textbook Issue' },
+                ]
+            }, {
+                name: '👨‍🎓 Student Lifecycle',
+                icon: '👨‍🎓',
+                modules: [
+                    { name: 'Student Profile', icon: '👤', file: 'student-profile.html', desc: 'Profile with APAAR ID' },
+                    { name: 'Bonafide Certificate', icon: '📄', file: 'bonafide.html', desc: 'Bonafide issuance' },
+                    { name: 'TC (Transfer Cert.)', icon: '📜', file: 'tc.html', desc: 'Transfer certificate' },
+                    { name: 'Work & Behaviour Cert.', icon: '📝', file: 'wb.html', desc: 'Conduct certificate',
+                        merged: true, mergedFrom: 'WB (expanded)' },
+                    { name: 'Student ID Card', icon: '🆔', file: 'student-id.html', desc: 'ID card generation' },
+                    { name: 'Student Diary', icon: '📖', file: 'student-diary.html', desc: 'Parent & Teacher views',
+                        merged: true, mergedFrom: 'Student Diary (P) · (T)' },
+                ]
+            }, {
+                name: '👩‍🏫 Staff Management',
+                icon: '👩‍🏫',
+                modules: [
+                    { name: 'Staff Onboarding', icon: '👩‍🏫', file: 'staff-entry.html', desc: 'Add staff & teaching ID',
+                        merged: true, mergedFrom: 'Staff Entry · Teaching ID' },
+                    { name: 'Leave Management', icon: '📅', file: 'leave-management.html', desc: 'Leave requests' },
+                    { name: 'Staff Reports', icon: '📄', file: 'staff-statement.html', desc: 'Staff analytics' },
+                ]
+            }, {
+                name: '📱 Communication Hub',
+                icon: '📱',
+                modules: [
+                    { name: 'Unified Communication', icon: '📱', file: 'broadcast.html', desc: 'SMS · Email · WhatsApp',
+                        merged: true, mergedFrom: 'Broadcast WhatsApp · Send Email · Send SMS' },
+                    { name: 'Communication Logs', icon: '📜', file: 'comm-logs.html', desc: 'History of all comms' },
+                ]
+            }, {
+                name: '🏛️ Govt. Compliance',
+                icon: '🏛️',
+                modules: [
+                    { name: 'APAAR Management', icon: '🆔', file: 'apaar-input.html', desc: 'APAAR ID mapping',
+                        merged: true, mergedFrom: 'Apaar Input (expanded)' },
+                    { name: 'VER - Village Ed. Register', icon: '📘', file: 'VER.html', desc: 'UDISE+ village survey',
+                        merged: true, mergedFrom: 'VER (expanded)' },
+                    { name: 'MDM - Mid-Day Meal', icon: '🍽️', file: 'mdm.html', desc: 'Meal scheme management',
+                        merged: true, mergedFrom: 'MDM (expanded)' },
+                    { name: 'Student Census', icon: '👶', file: 'child-population.html', desc: 'Demographics',
+                        merged: true, mergedFrom: 'Child Population (renamed)' },
+                    { name: 'MDM Reports', icon: '📊', file: 'mdm-statement.html', desc: 'MDM analytics' },
+                ]
+            }, {
+                name: '💰 Finance & Administration',
+                icon: '💰',
+                modules: [
+                    { name: 'Fee Management', icon: '💳', file: 'fee-management.html', desc: 'Fees, dues & receipts',
+                        isNew: true },
+                    { name: 'Transport Management', icon: '🚌', file: 'transport.html', desc: 'Routes & tracking',
+                        isNew: true },
+                    { name: 'Hostel Management', icon: '🏠', file: 'hostel.html', desc: 'Rooms & mess billing',
+                        isNew: true },
+                    { name: 'Inventory Management', icon: '📦', file: 'inventory.html', desc: 'Assets & supplies',
+                        isNew: true },
+                    { name: 'Document Vault', icon: '📁', file: 'document-vault.html', desc: 'Secure storage' },
+                ]
+            }, {
+                name: '📈 Reports & Analytics',
+                icon: '📈',
+                modules: [
+                    { name: 'Reports Hub', icon: '📈', file: 'reports-hub.html', desc: 'All reports in one place' },
+                    { name: 'Roll Analyzer', icon: '🔍', file: 'roll-analyzer.html', desc: 'Roll number analysis' },
+                    { name: 'Roll Statement', icon: '📃', file: 'roll-statement.html', desc: 'Roll statements' },
+                ]
+            }, {
+                name: '⚙️ System & Utilities',
+                icon: '⚙️',
+                modules: [
+                    { name: 'Master Profile', icon: '👤', file: 'master-profile.html', desc: 'Profile settings' },
+                    { name: 'User Role Management', icon: '🛡️', file: 'adm-register.html', desc: 'Admin roles & access',
+                        merged: true, mergedFrom: 'Adm Register (merged)' },
+                    { name: 'Workbook Management', icon: '📓', file: 'wb.html', desc: 'Workbook tracking',
+                        merged: true, mergedFrom: 'WB (workbook)' },
+                ]
+            }];
+
+            // ─── Flatten for search (keep category reference) ───
+            const allModules = [];
+            categories.forEach(cat => {
+                cat.modules.forEach(m => {
+                    allModules.push({
+                        ...m,
+                        category: cat.name,
+                        categoryIcon: cat.icon
+                    });
+                });
+            });
+
+            const container = document.getElementById('moduleContainer');
 
             function renderModules(filter = '') {
                 const search = filter.toLowerCase().trim();
-                const filtered = modules.filter(m =>
+
+                // If search is empty, render categories
+                if (!search) {
+                    let html = '';
+                    categories.forEach(cat => {
+                        html += `
+                                <div class="category-group">
+                                    <div class="category-header">
+                                        <h3>${cat.icon} ${cat.name}</h3>
+                                        <span class="badge">${cat.modules.length} modules</span>
+                                    </div>
+                                    <div class="modules-grid">
+                                        ${cat.modules.map((m, idx) => `
+                                            <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s">
+                                                <span class="icon">${m.icon}</span>
+                                                <span class="name">${m.name}</span>
+                                                <span class="desc">${m.desc}</span>
+                                                ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
+                                                ${m.isNew ? `<span class="new-badge">✦ NEW</span>` : ''}
+                                            </a>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                    });
+                    container.innerHTML = html;
+                    return;
+                }
+
+                // ─── Search mode: flat filtered list ───
+                const filtered = allModules.filter(m =>
                     m.name.toLowerCase().includes(search) ||
                     m.desc.toLowerCase().includes(search) ||
-                    m.file.toLowerCase().includes(search)
+                    m.file.toLowerCase().includes(search) ||
+                    (m.mergedFrom && m.mergedFrom.toLowerCase().includes(search))
                 );
 
-                grid.innerHTML = filtered.map(m => `
-                        <a href="${m.file}" class="module-card fade-up" style="animation-delay:${Math.random()*0.2}s">
-                            <span class="icon">${m.icon}</span>
-                            <span class="name">${m.name}</span>
-                            <span class="desc">${m.desc}</span>
-                        </a>
-                    `).join('') || `<p style="grid-column:1/-1;color:var(--text-secondary);">No modules found.</p>`;
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                            <div class="no-results">
+                                <span>🔍</span>
+                                No modules found for "<strong>${search}</strong>"
+                            </div>
+                        `;
+                    return;
+                }
+
+                // Group filtered results by category
+                const grouped = {};
+                filtered.forEach(m => {
+                    if (!grouped[m.category]) grouped[m.category] = [];
+                    grouped[m.category].push(m);
+                });
+
+                let html = '';
+                for (const [catName, mods] of Object.entries(grouped)) {
+                    const catIcon = mods[0].categoryIcon || '📦';
+                    html += `
+                            <div class="category-group">
+                                <div class="category-header">
+                                    <h3>${catIcon} ${catName}</h3>
+                                    <span class="badge">${mods.length} results</span>
+                                </div>
+                                <div class="modules-grid">
+                                    ${mods.map((m, idx) => `
+                                        <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s">
+                                            <span class="icon">${m.icon}</span>
+                                            <span class="name">${m.name}</span>
+                                            <span class="desc">${m.desc}</span>
+                                            ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
+                                            ${m.isNew ? `<span class="new-badge">✦ NEW</span>` : ''}
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                }
+                container.innerHTML = html;
             }
 
-            // Initial render
+              // ─── Initial render ───
             renderModules();
 
-            // Search filter
+            // ─── Search filter ───
             window.filterModules = function() {
                 const input = document.getElementById('moduleSearch');
                 renderModules(input.value);
             };
 
-            // Live search on input
             document.getElementById('moduleSearch').addEventListener('input', function() {
                 renderModules(this.value);
             });
