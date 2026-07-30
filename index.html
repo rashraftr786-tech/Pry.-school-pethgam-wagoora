@@ -871,242 +871,321 @@
     </div>
 
     <script>
-        (function() {
-            'use strict';
+    (function() {
+        'use strict';
 
-            // ─── CATEGORIZED MODULE DATA ──────────────────────────────
-            //   All links point to EXISTING files from your project.
-            //   Merged modules link to the most representative file.
-            //   New modules (missing files) are marked as "Coming soon".
-            // ─────────────────────────────────────────────────────────────
+        // ─── 1. GET CURRENT USER ROLE ──────────────────────────────
+        // After login, store the role in localStorage.
+        // For testing, you can uncomment one of these lines in your browser console:
+        // localStorage.setItem('userRole', 'admin');
+        // localStorage.setItem('userRole', 'teacher');
+        // localStorage.setItem('userRole', 'student');
+        const currentRole = localStorage.getItem('userRole') || 'student'; // Default to student if not set
 
-            const categories = [{
-                name: '📊 Dashboard',
-                icon: '📊',
-                modules: [
-                    { name: 'Admin Dashboard', icon: '📊', file: 'admin/dashboard.html', desc: 'Full admin panel' },
-                    { name: 'Teacher Dashboard', icon: '📊', file: 'teacher/dashboard.html', desc: 'Teacher view' },
-                    { name: 'Student Dashboard', icon: '📊', file: 'student/students.html', desc: 'Student view' },
-                ]
-            }, {
-                name: '📚 Academic Core',
-                icon: '📚',
-                modules: [
-                    { name: 'Admission', icon: '📋', file: 'admission.html', desc: 'Student enrollment' },
-                    { name: 'Attendance', icon: '✅', file: 'attendance.html', desc: 'Track presence' },
-                    { name: 'Timetable', icon: '⏰', file: 'timetable.html', desc: 'Class schedules' },
-                    { name: 'Examination Management', icon: '🏅', file: 'results.html', desc: 'Marks, results & grading',
-                        merged: true, mergedFrom: 'Marks Sheet · Results · Upload Results' },
-                    { name: 'Library Management', icon: '📚', file: 'library.html', desc: 'Books & textbook issue',
-                        merged: true, mergedFrom: 'Library · Textbook Issue' },
-                ]
-            }, {
-                name: '👨‍🎓 Student Lifecycle',
-                icon: '👨‍🎓',
-                modules: [
-                    { name: 'Student Profile', icon: '👤', file: 'student-id.html', desc: 'Profile with APAAR ID' },
-                    { name: 'Bonafide Certificate', icon: '📄', file: 'bonafide.html', desc: 'Bonafide issuance' },
-                    { name: 'TC (Transfer Cert.)', icon: '📜', file: 'tc.html', desc: 'Transfer certificate' },
-                    { name: 'Work & Behaviour Cert.', icon: '📝', file: 'wb.html', desc: 'Conduct certificate' },
-                    { name: 'Student ID Card', icon: '🆔', file: 'student-id.html', desc: 'ID card generation' },
-                    { name: 'Student Diary', icon: '📖', file: 'student-diary-parent.html', desc: 'Parent & Teacher views',
-                        merged: true, mergedFrom: 'Student Diary (P) · (T)' },
-                ]
-            }, {
-                name: '👩‍🏫 Staff Management',
-                icon: '👩‍🏫',
-                modules: [
-                    { name: 'Staff Onboarding', icon: '👩‍🏫', file: 'staff-entry.html', desc: 'Add staff & teaching ID',
-                        merged: true, mergedFrom: 'Staff Entry · Teaching ID' },
-                    { name: 'Leave Management', icon: '📅', file: 'leave-management.html', desc: 'Leave requests' },
-                    { name: 'Staff Reports', icon: '📄', file: 'staff-statement.html', desc: 'Staff analytics' },
-                ]
-            }, {
-                name: '📱 Communication Hub',
-                icon: '📱',
-                modules: [
-                    { name: 'Unified Communication', icon: '📱', file: 'broadcast-whatsapp.html', desc: 'SMS · Email · WhatsApp',
-                        merged: true, mergedFrom: 'Broadcast WhatsApp · Send Email · Send SMS' },
-                    { name: 'Communication Logs', icon: '📜', file: 'comm-logs.html', desc: 'History of all comms' },
-                ]
-            }, {
-                name: '🏛️ Govt. Compliance',
-                icon: '🏛️',
-                modules: [
-                    { name: 'APAAR Management', icon: '🆔', file: 'apaar-input.html', desc: 'APAAR ID mapping',
-                        merged: true, mergedFrom: 'Apaar Input (expanded)' },
-                    { name: 'VER - Village Ed. Register', icon: '📘', file: 'VER.html', desc: 'UDISE+ village survey',
-                        merged: true, mergedFrom: 'VER (expanded)' },
-                    { name: 'MDM - Mid-Day Meal', icon: '🍽️', file: 'mdm.html', desc: 'Meal scheme management',
-                        merged: true, mergedFrom: 'MDM (expanded)' },
-                    { name: 'Student Census', icon: '👶', file: 'child-population.html', desc: 'Demographics',
-                        merged: true, mergedFrom: 'Child Population (renamed)' },
-                    { name: 'MDM Reports', icon: '📊', file: 'mdm-statement.html', desc: 'MDM analytics' },
-                ]
-            }, {
-                name: '💰 Finance & Administration',
-                icon: '💰',
-                modules: [
-                    { name: 'Fee Management', icon: '💳', file: '#', desc: 'Fees, dues & receipts',
-                        coming: true },
-                    { name: 'Transport Management', icon: '🚌', file: '#', desc: 'Routes & tracking',
-                        coming: true },
-                    { name: 'Hostel Management', icon: '🏠', file: '#', desc: 'Rooms & mess billing',
-                        coming: true },
-                    { name: 'Inventory Management', icon: '📦', file: '#', desc: 'Assets & supplies',
-                        coming: true },
-                    { name: 'Document Vault', icon: '📁', file: 'document-vault.html', desc: 'Secure storage' },
-                ]
-            }, {
-                name: '📈 Reports & Analytics',
-                icon: '📈',
-                modules: [
-                    { name: 'Reports Hub', icon: '📈', file: 'reports-hub.html', desc: 'All reports in one place' },
-                    { name: 'Roll Analyzer', icon: '🔍', file: 'roll-analyzer.html', desc: 'Roll number analysis' },
-                    { name: 'Roll Statement', icon: '📃', file: 'roll-statement.html', desc: 'Roll statements' },
-                ]
-            }, {
-                name: '⚙️ System & Utilities',
-                icon: '⚙️',
-                modules: [
-                    { name: 'Master Profile', icon: '👤', file: 'master-profile.html', desc: 'Profile settings' },
-                    { name: 'User Role Management', icon: '🛡️', file: 'adm-register.html', desc: 'Admin roles & access',
-                        merged: true, mergedFrom: 'Adm Register (merged)' },
-                    { name: 'Workbook Management', icon: '📓', file: 'wb.html', desc: 'Workbook tracking' },
-                ]
-            }];
+        // ─── 2. ROLE PERMISSIONS MAPPING ──────────────────────────────
+        // Category-level access
+        const categoryAccess = {
+            '📊 Dashboard': ['admin', 'teacher', 'student'],
+            '📚 Academic Core': ['admin', 'teacher', 'student'],
+            '👨‍🎓 Student Lifecycle': ['admin', 'teacher', 'student'],
+            '👩‍🏫 Staff Management': ['admin'],
+            '📱 Communication Hub': ['admin', 'teacher'],
+            '🏛️ Govt. Compliance': ['admin'],
+            '💰 Finance & Administration': ['admin'],
+            '📈 Reports & Analytics': ['admin', 'teacher', 'student'],
+            '⚙️ System & Utilities': ['admin']
+        };
 
-            // ─── Flatten for search (keep category reference) ───
-            const allModules = [];
+        // Module-level access (overrides category if stricter)
+        const moduleAccess = {
+            // Academic Core
+            'Admission': ['admin'],
+            'Attendance': ['admin', 'teacher', 'student'],
+            'Timetable': ['admin', 'teacher', 'student'],
+            'Examination Management': ['admin', 'teacher', 'student'], // Student sees only results
+            'Library Management': ['admin', 'teacher', 'student'],
+            
+            // Student Lifecycle
+            'Student Profile': ['admin', 'teacher', 'student'],
+            'Bonafide Certificate': ['admin', 'student'], // Teachers don't issue, only view/request
+            'TC (Transfer Cert.)': ['admin', 'student'],
+            'Work & Behaviour Cert.': ['admin', 'teacher'], // Teacher fills it, Admin approves
+            'Student ID Card': ['admin', 'student'],
+            'Student Diary': ['admin', 'teacher', 'student'],
+
+            // Staff Management
+            'Staff Onboarding': ['admin'],
+            'Leave Management': ['admin', 'teacher'], // Teachers can apply
+            'Staff Reports': ['admin'],
+
+            // Communication
+            'Unified Communication': ['admin', 'teacher'],
+            'Communication Logs': ['admin'],
+
+            // Reports
+            'Reports Hub': ['admin', 'teacher'],
+            'Roll Analyzer': ['admin', 'teacher'],
+            'Roll Statement': ['admin', 'teacher', 'student'],
+
+            // System
+            'Master Profile': ['admin', 'teacher', 'student'],
+            'User Role Management': ['admin'],
+            'Workbook Management': ['admin', 'teacher'],
+        };
+
+        // ─── 3. CATEGORIZED MODULE DATA (with roles attached) ──────
+        const categories = [{
+            name: '📊 Dashboard',
+            icon: '📊',
+            modules: [
+                { name: 'Admin Dashboard', icon: '📊', file: 'admin/dashboard.html', desc: 'Full admin panel', roles: ['admin'] },
+                { name: 'Teacher Dashboard', icon: '📊', file: 'teacher/dashboard.html', desc: 'Teacher view', roles: ['teacher'] },
+                { name: 'Student Dashboard', icon: '📊', file: 'student/students.html', desc: 'Student view', roles: ['student'] },
+            ]
+        }, {
+            name: '📚 Academic Core',
+            icon: '📚',
+            modules: [
+                { name: 'Admission', icon: '📋', file: 'admission.html', desc: 'Student enrollment', roles: ['admin'] },
+                { name: 'Attendance', icon: '✅', file: 'attendance.html', desc: 'Track presence', roles: ['admin', 'teacher', 'student'] },
+                { name: 'Timetable', icon: '⏰', file: 'timetable.html', desc: 'Class schedules', roles: ['admin', 'teacher', 'student'] },
+                { name: 'Examination Management', icon: '🏅', file: 'results.html', desc: 'Marks, results & grading', merged: true, mergedFrom: 'Marks Sheet · Results · Upload Results', roles: ['admin', 'teacher', 'student'] },
+                { name: 'Library Management', icon: '📚', file: 'library.html', desc: 'Books & textbook issue', merged: true, mergedFrom: 'Library · Textbook Issue', roles: ['admin', 'teacher', 'student'] },
+            ]
+        }, {
+            name: '👨‍🎓 Student Lifecycle',
+            icon: '👨‍🎓',
+            modules: [
+                { name: 'Student Profile', icon: '👤', file: 'student-id.html', desc: 'Profile with APAAR ID', roles: ['admin', 'teacher', 'student'] },
+                { name: 'Bonafide Certificate', icon: '📄', file: 'bonafide.html', desc: 'Bonafide issuance', roles: ['admin', 'student'] },
+                { name: 'TC (Transfer Cert.)', icon: '📜', file: 'tc.html', desc: 'Transfer certificate', roles: ['admin', 'student'] },
+                { name: 'Work & Behaviour Cert.', icon: '📝', file: 'wb.html', desc: 'Conduct certificate', roles: ['admin', 'teacher'] },
+                { name: 'Student ID Card', icon: '🆔', file: 'student-id.html', desc: 'ID card generation', roles: ['admin', 'student'] },
+                { name: 'Student Diary', icon: '📖', file: 'student-diary-parent.html', desc: 'Parent & Teacher views', merged: true, mergedFrom: 'Student Diary (P) · (T)', roles: ['admin', 'teacher', 'student'] },
+            ]
+        }, {
+            name: '👩‍🏫 Staff Management',
+            icon: '👩‍🏫',
+            modules: [
+                { name: 'Staff Onboarding', icon: '👩‍🏫', file: 'staff-entry.html', desc: 'Add staff & teaching ID', merged: true, mergedFrom: 'Staff Entry · Teaching ID', roles: ['admin'] },
+                { name: 'Leave Management', icon: '📅', file: 'leave-management.html', desc: 'Leave requests', roles: ['admin', 'teacher'] },
+                { name: 'Staff Reports', icon: '📄', file: 'staff-statement.html', desc: 'Staff analytics', roles: ['admin'] },
+            ]
+        }, {
+            name: '📱 Communication Hub',
+            icon: '📱',
+            modules: [
+                { name: 'Unified Communication', icon: '📱', file: 'broadcast-whatsapp.html', desc: 'SMS · Email · WhatsApp', merged: true, mergedFrom: 'Broadcast WhatsApp · Send Email · Send SMS', roles: ['admin', 'teacher'] },
+                { name: 'Communication Logs', icon: '📜', file: 'comm-logs.html', desc: 'History of all comms', roles: ['admin'] },
+            ]
+        }, {
+            name: '🏛️ Govt. Compliance',
+            icon: '🏛️',
+            modules: [
+                { name: 'APAAR Management', icon: '🆔', file: 'apaar-input.html', desc: 'APAAR ID mapping', merged: true, mergedFrom: 'Apaar Input (expanded)', roles: ['admin'] },
+                { name: 'VER - Village Ed. Register', icon: '📘', file: 'VER.html', desc: 'UDISE+ village survey', merged: true, mergedFrom: 'VER (expanded)', roles: ['admin'] },
+                { name: 'MDM - Mid-Day Meal', icon: '🍽️', file: 'mdm.html', desc: 'Meal scheme management', merged: true, mergedFrom: 'MDM (expanded)', roles: ['admin'] },
+                { name: 'Student Census', icon: '👶', file: 'child-population.html', desc: 'Demographics', merged: true, mergedFrom: 'Child Population (renamed)', roles: ['admin'] },
+                { name: 'MDM Reports', icon: '📊', file: 'mdm-statement.html', desc: 'MDM analytics', roles: ['admin'] },
+            ]
+        }, {
+            name: '💰 Finance & Administration',
+            icon: '💰',
+            modules: [
+                { name: 'Fee Management', icon: '💳', file: '#', desc: 'Fees, dues & receipts', coming: true, roles: ['admin'] },
+                { name: 'Transport Management', icon: '🚌', file: '#', desc: 'Routes & tracking', coming: true, roles: ['admin'] },
+                { name: 'Hostel Management', icon: '🏠', file: '#', desc: 'Rooms & mess billing', coming: true, roles: ['admin'] },
+                { name: 'Inventory Management', icon: '📦', file: '#', desc: 'Assets & supplies', coming: true, roles: ['admin'] },
+                { name: 'Document Vault', icon: '📁', file: 'document-vault.html', desc: 'Secure storage', roles: ['admin'] },
+            ]
+        }, {
+            name: '📈 Reports & Analytics',
+            icon: '📈',
+            modules: [
+                { name: 'Reports Hub', icon: '📈', file: 'reports-hub.html', desc: 'All reports in one place', roles: ['admin', 'teacher'] },
+                { name: 'Roll Analyzer', icon: '🔍', file: 'roll-analyzer.html', desc: 'Roll number analysis', roles: ['admin', 'teacher'] },
+                { name: 'Roll Statement', icon: '📃', file: 'roll-statement.html', desc: 'Roll statements', roles: ['admin', 'teacher', 'student'] },
+            ]
+        }, {
+            name: '⚙️ System & Utilities',
+            icon: '⚙️',
+            modules: [
+                { name: 'Master Profile', icon: '👤', file: 'master-profile.html', desc: 'Profile settings', roles: ['admin', 'teacher', 'student'] },
+                { name: 'User Role Management', icon: '🛡️', file: 'adm-register.html', desc: 'Admin roles & access', merged: true, mergedFrom: 'Adm Register (merged)', roles: ['admin'] },
+                { name: 'Workbook Management', icon: '📓', file: 'wb.html', desc: 'Workbook tracking', roles: ['admin', 'teacher'] },
+            ]
+        }];
+
+        // ─── 4. FILTERING LOGIC ─────────────────────────────────────
+        function hasAccess(moduleRoles) {
+            if (!moduleRoles) return true; // If no roles defined, show to everyone
+            return moduleRoles.includes(currentRole);
+        }
+
+        // Filter categories based on the user's role
+        function getFilteredCategories() {
+            const filtered = [];
             categories.forEach(cat => {
-                cat.modules.forEach(m => {
-                    allModules.push({
-                        ...m,
-                        category: cat.name,
-                        categoryIcon: cat.icon
-                    });
+                // 1. Check if the category itself is allowed for this role
+                const allowedRoles = categoryAccess[cat.name] || ['admin'];
+                if (!allowedRoles.includes(currentRole)) return; // Skip entire category
+
+                // 2. Filter modules inside the category
+                const allowedModules = cat.modules.filter(module => {
+                    // Check module-level access, fallback to category access if not defined
+                    const moduleRoles = module.roles || allowedRoles;
+                    return moduleRoles.includes(currentRole);
                 });
+
+                // Only add the category if it has at least 1 visible module
+                if (allowedModules.length > 0) {
+                    filtered.push({
+                        ...cat,
+                        modules: allowedModules
+                    });
+                }
             });
+            return filtered;
+        }
 
-            const container = document.getElementById('moduleContainer');
+        // ─── 5. RENDER FUNCTION ─────────────────────────────────────
+        const container = document.getElementById('moduleContainer');
 
-            function renderModules(filter = '') {
-                const search = filter.toLowerCase().trim();
+        function renderModules(filter = '') {
+            const search = filter.toLowerCase().trim();
+            const visibleCategories = getFilteredCategories();
 
-                // If search is empty, render categories
-                if (!search) {
-                    let html = '';
-                    categories.forEach(cat => {
-                        html += `
-                                <div class="category-group">
-                                    <div class="category-header">
-                                        <h3>${cat.icon} ${cat.name}</h3>
-                                        <span class="badge">${cat.modules.length} modules</span>
-                                    </div>
-                                    <div class="modules-grid">
-                                        ${cat.modules.map((m, idx) => `
-                                            <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
-                                                <span class="icon">${m.icon}</span>
-                                                <span class="name">${m.name}</span>
-                                                <span class="desc">${m.desc}</span>
-                                                ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
-                                                ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
-                                            </a>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `;
-                    });
-                    container.innerHTML = html;
-                    return;
-                }
+            if (visibleCategories.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <span>🔒</span>
+                        You don't have permission to view any modules.<br>
+                        <small style="color:var(--text-secondary);">Please contact your administrator.</small>
+                    </div>
+                `;
+                return;
+            }
 
-                // ─── Search mode: flat filtered list ───
-                const filtered = allModules.filter(m =>
-                    m.name.toLowerCase().includes(search) ||
-                    m.desc.toLowerCase().includes(search) ||
-                    m.file.toLowerCase().includes(search) ||
-                    (m.mergedFrom && m.mergedFrom.toLowerCase().includes(search))
-                );
-
-                if (filtered.length === 0) {
-                    container.innerHTML = `
-                            <div class="no-results">
-                                <span>🔍</span>
-                                No modules found for "<strong>${search}</strong>"
-                            </div>
-                        `;
-                    return;
-                }
-
-                // Group filtered results by category
-                const grouped = {};
-                filtered.forEach(m => {
-                    if (!grouped[m.category]) grouped[m.category] = [];
-                    grouped[m.category].push(m);
-                });
-
+            // If search is empty, render all visible categories
+            if (!search) {
                 let html = '';
-                for (const [catName, mods] of Object.entries(grouped)) {
-                    const catIcon = mods[0].categoryIcon || '📦';
+                visibleCategories.forEach(cat => {
                     html += `
-                            <div class="category-group">
-                                <div class="category-header">
-                                    <h3>${catIcon} ${catName}</h3>
-                                    <span class="badge">${mods.length} results</span>
-                                </div>
-                                <div class="modules-grid">
-                                    ${mods.map((m, idx) => `
-                                        <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
-                                            <span class="icon">${m.icon}</span>
-                                            <span class="name">${m.name}</span>
-                                            <span class="desc">${m.desc}</span>
-                                            ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
-                                            ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
-                                        </a>
-                                    `).join('')}
-                                </div>
+                        <div class="category-group">
+                            <div class="category-header">
+                                <h3>${cat.icon} ${cat.name}</h3>
+                                <span class="badge">${cat.modules.length} modules</span>
                             </div>
-                        `;
-                }
+                            <div class="modules-grid">
+                                ${cat.modules.map((m, idx) => `
+                                    <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
+                                        <span class="icon">${m.icon}</span>
+                                        <span class="name">${m.name}</span>
+                                        <span class="desc">${m.desc}</span>
+                                        ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
+                                        ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
                 container.innerHTML = html;
+                return;
             }
 
-            // ─── Initial render ───
-            renderModules();
-
-            // ─── Search filter ───
-            window.filterModules = function() {
-                const input = document.getElementById('moduleSearch');
-                renderModules(input.value);
-            };
-
-            document.getElementById('moduleSearch').addEventListener('input', function() {
-                renderModules(this.value);
+            // ─── Search Mode ─────────────────────────────────────────
+            const flatVisible = [];
+            visibleCategories.forEach(cat => {
+                cat.modules.forEach(m => {
+                    flatVisible.push({ ...m, category: cat.name, categoryIcon: cat.icon });
+                });
             });
 
-            // ─── Hero 3D tilt (desktop) ───
-            const card = document.querySelector('.hero-card-3d');
-            if (card && window.innerWidth > 820) {
-                let isHovering = false;
-                card.addEventListener('mouseenter', () => { isHovering = true; });
-                card.addEventListener('mouseleave', () => {
-                    isHovering = false;
-                    card.style.transform = 'rotateY(-4deg) rotateX(3deg) translateZ(20px)';
-                });
-                card.addEventListener('mousemove', (e) => {
-                    if (!isHovering) return;
-                    const rect = card.getBoundingClientRect();
-                    const x = (e.clientX - rect.left) / rect.width - 0.5;
-                    const y = (e.clientY - rect.top) / rect.height - 0.5;
-                    card.style.transform =
-                        `rotateY(${-4 + x*6}deg) rotateX(${3 - y*6}deg) translateZ(30px) scale(1.01)`;
-                });
+            const filtered = flatVisible.filter(m =>
+                m.name.toLowerCase().includes(search) ||
+                m.desc.toLowerCase().includes(search) ||
+                (m.mergedFrom && m.mergedFrom.toLowerCase().includes(search))
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <span>🔍</span>
+                        No modules found for "<strong>${search}</strong>"
+                    </div>
+                `;
+                return;
             }
 
-        })();
-    </script>
+            // Group filtered results by category
+            const grouped = {};
+            filtered.forEach(m => {
+                if (!grouped[m.category]) grouped[m.category] = [];
+                grouped[m.category].push(m);
+            });
 
+            let html = '';
+            for (const [catName, mods] of Object.entries(grouped)) {
+                const catIcon = mods[0].categoryIcon || '📦';
+                html += `
+                    <div class="category-group">
+                        <div class="category-header">
+                            <h3>${catIcon} ${catName}</h3>
+                            <span class="badge">${mods.length} results</span>
+                        </div>
+                        <div class="modules-grid">
+                            ${mods.map((m, idx) => `
+                                <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
+                                    <span class="icon">${m.icon}</span>
+                                    <span class="name">${m.name}</span>
+                                    <span class="desc">${m.desc}</span>
+                                    ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
+                                    ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        // ─── 6. INITIALIZE & SEARCH ────────────────────────────────
+        renderModules();
+
+        window.filterModules = function() {
+            const input = document.getElementById('moduleSearch');
+            renderModules(input.value);
+        };
+
+        document.getElementById('moduleSearch').addEventListener('input', function() {
+            renderModules(this.value);
+        });
+
+        // ─── 7. HERO 3D TILT (unchanged) ────────────────────────────
+        const card = document.querySelector('.hero-card-3d');
+        if (card && window.innerWidth > 820) {
+            let isHovering = false;
+            card.addEventListener('mouseenter', () => { isHovering = true; });
+            card.addEventListener('mouseleave', () => {
+                isHovering = false;
+                card.style.transform = 'rotateY(-4deg) rotateX(3deg) translateZ(20px)';
+            });
+            card.addEventListener('mousemove', (e) => {
+                if (!isHovering) return;
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform =
+                    `rotateY(${-4 + x*6}deg) rotateX(${3 - y*6}deg) translateZ(30px) scale(1.01)`;
+            });
+        }
+
+        console.log(`✅ RBAC Loaded. Current Role: ${currentRole}`);
+    })();
+</script>
+                                
 </body>
 </html>
                     
