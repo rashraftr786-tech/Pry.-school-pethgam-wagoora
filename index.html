@@ -544,6 +544,18 @@
             font-weight: 600;
         }
 
+        .module-card .coming-badge {
+            font-size: 0.5rem;
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffa500;
+            padding: 0.1rem 0.6rem;
+            border-radius: 1rem;
+            margin-top: 0.1rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
         /* ─── Footer ─── */
         .footer {
             margin-top: 4rem;
@@ -681,7 +693,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem;
             }
-             .module-card {
+            .module-card {
                 padding: 0.8rem 0.5rem;
                 border-radius: 1rem;
             }
@@ -772,8 +784,8 @@
                     <span class="highlight">School Management</span>
                 </h1>
                 <p>
-                    Categorized, streamlined, and future-ready — every module you need,
-                    from admissions to compliance, in one glass‑styled dashboard.
+                    Categorized, streamlined, and mapped to your existing files —
+                    every module you need, from admissions to compliance.
                 </p>
                 <div class="hero-actions">
                     <a href="#modules" class="btn-glass btn-primary">Explore Modules →</a>
@@ -792,7 +804,7 @@
                         </div>
                         <div class="grid-item">
                             <span class="icon">📋</span>
-                            <span class="value">35+</span>
+                            <span class="value">30+</span>
                             <span class="label">Modules</span>
                         </div>
                         <div class="grid-item">
@@ -802,8 +814,8 @@
                         </div>
                         <div class="grid-item">
                             <span class="icon">✨</span>
-                            <span class="value">5</span>
-                            <span class="label">New</span>
+                            <span class="value">4</span>
+                            <span class="label">Coming Soon</span>
                         </div>
                         <div class="grid-item">
                             <span class="icon">📊</span>
@@ -812,7 +824,7 @@
                         </div>
                         <div class="grid-item">
                             <span class="icon">🏛️</span>
-                            <span class="value">4</span>
+                            <span class="value">5</span>
                             <span class="label">Compliance</span>
                         </div>
                     </div>
@@ -820,10 +832,10 @@
             </div>
         </section>
 
-          <!-- ─── MODULES ─── -->
+        <!-- ─── MODULES ─── -->
         <section class="module-section" id="modules">
             <div class="section-header">
-                <h2>📦 <span>All Modules</span> <span style="font-size:0.7rem;font-weight:400;color:var(--text-secondary);">· categorized · merged · enhanced</span></h2>
+                <h2>📦 <span>All Modules</span> <span style="font-size:0.7rem;font-weight:400;color:var(--text-secondary);">· categorized · merged · mapped to your files</span></h2>
                 <div class="search-box">
                     <input type="text" id="moduleSearch" placeholder="Search modules..." />
                     <button onclick="filterModules()">Filter</button>
@@ -863,10 +875,9 @@
             'use strict';
 
             // ─── CATEGORIZED MODULE DATA ──────────────────────────────
-            //   Merged modules are marked with merged: true
-            //   New modules (not in original list) are marked with isNew: true
-            //   Non-modules (Sign In, Forgot Password, Stop Watch) are removed.
-            //   Adm Register → merged into User Role Management (System)
+            //   All links point to EXISTING files from your project.
+            //   Merged modules link to the most representative file.
+            //   New modules (missing files) are marked as "Coming soon".
             // ─────────────────────────────────────────────────────────────
 
             const categories = [{
@@ -884,7 +895,7 @@
                     { name: 'Admission', icon: '📋', file: 'admission.html', desc: 'Student enrollment' },
                     { name: 'Attendance', icon: '✅', file: 'attendance.html', desc: 'Track presence' },
                     { name: 'Timetable', icon: '⏰', file: 'timetable.html', desc: 'Class schedules' },
-                    { name: 'Examination Management', icon: '🏅', file: 'examination.html', desc: 'Marks, results & grading',
+                    { name: 'Examination Management', icon: '🏅', file: 'results.html', desc: 'Marks, results & grading',
                         merged: true, mergedFrom: 'Marks Sheet · Results · Upload Results' },
                     { name: 'Library Management', icon: '📚', file: 'library.html', desc: 'Books & textbook issue',
                         merged: true, mergedFrom: 'Library · Textbook Issue' },
@@ -893,13 +904,12 @@
                 name: '👨‍🎓 Student Lifecycle',
                 icon: '👨‍🎓',
                 modules: [
-                    { name: 'Student Profile', icon: '👤', file: 'student-profile.html', desc: 'Profile with APAAR ID' },
+                    { name: 'Student Profile', icon: '👤', file: 'student-id.html', desc: 'Profile with APAAR ID' },
                     { name: 'Bonafide Certificate', icon: '📄', file: 'bonafide.html', desc: 'Bonafide issuance' },
                     { name: 'TC (Transfer Cert.)', icon: '📜', file: 'tc.html', desc: 'Transfer certificate' },
-                    { name: 'Work & Behaviour Cert.', icon: '📝', file: 'wb.html', desc: 'Conduct certificate',
-                        merged: true, mergedFrom: 'WB (expanded)' },
+                    { name: 'Work & Behaviour Cert.', icon: '📝', file: 'wb.html', desc: 'Conduct certificate' },
                     { name: 'Student ID Card', icon: '🆔', file: 'student-id.html', desc: 'ID card generation' },
-                    { name: 'Student Diary', icon: '📖', file: 'student-diary.html', desc: 'Parent & Teacher views',
+                    { name: 'Student Diary', icon: '📖', file: 'student-diary-parent.html', desc: 'Parent & Teacher views',
                         merged: true, mergedFrom: 'Student Diary (P) · (T)' },
                 ]
             }, {
@@ -915,7 +925,7 @@
                 name: '📱 Communication Hub',
                 icon: '📱',
                 modules: [
-                    { name: 'Unified Communication', icon: '📱', file: 'broadcast.html', desc: 'SMS · Email · WhatsApp',
+                    { name: 'Unified Communication', icon: '📱', file: 'broadcast-whatsapp.html', desc: 'SMS · Email · WhatsApp',
                         merged: true, mergedFrom: 'Broadcast WhatsApp · Send Email · Send SMS' },
                     { name: 'Communication Logs', icon: '📜', file: 'comm-logs.html', desc: 'History of all comms' },
                 ]
@@ -937,14 +947,14 @@
                 name: '💰 Finance & Administration',
                 icon: '💰',
                 modules: [
-                    { name: 'Fee Management', icon: '💳', file: 'fee-management.html', desc: 'Fees, dues & receipts',
-                        isNew: true },
-                    { name: 'Transport Management', icon: '🚌', file: 'transport.html', desc: 'Routes & tracking',
-                        isNew: true },
-                    { name: 'Hostel Management', icon: '🏠', file: 'hostel.html', desc: 'Rooms & mess billing',
-                        isNew: true },
-                    { name: 'Inventory Management', icon: '📦', file: 'inventory.html', desc: 'Assets & supplies',
-                        isNew: true },
+                    { name: 'Fee Management', icon: '💳', file: '#', desc: 'Fees, dues & receipts',
+                        coming: true },
+                    { name: 'Transport Management', icon: '🚌', file: '#', desc: 'Routes & tracking',
+                        coming: true },
+                    { name: 'Hostel Management', icon: '🏠', file: '#', desc: 'Rooms & mess billing',
+                        coming: true },
+                    { name: 'Inventory Management', icon: '📦', file: '#', desc: 'Assets & supplies',
+                        coming: true },
                     { name: 'Document Vault', icon: '📁', file: 'document-vault.html', desc: 'Secure storage' },
                 ]
             }, {
@@ -962,8 +972,7 @@
                     { name: 'Master Profile', icon: '👤', file: 'master-profile.html', desc: 'Profile settings' },
                     { name: 'User Role Management', icon: '🛡️', file: 'adm-register.html', desc: 'Admin roles & access',
                         merged: true, mergedFrom: 'Adm Register (merged)' },
-                    { name: 'Workbook Management', icon: '📓', file: 'wb.html', desc: 'Workbook tracking',
-                        merged: true, mergedFrom: 'WB (workbook)' },
+                    { name: 'Workbook Management', icon: '📓', file: 'wb.html', desc: 'Workbook tracking' },
                 ]
             }];
 
@@ -996,12 +1005,12 @@
                                     </div>
                                     <div class="modules-grid">
                                         ${cat.modules.map((m, idx) => `
-                                            <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s">
+                                            <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
                                                 <span class="icon">${m.icon}</span>
                                                 <span class="name">${m.name}</span>
                                                 <span class="desc">${m.desc}</span>
                                                 ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
-                                                ${m.isNew ? `<span class="new-badge">✦ NEW</span>` : ''}
+                                                ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
                                             </a>
                                         `).join('')}
                                     </div>
@@ -1048,12 +1057,12 @@
                                 </div>
                                 <div class="modules-grid">
                                     ${mods.map((m, idx) => `
-                                        <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s">
+                                        <a href="${m.file}" class="module-card fade-up" style="animation-delay:${(idx * 0.04).toFixed(2)}s" ${m.file === '#' ? 'onclick="return false;"' : ''}>
                                             <span class="icon">${m.icon}</span>
                                             <span class="name">${m.name}</span>
                                             <span class="desc">${m.desc}</span>
                                             ${m.merged ? `<span class="merged-badge">↳ ${m.mergedFrom}</span>` : ''}
-                                            ${m.isNew ? `<span class="new-badge">✦ NEW</span>` : ''}
+                                            ${m.coming ? `<span class="coming-badge">⏳ Coming soon</span>` : ''}
                                         </a>
                                     `).join('')}
                                 </div>
@@ -1063,7 +1072,7 @@
                 container.innerHTML = html;
             }
 
-              // ─── Initial render ───
+            // ─── Initial render ───
             renderModules();
 
             // ─── Search filter ───
@@ -1100,3 +1109,16 @@
 
 </body>
 </html>
+                    
+                    
+                    
+                    
+                    
+            
+        
+
+        
+        
+            
+
+                                            
