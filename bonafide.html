@@ -23,7 +23,6 @@
       justify-content: space-between;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-    /* Dashboard Logo */
     .dashboard-logo { 
       width: 50px; 
       height: 50px; 
@@ -40,66 +39,77 @@
     section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     h2 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
 
-    /* Dropdown/Inputs Styling */
-    select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; margin-bottom: 10px; box-sizing: border-box; }
+    label { font-weight: bold; font-size: 0.9rem; display: block; margin-top: 10px; margin-bottom: 4px; }
+    select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; box-sizing: border-box; }
 
-    /* --- Bonafide Certificate (A4 Design) --- */
+    /* --- Bonafide Certificate (A4 Sheet Preview) --- */
     .certificate-preview {
       display: none; 
       width: 210mm; /* A4 Width */
-      height: 297mm; /* A4 Height */
-      margin: 0 auto;
-      padding: 20mm;
+      min-height: 297mm; /* A4 Height */
+      margin: 20px auto;
+      padding: 18mm 20mm;
       box-sizing: border-box;
-      border: 15px double var(--navy);
+      border: 1px solid #ccc;
       background: white;
       position: relative;
       color: #000;
-      overflow: hidden;
+      font-family: 'Times New Roman', Times, serif;
     }
 
-    /* Watermark Style */
-    .watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-30deg);
-      opacity: 0.08; /* Very faint */
-      width: 400px;
-      height: 400px;
-      z-index: 0;
-      pointer-events: none;
+    .cert-header { text-align: center; }
+    .cert-header h3 { margin: 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cert-header h4 { margin: 6px 0 0 0; font-size: 0.8rem; font-weight: bold; line-height: 1.2; text-transform: uppercase; }
+
+    /* Photo Box Style */
+    .photo-box {
+      width: 130px;
+      height: 160px;
+      border: 1px solid #000;
+      text-align: center;
+      font-size: 0.72rem;
+      padding: 6px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #fdfdfd;
     }
 
-    .cert-content { position: relative; z-index: 1; }
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
 
-    .cert-header { text-align: center; margin-bottom: 40px; }
-    .cert-logo { width: 80px; height: 80px; margin-bottom: 10px; }
-    .cert-header h2 { border: none; font-size: 1.8rem; text-decoration: underline; margin-top: 20px; }
+    .underline-field {
+      border-bottom: 1px dotted #000;
+      padding: 0 8px;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-    .certificate-preview p { font-size: 1.2rem; line-height: 2; text-align: justify; margin-top: 30px; }
-
-    .signature-section { margin-top: 100px; display: flex; justify-content: space-between; }
-    
-    .actions { text-align: center; margin-bottom: 50px; }
+    .actions { text-align: center; margin-top: 20px; }
     button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
     #generateBtn { background: var(--navy); color: white; }
     #printBtn { background: #1a5d1a; color: white; display: none; }
 
-    /* --- Printing Logic for A4 --- */
+    /* --- Printing Logic for Exact A4 Output --- */
     @media print {
       @page { size: A4 portrait; margin: 0; }
-      body { background: white; }
+      body { background: white; margin: 0; padding: 0; }
       .no-print { display: none !important; }
       .certificate-preview { 
         display: block !important; 
-        border: none; /* Let the double border show or adjust for bleed */
+        border: none;
         margin: 0; 
         width: 210mm;
         height: 297mm;
         box-shadow: none;
+        padding: 15mm 18mm;
       }
-      /* Ensure colors and watermark print */
       * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
     }
   </style>
@@ -126,12 +136,53 @@
   <section class="inputs" id="inputSection" style="display: none;">
     <h2>2. Certificate Parameters</h2>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-      <input id="purpose" placeholder="Purpose (e.g. Scholarship)">
-      <input id="session" value="2024-25">
-      <input id="refNo" placeholder="Reference Number">
-      <input id="date" type="date">
+      <div>
+        <label>Institute Name:</label>
+        <input id="instName" value="GOVT. PRIMARY SCHOOL PETHGAM WAGOORA">
+      </div>
+      <div>
+        <label>Email ID:</label>
+        <input id="instEmail" value="pspethgam@gmail.com">
+      </div>
+      <div>
+        <label>Contact No:</label>
+        <input id="instContact" value="9596449881">
+      </div>
+      <div>
+        <label>Dispatch No:</label>
+        <input id="refNo" placeholder="e.g. GPS/PW/2026/14">
+      </div>
+      <div>
+        <label>Date of Issue:</label>
+        <input id="date" type="date">
+      </div>
+      <div>
+        <label>Academic Session:</label>
+        <input id="session" value="2026">
+      </div>
+      <div>
+        <label>Residence (R/O):</label>
+        <input id="residence" placeholder="e.g. WAGOORA">
+      </div>
+      <div>
+        <label>Stream / Section:</label>
+        <input id="stream" placeholder="e.g. General / N/A" value="N/A">
+      </div>
+      <div>
+        <label>Recognition No:</label>
+        <input id="recNo" value="NIL">
+      </div>
+      <div>
+        <label>Recognition Date:</label>
+        <input id="recDate" value="NIL">
+      </div>
     </div>
-    <input id="signedBy" value="Head Teacher">
+
+    <div style="margin-top: 15px;">
+      <label>Upload Student Photograph (Optional):</label>
+      <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
+    </div>
+
     <div class="actions">
         <button id="generateBtn" onclick="generateCertificate()">Generate Bonafide</button>
         <button id="printBtn" onclick="window.print()">Print A4 PDF</button>
@@ -139,53 +190,73 @@
   </section>
 </div>
 
+<!-- OFFICIAL BONAFIDE CERTIFICATE PREVIEW -->
 <div class="certificate-preview" id="certificate">
-  <img src="logo.png" class="watermark" onerror="this.style.display='none'">
-  
   <div class="cert-content">
     <div class="cert-header">
-      <img src="logo.png" class="cert-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO'">
-      <h3 style="margin:0; letter-spacing: 1px;">OFFICE OF THE HEAD TEACHER</h3>
-      <h1 style="margin:5px 0; color: var(--navy);">Government Primary School Pethgam Wagoora</h1>
-      <p style="text-align: center; margin:0; font-weight: bold;">Zone: Wagoora | District: Baramulla</p>
-      <hr style="border: 1px solid var(--navy); margin-top:15px;">
-      <h2>BONAFIDE CERTIFICATE</h2>
+      <h3>OFFICE OF THE PRINCIPAL/HEADMASTER</h3>
+      <h4>BONAFIDE CERTIFICATE FROM THE HEADMASTER / PRINCIPAL / HEAD OF THE INSTITUTION / AUTHORIZED OFFICER OF THE CONCERNED COLLEGE / UNIVERSITY</h4>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-top: 40px; font-weight: bold; font-size: 1.1rem;">
-      <span>Ref No: <span id="p_ref"></span></span>
-      <span>Date: <span id="p_date"></span></span>
+    <hr style="border: none; border-top: 1px dotted #000; margin: 15px 0 20px 0;">
+
+    <!-- Institute Details & Photo Frame -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+      <div style="flex: 1; font-size: 1.05rem; line-height: 2.3;">
+        <div>Name of Institute: <span id="p_instName" class="underline-field"></span></div>
+        <div>Email Id of institute: <span id="p_instEmail" class="underline-field"></span></div>
+        <div>Contact No. of Institute/Department: <span id="p_instContact" class="underline-field"></span></div>
+        <div>Dispatch No: <span id="p_ref" class="underline-field"></span></div>
+        <div>Date of Issue: <span id="p_date" class="underline-field"></span></div>
+      </div>
+
+      <!-- Student Photograph Box -->
+      <div class="photo-box" id="photoBox">
+        <span id="photoPlaceholder">Photograph of the Student to be attested by the Head of the Institution.<br><br>(with seal and signature)</span>
+        <img id="photoPreview" alt="Student Photo">
+      </div>
     </div>
 
-    <p>
-      This is to certify that <strong><span id="p_name">________________</span></strong>, 
-      Son/Daughter of <strong><span id="p_fname">________________</span></strong>, 
-      bearing Admission No <strong><span id="p_adm">________</span></strong> 
-      and Date of Birth <strong><span id="p_dob">________</span></strong>, 
-      is a bonafide student of this institution. 
-    </p>
-    
-    <p>
-      He/She is currently studying in class <strong><span id="p_class">________</span></strong> 
-      under the Academic Session <strong><span id="p_session">________</span></strong>. 
-      As per the school records, his/her character and conduct has been found satisfactory.
-    </p>
+    <!-- Main Content Paragraphs -->
+    <div style="font-size: 1.1rem; line-height: 2.3; text-align: justify;">
+      <p style="margin-bottom: 15px;">
+        It is to certify that Mr./Ms. <strong><span id="p_name" class="underline-field">________________</span></strong> 
+        S/O,D/O <strong><span id="p_fname" class="underline-field">________________</span></strong> 
+        R/O <strong><span id="p_address" class="underline-field">________________</span></strong> 
+        is a bonafide student of this institute and is presently reading in Class <strong><span id="p_class" class="underline-field">________</span></strong> Semester <strong><span id="p_semester" class="underline-field">&nbsp;&nbsp;&nbsp;&nbsp;</span></strong> 
+        Stream <strong><span id="p_stream" class="underline-field">________</span></strong> 
+        under Class Roll No./Enrollment No. <strong><span id="p_adm" class="underline-field">________</span></strong> 
+        during the current academic session <strong><span id="p_session1" class="underline-field">________</span></strong>.
+      </p>
 
-    <p>This certificate is issued on request for the purpose of 
-    <strong><span id="p_purpose">________________</span></strong>.</p>
+      <p style="margin-bottom: 15px;">
+        It is further certified that the said student has not availed any educational assistance/scholarship through this Institute during the current academic session <strong><span id="p_session2" class="underline-field">________</span></strong> and has no dues pending as on date as per records available.
+      </p>
 
-    <div class="signature-section">
-      <div style="text-align: center;">
-        <br><br><br>
-        <p style="border-top: 1px solid #ccc; padding-top: 5px;">Student's Signature</p>
+      <p style="margin-bottom: 30px;">
+        The institute is recognized with J&amp;K Government with recognition No. <strong><span id="p_recNo" class="underline-field">________</span></strong> dated <strong><span id="p_recDate" class="underline-field">________</span></strong>.
+      </p>
+    </div>
+
+    <!-- Signatures and Stamp Section -->
+    <div style="margin-top: 100px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="text-align: center; font-weight: bold; font-size: 1rem;">
+        Seal of the Institution
       </div>
-      <div style="text-align: center; min-width: 250px;">
-        <br><br><br>
-        <p style="border-top: 2px solid #000; padding-top: 5px; font-weight: bold;">
-            <span id="p_signedBy"></span><br>
-            GPS Pethgam Wagoora
-        </p>
+      <div style="text-align: center; font-weight: bold; font-size: 1rem; line-height: 1.4;">
+        Signature of Headmaster / Principal /<br>
+        Head of the Institution / Authorized Officer
       </div>
+    </div>
+
+    <!-- Footer Notes -->
+    <div style="margin-top: 70px; font-size: 0.85rem; line-height: 1.6;">
+      <strong>Note: -</strong>
+      <ol style="margin: 5px 0 0 20px; padding: 0;">
+        <li>All the above fields are mandatory to fill, incomplete application will be rejected.</li>
+        <li>Certificate with Cuttings and overwriting is not valid.</li>
+        <li>Certificate without Dispatch No. &amp; Date of Issuance from the concerned Institute/Department is not valid and will not be accepted.</li>
+      </ol>
     </div>
   </div>
 </div>
@@ -198,13 +269,12 @@
   let students = [];
   let selectedStudent = null;
 
-  // 2. Load Student List from Cloud on Page Load
+  // 2. Load Student List from Firestore
   window.onload = async () => {
       const select = document.getElementById('studentSelect');
       document.getElementById('date').valueAsDate = new Date();
       
       try {
-          // Fetch from "admissions" collection ordered by name
           const q = query(collection(db, "admissions"), orderBy("studentName", "asc"));
           const querySnapshot = await getDocs(q);
           
@@ -231,58 +301,88 @@
       
       if (selectedStudent) {
           document.getElementById('inputSection').style.display = "block";
-          // Generate professional Reference Number
           const year = new Date().getFullYear();
-          document.getElementById('refNo').value = `GPS/PW/BON/${year}/${selectedStudent.admNo}`;
+          document.getElementById('refNo').value = `GPS/PW/${year}/${selectedStudent.admNo}`;
+          if (selectedStudent.address || selectedStudent.rO) {
+            document.getElementById('residence').value = selectedStudent.address || selectedStudent.rO;
+          }
       }
   };
 
-  // 4. Generate and Save Certificate Record
+  // 4. Handle Student Photo Upload & Preview
+  window.handlePhotoUpload = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const photoImg = document.getElementById('photoPreview');
+        photoImg.src = e.target.result;
+        photoImg.style.display = 'block';
+        document.getElementById('photoPlaceholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Helper function to format date as DD/MM/YYYY
+  function formatDateString(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return dateStr;
+  }
+
+  // 5. Generate and Render Certificate Record
   window.generateCertificate = async function() {
     if (!selectedStudent) return;
 
-    // Fill the Certificate Template
-    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
-    document.getElementById('p_fname').innerText = selectedStudent.fatherName;
-    document.getElementById('p_adm').innerText = selectedStudent.admNo;
-    document.getElementById('p_class').innerText = selectedStudent.studentClass;
-    document.getElementById('p_dob').innerText = selectedStudent.dob;
-    
-    const refNo = document.getElementById('refNo').value;
-    const issueDate = document.getElementById('date').value;
-    const purpose = document.getElementById('purpose').value || "Official Requirements";
+    // Institute Info
+    document.getElementById('p_instName').innerText = document.getElementById('instName').value.toUpperCase();
+    document.getElementById('p_instEmail').innerText = document.getElementById('instEmail').value;
+    document.getElementById('p_instContact').innerText = document.getElementById('instContact').value;
+    document.getElementById('p_ref').innerText = document.getElementById('refNo').value;
+    document.getElementById('p_date').innerText = formatDateString(document.getElementById('date').value);
 
-    document.getElementById('p_ref').innerText = refNo;
-    document.getElementById('p_date').innerText = issueDate;
-    document.getElementById('p_purpose').innerText = purpose;
-    document.getElementById('p_session').innerText = document.getElementById('session').value;
-    document.getElementById('p_signedBy').innerText = document.getElementById('signedBy').value;
+    // Student Info
+    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
+    document.getElementById('p_fname').innerText = selectedStudent.fatherName ? selectedStudent.fatherName.toUpperCase() : '';
+    document.getElementById('p_address').innerText = document.getElementById('residence').value.toUpperCase();
+    document.getElementById('p_class').innerText = selectedStudent.studentClass || '';
+    document.getElementById('p_stream').innerText = document.getElementById('stream').value;
+    document.getElementById('p_adm').innerText = selectedStudent.admNo || '';
+    
+    const currentSession = document.getElementById('session').value;
+    document.getElementById('p_session1').innerText = currentSession;
+    document.getElementById('p_session2').innerText = currentSession;
+
+    document.getElementById('p_recNo').innerText = document.getElementById('recNo').value;
+    document.getElementById('p_recDate').innerText = document.getElementById('recDate').value;
 
     // UI Updates
     document.getElementById('certificate').style.display = "block";
     document.getElementById('printBtn').style.display = "inline-block";
     document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
 
-    // 5. OPTIONAL: Save a log of this certificate to Firebase
+    // Save Log to Firebase
     try {
-        const certId = refNo.replace(/\//g, "_"); // Format ID for Firebase
+        const refNo = document.getElementById('refNo').value;
+        const certId = refNo.replace(/\//g, "_");
         await setDoc(doc(db, "issued_certificates", certId), {
             studentName: selectedStudent.studentName,
             admNo: selectedStudent.admNo,
             refNo: refNo,
-            date: issueDate,
-            purpose: purpose,
-            type: "Bonafide",
+            date: document.getElementById('date').value,
+            type: "Bonafide Certificate",
             issuedAt: new Date().toISOString()
         });
-        console.log("Certificate record logged to cloud.");
     } catch (e) {
         console.error("Error logging certificate:", e);
     }
   };
 </script>
 
-
 </body>
 </html>
-            
+                  
