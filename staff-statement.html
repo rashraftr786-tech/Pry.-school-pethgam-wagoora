@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Staff Statement – Add, Edit & PDF</title>
     <!-- html2pdf library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ----- RESET & BASE ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f7fc;
@@ -15,51 +22,60 @@
             display: flex;
             justify-content: center;
         }
+
         .container {
             max-width: 1300px;
             width: 100%;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
             padding: 30px 25px;
         }
 
-        /* ===== HEADER ===== */
-                .header-logo {
-            width: 100px;
-            height: 100px;
-            margin-right: 20px;
+        /* ----- HEADER ----- */
         .statement-header {
             text-align: center;
             margin-bottom: 20px;
             border-bottom: 2px solid #1e2a4a;
             padding-bottom: 12px;
         }
+
+        .school-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
         .statement-header h1 {
             font-size: 24px;
             color: #1e2a4a;
             letter-spacing: 1px;
         }
+
         .statement-header .sub {
             font-size: 15px;
             color: #2d3748;
             margin-top: 3px;
         }
+
         .statement-header .details {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             flex-wrap: wrap;
+            gap: 12px 20px;
             font-size: 13px;
             color: #4a5568;
             margin-top: 6px;
         }
+
         .statement-header .details span {
             background: #f0f4fa;
-            padding: 3px 12px;
+            padding: 3px 14px;
             border-radius: 20px;
         }
 
-        /* ===== TOOLBAR ===== */
+        /* ----- TOOLBAR ----- */
         .toolbar {
             display: flex;
             justify-content: space-between;
@@ -68,22 +84,26 @@
             gap: 12px;
             margin-bottom: 18px;
         }
+
         .toolbar .left h2 {
             font-size: 18px;
             color: #1e2a4a;
         }
+
         .toolbar .left h2 span {
             font-weight: 400;
             font-size: 15px;
             color: #5a6a8a;
             margin-left: 8px;
         }
+
         .toolbar .right {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
 
+        /* ----- BUTTONS ----- */
         .btn {
             padding: 10px 22px;
             border: none;
@@ -97,28 +117,83 @@
             gap: 6px;
             text-decoration: none;
         }
-        .btn-primary { background: #1e2a4a; color: #fff; }
-        .btn-primary:hover { background: #2c3d66; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,42,74,0.25); }
-        .btn-success { background: #1f8b4c; color: #fff; }
-        .btn-success:hover { background: #1a7a41; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(31,139,76,0.25); }
-        .btn-danger { background: #c0392b; color: #fff; }
-        .btn-danger:hover { background: #a93226; }
-        .btn-warning { background: #e67e22; color: #fff; }
-        .btn-warning:hover { background: #d35400; }
-        .btn-pdf { background: #d32f2f; color: #fff; }
-        .btn-pdf:hover { background: #b71c1c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(211,47,47,0.3); }
-        .btn-sm { padding: 4px 10px; font-size: 12px; border-radius: 5px; }
-        .btn-cancel { background: #e2e8f0; color: #2d3748; }
-        .btn-cancel:hover { background: #d0d8e3; }
 
-        .table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .btn-primary {
+            background: #1e2a4a;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #2c3d66;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 42, 74, 0.25);
+        }
+
+        .btn-success {
+            background: #1f8b4c;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #1a7a41;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 139, 76, 0.25);
+        }
+
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #a93226;
+        }
+
+        .btn-warning {
+            background: #e67e22;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d35400;
+        }
+
+        .btn-pdf {
+            background: #d32f2f;
+            color: #fff;
+        }
+        .btn-pdf:hover {
+            background: #b71c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        .btn-cancel:hover {
+            background: #d0d8e3;
+        }
+
+        /* ----- TABLE ----- */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
         table {
             width: 100%;
             table-layout: fixed;
             border-collapse: collapse;
             font-size: 13px;
         }
-        table th, table td {
+
+        table th,
+        table td {
             padding: 7px 5px;
             text-align: left;
             vertical-align: middle;
@@ -128,6 +203,7 @@
             line-height: 1.3;
             border-bottom: 1px solid #edf2f7;
         }
+
         table th {
             background: #f0f4fa;
             color: #1e2a4a;
@@ -137,8 +213,20 @@
             letter-spacing: 0.3px;
             text-transform: uppercase;
         }
-        table tbody tr:hover { background: #f8faff; }
-        .staff-name { font-weight: 600; color: #1a2639; }
+
+        table tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .staff-name {
+            font-weight: 600;
+            color: #1a2639;
+        }
+
+        .photo-cell {
+            text-align: center;
+        }
+
         .photo-cell img {
             border-radius: 4px;
             border: 1px solid #dde3ed;
@@ -149,16 +237,62 @@
             display: block;
             margin: 0 auto;
         }
+
         .no-photo {
             font-size: 9px;
             color: #aab;
             background: #f0f2f5;
-            padding: 2px 4px;
+            padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
         }
-        .actions-cell { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
 
+        .actions-cell {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ----- COLUMN WIDTHS (table-layout: fixed) ----- */
+        .col-sno {
+            width: 3%;
+        }
+        .col-photo {
+            width: 5%;
+        }
+        .col-name {
+            width: 14%;
+        }
+        .col-desig {
+            width: 10%;
+        }
+        .col-qual {
+            width: 8%;
+        }
+        .col-subject {
+            width: 8%;
+        }
+        .col-doappt {
+            width: 8%;
+        }
+        .col-doj {
+            width: 8%;
+        }
+        .col-posting {
+            width: 10%;
+        }
+        .col-contact {
+            width: 7%;
+        }
+        .col-remarks {
+            width: 8%;
+        }
+        .col-actions {
+            width: 6%;
+        }
+
+        /* ----- NOTE & FOOTER ----- */
         .note-section {
             margin-top: 18px;
             padding: 10px 16px;
@@ -168,6 +302,7 @@
             font-size: 13px;
             color: #2d3748;
         }
+
         .footer-section {
             display: flex;
             justify-content: space-between;
@@ -177,6 +312,7 @@
             flex-wrap: wrap;
             gap: 15px;
         }
+
         .sig-box {
             font-weight: 600;
             color: #1e2a4a;
@@ -186,19 +322,23 @@
             border-bottom: 2px solid #cbd5e1;
         }
 
-        /* ===== MODAL ===== */
+        /* ----- MODAL ----- */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.45);
+            background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(3px);
             z-index: 999;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .modal-overlay.active { display: flex; }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
         .modal-box {
             background: #fff;
             border-radius: 16px;
@@ -207,32 +347,60 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 30px 32px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
             animation: fadeSlide 0.25s ease;
         }
+
         @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        .modal-box h3 { font-size: 22px; color: #1e2a4a; margin-bottom: 6px; }
-        .modal-box .subhead { color: #5a6a8a; font-size: 14px; margin-bottom: 22px; }
+
+        .modal-box h3 {
+            font-size: 22px;
+            color: #1e2a4a;
+            margin-bottom: 6px;
+        }
+
+        .modal-box .subhead {
+            color: #5a6a8a;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px 20px;
         }
-        .form-grid .full-width { grid-column: 1 / -1; }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
+
         .form-group label {
             font-size: 13px;
             font-weight: 600;
             color: #2d3748;
         }
-        .form-group label .required { color: #c0392b; margin-left: 2px; }
+
+        .form-group label .required {
+            color: #c0392b;
+            margin-left: 2px;
+        }
+
         .form-group input,
         .form-group textarea {
             padding: 10px 12px;
@@ -243,20 +411,27 @@
             background: #fafcff;
             font-family: inherit;
         }
+
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #1e2a4a;
-            box-shadow: 0 0 0 3px rgba(30,42,74,0.15);
+            box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.15);
             background: #fff;
         }
-        .form-group textarea { resize: vertical; min-height: 50px; }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
         .photo-upload-wrapper {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
         }
+
         .photo-upload-wrapper input[type="file"] {
             padding: 6px 10px;
             border: 1px dashed #b0b8c9;
@@ -266,6 +441,7 @@
             width: auto;
             flex: 1;
         }
+
         .photo-preview {
             width: 50px;
             height: 60px;
@@ -275,12 +451,17 @@
             background: #f0f2f5;
             display: none;
         }
-        .photo-preview.show { display: block; }
+
+        .photo-preview.show {
+            display: block;
+        }
+
         .photo-actions {
             display: flex;
             gap: 8px;
             align-items: center;
         }
+
         .btn-remove-photo {
             background: #e74c3c;
             color: #fff;
@@ -291,7 +472,10 @@
             cursor: pointer;
             display: none;
         }
-        .btn-remove-photo.show { display: inline-block; }
+
+        .btn-remove-photo.show {
+            display: inline-block;
+        }
 
         .modal-actions {
             display: flex;
@@ -302,6 +486,7 @@
             border-top: 1px solid #edf2f7;
         }
 
+        /* ----- TOAST ----- */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -311,581 +496,750 @@
             padding: 14px 28px;
             border-radius: 10px;
             font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             z-index: 9999;
             opacity: 0;
             transform: translateY(20px);
             transition: 0.3s ease;
             pointer-events: none;
         }
-        .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .toast.success { background: #1f8b4c; }
-        .toast.error { background: #c0392b; }
-        .loader-row td { padding: 40px 20px; text-align: center; color: #5a6a8a; font-style: italic; }
 
-        /* ===== COLUMN WIDTHS (table-layout: fixed) ===== */
-        .col-sno { width: 3%; }
-        .col-photo { width: 5%; }
-        .col-name { width: 15%; }
-        .col-desig { width: 10%; }
-        .col-qual { width: 10%; }
-        .col-subject { width: 10%; }
-        .col-doappt { width: 9%; }
-        .col-doj { width: 9%; }
-        .col-posting { width: 12%; }
-        .col-contact { width: 8%; }
-        .col-remarks { width: 9%; }
-        .col-actions { width: 7%; }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
 
-        /* ===== PRINT / PDF STYLES ===== */
+        .toast.success {
+            background: #1f8b4c;
+        }
+
+        .toast.error {
+            background: #c0392b;
+        }
+
+        .loader-row td {
+            padding: 40px 20px;
+            text-align: center;
+            color: #5a6a8a;
+            font-style: italic;
+        }
+
+        /* ----- PRINT / PDF STYLES ----- */
         @media print {
-            body { background: #fff; padding: 0; margin: 0; }
-            .container { box-shadow: none; border-radius: 0; padding: 12px 15px; max-width: 100%; }
-            .toolbar { display: none !important; }
-            .no-print { display: none !important; }
-            .col-actions { display: none !important; }
-            table th.col-actions, table td.col-actions { display: none !important; }
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
 
-            .statement-header { border-bottom: 2px solid #000; }
-            .footer-section { border-top: 2px solid #000; }
-            .sig-box { border-bottom: 2px solid #000; }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 12px 15px;
+                max-width: 100%;
+            }
 
-            table { font-size: 10px; }
-            table th { font-size: 9px; padding: 4px 3px; }
-            table td { padding: 4px 3px; font-size: 9.5px; line-height: 1.2; }
-            .photo-cell img { width: 28px; height: 36px; }
-            .note-section { font-size: 10px; padding: 6px 10px; }
-            .sig-box { font-size: 11px; }
-            .statement-header h1 { font-size: 18px; }
-            .statement-header .sub { font-size: 12px; }
-            .statement-header .details { font-size: 10px; }
-            .statement-header .details span { padding: 2px 8px; }
+            .toolbar {
+                display: none !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .col-actions {
+                display: none !important;
+            }
+
+            table th.col-actions,
+            table td.col-actions {
+                display: none !important;
+            }
+
+            .statement-header {
+                border-bottom: 2px solid #000;
+            }
+
+            .footer-section {
+                border-top: 2px solid #000;
+            }
+
+            .sig-box {
+                border-bottom: 2px solid #000;
+            }
+
+            table {
+                font-size: 10px;
+            }
+
+            table th {
+                font-size: 9px;
+                padding: 4px 3px;
+            }
+
+            table td {
+                padding: 4px 3px;
+                font-size: 9.5px;
+                line-height: 1.2;
+            }
+
+            .photo-cell img {
+                width: 28px;
+                height: 36px;
+            }
+
+            .note-section {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+
+            .sig-box {
+                font-size: 11px;
+            }
+
+            .statement-header h1 {
+                font-size: 18px;
+            }
+
+            .statement-header .sub {
+                font-size: 12px;
+            }
+
+            .statement-header .details {
+                font-size: 10px;
+            }
+
+            .statement-header .details span {
+                padding: 2px 8px;
+            }
+
+            .school-logo {
+                width: 60px;
+                height: 60px;
+            }
         }
 
         /* Hide toolbar and actions when PDF is being generated */
-        .pdf-generation .toolbar { display: none !important; }
-        .pdf-generation .no-print { display: none !important; }
-        .pdf-generation .col-actions { display: none !important; }
-        .pdf-generation table th.col-actions,
-        .pdf-generation table td.col-actions { display: none !important; }
+        .pdf-generation .toolbar {
+            display: none !important;
+        }
 
+        .pdf-generation .no-print {
+            display: none !important;
+        }
+
+        .pdf-generation .col-actions {
+            display: none !important;
+        }
+
+        .pdf-generation table th.col-actions,
+        .pdf-generation table td.col-actions {
+            display: none !important;
+        }
+
+        /* ----- RESPONSIVE ----- */
         @media (max-width: 640px) {
-            .container { padding: 16px; }
-            .toolbar { flex-direction: column; align-items: stretch; }
-            .toolbar .right { justify-content: stretch; }
-            .toolbar .right .btn { flex: 1; justify-content: center; }
-            .form-grid { grid-template-columns: 1fr; }
-            .modal-box { padding: 20px 16px; }
-            .footer-section { flex-direction: column; gap: 8px; }
-            .sig-box { border-bottom: 1px solid #dde3ed; }
-            .statement-header .details { flex-direction: column; gap: 4px; align-items: center; }
+            .container {
+                padding: 16px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar .right {
+                justify-content: stretch;
+            }
+
+            .toolbar .right .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-box {
+                padding: 20px 16px;
+            }
+
+            .footer-section {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .sig-box {
+                border-bottom: 1px solid #dde3ed;
+            }
+
+            .statement-header .details {
+                flex-direction: column;
+                gap: 4px;
+                align-items: center;
+            }
+
+            .statement-header h1 {
+                font-size: 19px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="container" id="statementContainer">
+    <div class="container" id="statementContainer">
 
-    <!-- ===== HEADER ===== -->
-    <div class="statement-header">
-        <img src="logo.png" alt="Logo" class="school-logo">
-        <h1>📚 Government Primary School Pethgam Wagoora</h1>
-        <div class="sub">Wagoora Babareshi Road Near Zonal Education Office Wagoora 193109</div>
-        <div class="details">
-            <span>📍 Wagoora, District Baramulla</span>
-            <span>📅 Statement as on: <strong id="headerDate"></strong></span>
-            <span>📋 Staff Strength Statement</span>
+        <!-- ===== HEADER ===== -->
+        <div class="statement-header">
+            <img src="logo.png" alt="School Logo" class="school-logo" />
+            <h1>📚 Government Primary School Pethgam Wagoora</h1>
+            <div class="sub">Wagoora Babareshi Road Near Zonal Education Office Wagoora 193109</div>
+            <div class="details">
+                <span>📍 Wagoora, District Baramulla</span>
+                <span>📅 Statement as on: <strong id="headerDate"></strong></span>
+                <span>📋 Staff Strength Statement</span>
+            </div>
+        </div>
+
+        <!-- ===== TOOLBAR ===== -->
+        <div class="toolbar">
+            <div class="left">
+                <h2>
+                    👥 Staff List
+                    <span id="currentDate"></span>
+                </h2>
+            </div>
+            <div class="right">
+                <button class="btn btn-pdf" id="downloadPdfBtn">⬇ Download PDF</button>
+                <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
+                <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
+            </div>
+        </div>
+
+        <!-- ===== TABLE ===== -->
+        <div class="table-wrapper">
+            <table>
+                <colgroup>
+                    <col class="col-sno" />
+                    <col class="col-photo" />
+                    <col class="col-name" />
+                    <col class="col-desig" />
+                    <col class="col-qual" />
+                    <col class="col-subject" />
+                    <col class="col-doappt" />
+                    <col class="col-doj" />
+                    <col class="col-posting" />
+                    <col class="col-contact" />
+                    <col class="col-remarks" />
+                    <col class="col-actions" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Photo</th>
+                        <th>Staff Name</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Subject in P.G</th>
+                        <th>Date of 1st Appointment</th>
+                        <th>D.O.J (Present)</th>
+                        <th>Actual Posting</th>
+                        <th>Contact No</th>
+                        <th>Remarks</th>
+                        <th class="no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="staffBody">
+                    <tr>
+                        <td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">Loading staff records…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== NOTE & FOOTER ===== -->
+        <div class="note-section">
+            Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
+        </div>
+
+        <div class="footer-section">
+            <div class="sig-box">Dealing Assistant</div>
+            <div class="sig-box">Headmaster / Seal</div>
         </div>
     </div>
 
-    <!-- ===== TOOLBAR ===== -->
-    <div class="toolbar">
-        <div class="left">
-            <h2>
-                👥 Staff List
-                <span id="currentDate"></span>
-            </h2>
-        </div>
-        <div class="right">
-            <button class="btn btn-pdf" id="downloadPdfBtn">⬇ Download PDF</button>
-            <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
-            <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
-        </div>
-    </div>
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="staffModal">
+        <div class="modal-box">
+            <h3 id="modalTitle">Add Staff Member</h3>
+            <div class="subhead" id="modalSubhead">Fill in the details below.</div>
 
-    <!-- ===== TABLE ===== -->
-    <div class="table-wrapper">
-        <table>
-            <colgroup>
-                <col class="col-sno" />
-                <col class="col-photo" />
-                <col class="col-name" />
-                <col class="col-desig" />
-                <col class="col-qual" />
-                <col class="col-subject" />
-                <col class="col-doappt" />
-                <col class="col-doj" />
-                <col class="col-posting" />
-                <col class="col-contact" />
-                <col class="col-remarks" />
-                <col class="col-actions" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Photo</th>
-                    <th>Staff Name</th>
-                    <th>Designation</th>
-                    <th>Qualification</th>
-                    <th>Subject in P.G</th>
-                    <th>Date of 1st Appointment</th>
-                    <th>D.O.J (Present)</th>
-                    <th>Actual Posting</th>
-                    <th>Contact No</th>
-                    <th>Remarks</th>
-                    <th class="no-print">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="staffBody">
-                <tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">Loading staff records…</td></tr>
-            </tbody>
-        </table>
-    </div>
+            <form id="staffForm" autocomplete="off">
+                <input type="hidden" id="editDocId" value="" />
 
-    <!-- ===== NOTE & FOOTER ===== -->
-    <div class="note-section">
-        Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
-    </div>
-
-    <div class="footer-section">
-        <div class="sig-box">Dealing Assistant</div>
-        <div class="sig-box">Headmaster / Seal</div>
-    </div>
-</div>
-
-<!-- ===== MODAL ===== -->
-<div class="modal-overlay" id="staffModal">
-    <div class="modal-box">
-        <h3 id="modalTitle">Add Staff Member</h3>
-        <div class="subhead" id="modalSubhead">Fill in the details below.</div>
-
-        <form id="staffForm" autocomplete="off">
-            <input type="hidden" id="editDocId" value="" />
-
-            <div class="form-grid">
-                <div class="form-group full-width">
-                    <label>Staff Name <span class="required">*</span></label>
-                    <input type="text" id="fName" placeholder="e.g. Ramesh Kumar" required />
-                </div>
-                <div class="form-group">
-                    <label>Designation <span class="required">*</span></label>
-                    <input type="text" id="fDesignation" placeholder="e.g. Teacher" required />
-                </div>
-                <div class="form-group">
-                    <label>Qualification</label>
-                    <input type="text" id="fQualification" placeholder="e.g. M.A., B.Ed" />
-                </div>
-                <div class="form-group">
-                    <label>Subject in P.G</label>
-                    <input type="text" id="fSubjectPG" placeholder="e.g. English" />
-                </div>
-                <div class="form-group">
-                    <label>Date of 1st Appointment</label>
-                    <input type="date" id="fDoFirstAppt" />
-                </div>
-                <div class="form-group">
-                    <label>D.O.J (Present School)</label>
-                    <input type="date" id="fDojPresent" />
-                </div>
-                <div class="form-group">
-                    <label>Actual Place of Posting</label>
-                    <input type="text" id="fActualPosting" placeholder="e.g. Wagoora" />
-                </div>
-                <div class="form-group">
-                    <label>Contact No</label>
-                    <input type="text" id="fContact" placeholder="e.g. 9876543210" />
-                </div>
-                <div class="form-group full-width">
-                    <label>Photo <span class="required">*</span> (upload image)</label>
-                    <div class="photo-upload-wrapper">
-                        <input type="file" id="fPhotoInput" accept="image/*" />
-                        <div class="photo-actions">
-                            <img id="photoPreview" class="photo-preview" alt="Preview" />
-                            <button type="button" class="btn-remove-photo" id="removePhotoBtn">✕ Remove</button>
-                        </div>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="fName">Staff Name <span class="required">*</span></label>
+                        <input type="text" id="fName" placeholder="e.g. Ramesh Kumar" required />
                     </div>
-                    <small style="color:#5a6a8a;font-size:12px;">Upload a JPG or PNG image (max 200KB recommended).</small>
-                </div>
-                <div class="form-group full-width">
-                    <label>Remarks</label>
-                    <textarea id="fRemarks" placeholder="Any additional notes…" rows="2"></textarea>
-                </div>
-            </div>
 
-            <div class="modal-actions">
-                <button type="button" class="btn btn-cancel" id="modalCancelBtn">Cancel</button>
-                <button type="submit" class="btn btn-success" id="modalSubmitBtn">💾 Save Staff</button>
-            </div>
-        </form>
+                    <div class="form-group">
+                        <label for="fDesignation">Designation <span class="required">*</span></label>
+                        <input type="text" id="fDesignation" placeholder="e.g. Teacher" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fQualification">Qualification</label>
+                        <input type="text" id="fQualification" placeholder="e.g. M.A., B.Ed" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fSubjectPG">Subject in P.G</label>
+                        <input type="text" id="fSubjectPG" placeholder="e.g. English" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDoFirstAppt">Date of 1st Appointment</label>
+                        <input type="date" id="fDoFirstAppt" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDojPresent">D.O.J (Present School)</label>
+                        <input type="date" id="fDojPresent" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fActualPosting">Actual Place of Posting</label>
+                        <input type="text" id="fActualPosting" placeholder="e.g. Wagoora" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fContact">Contact No</label>
+                        <input type="text" id="fContact" placeholder="e.g. 9876543210" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Photo <span class="required">*</span> (upload image)</label>
+                        <div class="photo-upload-wrapper">
+                            <input type="file" id="fPhotoInput" accept="image/*" />
+                            <div class="photo-actions">
+                                <img id="photoPreview" class="photo-preview" alt="Photo preview" />
+                                <button type="button" class="btn-remove-photo" id="removePhotoBtn">✕ Remove</button>
+                            </div>
+                        </div>
+                        <small style="color:#5a6a8a;font-size:12px;">Upload a JPG or PNG image (max 200KB recommended).</small>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="fRemarks">Remarks</label>
+                        <textarea id="fRemarks" placeholder="Any additional notes…" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="modalCancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="modalSubmitBtn">💾 Save Staff</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
-<script>
-    (function() {
-        'use strict';
+    <script>
+        (function() {
+            'use strict';
 
-        // ---- DOM refs ----
-        const tbody = document.getElementById('staffBody');
-        const dateEl = document.getElementById('currentDate');
-        const headerDate = document.getElementById('headerDate');
-        const addBtn = document.getElementById('addStaffBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const pdfBtn = document.getElementById('downloadPdfBtn');
-        const modal = document.getElementById('staffModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSubhead = document.getElementById('modalSubhead');
-        const form = document.getElementById('staffForm');
-        const editDocId = document.getElementById('editDocId');
-        const submitBtn = document.getElementById('modalSubmitBtn');
-        const cancelBtn = document.getElementById('modalCancelBtn');
+            // ---- DOM refs ----
+            const tbody = document.getElementById('staffBody');
+            const dateEl = document.getElementById('currentDate');
+            const headerDate = document.getElementById('headerDate');
+            const addBtn = document.getElementById('addStaffBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const pdfBtn = document.getElementById('downloadPdfBtn');
+            const modal = document.getElementById('staffModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubhead = document.getElementById('modalSubhead');
+            const form = document.getElementById('staffForm');
+            const editDocId = document.getElementById('editDocId');
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            const cancelBtn = document.getElementById('modalCancelBtn');
 
-        const fName = document.getElementById('fName');
-        const fDesignation = document.getElementById('fDesignation');
-        const fQualification = document.getElementById('fQualification');
-        const fSubjectPG = document.getElementById('fSubjectPG');
-        const fDoFirstAppt = document.getElementById('fDoFirstAppt');
-        const fDojPresent = document.getElementById('fDojPresent');
-        const fActualPosting = document.getElementById('fActualPosting');
-        const fContact = document.getElementById('fContact');
-        const fPhotoInput = document.getElementById('fPhotoInput');
-        const photoPreview = document.getElementById('photoPreview');
-        const removePhotoBtn = document.getElementById('removePhotoBtn');
-        const fRemarks = document.getElementById('fRemarks');
+            const fName = document.getElementById('fName');
+            const fDesignation = document.getElementById('fDesignation');
+            const fQualification = document.getElementById('fQualification');
+            const fSubjectPG = document.getElementById('fSubjectPG');
+            const fDoFirstAppt = document.getElementById('fDoFirstAppt');
+            const fDojPresent = document.getElementById('fDojPresent');
+            const fActualPosting = document.getElementById('fActualPosting');
+            const fContact = document.getElementById('fContact');
+            const fPhotoInput = document.getElementById('fPhotoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const removePhotoBtn = document.getElementById('removePhotoBtn');
+            const fRemarks = document.getElementById('fRemarks');
 
-        const toast = document.getElementById('toast');
-        let toastTimer = null;
-        let currentPhotoData = '';
+            const toast = document.getElementById('toast');
+            let toastTimer = null;
+            let currentPhotoData = '';
 
-        // ---- Helpers ----
-        function showToast(msg, type = 'success') {
-            toast.textContent = msg;
-            toast.className = 'toast ' + type;
-            void toast.offsetWidth;
-            toast.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            const d = new Date(dateStr + 'T00:00:00');
-            if (isNaN(d)) return dateStr;
-            return d.toLocaleDateString('en-GB');
-        }
-
-        function generateId() {
-            return Date.now() + '-' + Math.random().toString(36).substr(2, 6);
-        }
-
-        function getTodayStr() {
-            return new Date().toLocaleDateString('en-GB');
-        }
-
-        // ---- localStorage CRUD ----
-        function getStaffRecords() {
-            try {
-                const data = localStorage.getItem('staffRecords');
-                return data ? JSON.parse(data) : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveStaffRecords(records) {
-            localStorage.setItem('staffRecords', JSON.stringify(records));
-        }
-
-        function addStaffRecord(record) {
-            const records = getStaffRecords();
-            record.id = generateId();
-            records.push(record);
-            saveStaffRecords(records);
-            return record;
-        }
-
-        function updateStaffRecord(id, updatedData) {
-            const records = getStaffRecords();
-            const index = records.findIndex(r => r.id === id);
-            if (index === -1) return null;
-            updatedData.id = id;
-            records[index] = { ...records[index], ...updatedData };
-            saveStaffRecords(records);
-            return records[index];
-        }
-
-        function deleteStaffRecord(id) {
-            let records = getStaffRecords();
-            records = records.filter(r => r.id !== id);
-            saveStaffRecords(records);
-        }
-
-        function getStaffRecord(id) {
-            const records = getStaffRecords();
-            return records.find(r => r.id === id) || null;
-        }
-
-        // ---- Render Table ----
-        function renderStaff() {
-            const records = getStaffRecords();
-            if (records.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">📭 No staff records found.</td></tr>`;
-                return;
+            // ---- Helpers ----
+            function showToast(msg, type) {
+                type = type || 'success';
+                toast.textContent = msg;
+                toast.className = 'toast ' + type;
+                void toast.offsetWidth;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3500);
             }
 
-            const sorted = [...records].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            function formatDate(dateStr) {
+                if (!dateStr) return '-';
+                var d = new Date(dateStr + 'T00:00:00');
+                if (isNaN(d)) return dateStr;
+                return d.toLocaleDateString('en-GB');
+            }
 
-            let html = '';
-            let sNo = 1;
-            sorted.forEach(record => {
-                let photoHtml = '';
-                if (record.photo && record.photo.startsWith('data:image')) {
-                    photoHtml = `<img src="${record.photo}" alt="photo" />`;
-                } else {
-                    photoHtml = `<span class="no-photo">NO PHOTO</span>`;
+            function generateId() {
+                return Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+            }
+
+            function getTodayStr() {
+                return new Date().toLocaleDateString('en-GB');
+            }
+
+            // ---- localStorage CRUD ----
+            function getStaffRecords() {
+                try {
+                    var data = localStorage.getItem('staffRecords');
+                    return data ? JSON.parse(data) : [];
+                } catch (_) {
+                    return [];
+                }
+            }
+
+            function saveStaffRecords(records) {
+                localStorage.setItem('staffRecords', JSON.stringify(records));
+            }
+
+            function addStaffRecord(record) {
+                var records = getStaffRecords();
+                record.id = generateId();
+                records.push(record);
+                saveStaffRecords(records);
+                return record;
+            }
+
+            function updateStaffRecord(id, updatedData) {
+                var records = getStaffRecords();
+                var index = -1;
+                for (var i = 0; i < records.length; i++) {
+                    if (records[i].id === id) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index === -1) return null;
+                updatedData.id = id;
+                records[index] = { ...records[index], ...updatedData };
+                saveStaffRecords(records);
+                return records[index];
+            }
+
+            function deleteStaffRecord(id) {
+                var records = getStaffRecords();
+                var filtered = [];
+                for (var i = 0; i < records.length; i++) {
+                    if (records[i].id !== id) {
+                        filtered.push(records[i]);
+                    }
+                }
+                saveStaffRecords(filtered);
+            }
+
+            function getStaffRecord(id) {
+                var records = getStaffRecords();
+                for (var i = 0; i < records.length; i++) {
+                    if (records[i].id === id) {
+                        return records[i];
+                    }
+                }
+                return null;
+            }
+
+            // ---- Render Table ----
+            function renderStaff() {
+                var records = getStaffRecords();
+                if (records.length === 0) {
+                    tbody.innerHTML =
+                        '<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">📭 No staff records found.</td></tr>';
+                    return;
                 }
 
-                html += `
-                    <tr>
-                        <td>${sNo++}</td>
-                        <td class="photo-cell">${photoHtml}</td>
-                        <td class="staff-name">${(record.name || '').toUpperCase()}</td>
-                        <td>${record.designation || '-'}</td>
-                        <td>${record.qualification || '-'}</td>
-                        <td>${record.subjectPG || '-'}</td>
-                        <td>${formatDate(record.doFirstAppt)}</td>
-                        <td>${formatDate(record.dojPresentSchool)}</td>
-                        <td>${record.actualPosting || 'N.A.'}</td>
-                        <td>${record.contact || '-'}</td>
-                        <td>${record.remarks || ''}</td>
-                        <td class="no-print">
-                            <div class="actions-cell">
-                                <button class="btn btn-warning btn-sm edit-btn" data-id="${record.id}">✎ Edit</button>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="${record.id}">✕</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            tbody.innerHTML = html;
-
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    openEditModal(id);
+                // Sort by name
+                var sorted = records.slice().sort(function(a, b) {
+                    var nameA = (a.name || '').toLowerCase();
+                    var nameB = (b.name || '').toLowerCase();
+                    if (nameA < nameB) return -1;
+                    if (nameA > nameB) return 1;
+                    return 0;
                 });
-            });
 
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    if (confirm('Delete this staff record permanently?')) {
-                        deleteStaffRecord(id);
-                        showToast('🗑️ Staff deleted.', 'success');
-                        renderStaff();
+                var html = '';
+                var sNo = 1;
+
+                for (var i = 0; i < sorted.length; i++) {
+                    var record = sorted[i];
+                    var photoHtml = '';
+                    if (record.photo && record.photo.startsWith('data:image')) {
+                        photoHtml = '<img src="' + record.photo + '" alt="Staff photo" />';
+                    } else {
+                        photoHtml = '<span class="no-photo">NO PHOTO</span>';
                     }
-                });
-            });
-        }
 
-        // ---- Modal functions ----
-        function resetPhotoUI() {
-            currentPhotoData = '';
-            photoPreview.src = '';
-            photoPreview.classList.remove('show');
-            removePhotoBtn.classList.remove('show');
-            fPhotoInput.value = '';
-        }
+                    html += '<tr>' +
+                        '<td>' + sNo++ + '</td>' +
+                        '<td class="photo-cell">' + photoHtml + '</td>' +
+                        '<td class="staff-name">' + (record.name || '').toUpperCase() + '</td>' +
+                        '<td>' + (record.designation || '-') + '</td>' +
+                        '<td>' + (record.qualification || '-') + '</td>' +
+                        '<td>' + (record.subjectPG || '-') + '</td>' +
+                        '<td>' + formatDate(record.doFirstAppt) + '</td>' +
+                        '<td>' + formatDate(record.dojPresentSchool) + '</td>' +
+                        '<td>' + (record.actualPosting || 'N.A.') + '</td>' +
+                        '<td>' + (record.contact || '-') + '</td>' +
+                        '<td>' + (record.remarks || '') + '</td>' +
+                        '<td class="no-print">' +
+                        '<div class="actions-cell">' +
+                        '<button class="btn btn-warning btn-sm edit-btn" data-id="' + record.id + '">✎ Edit</button>' +
+                        '<button class="btn btn-danger btn-sm delete-btn" data-id="' + record.id + '">✕</button>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                }
 
-        function openModal(mode, data = null) {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            resetPhotoUI();
-            if (mode === 'add') {
-                modalTitle.textContent = '➕ Add Staff Member';
-                modalSubhead.textContent = 'Fill in the details and click Save.';
-                submitBtn.textContent = '💾 Save Staff';
-                editDocId.value = '';
-                form.reset();
-            } else if (mode === 'edit' && data) {
-                modalTitle.textContent = '✏️ Edit Staff Member';
-                modalSubhead.textContent = 'Update the details below.';
-                submitBtn.textContent = '🔄 Update Staff';
-                editDocId.value = data.id || '';
-                fName.value = data.name || '';
-                fDesignation.value = data.designation || '';
-                fQualification.value = data.qualification || '';
-                fSubjectPG.value = data.subjectPG || '';
-                fDoFirstAppt.value = data.doFirstAppt || '';
-                fDojPresent.value = data.dojPresentSchool || '';
-                fActualPosting.value = data.actualPosting || '';
-                fContact.value = data.contact || '';
-                fRemarks.value = data.remarks || '';
-                if (data.photo && data.photo.startsWith('data:image')) {
-                    currentPhotoData = data.photo;
-                    photoPreview.src = data.photo;
+                tbody.innerHTML = html;
+
+                // Edit buttons
+                var editBtns = document.querySelectorAll('.edit-btn');
+                for (var j = 0; j < editBtns.length; j++) {
+                    (function(btn) {
+                        btn.addEventListener('click', function() {
+                            var id = btn.dataset.id;
+                            openEditModal(id);
+                        });
+                    })(editBtns[j]);
+                }
+
+                // Delete buttons
+                var delBtns = document.querySelectorAll('.delete-btn');
+                for (var k = 0; k < delBtns.length; k++) {
+                    (function(btn) {
+                        btn.addEventListener('click', function() {
+                            var id = btn.dataset.id;
+                            if (confirm('Delete this staff record permanently?')) {
+                                deleteStaffRecord(id);
+                                showToast('🗑️ Staff deleted.', 'success');
+                                renderStaff();
+                            }
+                        });
+                    })(delBtns[k]);
+                }
+            }
+
+            // ---- Modal functions ----
+            function resetPhotoUI() {
+                currentPhotoData = '';
+                photoPreview.src = '';
+                photoPreview.classList.remove('show');
+                removePhotoBtn.classList.remove('show');
+                fPhotoInput.value = '';
+            }
+
+            function openModal(mode, data) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                resetPhotoUI();
+
+                if (mode === 'add') {
+                    modalTitle.textContent = '➕ Add Staff Member';
+                    modalSubhead.textContent = 'Fill in the details and click Save.';
+                    submitBtn.textContent = '💾 Save Staff';
+                    editDocId.value = '';
+                    form.reset();
+                } else if (mode === 'edit' && data) {
+                    modalTitle.textContent = '✏️ Edit Staff Member';
+                    modalSubhead.textContent = 'Update the details below.';
+                    submitBtn.textContent = '🔄 Update Staff';
+                    editDocId.value = data.id || '';
+                    fName.value = data.name || '';
+                    fDesignation.value = data.designation || '';
+                    fQualification.value = data.qualification || '';
+                    fSubjectPG.value = data.subjectPG || '';
+                    fDoFirstAppt.value = data.doFirstAppt || '';
+                    fDojPresent.value = data.dojPresentSchool || '';
+                    fActualPosting.value = data.actualPosting || '';
+                    fContact.value = data.contact || '';
+                    fRemarks.value = data.remarks || '';
+
+                    if (data.photo && data.photo.startsWith('data:image')) {
+                        currentPhotoData = data.photo;
+                        photoPreview.src = data.photo;
+                        photoPreview.classList.add('show');
+                        removePhotoBtn.classList.add('show');
+                    }
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                resetPhotoUI();
+            }
+
+            function openEditModal(id) {
+                var record = getStaffRecord(id);
+                if (!record) {
+                    showToast('Record not found.', 'error');
+                    return;
+                }
+                openModal('edit', record);
+            }
+
+            // ---- Photo handling ----
+            fPhotoInput.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 200 * 1024) {
+                    showToast('Image too large. Please keep under 200KB.', 'error');
+                    fPhotoInput.value = '';
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    currentPhotoData = ev.target.result;
+                    photoPreview.src = currentPhotoData;
                     photoPreview.classList.add('show');
                     removePhotoBtn.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removePhotoBtn.addEventListener('click', function() {
+                resetPhotoUI();
+            });
+
+             // ---- Form Submit ----
+            function handleFormSubmit(e) {
+                e.preventDefault();
+
+                var name = fName.value.trim();
+                if (!name) {
+                    showToast('Staff Name is required.', 'error');
+                    fName.focus();
+                    return;
                 }
-            }
-        }
+                var designation = fDesignation.value.trim();
+                if (!designation) {
+                    showToast('Designation is required.', 'error');
+                    fDesignation.focus();
+                    return;
+                }
 
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-            resetPhotoUI();
-        }
+                var payload = {
+                    name: name,
+                    designation: designation,
+                    qualification: fQualification.value.trim() || '',
+                    subjectPG: fSubjectPG.value.trim() || '',
+                    doFirstAppt: fDoFirstAppt.value || '',
+                    dojPresentSchool: fDojPresent.value || '',
+                    actualPosting: fActualPosting.value.trim() || '',
+                    contact: fContact.value.trim() || '',
+                    photo: currentPhotoData || '',
+                    remarks: fRemarks.value.trim() || ''
+                };
 
-        function openEditModal(id) {
-            const record = getStaffRecord(id);
-            if (!record) {
-                showToast('Record not found.', 'error');
-                return;
-            }
-            openModal('edit', record);
-        }
+                var docId = editDocId.value;
 
-        // ---- Photo handling ----
-        fPhotoInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            if (file.size > 200 * 1024) {
-                showToast('Image too large. Please keep under 200KB.', 'error');
-                fPhotoInput.value = '';
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                currentPhotoData = ev.target.result;
-                photoPreview.src = currentPhotoData;
-                photoPreview.classList.add('show');
-                removePhotoBtn.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-        });
-
-        removePhotoBtn.addEventListener('click', function() {
-            resetPhotoUI();
-        });
-
-        // ---- Form Submit ----
-        function handleFormSubmit(e) {
-            e.preventDefault();
-
-            const name = fName.value.trim();
-            if (!name) {
-                showToast('Staff Name is required.', 'error');
-                fName.focus();
-                return;
-            }
-            const designation = fDesignation.value.trim();
-            if (!designation) {
-                showToast('Designation is required.', 'error');
-                fDesignation.focus();
-                return;
-            }
-
-            const payload = {
-                name,
-                designation,
-                qualification: fQualification.value.trim() || '',
-                subjectPG: fSubjectPG.value.trim() || '',
-                doFirstAppt: fDoFirstAppt.value || '',
-                dojPresentSchool: fDojPresent.value || '',
-                actualPosting: fActualPosting.value.trim() || '',
-                contact: fContact.value.trim() || '',
-                photo: currentPhotoData || '',
-                remarks: fRemarks.value.trim() || '',
-            };
-
-            const docId = editDocId.value;
-
-            if (docId) {
-                const updated = updateStaffRecord(docId, payload);
-                if (updated) {
-                    showToast('✅ Staff updated successfully.', 'success');
+                if (docId) {
+                    var updated = updateStaffRecord(docId, payload);
+                    if (updated) {
+                        showToast('✅ Staff updated successfully.', 'success');
+                    } else {
+                        showToast('Error updating record.', 'error');
+                    }
                 } else {
-                    showToast('Error updating record.', 'error');
+                    addStaffRecord(payload);
+                    showToast('✅ Staff added successfully.', 'success');
                 }
-            } else {
-                addStaffRecord(payload);
-                showToast('✅ Staff added successfully.', 'success');
+
+                closeModal();
+                renderStaff();
             }
 
-            closeModal();
-            renderStaff();
-        }
+            // ---- PDF Download ----
+            function downloadPDF() {
+                var element = document.getElementById('statementContainer');
 
-        // ---- PDF Download ----
-        function downloadPDF() {
-            const element = document.getElementById('statementContainer');
+                document.body.classList.add('pdf-generation');
 
-            // Hide toolbar & actions during PDF generation
-            document.body.classList.add('pdf-generation');
+                var opt = {
+                    margin: [0.3, 0.3, 0.3, 0.3],
+                    filename: 'Staff_Statement.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, letterRendering: true, useCORS: true, logging: false },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+                };
 
-            const opt = {
-                margin:        [0.3, 0.3, 0.3, 0.3], // tight margins for A4 landscape
-                filename:     'Staff_Statement.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
-            };
+                html2pdf().set(opt).from(element).save().then(function() {
+                    document.body.classList.remove('pdf-generation');
+                }).catch(function(err) {
+                    console.error('PDF generation error:', err);
+                    showToast('Failed to generate PDF.', 'error');
+                    document.body.classList.remove('pdf-generation');
+                });
+            }
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('pdf-generation');
-            }).catch(err => {
-                console.error('PDF generation error:', err);
-                showToast('Failed to generate PDF.', 'error');
-                document.body.classList.remove('pdf-generation');
-            });
-        }
+            // ---- Set dates ----
+            function setDates() {
+                var today = getTodayStr();
+                if (dateEl) dateEl.innerText = today;
+                if (headerDate) headerDate.innerText = today;
+            }
 
-        // ---- Set dates ----
-        function setDates() {
-            const today = getTodayStr();
-            if (dateEl) dateEl.innerText = today;
-            if (headerDate) headerDate.innerText = today;
-        }
-
-        // ---- Init ----
-        function init() {
-            setDates();
-            renderStaff();
-
-            addBtn.addEventListener('click', () => openModal('add'));
-            refreshBtn.addEventListener('click', () => {
+            // ---- Init ----
+            function init() {
+                setDates();
                 renderStaff();
-                showToast('Refreshed.', 'success');
-            });
-            pdfBtn.addEventListener('click', downloadPDF);
 
-            cancelBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
-            });
-            form.addEventListener('submit', handleFormSubmit);
-        }
+                addBtn.addEventListener('click', function() {
+                    openModal('add');
+                });
+                refreshBtn.addEventListener('click', function() {
+                    renderStaff();
+                    showToast('Refreshed.', 'success');
+                });
+                pdfBtn.addEventListener('click', downloadPDF);
 
-        init();
-    })();
-</script>
+                cancelBtn.addEventListener('click', closeModal);
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) closeModal();
+                });
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+                });
+                form.addEventListener('submit', handleFormSubmit);
+            }
+
+            init();
+        })();
+    </script>
 
 </body>
-</html> 
+</html>
