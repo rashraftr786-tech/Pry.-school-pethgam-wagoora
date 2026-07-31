@@ -17,21 +17,21 @@
     .header {
       background: var(--navy);
       color: white;
-      padding: 15px 5%;
+      padding: 12px 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     .dashboard-logo { 
-      width: 50px; 
-      height: 50px; 
+      width: 45px; 
+      height: 45px; 
       background: white; 
       border-radius: 50%; 
       object-fit: cover;
       border: 2px solid var(--gold);
     }
-    .header h1 { font-size: 1.4rem; margin: 0; flex-grow: 1; text-align: center; }
+    .header h1 { font-size: 1.3rem; margin: 0; flex-grow: 1; text-align: center; }
     nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: bold; font-size: 0.9rem; }
 
     .container { max-width: 950px; margin: 20px auto; padding: 0 20px; }
@@ -41,53 +41,56 @@
 
     .form-section-title {
       grid-column: 1 / -1;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--navy);
       font-weight: bold;
       border-bottom: 1px solid #ddd;
-      padding-bottom: 4px;
-      margin-top: 10px;
+      padding-bottom: 3px;
+      margin-top: 5px;
     }
 
-    label { font-weight: bold; font-size: 0.85rem; display: block; margin-top: 5px; margin-bottom: 4px; color: #444; }
-    select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; box-sizing: border-box; }
+    label { font-weight: bold; font-size: 0.82rem; display: block; margin-top: 4px; margin-bottom: 3px; color: #444; }
+    select, input { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; box-sizing: border-box; }
 
-    /* --- Bonafide Certificate (A4 Sheet Preview with Page Border) --- */
+    /* --- Bonafide Certificate (Strict Single A4 Sheet Fitting) --- */
     .certificate-preview {
       display: none; 
-      width: 210mm; /* A4 Width */
-      min-height: 297mm; /* A4 Height */
+      width: 210mm;
+      height: 297mm; /* Fixed A4 Height */
+      max-height: 297mm;
       margin: 20px auto;
-      padding: 18mm 20mm;
+      padding: 12mm 15mm;
       box-sizing: border-box;
-      /* Page Frame Borders */
+      /* Double Page Frame Border */
       border: 2px solid #000;
       outline: 1px solid #000;
-      outline-offset: -6px;
+      outline-offset: -5px;
       background: white;
       position: relative;
       color: #000;
       font-family: 'Times New Roman', Times, serif;
+      overflow: hidden; /* Prevents vertical bleed */
     }
 
     .cert-header { text-align: center; }
-    .cert-header h3 { margin: 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
-    .cert-header h4 { margin: 6px 0 0 0; font-size: 0.8rem; font-weight: bold; line-height: 1.2; text-transform: uppercase; }
+    .cert-header h3 { margin: 0; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cert-header h4 { margin: 4px 0 0 0; font-size: 0.75rem; font-weight: bold; line-height: 1.2; text-transform: uppercase; }
 
     /* Photo Box Style */
     .photo-box {
-      width: 130px;
-      height: 160px;
+      width: 125px;
+      height: 150px;
       border: 1px solid #000;
       text-align: center;
-      font-size: 0.72rem;
-      padding: 6px;
+      font-size: 0.68rem;
+      padding: 4px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       background-color: #fdfdfd;
+      flex-shrink: 0;
     }
 
     .photo-box img {
@@ -99,31 +102,46 @@
 
     .underline-field {
       border-bottom: 1px dotted #000;
-      padding: 0 8px;
+      padding: 0 5px;
       font-weight: bold;
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .actions { text-align: center; margin-top: 25px; }
-    button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+    .actions { text-align: center; margin-top: 20px; }
+    button { padding: 10px 22px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
     #generateBtn { background: var(--navy); color: white; }
     #printBtn { background: #1a5d1a; color: white; display: none; }
 
-    /* --- Printing Logic for Exact A4 Output with Page Border --- */
+    /* --- Strict Printing Logic for Exact Single Page A4 Output --- */
     @media print {
-      @page { size: A4 portrait; margin: 0; }
-      body { background: white; margin: 0; padding: 0; }
+      @page { 
+        size: A4 portrait; 
+        margin: 0; 
+      }
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: white;
+      }
       .no-print { display: none !important; }
       .certificate-preview { 
         display: block !important; 
         border: 2px solid #000 !important;
         outline: 1px solid #000 !important;
-        outline-offset: -6px !important;
-        margin: 0 auto; 
-        width: 210mm;
-        height: 297mm;
-        box-shadow: none;
-        padding: 15mm 18mm;
+        outline-offset: -5px !important;
+        margin: 0 auto !important; 
+        width: 210mm !important;
+        height: 297mm !important;
+        max-height: 297mm !important;
+        box-shadow: none !important;
+        padding: 10mm 14mm !important;
+        box-sizing: border-box !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
       }
       * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
     }
@@ -150,7 +168,7 @@
 
   <section class="inputs" id="inputSection">
     <h2>2. Certificate Parameters</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
       
       <!-- Institute Info Section -->
       <div class="form-section-title">Institutional Information</div>
@@ -222,7 +240,7 @@
       </div>
     </div>
 
-    <div style="margin-top: 15px;">
+    <div style="margin-top: 12px;">
       <label>Upload Student Photograph (Optional):</label>
       <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
     </div>
@@ -234,7 +252,7 @@
   </section>
 </div>
 
-<!-- OFFICIAL BONAFIDE CERTIFICATE PREVIEW -->
+<!-- OFFICIAL BONAFIDE CERTIFICATE PREVIEW (EXACT SINGLE A4 PAGE) -->
 <div class="certificate-preview" id="certificate">
   <div class="cert-content">
     <div class="cert-header">
@@ -242,11 +260,11 @@
       <h4>BONAFIDE CERTIFICATE FROM THE HEAD OF THE INSTITUTION</h4>
     </div>
 
-    <hr style="border: none; border-top: 1px dotted #000; margin: 15px 0 20px 0;">
+    <hr style="border: none; border-top: 1px dotted #000; margin: 10px 0 15px 0;">
 
     <!-- Institute Details & Photo Frame -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
-      <div style="flex: 1; font-size: 1.05rem; line-height: 2.3;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+      <div style="flex: 1; font-size: 1rem; line-height: 2.1;">
         <div>Name of Institute: <span id="p_instName" class="underline-field"></span></div>
         <div>Email Id of institute: <span id="p_instEmail" class="underline-field"></span></div>
         <div>Contact No. of Institute: <span id="p_instContact" class="underline-field"></span></div>
@@ -262,8 +280,8 @@
     </div>
 
     <!-- Main Content Paragraphs -->
-    <div style="font-size: 1.1rem; line-height: 2.3; text-align: justify;">
-      <p style="margin-bottom: 15px;">
+    <div style="font-size: 1.05rem; line-height: 2.0; text-align: justify;">
+      <p style="margin-bottom: 12px;">
         It is to certify that Mr./Ms. <strong><span id="p_name" class="underline-field">________________</span></strong> 
         S/O,D/O <strong><span id="p_fname" class="underline-field">________________</span></strong> 
         R/O <strong><span id="p_address" class="underline-field">________________</span></strong> 
@@ -273,30 +291,30 @@
         during the current academic session <strong><span id="p_session1" class="underline-field">________</span></strong>.
       </p>
 
-      <p style="margin-bottom: 15px;">
+      <p style="margin-bottom: 12px;">
         It is further certified that the said student has not availed any educational assistance/scholarship through this Institute during the current academic session <strong><span id="p_session2" class="underline-field">________</span></strong> and has no dues pending as on date as per records available.
       </p>
 
-      <p style="margin-bottom: 30px;">
+      <p style="margin-bottom: 20px;">
         The institute is recognized with J&amp;K Government with recognition No. <strong><span id="p_recNo" class="underline-field">________</span></strong> dated <strong><span id="p_recDate" class="underline-field">________</span></strong>.
       </p>
     </div>
 
     <!-- Signatures and Stamp Section -->
-    <div style="margin-top: 90px; display: flex; justify-content: space-between; align-items: flex-end;">
-      <div style="text-align: center; font-weight: bold; font-size: 1rem;">
+    <div style="margin-top: 55px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="text-align: center; font-weight: bold; font-size: 0.95rem;">
         Seal of the Institution
       </div>
-      <div style="text-align: center; font-weight: bold; font-size: 1rem; line-height: 1.4;">
+      <div style="text-align: center; font-weight: bold; font-size: 0.95rem; line-height: 1.3;">
         Signature of Headmaster / Principal /<br>
         Head of the Institution / Authorized Officer
       </div>
     </div>
 
     <!-- Footer Notes -->
-    <div style="margin-top: 60px; font-size: 0.85rem; line-height: 1.6;">
+    <div style="margin-top: 35px; font-size: 0.8rem; line-height: 1.5;">
       <strong>Note: -</strong>
-      <ol style="margin: 5px 0 0 20px; padding: 0;">
+      <ol style="margin: 3px 0 0 18px; padding: 0;">
         <li>All the above fields are mandatory to fill, incomplete application will be rejected.</li>
         <li>Certificate with Cuttings and overwriting is not valid.</li>
         <li>Certificate without Dispatch No. &amp; Date of Issuance from the concerned Institute/Department is not valid and will not be accepted.</li>
@@ -428,4 +446,5 @@
 
 </body>
 </html>
-                      
+              
+            
