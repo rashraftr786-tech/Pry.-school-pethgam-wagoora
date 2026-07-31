@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Staff Statement – Add & Edit (localStorage)</title>
+    <title>Staff Statement – Add, Edit & PDF</title>
+    <!-- html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -21,25 +23,63 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             padding: 30px 25px;
         }
-        .header-row {
+
+        /* ===== HEADER ===== */
+        .statement-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #1e2a4a;
+            padding-bottom: 15px;
+        }
+        .statement-header h1 {
+            font-size: 26px;
+            color: #1e2a4a;
+            letter-spacing: 1px;
+        }
+        .statement-header .sub {
+            font-size: 16px;
+            color: #2d3748;
+            margin-top: 4px;
+        }
+        .statement-header .details {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+        .statement-header .details span {
+            background: #f0f4fa;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
-        .header-row h2 {
-            font-size: 22px;
+        .toolbar .left h2 {
+            font-size: 20px;
             color: #1e2a4a;
         }
-        .header-row h2 span {
+        .toolbar .left h2 span {
             font-weight: 400;
             font-size: 16px;
             color: #5a6a8a;
             margin-left: 8px;
         }
-        .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .toolbar .right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .btn {
             padding: 10px 22px;
             border: none;
@@ -51,6 +91,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            text-decoration: none;
         }
         .btn-primary { background: #1e2a4a; color: #fff; }
         .btn-primary:hover { background: #2c3d66; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,42,74,0.25); }
@@ -60,6 +101,8 @@
         .btn-danger:hover { background: #a93226; }
         .btn-warning { background: #e67e22; color: #fff; }
         .btn-warning:hover { background: #d35400; }
+        .btn-pdf { background: #d32f2f; color: #fff; }
+        .btn-pdf:hover { background: #b71c1c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(211,47,47,0.3); }
         .btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 5px; }
         .btn-cancel { background: #e2e8f0; color: #2d3748; }
         .btn-cancel:hover { background: #d0d8e3; }
@@ -106,6 +149,7 @@
             border-radius: 4px;
         }
         .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+
         .note-section {
             margin-top: 20px;
             padding: 12px 16px;
@@ -133,7 +177,7 @@
             border-bottom: 2px solid #cbd5e1;
         }
 
-        /* Modal */
+        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -228,33 +272,64 @@
         .toast.error { background: #c0392b; }
         .loader-row td { padding: 40px 20px; text-align: center; color: #5a6a8a; font-style: italic; }
 
+        /* ===== PRINT / PDF STYLES ===== */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; padding: 20px; }
+            .toolbar .right .btn:not(.btn-pdf) { display: none; }
+            .btn-pdf { display: none; } /* hide the PDF button itself in print */
+            .actions-cell { display: none; } /* hide action buttons in print */
+            table th:last-child, table td:last-child { display: none; } /* hide action column */
+            .no-print { display: none !important; }
+            .statement-header { border-bottom: 2px solid #000; }
+            .footer-section { border-top: 2px solid #000; }
+            .sig-box { border-bottom: 2px solid #000; }
+        }
+
         @media (max-width: 640px) {
             .container { padding: 16px; }
-            .header-row { flex-direction: column; align-items: stretch; }
-            .action-buttons { justify-content: stretch; }
-            .action-buttons .btn { flex: 1; justify-content: center; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .right { justify-content: stretch; }
+            .toolbar .right .btn { flex: 1; justify-content: center; }
             .form-grid { grid-template-columns: 1fr; }
             .modal-box { padding: 20px 16px; }
             .footer-section { flex-direction: column; gap: 8px; }
             .sig-box { border-bottom: 1px solid #dde3ed; }
+            .statement-header .details { flex-direction: column; gap: 4px; align-items: center; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="statementContainer">
 
-    <div class="header-row">
-        <h2>
-            📋 Staff Statement
-            <span id="currentDate"></span>
-        </h2>
-        <div class="action-buttons">
+    <!-- ===== HEADER ===== -->
+    <div class="statement-header">
+        <h1>📚 Government Higher Secondary School Wagoora</h1>
+        <div class="sub">(Affiliated to J&K Board of School Education)</div>
+        <div class="details">
+            <span>📍 Wagoora, District Baramulla</span>
+            <span>📅 Statement as on: <strong id="headerDate"></strong></span>
+            <span>📋 Staff Strength Statement</span>
+        </div>
+    </div>
+
+    <!-- ===== TOOLBAR ===== -->
+    <div class="toolbar">
+        <div class="left">
+            <h2>
+                👥 Staff List
+                <span id="currentDate"></span>
+            </h2>
+        </div>
+        <div class="right">
+            <button class="btn btn-pdf" id="downloadPdfBtn">⬇ Download PDF</button>
             <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
             <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
         </div>
     </div>
 
+    <!-- ===== TABLE ===== -->
     <div class="table-wrapper">
         <table>
             <thead>
@@ -270,7 +345,7 @@
                     <th style="width:120px;">Actual Place of Posting</th>
                     <th style="width:90px;">Contact No</th>
                     <th>Remarks</th>
-                    <th style="width:100px;">Actions</th>
+                    <th style="width:100px;" class="no-print">Actions</th>
                 </tr>
             </thead>
             <tbody id="staffBody">
@@ -279,6 +354,7 @@
         </table>
     </div>
 
+    <!-- ===== NOTE & FOOTER ===== -->
     <div class="note-section">
         Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
     </div>
@@ -360,8 +436,10 @@
         // ---- DOM refs ----
         const tbody = document.getElementById('staffBody');
         const dateEl = document.getElementById('currentDate');
+        const headerDate = document.getElementById('headerDate');
         const addBtn = document.getElementById('addStaffBtn');
         const refreshBtn = document.getElementById('refreshBtn');
+        const pdfBtn = document.getElementById('downloadPdfBtn');
         const modal = document.getElementById('staffModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalSubhead = document.getElementById('modalSubhead');
@@ -405,6 +483,10 @@
             return Date.now() + '-' + Math.random().toString(36).substr(2, 6);
         }
 
+        function getTodayStr() {
+            return new Date().toLocaleDateString('en-GB');
+        }
+
         // ---- localStorage CRUD ----
         function getStaffRecords() {
             try {
@@ -431,7 +513,6 @@
             const records = getStaffRecords();
             const index = records.findIndex(r => r.id === id);
             if (index === -1) return null;
-            // preserve id
             updatedData.id = id;
             records[index] = { ...records[index], ...updatedData };
             saveStaffRecords(records);
@@ -458,7 +539,6 @@
                 return;
             }
 
-            // Sort by name
             const sorted = [...records].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
             let html = '';
@@ -481,7 +561,7 @@
                         <td>${record.actualPosting || 'N.A.'}</td>
                         <td>${record.contact || '-'}</td>
                         <td>${record.remarks || ''}</td>
-                        <td>
+                        <td class="no-print">
                             <div class="actions-cell">
                                 <button class="btn btn-warning btn-sm edit-btn" data-id="${record.id}">✎ Edit</button>
                                 <button class="btn btn-danger btn-sm delete-btn" data-id="${record.id}">✕</button>
@@ -493,7 +573,7 @@
 
             tbody.innerHTML = html;
 
-            // Attach event listeners
+            // Attach event listeners (only if not printing)
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -588,7 +668,6 @@
             const docId = editDocId.value;
 
             if (docId) {
-                // Update
                 const updated = updateStaffRecord(docId, payload);
                 if (updated) {
                     showToast('✅ Staff updated successfully.', 'success');
@@ -596,7 +675,6 @@
                     showToast('Error updating record.', 'error');
                 }
             } else {
-                // Add
                 addStaffRecord(payload);
                 showToast('✅ Staff added successfully.', 'success');
             }
@@ -605,17 +683,42 @@
             renderStaff();
         }
 
-        // ---- Set date ----
-        function setDate() {
-            if (dateEl) {
-                const now = new Date();
-                dateEl.innerText = now.toLocaleDateString('en-GB');
-            }
+        // ---- PDF Download ----
+        function downloadPDF() {
+            const element = document.getElementById('statementContainer');
+            // Temporarily hide action buttons and other UI elements that should not appear in PDF
+            const actions = document.querySelectorAll('.no-print');
+            actions.forEach(el => el.style.display = 'none');
+
+            // Use html2pdf
+            const opt = {
+                margin:        [0.5, 0.5, 0.5, 0.5], // top, right, bottom, left
+                filename:     'Staff_Statement.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Re-show actions after PDF generation
+                actions.forEach(el => el.style.display = '');
+            }).catch(err => {
+                console.error('PDF generation error:', err);
+                showToast('Failed to generate PDF.', 'error');
+                actions.forEach(el => el.style.display = '');
+            });
+        }
+
+        // ---- Set dates ----
+        function setDates() {
+            const today = getTodayStr();
+            if (dateEl) dateEl.innerText = today;
+            if (headerDate) headerDate.innerText = today;
         }
 
         // ---- Init ----
         function init() {
-            setDate();
+            setDates();
             renderStaff();
 
             addBtn.addEventListener('click', () => openModal('add'));
@@ -623,6 +726,8 @@
                 renderStaff();
                 showToast('Refreshed.', 'success');
             });
+            pdfBtn.addEventListener('click', downloadPDF);
+
             cancelBtn.addEventListener('click', closeModal);
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
@@ -632,9 +737,6 @@
             });
             form.addEventListener('submit', handleFormSubmit);
         }
-
-        // Expose for debugging if needed
-        window.renderStaff = renderStaff;
 
         init();
     })();
