@@ -242,6 +242,48 @@
             background: #fff;
         }
         .form-group textarea { resize: vertical; min-height: 50px; }
+        .photo-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .photo-upload-wrapper input[type="file"] {
+            padding: 6px 10px;
+            border: 1px dashed #b0b8c9;
+            border-radius: 8px;
+            background: #f8faff;
+            cursor: pointer;
+            width: auto;
+            flex: 1;
+        }
+        .photo-preview {
+            width: 50px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #dde3ed;
+            background: #f0f2f5;
+            display: none;
+        }
+        .photo-preview.show { display: block; }
+        .photo-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn-remove-photo {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+        }
+        .btn-remove-photo.show { display: inline-block; }
+
         .modal-actions {
             display: flex;
             justify-content: flex-end;
@@ -273,18 +315,28 @@
         .loader-row td { padding: 40px 20px; text-align: center; color: #5a6a8a; font-style: italic; }
 
         /* ===== PRINT / PDF STYLES ===== */
+        /* Hide toolbar and action column when printing or generating PDF */
         @media print {
             body { background: #fff; padding: 0; }
             .container { box-shadow: none; border-radius: 0; padding: 20px; }
-            .toolbar .right .btn:not(.btn-pdf) { display: none; }
-            .btn-pdf { display: none; } /* hide the PDF button itself in print */
-            .actions-cell { display: none; } /* hide action buttons in print */
-            table th:last-child, table td:last-child { display: none; } /* hide action column */
+            .toolbar { display: none !important; }
             .no-print { display: none !important; }
+            table th:last-child, table td:last-child { display: none; } /* action column */
             .statement-header { border-bottom: 2px solid #000; }
             .footer-section { border-top: 2px solid #000; }
             .sig-box { border-bottom: 2px solid #000; }
+            .photo-cell img { max-width: 40px; max-height: 50px; }
+            table { font-size: 11px; }
+            table th { font-size: 10px; padding: 8px 5px; }
+            table td { padding: 6px 5px; }
+            .note-section { font-size: 12px; }
         }
+
+        /* Hide toolbar and actions when PDF generation is in progress */
+        .pdf-generation .toolbar { display: none !important; }
+        .pdf-generation .no-print { display: none !important; }
+        .pdf-generation table th:last-child,
+        .pdf-generation table td:last-child { display: none; }
 
         @media (max-width: 640px) {
             .container { padding: 16px; }
@@ -408,9 +460,15 @@
                     <input type="text" id="fContact" placeholder="e.g. 9876543210" />
                 </div>
                 <div class="form-group full-width">
-                    <label>Photo URL (optional)</label>
-                    <input type="url" id="fPhoto" placeholder="https://example.com/photo.jpg" />
-                    <small style="color:#5a6a8a;font-size:12px;">Paste a direct image URL. Leave blank for no photo.</small>
+                    <label>Photo <span class="required">*</span> (upload image)</label>
+                    <div class="photo-upload-wrapper">
+                        <input type="file" id="fPhotoInput" accept="image/*" />
+                        <div class="photo-actions">
+                            <img id="photoPreview" class="photo-preview" alt="Preview" />
+                            <button type="button" class="btn-remove-photo" id="removePhotoBtn">✕ Remove</button>
+                        </div>
+                    </div>
+                    <small style="color:#5a6a8a;font-size:12px;">Upload a JPG or PNG image (max 200KB recommended).</small>
                 </div>
                 <div class="form-group full-width">
                     <label>Remarks</label>
@@ -456,11 +514,14 @@
         const fDojPresent = document.getElementById('fDojPresent');
         const fActualPosting = document.getElementById('fActualPosting');
         const fContact = document.getElementById('fContact');
-        const fPhoto = document.getElementById('fPhoto');
+        const fPhotoInput = document.getElementById('fPhotoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const removePhotoBtn = document.getElementById('removePhotoBtn');
         const fRemarks = document.getElementById('fRemarks');
 
         const toast = document.getElementById('toast');
         let toastTimer = null;
+        let currentPhotoData = ''; // base64 data for preview/storage
 
         // ---- Helpers ----
         function showToast(msg, type = 'success') {
@@ -544,9 +605,12 @@
             let html = '';
             let sNo = 1;
             sorted.forEach(record => {
-                const photoHtml = record.photo ?
-                    `<img src="${record.photo}" alt="photo" />` :
-                    `<span class="no-photo">NO PHOTO</span>`;
+                let photoHtml = '';
+                if (record.photo && record.photo.startsWith('data:image')) {
+                    photoHtml = `<img src="${record.photo}" alt="photo" />`;
+                } else {
+                    photoHtml = `<span class="no-photo">NO PHOTO</span>`;
+                }
 
                 html += `
                     <tr>
@@ -573,7 +637,7 @@
 
             tbody.innerHTML = html;
 
-            // Attach event listeners (only if not printing)
+            // Attach event listeners
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -594,9 +658,18 @@
         }
 
         // ---- Modal functions ----
+        function resetPhotoUI() {
+            currentPhotoData = '';
+            photoPreview.src = '';
+            photoPreview.classList.remove('show');
+            removePhotoBtn.classList.remove('show');
+            fPhotoInput.value = '';
+        }
+
         function openModal(mode, data = null) {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            resetPhotoUI();
             if (mode === 'add') {
                 modalTitle.textContent = '➕ Add Staff Member';
                 modalSubhead.textContent = 'Fill in the details and click Save.';
@@ -616,14 +689,20 @@
                 fDojPresent.value = data.dojPresentSchool || '';
                 fActualPosting.value = data.actualPosting || '';
                 fContact.value = data.contact || '';
-                fPhoto.value = data.photo || '';
                 fRemarks.value = data.remarks || '';
+                if (data.photo && data.photo.startsWith('data:image')) {
+                    currentPhotoData = data.photo;
+                    photoPreview.src = data.photo;
+                    photoPreview.classList.add('show');
+                    removePhotoBtn.classList.add('show');
+                }
             }
         }
 
         function closeModal() {
             modal.classList.remove('active');
             document.body.style.overflow = '';
+            resetPhotoUI();
         }
 
         function openEditModal(id) {
@@ -634,6 +713,30 @@
             }
             openModal('edit', record);
         }
+
+        // ---- Photo handling ----
+        fPhotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            // Validate file size (max 200KB)
+            if (file.size > 200 * 1024) {
+                showToast('Image too large. Please keep under 200KB.', 'error');
+                fPhotoInput.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                currentPhotoData = ev.target.result;
+                photoPreview.src = currentPhotoData;
+                photoPreview.classList.add('show');
+                removePhotoBtn.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        removePhotoBtn.addEventListener('click', function() {
+            resetPhotoUI();
+        });
 
         // ---- Form Submit ----
         function handleFormSubmit(e) {
@@ -661,7 +764,7 @@
                 dojPresentSchool: fDojPresent.value || '',
                 actualPosting: fActualPosting.value.trim() || '',
                 contact: fContact.value.trim() || '',
-                photo: fPhoto.value.trim() || '',
+                photo: currentPhotoData || '', // store base64 or empty
                 remarks: fRemarks.value.trim() || '',
             };
 
@@ -686,26 +789,25 @@
         // ---- PDF Download ----
         function downloadPDF() {
             const element = document.getElementById('statementContainer');
-            // Temporarily hide action buttons and other UI elements that should not appear in PDF
-            const actions = document.querySelectorAll('.no-print');
-            actions.forEach(el => el.style.display = 'none');
 
-            // Use html2pdf
+            // Temporarily add a class to hide toolbar and action buttons
+            document.body.classList.add('pdf-generation');
+
             const opt = {
-                margin:        [0.5, 0.5, 0.5, 0.5], // top, right, bottom, left
+                margin:        [0.4, 0.4, 0.4, 0.4], // top, right, bottom, left (in inches)
                 filename:     'Staff_Statement.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
+                html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
-                // Re-show actions after PDF generation
-                actions.forEach(el => el.style.display = '');
+                // Remove the class after PDF generation
+                document.body.classList.remove('pdf-generation');
             }).catch(err => {
                 console.error('PDF generation error:', err);
                 showToast('Failed to generate PDF.', 'error');
-                actions.forEach(el => el.style.display = '');
+                document.body.classList.remove('pdf-generation');
             });
         }
 
@@ -744,3 +846,10 @@
 
 </body>
 </html>
+                
+                
+                
+                
+                
+                .        .                
+                    
