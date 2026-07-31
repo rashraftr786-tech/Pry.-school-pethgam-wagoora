@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Staff Statement - Manage</title>
+    <title>Staff Statement – Add & Edit (localStorage)</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f7fc;
@@ -18,17 +13,14 @@
             display: flex;
             justify-content: center;
         }
-
         .container {
             max-width: 1300px;
             width: 100%;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             padding: 30px 25px;
         }
-
-        /* ---- Header ---- */
         .header-row {
             display: flex;
             justify-content: space-between;
@@ -37,26 +29,17 @@
             gap: 15px;
             margin-bottom: 25px;
         }
-
         .header-row h2 {
             font-size: 22px;
             color: #1e2a4a;
-            letter-spacing: 0.5px;
         }
-
         .header-row h2 span {
             font-weight: 400;
             font-size: 16px;
             color: #5a6a8a;
             margin-left: 8px;
         }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
+        .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
         .btn {
             padding: 10px 22px;
             border: none;
@@ -68,65 +51,26 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            text-decoration: none;
         }
+        .btn-primary { background: #1e2a4a; color: #fff; }
+        .btn-primary:hover { background: #2c3d66; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,42,74,0.25); }
+        .btn-success { background: #1f8b4c; color: #fff; }
+        .btn-success:hover { background: #1a7a41; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(31,139,76,0.25); }
+        .btn-danger { background: #c0392b; color: #fff; }
+        .btn-danger:hover { background: #a93226; }
+        .btn-warning { background: #e67e22; color: #fff; }
+        .btn-warning:hover { background: #d35400; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 5px; }
+        .btn-cancel { background: #e2e8f0; color: #2d3748; }
+        .btn-cancel:hover { background: #d0d8e3; }
 
-        .btn-primary {
-            background: #1e2a4a;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #2c3d66;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(30, 42, 74, 0.25);
-        }
-
-        .btn-success {
-            background: #1f8b4c;
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #1a7a41;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(31, 139, 76, 0.25);
-        }
-
-        .btn-danger {
-            background: #c0392b;
-            color: #fff;
-        }
-        .btn-danger:hover {
-            background: #a93226;
-        }
-
-        .btn-warning {
-            background: #e67e22;
-            color: #fff;
-        }
-        .btn-warning:hover {
-            background: #d35400;
-        }
-
-        .btn-sm {
-            padding: 4px 12px;
-            font-size: 12px;
-            border-radius: 5px;
-        }
-
-        /* ---- Table ---- */
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-        }
-
+        .table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; }
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             min-width: 1100px;
         }
-
         table th {
             background: #f0f4fa;
             color: #1e2a4a;
@@ -138,29 +82,22 @@
             font-size: 12px;
             letter-spacing: 0.3px;
         }
-
         table td {
             padding: 10px 8px;
             border-bottom: 1px solid #edf2f7;
             vertical-align: middle;
             color: #2d3748;
         }
-
-        table tbody tr:hover {
-            background: #f8faff;
-        }
-
-        .staff-name {
-            font-weight: 600;
-            color: #1a2639;
-        }
-
+        table tbody tr:hover { background: #f8faff; }
+        .staff-name { font-weight: 600; color: #1a2639; }
         .photo-cell img {
             border-radius: 4px;
             border: 1px solid #dde3ed;
             background: #fafafa;
+            width: 45px;
+            height: 55px;
+            object-fit: cover;
         }
-
         .no-photo {
             font-size: 9px;
             color: #aab;
@@ -168,14 +105,7 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
-
-        .actions-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        /* ---- Note & Footer ---- */
+        .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
         .note-section {
             margin-top: 20px;
             padding: 12px 16px;
@@ -185,7 +115,6 @@
             font-size: 14px;
             color: #2d3748;
         }
-
         .footer-section {
             display: flex;
             justify-content: space-between;
@@ -195,7 +124,6 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-
         .sig-box {
             font-weight: 600;
             color: #1e2a4a;
@@ -205,23 +133,19 @@
             border-bottom: 2px solid #cbd5e1;
         }
 
-        /* ---- Modal ---- */
+        /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0,0,0,0.45);
             backdrop-filter: blur(3px);
             z-index: 999;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
+        .modal-overlay.active { display: flex; }
         .modal-box {
             background: #fff;
             border-radius: 16px;
@@ -230,62 +154,33 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 30px 32px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
             animation: fadeSlide 0.25s ease;
         }
-
         @keyframes fadeSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        .modal-box h3 {
-            font-size: 22px;
-            color: #1e2a4a;
-            margin-bottom: 6px;
-        }
-
-        .modal-box .subhead {
-            color: #5a6a8a;
-            font-size: 14px;
-            margin-bottom: 22px;
-        }
-
+        .modal-box h3 { font-size: 22px; color: #1e2a4a; margin-bottom: 6px; }
+        .modal-box .subhead { color: #5a6a8a; font-size: 14px; margin-bottom: 22px; }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px 20px;
         }
-
-        .form-grid .full-width {
-            grid-column: 1 / -1;
-        }
-
+        .form-grid .full-width { grid-column: 1 / -1; }
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-
         .form-group label {
             font-size: 13px;
             font-weight: 600;
             color: #2d3748;
         }
-
-        .form-group label .required {
-            color: #c0392b;
-            margin-left: 2px;
-        }
-
+        .form-group label .required { color: #c0392b; margin-left: 2px; }
         .form-group input,
-        .form-group select,
         .form-group textarea {
             padding: 10px 12px;
             border: 1px solid #dde3ed;
@@ -295,21 +190,14 @@
             background: #fafcff;
             font-family: inherit;
         }
-
         .form-group input:focus,
-        .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #1e2a4a;
-            box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.15);
+            box-shadow: 0 0 0 3px rgba(30,42,74,0.15);
             background: #fff;
         }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 50px;
-        }
-
+        .form-group textarea { resize: vertical; min-height: 50px; }
         .modal-actions {
             display: flex;
             justify-content: flex-end;
@@ -319,15 +207,6 @@
             border-top: 1px solid #edf2f7;
         }
 
-        .btn-cancel {
-            background: #e2e8f0;
-            color: #2d3748;
-        }
-        .btn-cancel:hover {
-            background: #d0d8e3;
-        }
-
-        /* ---- Toast ---- */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -337,222 +216,148 @@
             padding: 14px 28px;
             border-radius: 10px;
             font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             z-index: 9999;
             opacity: 0;
             transform: translateY(20px);
             transition: 0.3s ease;
             pointer-events: none;
         }
+        .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .toast.success { background: #1f8b4c; }
+        .toast.error { background: #c0392b; }
+        .loader-row td { padding: 40px 20px; text-align: center; color: #5a6a8a; font-style: italic; }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .toast.success {
-            background: #1f8b4c;
-        }
-        .toast.error {
-            background: #c0392b;
-        }
-
-        /* ---- Loader ---- */
-        .loader-row td {
-            padding: 40px 20px;
-            text-align: center;
-            color: #5a6a8a;
-            font-style: italic;
-        }
-
-        /* ---- Responsive ---- */
         @media (max-width: 640px) {
-            .container {
-                padding: 16px;
-            }
-            .header-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .action-buttons {
-                justify-content: stretch;
-            }
-            .action-buttons .btn {
-                flex: 1;
-                justify-content: center;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .modal-box {
-                padding: 20px 16px;
-            }
-            .footer-section {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .sig-box {
-                border-bottom: 1px solid #dde3ed;
-            }
+            .container { padding: 16px; }
+            .header-row { flex-direction: column; align-items: stretch; }
+            .action-buttons { justify-content: stretch; }
+            .action-buttons .btn { flex: 1; justify-content: center; }
+            .form-grid { grid-template-columns: 1fr; }
+            .modal-box { padding: 20px 16px; }
+            .footer-section { flex-direction: column; gap: 8px; }
+            .sig-box { border-bottom: 1px solid #dde3ed; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- Header -->
-        <div class="header-row">
-            <h2>
-                📋 Staff Statement
-                <span id="currentDate"></span>
-            </h2>
-            <div class="action-buttons">
-                <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
-                <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
+    <div class="header-row">
+        <h2>
+            📋 Staff Statement
+            <span id="currentDate"></span>
+        </h2>
+        <div class="action-buttons">
+            <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
+            <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:30px;">S.No</th>
+                    <th style="width:55px;">Photo</th>
+                    <th style="width:140px;">Staff Name</th>
+                    <th style="width:100px;">Designation</th>
+                    <th style="width:100px;">Qualification</th>
+                    <th style="width:100px;">Subject in P.G</th>
+                    <th style="width:85px;">Date of 1st Appointment</th>
+                    <th style="width:85px;">D.O.J (Present School)</th>
+                    <th style="width:120px;">Actual Place of Posting</th>
+                    <th style="width:90px;">Contact No</th>
+                    <th>Remarks</th>
+                    <th style="width:100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="staffBody">
+                <tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">Loading staff records…</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-section">
+        Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
+    </div>
+
+    <div class="footer-section">
+        <div class="sig-box">Dealing Assistant</div>
+        <div class="sig-box">Headmaster / Seal</div>
+    </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="staffModal">
+    <div class="modal-box">
+        <h3 id="modalTitle">Add Staff Member</h3>
+        <div class="subhead" id="modalSubhead">Fill in the details below.</div>
+
+        <form id="staffForm" autocomplete="off">
+            <input type="hidden" id="editDocId" value="" />
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Staff Name <span class="required">*</span></label>
+                    <input type="text" id="fName" placeholder="e.g. Ramesh Kumar" required />
+                </div>
+                <div class="form-group">
+                    <label>Designation <span class="required">*</span></label>
+                    <input type="text" id="fDesignation" placeholder="e.g. Teacher" required />
+                </div>
+                <div class="form-group">
+                    <label>Qualification</label>
+                    <input type="text" id="fQualification" placeholder="e.g. M.A., B.Ed" />
+                </div>
+                <div class="form-group">
+                    <label>Subject in P.G</label>
+                    <input type="text" id="fSubjectPG" placeholder="e.g. English" />
+                </div>
+                <div class="form-group">
+                    <label>Date of 1st Appointment</label>
+                    <input type="date" id="fDoFirstAppt" />
+                </div>
+                <div class="form-group">
+                    <label>D.O.J (Present School)</label>
+                    <input type="date" id="fDojPresent" />
+                </div>
+                <div class="form-group">
+                    <label>Actual Place of Posting</label>
+                    <input type="text" id="fActualPosting" placeholder="e.g. Wagoora" />
+                </div>
+                <div class="form-group">
+                    <label>Contact No</label>
+                    <input type="text" id="fContact" placeholder="e.g. 9876543210" />
+                </div>
+                <div class="form-group full-width">
+                    <label>Photo URL (optional)</label>
+                    <input type="url" id="fPhoto" placeholder="https://example.com/photo.jpg" />
+                    <small style="color:#5a6a8a;font-size:12px;">Paste a direct image URL. Leave blank for no photo.</small>
+                </div>
+                <div class="form-group full-width">
+                    <label>Remarks</label>
+                    <textarea id="fRemarks" placeholder="Any additional notes…" rows="2"></textarea>
+                </div>
             </div>
-        </div>
 
-        <!-- Table -->
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width:30px;">S.No</th>
-                        <th style="width:55px;">Photo</th>
-                        <th style="width:140px;">Staff Name</th>
-                        <th style="width:100px;">Designation</th>
-                        <th style="width:100px;">Qualification</th>
-                        <th style="width:100px;">Subject in P.G</th>
-                        <th style="width:85px;">Date of 1st Appointment</th>
-                        <th style="width:85px;">D.O.J (Present School)</th>
-                        <th style="width:120px;">Actual Place of Posting</th>
-                        <th style="width:90px;">Contact No</th>
-                        <th>Remarks</th>
-                        <th style="width:100px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="staffBody">
-                    <tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">Loading staff records…</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Note -->
-        <div class="note-section">
-            Note: Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
-        </div>
-
-        <!-- Footer -->
-        <div class="footer-section">
-            <div class="sig-box">Dealing Assistant</div>
-            <div class="sig-box">Headmaster / Seal</div>
-        </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancel" id="modalCancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-success" id="modalSubmitBtn">💾 Save Staff</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- ===== MODAL (Add / Edit) ===== -->
-    <div class="modal-overlay" id="staffModal">
-        <div class="modal-box">
-            <h3 id="modalTitle">Add Staff Member</h3>
-            <div class="subhead" id="modalSubhead">Fill in the details below.</div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
-            <form id="staffForm" autocomplete="off">
-                <!-- Hidden field for edit mode -->
-                <input type="hidden" id="editDocId" value="" />
+<script>
+    (function() {
+        'use strict';
 
-                <div class="form-grid">
-                    <!-- Name -->
-                    <div class="form-group full-width">
-                        <label>Staff Name <span class="required">*</span></label>
-                        <input type="text" id="fName" placeholder="e.g. Ramesh Kumar" required />
-                    </div>
-
-                    <!-- Designation -->
-                    <div class="form-group">
-                        <label>Designation <span class="required">*</span></label>
-                        <input type="text" id="fDesignation" placeholder="e.g. Teacher" required />
-                    </div>
-
-                    <!-- Qualification -->
-                    <div class="form-group">
-                        <label>Qualification</label>
-                        <input type="text" id="fQualification" placeholder="e.g. M.A., B.Ed" />
-                    </div>
-
-                    <!-- Subject in P.G -->
-                    <div class="form-group">
-                        <label>Subject in P.G</label>
-                        <input type="text" id="fSubjectPG" placeholder="e.g. English" />
-                    </div>
-
-                    <!-- Date of 1st Appointment -->
-                    <div class="form-group">
-                        <label>Date of 1st Appointment</label>
-                        <input type="date" id="fDoFirstAppt" />
-                    </div>
-
-                    <!-- D.O.J (Present School) -->
-                    <div class="form-group">
-                        <label>D.O.J (Present School)</label>
-                        <input type="date" id="fDojPresent" />
-                    </div>
-
-                    <!-- Actual Place of Posting -->
-                    <div class="form-group">
-                        <label>Actual Place of Posting</label>
-                        <input type="text" id="fActualPosting" placeholder="e.g. Wagoora" />
-                    </div>
-
-                    <!-- Contact No -->
-                    <div class="form-group">
-                        <label>Contact No</label>
-                        <input type="text" id="fContact" placeholder="e.g. 9876543210" />
-                    </div>
-
-                    <!-- Photo URL -->
-                    <div class="form-group full-width">
-                        <label>Photo URL (optional)</label>
-                        <input type="url" id="fPhoto" placeholder="https://example.com/photo.jpg" />
-                        <small style="color:#5a6a8a;font-size:12px;">Paste a direct image URL. Leave blank for no photo.</small>
-                    </div>
-
-                    <!-- Remarks -->
-                    <div class="form-group full-width">
-                        <label>Remarks</label>
-                        <textarea id="fRemarks" placeholder="Any additional notes…" rows="2"></textarea>
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-cancel" id="modalCancelBtn">Cancel</button>
-                    <button type="submit" class="btn btn-success" id="modalSubmitBtn">💾 Save Staff</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <!-- ============================================================ -->
-    <!-- Firebase + Logic -->
-    <script type="module">
-        // ----- Imports -----
-        import { db } from './init-firebase.js';
-        import {
-            collection,
-            getDocs,
-            query,
-            orderBy,
-            addDoc,
-            doc,
-            updateDoc,
-            deleteDoc,
-            getDoc
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // ----- DOM refs -----
+        // ---- DOM refs ----
         const tbody = document.getElementById('staffBody');
         const dateEl = document.getElementById('currentDate');
         const addBtn = document.getElementById('addStaffBtn');
@@ -565,7 +370,6 @@
         const submitBtn = document.getElementById('modalSubmitBtn');
         const cancelBtn = document.getElementById('modalCancelBtn');
 
-        // Form fields
         const fName = document.getElementById('fName');
         const fDesignation = document.getElementById('fDesignation');
         const fQualification = document.getElementById('fQualification');
@@ -580,42 +384,150 @@
         const toast = document.getElementById('toast');
         let toastTimer = null;
 
-        // ----- Helpers -----
+        // ---- Helpers ----
         function showToast(msg, type = 'success') {
             toast.textContent = msg;
             toast.className = 'toast ' + type;
-            // force reflow
             void toast.offsetWidth;
             toast.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
         function formatDate(dateStr) {
             if (!dateStr) return '-';
             const d = new Date(dateStr + 'T00:00:00');
             if (isNaN(d)) return dateStr;
-            return d.toLocaleDateString('en-GB'); // DD/MM/YYYY
+            return d.toLocaleDateString('en-GB');
         }
 
+        function generateId() {
+            return Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+        }
+
+        // ---- localStorage CRUD ----
+        function getStaffRecords() {
+            try {
+                const data = localStorage.getItem('staffRecords');
+                return data ? JSON.parse(data) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveStaffRecords(records) {
+            localStorage.setItem('staffRecords', JSON.stringify(records));
+        }
+
+        function addStaffRecord(record) {
+            const records = getStaffRecords();
+            record.id = generateId();
+            records.push(record);
+            saveStaffRecords(records);
+            return record;
+        }
+
+        function updateStaffRecord(id, updatedData) {
+            const records = getStaffRecords();
+            const index = records.findIndex(r => r.id === id);
+            if (index === -1) return null;
+            // preserve id
+            updatedData.id = id;
+            records[index] = { ...records[index], ...updatedData };
+            saveStaffRecords(records);
+            return records[index];
+        }
+
+        function deleteStaffRecord(id) {
+            let records = getStaffRecords();
+            records = records.filter(r => r.id !== id);
+            saveStaffRecords(records);
+        }
+
+        function getStaffRecord(id) {
+            const records = getStaffRecords();
+            return records.find(r => r.id === id) || null;
+        }
+
+        // ---- Render Table ----
+        function renderStaff() {
+            const records = getStaffRecords();
+            if (records.length === 0) {
+                tbody.innerHTML =
+                    `<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">📭 No staff records found.</td></tr>`;
+                return;
+            }
+
+            // Sort by name
+            const sorted = [...records].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+            let html = '';
+            let sNo = 1;
+            sorted.forEach(record => {
+                const photoHtml = record.photo ?
+                    `<img src="${record.photo}" alt="photo" />` :
+                    `<span class="no-photo">NO PHOTO</span>`;
+
+                html += `
+                    <tr>
+                        <td>${sNo++}</td>
+                        <td class="photo-cell">${photoHtml}</td>
+                        <td class="staff-name">${(record.name || '').toUpperCase()}</td>
+                        <td>${record.designation || '-'}</td>
+                        <td>${record.qualification || '-'}</td>
+                        <td>${record.subjectPG || '-'}</td>
+                        <td>${formatDate(record.doFirstAppt)}</td>
+                        <td>${formatDate(record.dojPresentSchool)}</td>
+                        <td>${record.actualPosting || 'N.A.'}</td>
+                        <td>${record.contact || '-'}</td>
+                        <td>${record.remarks || ''}</td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="btn btn-warning btn-sm edit-btn" data-id="${record.id}">✎ Edit</button>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="${record.id}">✕</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+
+            // Attach event listeners
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    openEditModal(id);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    if (confirm('Delete this staff record permanently?')) {
+                        deleteStaffRecord(id);
+                        showToast('🗑️ Staff deleted.', 'success');
+                        renderStaff();
+                    }
+                });
+            });
+        }
+
+        // ---- Modal functions ----
         function openModal(mode, data = null) {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-
             if (mode === 'add') {
                 modalTitle.textContent = '➕ Add Staff Member';
                 modalSubhead.textContent = 'Fill in the details and click Save.';
                 submitBtn.textContent = '💾 Save Staff';
                 editDocId.value = '';
                 form.reset();
-                // Set default date to today
-                // leave empty for user to pick
             } else if (mode === 'edit' && data) {
                 modalTitle.textContent = '✏️ Edit Staff Member';
                 modalSubhead.textContent = 'Update the details below.';
                 submitBtn.textContent = '🔄 Update Staff';
                 editDocId.value = data.id || '';
-
                 fName.value = data.name || '';
                 fDesignation.value = data.designation || '';
                 fQualification.value = data.qualification || '';
@@ -634,113 +546,17 @@
             document.body.style.overflow = '';
         }
 
-         // ----- Render Table -----
-        async function renderStaff() {
-            tbody.innerHTML =
-            `<tr><td colspan="12" class="loader-row">⏳ Fetching staff records…</td></tr>`;
-
-            try {
-                const staffRef = collection(db, "staffRecords");
-                const q = query(staffRef, orderBy("name", "asc"));
-                const snapshot = await getDocs(q);
-
-                if (snapshot.empty) {
-                    tbody.innerHTML =
-                        `<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">📭 No staff records found in Database.</td></tr>`;
-                    return;
-                }
-
-                let html = '';
-                let sNo = 1;
-                snapshot.forEach((docSnap) => {
-                    const d = docSnap.data();
-                    const id = docSnap.id;
-
-                    const photoHtml = d.photo ?
-                        `<img src="${d.photo}" style="width:45px;height:55px;object-fit:cover;border-radius:4px;border:1px solid #dde3ed;background:#fafafa;" alt="photo" />` :
-                        `<span class="no-photo">NO PHOTO</span>`;
-
-                    html += `
-                        <tr>
-                            <td>${sNo++}</td>
-                            <td class="photo-cell">${photoHtml}</td>
-                            <td class="staff-name">${(d.name || '').toUpperCase()}</td>
-                            <td>${d.designation || '-'}</td>
-                            <td>${d.qualification || '-'}</td>
-                            <td>${d.subjectPG || '-'}</td>
-                            <td>${formatDate(d.doFirstAppt)}</td>
-                            <td>${formatDate(d.dojPresentSchool)}</td>
-                            <td>${d.actualPosting || 'N.A.'}</td>
-                            <td>${d.contact || '-'}</td>
-                            <td>${d.remarks || ''}</td>
-                            <td>
-                                <div class="actions-cell">
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="${id}">✎ Edit</button>
-                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${id}">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                tbody.innerHTML = html;
-
-                // Attach edit / delete listeners
-                document.querySelectorAll('.edit-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const id = btn.dataset.id;
-                        await loadAndEditStaff(id);
-                    });
-                });
-
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const id = btn.dataset.id;
-                        if (confirm('Delete this staff record permanently?')) {
-                            await deleteStaff(id);
-                        }
-                    });
-                });
-
-            } catch (err) {
-                console.error('Render error:', err);
-                tbody.innerHTML =
-                    `<tr><td colspan="12" style="padding:30px;text-align:center;color:#c0392b;">⚠️ Database error. Check console.</td></tr>`;
-                showToast('Failed to load staff.', 'error');
+        function openEditModal(id) {
+            const record = getStaffRecord(id);
+            if (!record) {
+                showToast('Record not found.', 'error');
+                return;
             }
+            openModal('edit', record);
         }
 
-        // ----- Load single doc for edit -----
-        async function loadAndEditStaff(id) {
-            try {
-                const docRef = doc(db, "staffRecords", id);
-                const snap = await getDoc(docRef);
-                if (!snap.exists()) {
-                    showToast('Staff record not found.', 'error');
-                    return;
-                }
-                const data = snap.data();
-                openModal('edit', { ...data, id });
-            } catch (err) {
-                console.error('Load edit error:', err);
-                showToast('Could not load staff details.', 'error');
-            }
-        }
-
-        // ----- Delete -----
-        async function deleteStaff(id) {
-            try {
-                await deleteDoc(doc(db, "staffRecords", id));
-                showToast('🗑️ Staff deleted successfully.', 'success');
-                renderStaff();
-            } catch (err) {
-                console.error('Delete error:', err);
-                showToast('Failed to delete staff.', 'error');
-            }
-        }
-
-        // ----- Save (Add or Update) -----
-        async function handleFormSubmit(e) {
+        // ---- Form Submit ----
+        function handleFormSubmit(e) {
             e.preventDefault();
 
             const name = fName.value.trim();
@@ -749,10 +565,16 @@
                 fName.focus();
                 return;
             }
+            const designation = fDesignation.value.trim();
+            if (!designation) {
+                showToast('Designation is required.', 'error');
+                fDesignation.focus();
+                return;
+            }
 
             const payload = {
-                name: name,
-                designation: fDesignation.value.trim() || '',
+                name,
+                designation,
                 qualification: fQualification.value.trim() || '',
                 subjectPG: fSubjectPG.value.trim() || '',
                 doFirstAppt: fDoFirstAppt.value || '',
@@ -765,25 +587,25 @@
 
             const docId = editDocId.value;
 
-            try {
-                if (docId) {
-                    // UPDATE
-                    await updateDoc(doc(db, "staffRecords", docId), payload);
+            if (docId) {
+                // Update
+                const updated = updateStaffRecord(docId, payload);
+                if (updated) {
                     showToast('✅ Staff updated successfully.', 'success');
                 } else {
-                    // ADD
-                    await addDoc(collection(db, "staffRecords"), payload);
-                    showToast('✅ Staff added successfully.', 'success');
+                    showToast('Error updating record.', 'error');
                 }
-                closeModal();
-                renderStaff();
-            } catch (err) {
-                console.error('Save error:', err);
-                showToast('Failed to save staff. Check console.', 'error');
+            } else {
+                // Add
+                addStaffRecord(payload);
+                showToast('✅ Staff added successfully.', 'success');
             }
+
+            closeModal();
+            renderStaff();
         }
 
-        // ----- Set current date -----
+        // ---- Set date ----
         function setDate() {
             if (dateEl) {
                 const now = new Date();
@@ -791,43 +613,32 @@
             }
         }
 
-        // ----- Init -----
+        // ---- Init ----
         function init() {
             setDate();
             renderStaff();
 
-            // Add button
             addBtn.addEventListener('click', () => openModal('add'));
-
-            // Refresh
             refreshBtn.addEventListener('click', () => {
                 renderStaff();
                 showToast('Refreshed.', 'success');
             });
-
-            // Cancel modal
             cancelBtn.addEventListener('click', closeModal);
-
-            // Click overlay to close
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
             });
-
-            // Escape key
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
             });
-
-            // Form submit
             form.addEventListener('submit', handleFormSubmit);
         }
 
-        // Go
-        init();
-
-        // Expose render for debugging
+        // Expose for debugging if needed
         window.renderStaff = renderStaff;
-    </script>
+
+        init();
+    })();
+</script>
 
 </body>
 </html>
