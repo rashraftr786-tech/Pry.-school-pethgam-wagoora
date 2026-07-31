@@ -27,31 +27,31 @@
         /* ===== HEADER ===== */
         .statement-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #1e2a4a;
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
         .statement-header h1 {
-            font-size: 26px;
+            font-size: 24px;
             color: #1e2a4a;
             letter-spacing: 1px;
         }
         .statement-header .sub {
-            font-size: 16px;
+            font-size: 15px;
             color: #2d3748;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         .statement-header .details {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            font-size: 14px;
+            font-size: 13px;
             color: #4a5568;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .statement-header .details span {
             background: #f0f4fa;
-            padding: 4px 12px;
+            padding: 3px 12px;
             border-radius: 20px;
         }
 
@@ -62,15 +62,15 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         .toolbar .left h2 {
-            font-size: 20px;
+            font-size: 18px;
             color: #1e2a4a;
         }
         .toolbar .left h2 span {
             font-weight: 400;
-            font-size: 16px;
+            font-size: 15px;
             color: #5a6a8a;
             margin-left: 8px;
         }
@@ -103,33 +103,35 @@
         .btn-warning:hover { background: #d35400; }
         .btn-pdf { background: #d32f2f; color: #fff; }
         .btn-pdf:hover { background: #b71c1c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(211,47,47,0.3); }
-        .btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 5px; }
+        .btn-sm { padding: 4px 10px; font-size: 12px; border-radius: 5px; }
         .btn-cancel { background: #e2e8f0; color: #2d3748; }
         .btn-cancel:hover { background: #d0d8e3; }
 
         .table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; }
         table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
             font-size: 13px;
-            min-width: 1100px;
+        }
+        table th, table td {
+            padding: 7px 5px;
+            text-align: left;
+            vertical-align: middle;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            border-bottom: 1px solid #edf2f7;
         }
         table th {
             background: #f0f4fa;
             color: #1e2a4a;
             font-weight: 600;
-            padding: 12px 8px;
             border-bottom: 2px solid #dde3ed;
-            text-align: left;
-            white-space: nowrap;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.3px;
-        }
-        table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #edf2f7;
-            vertical-align: middle;
-            color: #2d3748;
+            text-transform: uppercase;
         }
         table tbody tr:hover { background: #f8faff; }
         .staff-name { font-weight: 600; color: #1a2639; }
@@ -137,33 +139,36 @@
             border-radius: 4px;
             border: 1px solid #dde3ed;
             background: #fafafa;
-            width: 45px;
-            height: 55px;
+            width: 40px;
+            height: 50px;
             object-fit: cover;
+            display: block;
+            margin: 0 auto;
         }
         .no-photo {
             font-size: 9px;
             color: #aab;
             background: #f0f2f5;
-            padding: 2px 6px;
+            padding: 2px 4px;
             border-radius: 4px;
+            display: inline-block;
         }
-        .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+        .actions-cell { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
 
         .note-section {
-            margin-top: 20px;
-            padding: 12px 16px;
+            margin-top: 18px;
+            padding: 10px 16px;
             background: #f9fafc;
             border-left: 4px solid #1e2a4a;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             color: #2d3748;
         }
         .footer-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 25px;
+            padding-top: 18px;
             border-top: 2px solid #e2e8f0;
             flex-wrap: wrap;
             gap: 15px;
@@ -314,29 +319,51 @@
         .toast.error { background: #c0392b; }
         .loader-row td { padding: 40px 20px; text-align: center; color: #5a6a8a; font-style: italic; }
 
+        /* ===== COLUMN WIDTHS (table-layout: fixed) ===== */
+        .col-sno { width: 3%; }
+        .col-photo { width: 5%; }
+        .col-name { width: 15%; }
+        .col-desig { width: 10%; }
+        .col-qual { width: 10%; }
+        .col-subject { width: 10%; }
+        .col-doappt { width: 9%; }
+        .col-doj { width: 9%; }
+        .col-posting { width: 12%; }
+        .col-contact { width: 8%; }
+        .col-remarks { width: 9%; }
+        .col-actions { width: 7%; }
+
         /* ===== PRINT / PDF STYLES ===== */
-        /* Hide toolbar and action column when printing or generating PDF */
         @media print {
-            body { background: #fff; padding: 0; }
-            .container { box-shadow: none; border-radius: 0; padding: 20px; }
+            body { background: #fff; padding: 0; margin: 0; }
+            .container { box-shadow: none; border-radius: 0; padding: 12px 15px; max-width: 100%; }
             .toolbar { display: none !important; }
             .no-print { display: none !important; }
-            table th:last-child, table td:last-child { display: none; } /* action column */
+            .col-actions { display: none !important; }
+            table th.col-actions, table td.col-actions { display: none !important; }
+
             .statement-header { border-bottom: 2px solid #000; }
             .footer-section { border-top: 2px solid #000; }
             .sig-box { border-bottom: 2px solid #000; }
-            .photo-cell img { max-width: 40px; max-height: 50px; }
-            table { font-size: 11px; }
-            table th { font-size: 10px; padding: 8px 5px; }
-            table td { padding: 6px 5px; }
-            .note-section { font-size: 12px; }
+
+            table { font-size: 10px; }
+            table th { font-size: 9px; padding: 4px 3px; }
+            table td { padding: 4px 3px; font-size: 9.5px; line-height: 1.2; }
+            .photo-cell img { width: 28px; height: 36px; }
+            .note-section { font-size: 10px; padding: 6px 10px; }
+            .sig-box { font-size: 11px; }
+            .statement-header h1 { font-size: 18px; }
+            .statement-header .sub { font-size: 12px; }
+            .statement-header .details { font-size: 10px; }
+            .statement-header .details span { padding: 2px 8px; }
         }
 
-        /* Hide toolbar and actions when PDF generation is in progress */
+        /* Hide toolbar and actions when PDF is being generated */
         .pdf-generation .toolbar { display: none !important; }
         .pdf-generation .no-print { display: none !important; }
-        .pdf-generation table th:last-child,
-        .pdf-generation table td:last-child { display: none; }
+        .pdf-generation .col-actions { display: none !important; }
+        .pdf-generation table th.col-actions,
+        .pdf-generation table td.col-actions { display: none !important; }
 
         @media (max-width: 640px) {
             .container { padding: 16px; }
@@ -384,20 +411,34 @@
     <!-- ===== TABLE ===== -->
     <div class="table-wrapper">
         <table>
+            <colgroup>
+                <col class="col-sno" />
+                <col class="col-photo" />
+                <col class="col-name" />
+                <col class="col-desig" />
+                <col class="col-qual" />
+                <col class="col-subject" />
+                <col class="col-doappt" />
+                <col class="col-doj" />
+                <col class="col-posting" />
+                <col class="col-contact" />
+                <col class="col-remarks" />
+                <col class="col-actions" />
+            </colgroup>
             <thead>
                 <tr>
-                    <th style="width:30px;">S.No</th>
-                    <th style="width:55px;">Photo</th>
-                    <th style="width:140px;">Staff Name</th>
-                    <th style="width:100px;">Designation</th>
-                    <th style="width:100px;">Qualification</th>
-                    <th style="width:100px;">Subject in P.G</th>
-                    <th style="width:85px;">Date of 1st Appointment</th>
-                    <th style="width:85px;">D.O.J (Present School)</th>
-                    <th style="width:120px;">Actual Place of Posting</th>
-                    <th style="width:90px;">Contact No</th>
+                    <th>S.No</th>
+                    <th>Photo</th>
+                    <th>Staff Name</th>
+                    <th>Designation</th>
+                    <th>Qualification</th>
+                    <th>Subject in P.G</th>
+                    <th>Date of 1st Appointment</th>
+                    <th>D.O.J (Present)</th>
+                    <th>Actual Posting</th>
+                    <th>Contact No</th>
                     <th>Remarks</th>
-                    <th style="width:100px;" class="no-print">Actions</th>
+                    <th class="no-print">Actions</th>
                 </tr>
             </thead>
             <tbody id="staffBody">
@@ -521,7 +562,7 @@
 
         const toast = document.getElementById('toast');
         let toastTimer = null;
-        let currentPhotoData = ''; // base64 data for preview/storage
+        let currentPhotoData = '';
 
         // ---- Helpers ----
         function showToast(msg, type = 'success') {
@@ -637,7 +678,6 @@
 
             tbody.innerHTML = html;
 
-            // Attach event listeners
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -718,7 +758,6 @@
         fPhotoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            // Validate file size (max 200KB)
             if (file.size > 200 * 1024) {
                 showToast('Image too large. Please keep under 200KB.', 'error');
                 fPhotoInput.value = '';
@@ -764,7 +803,7 @@
                 dojPresentSchool: fDojPresent.value || '',
                 actualPosting: fActualPosting.value.trim() || '',
                 contact: fContact.value.trim() || '',
-                photo: currentPhotoData || '', // store base64 or empty
+                photo: currentPhotoData || '',
                 remarks: fRemarks.value.trim() || '',
             };
 
@@ -790,11 +829,11 @@
         function downloadPDF() {
             const element = document.getElementById('statementContainer');
 
-            // Temporarily add a class to hide toolbar and action buttons
+            // Hide toolbar & actions during PDF generation
             document.body.classList.add('pdf-generation');
 
             const opt = {
-                margin:        [0.4, 0.4, 0.4, 0.4], // top, right, bottom, left (in inches)
+                margin:        [0.3, 0.3, 0.3, 0.3], // tight margins for A4 landscape
                 filename:     'Staff_Statement.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false },
@@ -802,7 +841,6 @@
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
-                // Remove the class after PDF generation
                 document.body.classList.remove('pdf-generation');
             }).catch(err => {
                 console.error('PDF generation error:', err);
@@ -845,11 +883,4 @@
 </script>
 
 </body>
-</html>
-                
-                
-                
-                
-                
-                .        .                
-                    
+</html> 
