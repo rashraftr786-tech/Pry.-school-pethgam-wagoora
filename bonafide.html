@@ -34,15 +34,25 @@
     .header h1 { font-size: 1.4rem; margin: 0; flex-grow: 1; text-align: center; }
     nav a { color: white; text-decoration: none; margin-left: 15px; font-weight: bold; font-size: 0.9rem; }
 
-    .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
+    .container { max-width: 950px; margin: 20px auto; padding: 0 20px; }
 
     section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     h2 { color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 5px; margin-top: 0; }
 
-    label { font-weight: bold; font-size: 0.9rem; display: block; margin-top: 10px; margin-bottom: 4px; }
+    .form-section-title {
+      grid-column: 1 / -1;
+      font-size: 1rem;
+      color: var(--navy);
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+      margin-top: 10px;
+    }
+
+    label { font-weight: bold; font-size: 0.85rem; display: block; margin-top: 5px; margin-bottom: 4px; color: #444; }
     select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; box-sizing: border-box; }
 
-    /* --- Bonafide Certificate (A4 Sheet Preview) --- */
+    /* --- Bonafide Certificate (A4 Sheet Preview with Page Border) --- */
     .certificate-preview {
       display: none; 
       width: 210mm; /* A4 Width */
@@ -50,7 +60,10 @@
       margin: 20px auto;
       padding: 18mm 20mm;
       box-sizing: border-box;
-      border: 1px solid #ccc;
+      /* Page Frame Borders */
+      border: 2px solid #000;
+      outline: 1px solid #000;
+      outline-offset: -6px;
       background: white;
       position: relative;
       color: #000;
@@ -91,20 +104,22 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .actions { text-align: center; margin-top: 20px; }
+    .actions { text-align: center; margin-top: 25px; }
     button { padding: 12px 25px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
     #generateBtn { background: var(--navy); color: white; }
     #printBtn { background: #1a5d1a; color: white; display: none; }
 
-    /* --- Printing Logic for Exact A4 Output --- */
+    /* --- Printing Logic for Exact A4 Output with Page Border --- */
     @media print {
       @page { size: A4 portrait; margin: 0; }
       body { background: white; margin: 0; padding: 0; }
       .no-print { display: none !important; }
       .certificate-preview { 
         display: block !important; 
-        border: none;
-        margin: 0; 
+        border: 2px solid #000 !important;
+        outline: 1px solid #000 !important;
+        outline-offset: -6px !important;
+        margin: 0 auto; 
         width: 210mm;
         height: 297mm;
         box-shadow: none;
@@ -129,13 +144,16 @@
   <section class="search-area">
     <h2>1. Select Student</h2>
     <select id="studentSelect" onchange="loadStudentData()">
-        <option value="">-- Click to Select Student --</option>
+        <option value="">-- Click to Select Student or Manual Entry --</option>
     </select>
   </section>
 
-  <section class="inputs" id="inputSection" style="display: none;">
+  <section class="inputs" id="inputSection">
     <h2>2. Certificate Parameters</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      
+      <!-- Institute Info Section -->
+      <div class="form-section-title">Institutional Information</div>
       <div>
         <label>Institute Name:</label>
         <input id="instName" value="GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA">
@@ -149,7 +167,7 @@
         <input id="instContact" value="9596449881">
       </div>
       <div>
-        <label>Dispatch No:</label>
+        <label>Dispatch / Reference No:</label>
         <input id="refNo" placeholder="e.g. GPS/PW/2026/14">
       </div>
       <div>
@@ -160,14 +178,40 @@
         <label>Academic Session:</label>
         <input id="session" value="2026">
       </div>
+
+      <!-- Student Info Section -->
+      <div class="form-section-title">Student Information</div>
+      <div>
+        <label>Student Name (Mr./Ms.):</label>
+        <input id="studentName" placeholder="e.g. AMINA BASHIR">
+      </div>
+      <div>
+        <label>Father's / Parent's Name (S/O, D/O):</label>
+        <input id="fatherName" placeholder="e.g. BASHIR AHMAD MALLA">
+      </div>
       <div>
         <label>Residence (R/O):</label>
         <input id="residence" placeholder="e.g. WAGOORA">
       </div>
       <div>
+        <label>Class:</label>
+        <input id="studentClass" placeholder="e.g. 2nd Primary">
+      </div>
+      <div>
+        <label>Semester (If applicable):</label>
+        <input id="semester" placeholder="e.g. N/A or 1st">
+      </div>
+      <div>
         <label>Stream / Section:</label>
         <input id="stream" placeholder="e.g. General / N/A" value="N/A">
       </div>
+      <div>
+        <label>Class Roll No. / Enrollment No.:</label>
+        <input id="rollNo" placeholder="e.g. 01">
+      </div>
+
+      <!-- Recognition Info Section -->
+      <div class="form-section-title">Recognition Details</div>
       <div>
         <label>Recognition No:</label>
         <input id="recNo" value="NIL">
@@ -239,7 +283,7 @@
     </div>
 
     <!-- Signatures and Stamp Section -->
-    <div style="margin-top: 100px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div style="margin-top: 90px; display: flex; justify-content: space-between; align-items: flex-end;">
       <div style="text-align: center; font-weight: bold; font-size: 1rem;">
         Seal of the Institution
       </div>
@@ -250,7 +294,7 @@
     </div>
 
     <!-- Footer Notes -->
-    <div style="margin-top: 70px; font-size: 0.85rem; line-height: 1.6;">
+    <div style="margin-top: 60px; font-size: 0.85rem; line-height: 1.6;">
       <strong>Note: -</strong>
       <ol style="margin: 5px 0 0 20px; padding: 0;">
         <li>All the above fields are mandatory to fill, incomplete application will be rejected.</li>
@@ -288,11 +332,10 @@
           });
       } catch (error) {
           console.error("Error loading students:", error);
-          alert("Could not load student list from cloud.");
       }
   };
 
-  // 3. Load Selected Student Data
+  // 3. Load Selected Student Data into Form Inputs
   window.loadStudentData = function() {
       const admNo = document.getElementById('studentSelect').value;
       if (!admNo) return;
@@ -300,12 +343,14 @@
       selectedStudent = students.find(s => s.admNo == admNo);
       
       if (selectedStudent) {
-          document.getElementById('inputSection').style.display = "block";
           const year = new Date().getFullYear();
           document.getElementById('refNo').value = `GPS/PW/${year}/${selectedStudent.admNo}`;
-          if (selectedStudent.address || selectedStudent.rO) {
-            document.getElementById('residence').value = selectedStudent.address || selectedStudent.rO;
-          }
+          document.getElementById('studentName').value = selectedStudent.studentName || '';
+          document.getElementById('fatherName').value = selectedStudent.fatherName || '';
+          document.getElementById('residence').value = selectedStudent.address || selectedStudent.rO || '';
+          document.getElementById('studentClass').value = selectedStudent.studentClass || selectedStudent.class || '';
+          document.getElementById('semester').value = selectedStudent.semester || 'N/A';
+          document.getElementById('rollNo').value = selectedStudent.rollNo || selectedStudent.admNo || '';
       }
   };
 
@@ -334,24 +379,22 @@
     return dateStr;
   }
 
-  // 5. Generate and Render Certificate Record
+  // 5. Generate and Render Certificate Record from Input Values
   window.generateCertificate = async function() {
-    if (!selectedStudent) return;
-
-    // Institute Info
+    // Read all values directly from form inputs
     document.getElementById('p_instName').innerText = document.getElementById('instName').value.toUpperCase();
     document.getElementById('p_instEmail').innerText = document.getElementById('instEmail').value;
     document.getElementById('p_instContact').innerText = document.getElementById('instContact').value;
     document.getElementById('p_ref').innerText = document.getElementById('refNo').value;
     document.getElementById('p_date').innerText = formatDateString(document.getElementById('date').value);
 
-    // Student Info
-    document.getElementById('p_name').innerText = selectedStudent.studentName.toUpperCase();
-    document.getElementById('p_fname').innerText = selectedStudent.fatherName ? selectedStudent.fatherName.toUpperCase() : '';
+    document.getElementById('p_name').innerText = document.getElementById('studentName').value.toUpperCase();
+    document.getElementById('p_fname').innerText = document.getElementById('fatherName').value.toUpperCase();
     document.getElementById('p_address').innerText = document.getElementById('residence').value.toUpperCase();
-    document.getElementById('p_class').innerText = selectedStudent.studentClass || '';
+    document.getElementById('p_class').innerText = document.getElementById('studentClass').value;
+    document.getElementById('p_semester').innerText = document.getElementById('semester').value;
     document.getElementById('p_stream').innerText = document.getElementById('stream').value;
-    document.getElementById('p_adm').innerText = selectedStudent.admNo || '';
+    document.getElementById('p_adm').innerText = document.getElementById('rollNo').value;
     
     const currentSession = document.getElementById('session').value;
     document.getElementById('p_session1').innerText = currentSession;
@@ -368,10 +411,10 @@
     // Save Log to Firebase
     try {
         const refNo = document.getElementById('refNo').value;
-        const certId = refNo.replace(/\//g, "_");
+        const certId = refNo.replace(/\//g, "_") || `CERT_${Date.now()}`;
         await setDoc(doc(db, "issued_certificates", certId), {
-            studentName: selectedStudent.studentName,
-            admNo: selectedStudent.admNo,
+            studentName: document.getElementById('studentName').value,
+            rollNo: document.getElementById('rollNo').value,
             refNo: refNo,
             date: document.getElementById('date').value,
             type: "Bonafide Certificate",
@@ -385,4 +428,4 @@
 
 </body>
 </html>
-                  
+                      
