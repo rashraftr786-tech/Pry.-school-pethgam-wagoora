@@ -22,6 +22,7 @@
     .btn-danger { background: #b71c1c; }
     .btn-warning { background: #f57c00; }
     .btn-approve { background: #0d47a1; }
+    .btn-add { background: #1e5a8a; }
     .status-msg { font-size: 12px; margin-left: 10px; }
     
     .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; flex-wrap: wrap; }
@@ -97,7 +98,7 @@
     <div id="pendingList"></div>
   </div>
 
-  <!-- Filter & Print -->
+  <!-- Filter, Print & Add Student -->
   <div class="filter-section no-print">
     <label><b>Class:</b></label>
     <select id="classSearch" onchange="applyFilter()">
@@ -109,6 +110,7 @@
         <option value="5th">5th Primary</option>
     </select>
     
+    <button id="addStudentBtn" class="btn-small btn-add" style="padding: 6px 18px;">➕ Add Student</button>
     <button onclick="window.print()" style="background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print Sheet</button>
     <button id="refreshBtn" style="background: #2c7a2c; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer;">⟳ Refresh</button>
   </div>
@@ -120,11 +122,11 @@
   </table>
 </div>
 
-<!-- Edit Modal -->
+<!-- Edit / Add Modal -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <span class="modal-close" id="modalClose">&times;</span>
-    <h3>Edit Student Record</h3>
+    <h3 id="modalTitle">Edit Student Record</h3>
     <form id="editForm">
       <input type="hidden" id="editDocId">
       <div class="full-width"><label>Admission No. *</label><input type="text" id="editAdmNo" required></div>
@@ -144,7 +146,7 @@
       </div>
       <div class="full-width" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
         <button type="button" id="modalCancelBtn" class="btn-small" style="background: #999;">Cancel</button>
-        <button type="submit" class="btn-small" style="background: #1a5d1a;">💾 Update</button>
+        <button type="submit" class="btn-small" style="background: #1a5d1a;" id="modalSubmitBtn">💾 Save</button>
       </div>
     </form>
   </div>
@@ -152,7 +154,7 @@
 
 <script type="module">
     import { db } from './init-firebase.js';
-    import { collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { collection, doc, getDoc, updateDoc, deleteDoc, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const storage = getStorage();
@@ -173,7 +175,7 @@
     }
     buildHeader();
 
-    // ---------- PHOTO UPLOAD ----------
+    // ---------- PHOTO UPLOAD (unchanged logic) ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -331,7 +333,7 @@
         });
     }
 
-    // ---------- RENDER MASTER TABLE (approved only) ----------
+    // ---------- RENDER MASTER TABLE ----------
     let allStudents = [];
 
     function renderMasterTable(students) {
@@ -380,7 +382,7 @@
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
                 const student = allStudents.find(s => s.admNo === id);
-                if (student) openEditModal(student);
+                if (student) openModal('edit', student);
             });
         });
         document.querySelectorAll('.delete-btn').forEach(btn => {
@@ -391,8 +393,10 @@
         });
     }
 
-    // ---------- EDIT MODAL ----------
+    // ---------- MODAL LOGIC (Add + Edit) ----------
     const editModal = document.getElementById('editModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
     const editForm = document.getElementById('editForm');
     const editDocId = document.getElementById('editDocId');
     const editAdmNo = document.getElementById('editAdmNo');
@@ -406,37 +410,59 @@
     const editPen = document.getElementById('editPen');
     const editStatus = document.getElementById('editStatus');
 
-    let currentEditId = null;
-
-    function openEditModal(student) {
-        currentEditId = student.id || student.admNo;
-        editDocId.value = currentEditId;
-        editAdmNo.value = student.admNo || '';
-        editRollNo.value = student.rollNo || '';
-        editClass.value = student.class || '';
-        editName.value = student.name || student.studentName || '';
-        editFather.value = student.fatherName || '';
-        editMother.value = student.motherName || '';
-        editDob.value = student.dob || '';
-        editApaar.value = student.apaarId || student.apaarID || '';
-        editPen.value = student.penNo || student.penNumber || '';
-        editStatus.value = student.status || 'approved';
+    function openModal(mode, student = null) {
+        editForm.reset();
+        editDocId.value = '';
+        if (mode === 'add') {
+            modalTitle.innerText = '➕ Add New Student';
+            modalSubmitBtn.innerText = '💾 Add Student';
+            // Clear all fields
+            editAdmNo.value = '';
+            editRollNo.value = '';
+            editClass.value = '';
+            editName.value = '';
+            editFather.value = '';
+            editMother.value = '';
+            editDob.value = '';
+            editApaar.value = '';
+            editPen.value = '';
+            editStatus.value = 'approved';
+        } else if (mode === 'edit' && student) {
+            modalTitle.innerText = '✏️ Edit Student Record';
+            modalSubmitBtn.innerText = '🔄 Update Student';
+            editDocId.value = student.id || student.admNo;
+            editAdmNo.value = student.admNo || '';
+            editRollNo.value = student.rollNo || '';
+            editClass.value = student.class || '';
+            editName.value = student.name || student.studentName || '';
+            editFather.value = student.fatherName || '';
+            editMother.value = student.motherName || '';
+            editDob.value = student.dob || '';
+            editApaar.value = student.apaarId || student.apaarID || '';
+            editPen.value = student.penNo || student.penNumber || '';
+            editStatus.value = student.status || 'approved';
+        }
         editModal.style.display = 'block';
     }
 
-    function closeEditModal() {
+    function closeModal() {
         editModal.style.display = 'none';
     }
 
-    document.getElementById('modalClose').addEventListener('click', closeEditModal);
-    document.getElementById('modalCancelBtn').addEventListener('click', closeEditModal);
-    window.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal(); });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => { if (e.target === editModal) closeModal(); });
 
+    // Add Student Button
+    document.getElementById('addStudentBtn').addEventListener('click', () => {
+        openModal('add');
+    });
+
+    // Form Submit (Add or Update)
     editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const id = editDocId.value;
-        if (!id) return;
-        const updatedData = {
+        const docId = editDocId.value;
+        const payload = {
             admNo: editAdmNo.value.trim(),
             rollNo: editRollNo.value.trim(),
             class: editClass.value.trim(),
@@ -451,12 +477,31 @@
             penNumber: editPen.value.trim(),
             status: editStatus.value
         };
+
+        // Basic validation
+        if (!payload.admNo || !payload.class || !payload.name) {
+            alert('Admission No, Class, and Name are required.');
+            return;
+        }
+
         try {
-            await updateDoc(doc(db, "students", id), updatedData);
-            showToast('✅ Record updated successfully.');
-            closeEditModal();
+            if (docId) {
+                // EDIT mode
+                await updateDoc(doc(db, "students", docId), payload);
+                showToast('✅ Record updated successfully.');
+            } else {
+                // ADD mode - check if admission number already exists
+                const existing = allStudents.find(s => s.admNo === payload.admNo);
+                if (existing) {
+                    alert(`Admission No ${payload.admNo} already exists. Please use a unique number.`);
+                    return;
+                }
+                await addDoc(collection(db, "students"), payload);
+                showToast('✅ Student added successfully.');
+            }
+            closeModal();
         } catch (err) {
-            alert('Update failed: ' + err.message);
+            alert('Operation failed: ' + err.message);
         }
     });
 
@@ -512,7 +557,6 @@
     // ---------- REFRESH ----------
     document.getElementById('refreshBtn').addEventListener('click', () => {
         showToast('🔄 Refreshing data...');
-        // listener will update
     });
 
     // ---------- INIT ----------
