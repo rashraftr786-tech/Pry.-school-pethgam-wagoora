@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Master Admissions · GPS Pethgam Wagoora</title>
+  <title>Master Student Registry · GPS Pethgam Wagoora</title>
   <style>
     @page { size: A4 landscape; margin: 5mm; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; }
@@ -13,7 +13,6 @@
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    /* Photo upload section (unchanged) */
     .photo-upload-section { background: #e8f0fe; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #1a5d1a; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
     .photo-preview { display: flex; align-items: center; gap: 15px; }
     .photo-preview img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #1a5d1a; background: white; }
@@ -25,27 +24,21 @@
     .btn-approve { background: #0d47a1; }
     .status-msg { font-size: 12px; margin-left: 10px; }
     
-    /* Filter & actions */
     .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; flex-wrap: wrap; }
     .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
 
-    /* Pending approvals box */
     .pending-box { background: #fff8e1; border: 2px solid #f57c00; border-radius: 8px; padding: 12px; margin-bottom: 20px; }
     .pending-box h3 { margin: 0 0 10px 0; color: #e65100; display: flex; gap: 10px; align-items: center; }
     .pending-box .pending-item { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border-bottom: 1px solid #ffcc80; padding: 8px 0; }
     .pending-box .pending-item:last-child { border-bottom: none; }
     .pending-box .pending-item strong { min-width: 120px; }
 
-    /* Master table */
-    table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1600px; }
-    th, td { border: 1px solid #444; padding: 2px; text-align: center; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; }
+    th, td { border: 1px solid #444; padding: 6px 4px; text-align: center; }
     th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; white-space: nowrap; }
-    .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; color: #000; }
-    .summary-col { background: #fffde7; font-weight: bold; color: #000; }
-    .sub-total { background: #eeeeee; font-weight: bold; color: #000; }
-    .action-btn { padding: 2px 8px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; font-size: 10px; }
+    .student-info { text-align: left; font-weight: 500; padding-left: 8px; }
+    .action-btn { padding: 2px 8px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
 
-    /* Edit Modal */
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.5); }
     .modal-content { background: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; position: relative; }
     .modal-close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -58,7 +51,7 @@
     @media print {
       .nav-header, .filter-section, .photo-upload-section, .no-print, .pending-box, .action-btn { display: none !important; }
       body { background: white; padding: 0; }
-      table { font-size: 5.5px; min-width: 100%; }
+      table { font-size: 10px; min-width: 100%; }
       th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
     }
   </style>
@@ -77,9 +70,9 @@
 <div class="master-container">
 
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
-  <div class="sub-title">Master Admissions · Consolidated Record</div>
+  <div class="sub-title">Master Student Registry – Single Source of Truth</div>
 
-  <!-- Photo Upload Section (unchanged) -->
+  <!-- Photo Upload Section -->
   <div class="photo-upload-section no-print">
     <div class="photo-preview">
       <img id="previewPhoto" src="https://via.placeholder.com/80?text=No+Photo" alt="Student Photo">
@@ -106,14 +99,8 @@
 
   <!-- Filter & Print -->
   <div class="filter-section no-print">
-    <label><b>Session:</b></label>
-    <select id="sessionSearch" onchange="renderMasterTable()">
-        <option value="Oct 2025">Oct 2025</option>
-        <option value="Oct 2024">Oct 2024</option>
-    </select>
-    
     <label><b>Class:</b></label>
-    <select id="classSearch" onchange="renderMasterTable()">
+    <select id="classSearch" onchange="applyFilter()">
         <option value="All">All Classes</option>
         <option value="1st">1st Primary</option>
         <option value="2nd">2nd Primary</option>
@@ -137,13 +124,13 @@
 <div id="editModal" class="modal">
   <div class="modal-content">
     <span class="modal-close" id="modalClose">&times;</span>
-    <h3>Edit Admission Record</h3>
+    <h3>Edit Student Record</h3>
     <form id="editForm">
       <input type="hidden" id="editDocId">
-      <div class="full-width"><label>Admission No.</label><input type="text" id="editAdmNo" required></div>
+      <div class="full-width"><label>Admission No. *</label><input type="text" id="editAdmNo" required></div>
       <div><label>Roll No.</label><input type="text" id="editRollNo"></div>
-      <div><label>Class</label><input type="text" id="editClass" required></div>
-      <div class="full-width"><label>Student Name</label><input type="text" id="editName" required></div>
+      <div><label>Class *</label><input type="text" id="editClass" required></div>
+      <div class="full-width"><label>Student Name *</label><input type="text" id="editName" required></div>
       <div class="full-width"><label>Father's Name</label><input type="text" id="editFather"></div>
       <div><label>Mother's Name</label><input type="text" id="editMother"></div>
       <div><label>Date of Birth</label><input type="date" id="editDob"></div>
@@ -163,19 +150,15 @@
   </div>
 </div>
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
     import { db } from './init-firebase.js';
-    import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, onSnapshot, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-    import { calculateGrades } from './results-handler.js';
 
     const storage = getStorage();
-    const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
-    const displaySubjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 
     // ---------- ROLE CHECK ----------
-    const userRole = localStorage.getItem('userRole') || 'admin';  // 'admin' or 'teacher'
+    const userRole = localStorage.getItem('userRole') || 'admin';
     const isAdmin = (userRole === 'admin');
     document.getElementById('userRoleDisplay').innerText = isAdmin ? 'Admin' : 'Teacher';
 
@@ -184,18 +167,13 @@
         const thead = document.getElementById('masterTableHead');
         let headerRow = '<tr>';
         headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father\'s Name</th><th>Mother\'s Name</th><th>D.O.B</th><th>APAAR ID</th><th>PEN No</th>';
-        for (let i = 0; i < subjects.length; i++) {
-            const subName = displaySubjects[i];
-            headerRow += `<th>${subName} F1</th><th>${subName} F2</th><th>${subName} F3</th><th>${subName} F4</th><th>${subName} F5</th><th>${subName} F6</th><th>${subName} CC</th><th>${subName} SA</th><th>${subName} T</th>`;
-        }
-        headerRow += '<th>Grand Total</th><th>%age</th><th>Grade Points</th><th>Grade</th><th>Result</th>';
         if (isAdmin) headerRow += '<th class="no-print">Actions</th>';
         headerRow += '</tr>';
         thead.innerHTML = headerRow;
     }
     buildHeader();
 
-    // ---------- PHOTO UPLOAD (unchanged) ----------
+    // ---------- PHOTO UPLOAD ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -295,7 +273,7 @@
     photoFileInput.addEventListener('change', onFileSelected);
     uploadPhotoBtn.addEventListener('click', uploadPhoto);
 
-    // ---------- PENDING APPROVALS (HOI only) ----------
+    // ---------- PENDING APPROVALS ----------
     const pendingBox = document.getElementById('pendingBox');
     const pendingList = document.getElementById('pendingList');
     const pendingCount = document.getElementById('pendingCount');
@@ -323,7 +301,6 @@
             pendingList.appendChild(div);
         });
 
-        // Approve button
         document.querySelectorAll('.approve-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const id = btn.dataset.id;
@@ -339,7 +316,6 @@
             });
         });
 
-        // Delete pending (admin only)
         document.querySelectorAll('.delete-pending-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const id = btn.dataset.id;
@@ -355,86 +331,64 @@
         });
     }
 
-    // ---------- MASTER TABLE RENDER (approved only) ----------
-    async function renderMasterTable(studentsData) {
+    // ---------- RENDER MASTER TABLE (approved only) ----------
+    let allStudents = [];
+
+    function renderMasterTable(students) {
         const selectedClass = document.getElementById('classSearch').value;
-        const selectedSession = document.getElementById('sessionSearch').value;
         const tbody = document.getElementById('masterBody');
-        tbody.innerHTML = "<tr><td colspan='60'>Loading...<\/td><\/tr>";
+        tbody.innerHTML = "";
 
-        try {
-            // If studentsData not passed, fetch from Firestore
-            let students = studentsData;
-            if (!students) {
-                const snapshot = await getDocs(collection(db, "students"));
-                students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            }
-            // Only approved
-            students = students.filter(s => s.status === 'approved' || !s.status); // if status missing treat as approved
+        const approved = students.filter(s => s.status === 'approved' || !s.status);
+        const filtered = selectedClass === "All" ? approved : approved.filter(s => (s.class || '') === selectedClass);
 
-            // Fetch results
-            const resultSnap = await getDocs(collection(db, "results"));
-            const resultsData = resultSnap.docs.map(doc => doc.data());
-
-            tbody.innerHTML = "";
-            let foundAny = false;
-            for (const s of students) {
-                const studentClass = s.class || s.studentClass || '';
-                if (selectedClass !== "All" && studentClass !== selectedClass) continue;
-
-                const r = resultsData.find(res => res.admNo === s.admNo && res.session === selectedSession);
-                if (!r) continue;
-
-                foundAny = true;
-                let grandTotal = 0;
-                let subCells = "";
-                for (let idx = 0; idx < subjects.length; idx++) {
-                    const subKey = subjects[idx];
-                    const m = (r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
-                    const fa = m.fa || [0,0,0,0,0,0];
-                    const faSum = fa.reduce((a, b) => a + (Number(b) || 0), 0);
-                    const cc = Number(m.cca) || 0;
-                    const sa = Number(m.sa) || 0;
-                    const subTotal = faSum + cc + sa;
-                    grandTotal += subTotal;
-                    subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
-                }
-
-                const finalResult = calculateGrades(grandTotal, 500);
-                const studentName = (s.name || s.studentName || '').toUpperCase();
-
-                let actionsHtml = '';
-                if (isAdmin) {
-                    actionsHtml = `<td class="no-print">
-                        <button class="btn-small btn-warning edit-btn" data-id="${s.admNo}">✎ Edit</button>
-                        <button class="btn-small btn-danger delete-btn" data-id="${s.admNo}">✕</button>
-                    </td>`;
-                }
-
-                tbody.innerHTML += `<tr>
-                    <td>${s.admNo || ''}</td>
-                    <td>${s.rollNo || '-'}</td>
-                    <td>${studentClass}</td>
-                    <td class="student-info">${studentName}</td>
-                    <td class="student-info">${s.fatherName || ''}</td>
-                    <td>${s.motherName || ''}</td>
-                    <td>${s.dob || ''}</td>
-                    <td>${s.apaarId || s.apaarID || '-'}</td>
-                    <td>${s.penNo || s.penNumber || '-'}</td>
-                    ${subCells}
-                    <td class="summary-col">${grandTotal}</td>
-                    <td class="summary-col">${finalResult.percentage}%</td>
-                    <td class="summary-col">-</td>
-                    <td class="summary-col">${finalResult.grade}</td>
-                    <td class="summary-col">${finalResult.remarks}</td>
-                    ${actionsHtml}
-                </tr>`;
-            }
-            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class.<\/td><\/tr>";
-        } catch (error) {
-            console.error(error);
-            tbody.innerHTML = "<tr><td colspan='60'>Error loading data. Check console.<\/td><\/tr>";
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 10 : 9}">No students found.</td></tr>`;
+            return;
         }
+
+        filtered.forEach(s => {
+            const name = (s.name || s.studentName || '').toUpperCase();
+            const father = s.fatherName || '';
+            const mother = s.motherName || '';
+            const dob = s.dob || '';
+            const apaar = s.apaarId || s.apaarID || '-';
+            const pen = s.penNo || s.penNumber || '-';
+            let actions = '';
+            if (isAdmin) {
+                actions = `<td class="no-print">
+                    <button class="btn-small btn-warning edit-btn" data-id="${s.admNo}">✎ Edit</button>
+                    <button class="btn-small btn-danger delete-btn" data-id="${s.admNo}">✕</button>
+                </td>`;
+            }
+            tbody.innerHTML += `<tr>
+                <td>${s.admNo || ''}</td>
+                <td>${s.rollNo || '-'}</td>
+                <td>${s.class || ''}</td>
+                <td class="student-info">${name}</td>
+                <td class="student-info">${father}</td>
+                <td>${mother}</td>
+                <td>${dob}</td>
+                <td>${apaar}</td>
+                <td>${pen}</td>
+                ${actions}
+            </tr>`;
+        });
+
+        // Attach edit/delete events
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const student = allStudents.find(s => s.admNo === id);
+                if (student) openEditModal(student);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                deleteStudent(id);
+            });
+        });
     }
 
     // ---------- EDIT MODAL ----------
@@ -487,7 +441,7 @@
             rollNo: editRollNo.value.trim(),
             class: editClass.value.trim(),
             name: editName.value.trim(),
-            studentName: editName.value.trim(), // for compatibility
+            studentName: editName.value.trim(),
             fatherName: editFather.value.trim(),
             motherName: editMother.value.trim(),
             dob: editDob.value,
@@ -501,15 +455,14 @@
             await updateDoc(doc(db, "students", id), updatedData);
             showToast('✅ Record updated successfully.');
             closeEditModal();
-            // Refresh will happen via onSnapshot
         } catch (err) {
             alert('Update failed: ' + err.message);
         }
     });
 
-    // ---------- DELETE (Admin only) ----------
+    // ---------- DELETE ----------
     async function deleteStudent(id) {
-        if (!confirm(`Permanently delete admission record ${id}?`)) return;
+        if (!confirm(`Permanently delete student record ${id}?`)) return;
         try {
             await deleteDoc(doc(db, "students", id));
             showToast('🗑️ Record deleted.');
@@ -518,45 +471,26 @@
         }
     }
 
-    // ---------- REAL-TIME LISTENER (Firestore) ----------
-    let allStudents = [];
-
+    // ---------- REAL-TIME LISTENER ----------
     function listenToStudents() {
-        const q = query(collection(db, "students")); // we can filter later
+        const q = query(collection(db, "students"));
         onSnapshot(q, (snapshot) => {
             const students = [];
             snapshot.forEach(doc => {
                 students.push({ id: doc.id, ...doc.data() });
             });
             allStudents = students;
-            // Update pending approvals
             renderPending(students);
-            // Update master table (approved only)
             renderMasterTable(students);
-            // Attach edit/delete events after table render (delegated)
-            attachActionEvents();
         }, (error) => {
             console.error('Listener error:', error);
         });
     }
 
-    function attachActionEvents() {
-        // Edit buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                const student = allStudents.find(s => s.admNo === id);
-                if (student) openEditModal(student);
-            });
-        });
-        // Delete buttons
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                deleteStudent(id);
-            });
-        });
-    }
+    // ---------- FILTER ----------
+    window.applyFilter = function() {
+        renderMasterTable(allStudents);
+    };
 
     // ---------- TOAST ----------
     function showToast(msg) {
@@ -575,18 +509,14 @@
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // ---------- REFRESH (manual) ----------
+    // ---------- REFRESH ----------
     document.getElementById('refreshBtn').addEventListener('click', () => {
         showToast('🔄 Refreshing data...');
-        // listener will handle update
+        // listener will update
     });
 
     // ---------- INIT ----------
     listenToStudents();
-
-    // Expose renderMasterTable for filter changes
-    window.renderMasterTable = renderMasterTable;
-
 </script>
 </body>
 </html>
