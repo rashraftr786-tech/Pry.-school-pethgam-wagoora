@@ -34,26 +34,30 @@
     .pending-box .pending-item:last-child { border-bottom: none; }
     .pending-box .pending-item strong { min-width: 120px; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; }
-    th, td { border: 1px solid #444; padding: 6px 4px; text-align: center; }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1600px; }
+    th, td { border: 1px solid #444; padding: 4px 3px; text-align: center; vertical-align: middle; }
     th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; white-space: nowrap; }
-    .student-info { text-align: left; font-weight: 500; padding-left: 8px; }
-    .action-btn { padding: 2px 8px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
+    .student-info { text-align: left; font-weight: 500; padding-left: 5px; }
+    .action-btn { padding: 2px 6px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; font-size: 10px; }
+    .photo-cell img { width: 35px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
 
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.5); }
-    .modal-content { background: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; position: relative; }
+    .modal-content { background: #fefefe; margin: 3% auto; padding: 20px; border-radius: 8px; max-width: 750px; width: 95%; position: relative; }
     .modal-close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
     .modal-close:hover { color: black; }
-    .modal form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .modal form .full-width { grid-column: 1 / -1; }
-    .modal form label { font-weight: 600; font-size: 13px; }
-    .modal form input, .modal form select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+    .modal form label { font-weight: 600; font-size: 12px; }
+    .modal form input, .modal form select, .modal form textarea { padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 12px; }
+    .modal form textarea { resize: vertical; min-height: 40px; }
 
     @media print {
       .nav-header, .filter-section, .photo-upload-section, .no-print, .pending-box, .action-btn { display: none !important; }
       body { background: white; padding: 0; }
-      table { font-size: 10px; min-width: 100%; }
+      table { font-size: 8px; min-width: 100%; }
       th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+      .photo-cell img { width: 20px; height: 25px; }
     }
   </style>
 </head>
@@ -71,7 +75,7 @@
 <div class="master-container">
 
   <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
-  <div class="sub-title">Master Student Registry – Single Source of Truth</div>
+  <div class="sub-title">Master Student Registry – Complete Student Profile</div>
 
   <!-- Photo Upload Section -->
   <div class="photo-upload-section no-print">
@@ -92,13 +96,13 @@
     </div>
   </div>
 
-  <!-- Pending Approvals (HOI only) -->
+  <!-- Pending Approvals -->
   <div class="pending-box no-print" id="pendingBox" style="display: none;">
     <h3>⏳ Pending Approvals <span id="pendingCount" style="font-size:14px; background: #ff6f00; color: white; padding: 0 8px; border-radius: 12px;">0</span></h3>
     <div id="pendingList"></div>
   </div>
 
-  <!-- Filter, Print & Add Student -->
+  <!-- Filter & Actions -->
   <div class="filter-section no-print">
     <label><b>Class:</b></label>
     <select id="classSearch" onchange="applyFilter()">
@@ -111,24 +115,28 @@
     </select>
     
     <button id="addStudentBtn" class="btn-small btn-add" style="padding: 6px 18px;">➕ Add Student</button>
-    <button onclick="window.print()" style="background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print Sheet</button>
+    <button onclick="window.print()" style="background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print</button>
     <button id="refreshBtn" style="background: #2c7a2c; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer;">⟳ Refresh</button>
   </div>
 
   <!-- Master Table -->
-  <table id="masterTable">
-    <thead id="masterTableHead"></thead>
-    <tbody id="masterBody"></tbody>
-  </table>
+  <div class="table-wrapper">
+    <table id="masterTable">
+      <thead id="masterTableHead"></thead>
+      <tbody id="masterBody"></tbody>
+    </table>
+  </div>
 </div>
 
 <!-- Edit / Add Modal -->
 <div id="editModal" class="modal">
   <div class="modal-content">
     <span class="modal-close" id="modalClose">&times;</span>
-    <h3 id="modalTitle">Edit Student Record</h3>
+    <h3 id="modalTitle">Student Record</h3>
     <form id="editForm">
       <input type="hidden" id="editDocId">
+      
+      <!-- Basic Info -->
       <div class="full-width"><label>Admission No. *</label><input type="text" id="editAdmNo" required></div>
       <div><label>Roll No.</label><input type="text" id="editRollNo"></div>
       <div><label>Class *</label><input type="text" id="editClass" required></div>
@@ -136,14 +144,33 @@
       <div class="full-width"><label>Father's Name</label><input type="text" id="editFather"></div>
       <div><label>Mother's Name</label><input type="text" id="editMother"></div>
       <div><label>Date of Birth</label><input type="date" id="editDob"></div>
+      <div><label>Gender</label>
+        <select id="editGender">
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="full-width"><label>Address</label><textarea id="editAddress" rows="2"></textarea></div>
+      <div><label>Contact No.</label><input type="text" id="editContact"></div>
       <div><label>APAAR ID</label><input type="text" id="editApaar"></div>
       <div><label>PEN No.</label><input type="text" id="editPen"></div>
-      <div class="full-width"><label>Status</label>
+      
+      <!-- Admission Details -->
+      <div><label>Date of Admission</label><input type="date" id="editDateOfAdmission"></div>
+      <div><label>Class admitted in</label><input type="text" id="editClassAdmitted" placeholder="e.g. 1st"></div>
+      <div class="full-width"><label>Admitted Vide (e.g. Father's Application)</label><input type="text" id="editAdmittedVide"></div>
+      <div class="full-width"><label>DC Issued By (School)</label><input type="text" id="editDcIssuedBy" placeholder="Name of school from which TC received"></div>
+      <div><label>Date of Withdrawal</label><input type="date" id="editDateOfWithdrawal"></div>
+      <div><label>Status</label>
         <select id="editStatus">
           <option value="approved">Approved</option>
           <option value="pending">Pending</option>
+          <option value="withdrawn">Withdrawn</option>
         </select>
       </div>
+      
       <div class="full-width" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
         <button type="button" id="modalCancelBtn" class="btn-small" style="background: #999;">Cancel</button>
         <button type="submit" class="btn-small" style="background: #1a5d1a;" id="modalSubmitBtn">💾 Save</button>
@@ -159,7 +186,7 @@
 
     const storage = getStorage();
 
-    // ---------- ROLE CHECK ----------
+    // ---------- ROLE ----------
     const userRole = localStorage.getItem('userRole') || 'admin';
     const isAdmin = (userRole === 'admin');
     document.getElementById('userRoleDisplay').innerText = isAdmin ? 'Admin' : 'Teacher';
@@ -168,14 +195,17 @@
     function buildHeader() {
         const thead = document.getElementById('masterTableHead');
         let headerRow = '<tr>';
-        headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father\'s Name</th><th>Mother\'s Name</th><th>D.O.B</th><th>APAAR ID</th><th>PEN No</th>';
+        headerRow += '<th>Photo</th>';
+        headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father</th><th>Mother</th><th>DOB</th><th>Gender</th>';
+        headerRow += '<th>Address</th><th>Contact</th><th>APAAR</th><th>PEN</th>';
+        headerRow += '<th>Adm. Date</th><th>Class Adm.</th><th>Adm. Vide</th><th>DC Issued By</th><th>Withdrawal Date</th>';
         if (isAdmin) headerRow += '<th class="no-print">Actions</th>';
         headerRow += '</tr>';
         thead.innerHTML = headerRow;
     }
     buildHeader();
 
-    // ---------- PHOTO UPLOAD (unchanged logic) ----------
+    // ---------- PHOTO UPLOAD (unchanged) ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -345,17 +375,27 @@
         const filtered = selectedClass === "All" ? approved : approved.filter(s => (s.class || '') === selectedClass);
 
         if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 10 : 9}">No students found.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="${isAdmin ? 20 : 19}">No students found.</td></tr>`;
             return;
         }
 
         filtered.forEach(s => {
+            const photoHtml = s.photoURL ? `<img src="${s.photoURL}" alt="photo">` : '—';
             const name = (s.name || s.studentName || '').toUpperCase();
             const father = s.fatherName || '';
             const mother = s.motherName || '';
             const dob = s.dob || '';
+            const gender = s.gender || '';
+            const address = s.address || '';
+            const contact = s.contact || '';
             const apaar = s.apaarId || s.apaarID || '-';
             const pen = s.penNo || s.penNumber || '-';
+            const dateOfAdmission = s.dateOfAdmission || '';
+            const classAdmitted = s.classAdmitted || '';
+            const admittedVide = s.admittedVide || '';
+            const dcIssuedBy = s.dcIssuedBy || '';
+            const withdrawalDate = s.dateOfWithdrawal || '';
+
             let actions = '';
             if (isAdmin) {
                 actions = `<td class="no-print">
@@ -364,6 +404,7 @@
                 </td>`;
             }
             tbody.innerHTML += `<tr>
+                <td class="photo-cell">${photoHtml}</td>
                 <td>${s.admNo || ''}</td>
                 <td>${s.rollNo || '-'}</td>
                 <td>${s.class || ''}</td>
@@ -371,8 +412,16 @@
                 <td class="student-info">${father}</td>
                 <td>${mother}</td>
                 <td>${dob}</td>
+                <td>${gender}</td>
+                <td style="text-align:left; font-size:9px;">${address}</td>
+                <td>${contact}</td>
                 <td>${apaar}</td>
                 <td>${pen}</td>
+                <td>${dateOfAdmission}</td>
+                <td>${classAdmitted}</td>
+                <td style="font-size:9px;">${admittedVide}</td>
+                <td style="font-size:9px;">${dcIssuedBy}</td>
+                <td>${withdrawalDate}</td>
                 ${actions}
             </tr>`;
         });
@@ -393,7 +442,7 @@
         });
     }
 
-    // ---------- MODAL LOGIC (Add + Edit) ----------
+    // ---------- MODAL (Add/Edit) ----------
     const editModal = document.getElementById('editModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalSubmitBtn = document.getElementById('modalSubmitBtn');
@@ -406,8 +455,16 @@
     const editFather = document.getElementById('editFather');
     const editMother = document.getElementById('editMother');
     const editDob = document.getElementById('editDob');
+    const editGender = document.getElementById('editGender');
+    const editAddress = document.getElementById('editAddress');
+    const editContact = document.getElementById('editContact');
     const editApaar = document.getElementById('editApaar');
     const editPen = document.getElementById('editPen');
+    const editDateOfAdmission = document.getElementById('editDateOfAdmission');
+    const editClassAdmitted = document.getElementById('editClassAdmitted');
+    const editAdmittedVide = document.getElementById('editAdmittedVide');
+    const editDcIssuedBy = document.getElementById('editDcIssuedBy');
+    const editDateOfWithdrawal = document.getElementById('editDateOfWithdrawal');
     const editStatus = document.getElementById('editStatus');
 
     function openModal(mode, student = null) {
@@ -416,16 +473,8 @@
         if (mode === 'add') {
             modalTitle.innerText = '➕ Add New Student';
             modalSubmitBtn.innerText = '💾 Add Student';
-            // Clear all fields
-            editAdmNo.value = '';
-            editRollNo.value = '';
-            editClass.value = '';
-            editName.value = '';
-            editFather.value = '';
-            editMother.value = '';
-            editDob.value = '';
-            editApaar.value = '';
-            editPen.value = '';
+            // Clear all fields (reset already done)
+            // Set default status
             editStatus.value = 'approved';
         } else if (mode === 'edit' && student) {
             modalTitle.innerText = '✏️ Edit Student Record';
@@ -438,8 +487,16 @@
             editFather.value = student.fatherName || '';
             editMother.value = student.motherName || '';
             editDob.value = student.dob || '';
+            editGender.value = student.gender || '';
+            editAddress.value = student.address || '';
+            editContact.value = student.contact || '';
             editApaar.value = student.apaarId || student.apaarID || '';
             editPen.value = student.penNo || student.penNumber || '';
+            editDateOfAdmission.value = student.dateOfAdmission || '';
+            editClassAdmitted.value = student.classAdmitted || '';
+            editAdmittedVide.value = student.admittedVide || '';
+            editDcIssuedBy.value = student.dcIssuedBy || '';
+            editDateOfWithdrawal.value = student.dateOfWithdrawal || '';
             editStatus.value = student.status || 'approved';
         }
         editModal.style.display = 'block';
@@ -453,12 +510,11 @@
     document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
     window.addEventListener('click', (e) => { if (e.target === editModal) closeModal(); });
 
-    // Add Student Button
     document.getElementById('addStudentBtn').addEventListener('click', () => {
         openModal('add');
     });
 
-    // Form Submit (Add or Update)
+    // Submit
     editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const docId = editDocId.value;
@@ -471,14 +527,21 @@
             fatherName: editFather.value.trim(),
             motherName: editMother.value.trim(),
             dob: editDob.value,
+            gender: editGender.value,
+            address: editAddress.value.trim(),
+            contact: editContact.value.trim(),
             apaarId: editApaar.value.trim(),
             apaarID: editApaar.value.trim(),
             penNo: editPen.value.trim(),
             penNumber: editPen.value.trim(),
+            dateOfAdmission: editDateOfAdmission.value,
+            classAdmitted: editClassAdmitted.value.trim(),
+            admittedVide: editAdmittedVide.value.trim(),
+            dcIssuedBy: editDcIssuedBy.value.trim(),
+            dateOfWithdrawal: editDateOfWithdrawal.value,
             status: editStatus.value
         };
 
-        // Basic validation
         if (!payload.admNo || !payload.class || !payload.name) {
             alert('Admission No, Class, and Name are required.');
             return;
@@ -486,14 +549,13 @@
 
         try {
             if (docId) {
-                // EDIT mode
                 await updateDoc(doc(db, "students", docId), payload);
                 showToast('✅ Record updated successfully.');
             } else {
-                // ADD mode - check if admission number already exists
+                // Check duplicate admNo
                 const existing = allStudents.find(s => s.admNo === payload.admNo);
                 if (existing) {
-                    alert(`Admission No ${payload.admNo} already exists. Please use a unique number.`);
+                    alert(`Admission No ${payload.admNo} already exists.`);
                     return;
                 }
                 await addDoc(collection(db, "students"), payload);
