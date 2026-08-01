@@ -2,47 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Consolidated Master Record | GPS Pethgam Wagoora</title>
+  <title>Master Admissions · GPS Pethgam Wagoora</title>
   <style>
     @page { size: A4 landscape; margin: 5mm; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; }
-    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; border-radius: 4px; }
+    .nav-header { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; border-radius: 4px; flex-wrap: wrap; }
     .nav-header a { color: white; text-decoration: none; font-weight: bold; font-size: 13px; }
     
     .master-container { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; overflow-x: auto; }
     .school-title { text-align: center; color: #1a5d1a; margin: 0; text-transform: uppercase; font-size: 18px; }
     .sub-title { text-align: center; margin: 5px 0 10px 0; color: #333; font-weight: bold; font-size: 12px; }
     
-    .photo-upload-section {
-      background: #e8f0fe;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #1a5d1a;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: center;
-    }
+    /* Photo upload section (unchanged) */
+    .photo-upload-section { background: #e8f0fe; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #1a5d1a; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
     .photo-preview { display: flex; align-items: center; gap: 15px; }
     .photo-preview img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #1a5d1a; background: white; }
     .photo-upload-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .photo-upload-controls input, .photo-upload-controls button { padding: 6px 12px; }
     .btn-small { background: #2c7a2c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-danger { background: #b71c1c; }
+    .btn-warning { background: #f57c00; }
+    .btn-approve { background: #0d47a1; }
     .status-msg { font-size: 12px; margin-left: 10px; }
     
-    .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; }
+    /* Filter & actions */
+    .filter-section { display: flex; gap: 15px; justify-content: center; align-items: center; background: #e8f5e9; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #1a5d1a; flex-wrap: wrap; }
     .filter-section select, .filter-section input { padding: 5px; border-radius: 3px; border: 1px solid #ccc; font-size: 12px; }
 
+    /* Pending approvals box */
+    .pending-box { background: #fff8e1; border: 2px solid #f57c00; border-radius: 8px; padding: 12px; margin-bottom: 20px; }
+    .pending-box h3 { margin: 0 0 10px 0; color: #e65100; display: flex; gap: 10px; align-items: center; }
+    .pending-box .pending-item { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border-bottom: 1px solid #ffcc80; padding: 8px 0; }
+    .pending-box .pending-item:last-child { border-bottom: none; }
+    .pending-box .pending-item strong { min-width: 120px; }
+
+    /* Master table */
     table { width: 100%; border-collapse: collapse; font-size: 6.5px; min-width: 1600px; }
     th, td { border: 1px solid #444; padding: 2px; text-align: center; }
     th { background: #002366 !important; color: #ffffff !important; position: sticky; top: 0; z-index: 10; font-weight: bold; border: 1px solid #ffffff; white-space: nowrap; }
     .student-info { text-align: left; background: #f9f9f9; font-weight: bold; white-space: nowrap; padding-left: 5px; color: #000; }
     .summary-col { background: #fffde7; font-weight: bold; color: #000; }
     .sub-total { background: #eeeeee; font-weight: bold; color: #000; }
+    .action-btn { padding: 2px 8px; margin: 0 2px; border: none; border-radius: 3px; cursor: pointer; font-size: 10px; }
+
+    /* Edit Modal */
+    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.5); }
+    .modal-content { background: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; position: relative; }
+    .modal-close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .modal-close:hover { color: black; }
+    .modal form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal form .full-width { grid-column: 1 / -1; }
+    .modal form label { font-weight: 600; font-size: 13px; }
+    .modal form input, .modal form select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
 
     @media print {
-      .nav-header, .filter-section, .photo-upload-section, .no-print { display: none !important; }
+      .nav-header, .filter-section, .photo-upload-section, .no-print, .pending-box, .action-btn { display: none !important; }
       body { background: white; padding: 0; }
       table { font-size: 5.5px; min-width: 100%; }
       th { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; }
@@ -57,13 +71,15 @@
     <a href="upload-results.html">📤 Upload Marks</a>
     <a href="results.html">🎓 Result Search</a>
     <a href="master-profile.html">📊 Master Record</a>
+    <span style="color: white; margin-left: auto;">👤 <span id="userRoleDisplay">Admin</span></span>
 </div>
 
 <div class="master-container">
-  <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
-  <div class="sub-title">Detailed Award Roll / Consolidated Master Sheet</div>
 
-  <!-- Photo Upload Section -->
+  <h2 class="school-title">Government Primary School Pethgam Wagoora</h2>
+  <div class="sub-title">Master Admissions · Consolidated Record</div>
+
+  <!-- Photo Upload Section (unchanged) -->
   <div class="photo-upload-section no-print">
     <div class="photo-preview">
       <img id="previewPhoto" src="https://via.placeholder.com/80?text=No+Photo" alt="Student Photo">
@@ -82,6 +98,13 @@
     </div>
   </div>
 
+  <!-- Pending Approvals (HOI only) -->
+  <div class="pending-box no-print" id="pendingBox" style="display: none;">
+    <h3>⏳ Pending Approvals <span id="pendingCount" style="font-size:14px; background: #ff6f00; color: white; padding: 0 8px; border-radius: 12px;">0</span></h3>
+    <div id="pendingList"></div>
+  </div>
+
+  <!-- Filter & Print -->
   <div class="filter-section no-print">
     <label><b>Session:</b></label>
     <select id="sessionSearch" onchange="renderMasterTable()">
@@ -89,7 +112,7 @@
         <option value="Oct 2024">Oct 2024</option>
     </select>
     
-    <label style="margin-left: 10px;"><b>Class:</b></label>
+    <label><b>Class:</b></label>
     <select id="classSearch" onchange="renderMasterTable()">
         <option value="All">All Classes</option>
         <option value="1st">1st Primary</option>
@@ -99,19 +122,51 @@
         <option value="5th">5th Primary</option>
     </select>
     
-    <button onclick="window.print()" style="margin-left: 20px; background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print Sheet</button>
+    <button onclick="window.print()" style="background: #1a5d1a; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">🖨️ Print Sheet</button>
+    <button id="refreshBtn" style="background: #2c7a2c; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer;">⟳ Refresh</button>
   </div>
 
+  <!-- Master Table -->
   <table id="masterTable">
     <thead id="masterTableHead"></thead>
     <tbody id="masterBody"></tbody>
   </table>
 </div>
 
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="modalClose">&times;</span>
+    <h3>Edit Admission Record</h3>
+    <form id="editForm">
+      <input type="hidden" id="editDocId">
+      <div class="full-width"><label>Admission No.</label><input type="text" id="editAdmNo" required></div>
+      <div><label>Roll No.</label><input type="text" id="editRollNo"></div>
+      <div><label>Class</label><input type="text" id="editClass" required></div>
+      <div class="full-width"><label>Student Name</label><input type="text" id="editName" required></div>
+      <div class="full-width"><label>Father's Name</label><input type="text" id="editFather"></div>
+      <div><label>Mother's Name</label><input type="text" id="editMother"></div>
+      <div><label>Date of Birth</label><input type="date" id="editDob"></div>
+      <div><label>APAAR ID</label><input type="text" id="editApaar"></div>
+      <div><label>PEN No.</label><input type="text" id="editPen"></div>
+      <div class="full-width"><label>Status</label>
+        <select id="editStatus">
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="full-width" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+        <button type="button" id="modalCancelBtn" class="btn-small" style="background: #999;">Cancel</button>
+        <button type="submit" class="btn-small" style="background: #1a5d1a;">💾 Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script type="module">
     import { db } from './init-firebase.js';
-    import { collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { collection, getDocs, doc, getDoc, updateDoc, deleteDoc, onSnapshot, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
     import { calculateGrades } from './results-handler.js';
 
@@ -119,9 +174,14 @@
     const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
     const displaySubjects = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 
-    function buildSingleHeader() {
+    // ---------- ROLE CHECK ----------
+    const userRole = localStorage.getItem('userRole') || 'admin';  // 'admin' or 'teacher'
+    const isAdmin = (userRole === 'admin');
+    document.getElementById('userRoleDisplay').innerText = isAdmin ? 'Admin' : 'Teacher';
+
+    // ---------- BUILD HEADER ----------
+    function buildHeader() {
         const thead = document.getElementById('masterTableHead');
-        thead.innerHTML = '';
         let headerRow = '<tr>';
         headerRow += '<th>Adm No</th><th>Roll No</th><th>Class</th><th>Name</th><th>Father\'s Name</th><th>Mother\'s Name</th><th>D.O.B</th><th>APAAR ID</th><th>PEN No</th>';
         for (let i = 0; i < subjects.length; i++) {
@@ -129,12 +189,13 @@
             headerRow += `<th>${subName} F1</th><th>${subName} F2</th><th>${subName} F3</th><th>${subName} F4</th><th>${subName} F5</th><th>${subName} F6</th><th>${subName} CC</th><th>${subName} SA</th><th>${subName} T</th>`;
         }
         headerRow += '<th>Grand Total</th><th>%age</th><th>Grade Points</th><th>Grade</th><th>Result</th>';
+        if (isAdmin) headerRow += '<th class="no-print">Actions</th>';
         headerRow += '</tr>';
         thead.innerHTML = headerRow;
     }
-    buildSingleHeader();
+    buildHeader();
 
-    // ---------- PHOTO UPLOAD (FIXED) ----------
+    // ---------- PHOTO UPLOAD (unchanged) ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -150,16 +211,13 @@
 
     async function searchStudent() {
         const admNo = photoAdmNoInput.value.trim();
-        if (!admNo) {
-            photoStatus.innerText = 'Enter Admission Number';
-            return;
-        }
+        if (!admNo) { photoStatus.innerText = 'Enter Admission Number'; return; }
         photoStatus.innerText = 'Searching...';
         try {
             const studentRef = doc(db, "students", admNo);
             const studentSnap = await getDoc(studentRef);
             if (!studentSnap.exists()) {
-                photoStatus.innerText = 'Student not found. Upload results first.';
+                photoStatus.innerText = 'Student not found.';
                 previewName.innerText = 'Not found';
                 previewPhoto.src = "https://via.placeholder.com/80?text=No+Photo";
                 selectedStudentData = null;
@@ -177,18 +235,15 @@
             }
             photoStatus.innerText = 'Student found. Select photo.';
             selectPhotoBtn.disabled = false;
-            uploadPhotoBtn.disabled = true; // reset until a file is chosen
+            uploadPhotoBtn.disabled = true;
             selectedFile = null;
         } catch (err) {
             console.error(err);
-            photoStatus.innerText = 'Error searching student. Check console.';
+            photoStatus.innerText = 'Error searching student.';
         }
     }
 
-    function triggerFileSelect() {
-        photoFileInput.click();
-    }
-
+    function triggerFileSelect() { photoFileInput.click(); }
     function onFileSelected(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -219,7 +274,7 @@
             await uploadBytes(storageRef, selectedFile);
             const photoURL = await getDownloadURL(storageRef);
             const studentRef = doc(db, "students", admNo);
-            await updateDoc(studentRef, { photoURL: photoURL });
+            await updateDoc(studentRef, { photoURL });
             previewPhoto.src = photoURL;
             selectedStudentData.photoURL = photoURL;
             photoStatus.innerText = '✅ Photo uploaded successfully!';
@@ -235,28 +290,95 @@
         }
     }
 
-    // Attach event listeners safely
-    if (searchStudentBtn) searchStudentBtn.addEventListener('click', searchStudent);
-    if (selectPhotoBtn) selectPhotoBtn.addEventListener('click', triggerFileSelect);
-    if (photoFileInput) photoFileInput.addEventListener('change', onFileSelected);
-    if (uploadPhotoBtn) uploadPhotoBtn.addEventListener('click', uploadPhoto);
+    searchStudentBtn.addEventListener('click', searchStudent);
+    selectPhotoBtn.addEventListener('click', triggerFileSelect);
+    photoFileInput.addEventListener('change', onFileSelected);
+    uploadPhotoBtn.addEventListener('click', uploadPhoto);
 
-    // ---------- MASTER TABLE RENDERING ----------
-    async function renderMasterTable() {
+    // ---------- PENDING APPROVALS (HOI only) ----------
+    const pendingBox = document.getElementById('pendingBox');
+    const pendingList = document.getElementById('pendingList');
+    const pendingCount = document.getElementById('pendingCount');
+
+    function renderPending(students) {
+        const pending = students.filter(s => s.status === 'pending');
+        if (pending.length === 0) {
+            pendingBox.style.display = 'none';
+            return;
+        }
+        pendingBox.style.display = 'block';
+        pendingCount.innerText = pending.length;
+        pendingList.innerHTML = '';
+        pending.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'pending-item';
+            div.innerHTML = `
+                <strong>${s.name || s.studentName || 'No Name'}</strong>
+                <span>Adm: ${s.admNo}</span>
+                <span>Class: ${s.class}</span>
+                <span>Father: ${s.fatherName || '-'}</span>
+                <button class="btn-small btn-approve approve-btn" data-id="${s.admNo}">✅ Approve</button>
+                <button class="btn-small btn-danger delete-pending-btn" data-id="${s.admNo}">🗑️ Delete</button>
+            `;
+            pendingList.appendChild(div);
+        });
+
+        // Approve button
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const id = btn.dataset.id;
+                if (confirm(`Approve admission for ${id}?`)) {
+                    try {
+                        const ref = doc(db, "students", id);
+                        await updateDoc(ref, { status: 'approved' });
+                        showToast('✅ Approved successfully.');
+                    } catch (err) {
+                        alert('Error approving: ' + err.message);
+                    }
+                }
+            });
+        });
+
+        // Delete pending (admin only)
+        document.querySelectorAll('.delete-pending-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const id = btn.dataset.id;
+                if (confirm(`Delete pending admission ${id} permanently?`)) {
+                    try {
+                        await deleteDoc(doc(db, "students", id));
+                        showToast('🗑️ Deleted.');
+                    } catch (err) {
+                        alert('Error deleting: ' + err.message);
+                    }
+                }
+            });
+        });
+    }
+
+    // ---------- MASTER TABLE RENDER (approved only) ----------
+    async function renderMasterTable(studentsData) {
         const selectedClass = document.getElementById('classSearch').value;
         const selectedSession = document.getElementById('sessionSearch').value;
         const tbody = document.getElementById('masterBody');
-        tbody.innerHTML = "<tr><td colspan='60'>Loading...<\/td> <\/tr>";
+        tbody.innerHTML = "<tr><td colspan='60'>Loading...<\/td><\/tr>";
 
         try {
-            const studentSnap = await getDocs(collection(db, "students"));
+            // If studentsData not passed, fetch from Firestore
+            let students = studentsData;
+            if (!students) {
+                const snapshot = await getDocs(collection(db, "students"));
+                students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            }
+            // Only approved
+            students = students.filter(s => s.status === 'approved' || !s.status); // if status missing treat as approved
+
+            // Fetch results
             const resultSnap = await getDocs(collection(db, "results"));
             const resultsData = resultSnap.docs.map(doc => doc.data());
-            tbody.innerHTML = "";
 
+            tbody.innerHTML = "";
             let foundAny = false;
-            for (const docSnap of studentSnap.docs) {
-                const s = docSnap.data();
+            for (const s of students) {
                 const studentClass = s.class || s.studentClass || '';
                 if (selectedClass !== "All" && studentClass !== selectedClass) continue;
 
@@ -266,7 +388,6 @@
                 foundAny = true;
                 let grandTotal = 0;
                 let subCells = "";
-                
                 for (let idx = 0; idx < subjects.length; idx++) {
                     const subKey = subjects[idx];
                     const m = (r.marks && r.marks[subKey]) ? r.marks[subKey] : { fa: [0,0,0,0,0,0], cca: 0, sa: 0 };
@@ -276,41 +397,196 @@
                     const sa = Number(m.sa) || 0;
                     const subTotal = faSum + cc + sa;
                     grandTotal += subTotal;
-                    
-                    subCells += `<td>${fa[0]}<\/td><td>${fa[1]}<\/td><td>${fa[2]}<\/td><td>${fa[3]}<\/td><td>${fa[4]}<\/td><td>${fa[5]}<\/td><td>${cc}<\/td><td>${sa}<\/td><td class="sub-total">${subTotal}<\/td>`;
+                    subCells += `<td>${fa[0]}</td><td>${fa[1]}</td><td>${fa[2]}</td><td>${fa[3]}</td><td>${fa[4]}</td><td>${fa[5]}</td><td>${cc}</td><td>${sa}</td><td class="sub-total">${subTotal}</td>`;
                 }
 
                 const finalResult = calculateGrades(grandTotal, 500);
                 const studentName = (s.name || s.studentName || '').toUpperCase();
-                
+
+                let actionsHtml = '';
+                if (isAdmin) {
+                    actionsHtml = `<td class="no-print">
+                        <button class="btn-small btn-warning edit-btn" data-id="${s.admNo}">✎ Edit</button>
+                        <button class="btn-small btn-danger delete-btn" data-id="${s.admNo}">✕</button>
+                    </td>`;
+                }
+
                 tbody.innerHTML += `<tr>
-                    <td>${s.admNo || ''}<\/td>
-                    <td>${s.rollNo || '-'}<\/td>
-                    <td>${studentClass}<\/td>
-                    <td class="student-info">${studentName}<\/td>
-                    <td class="student-info">${s.fatherName || ''}<\/td>
-                    <td>${s.motherName || ''}<\/td>
-                    <td>${s.dob || ''}<\/td>
-                    <td>${s.apaarId || s.apaarID || '-'}<\/td>
-                    <td>${s.penNo || s.penNumber || '-'}<\/td>
+                    <td>${s.admNo || ''}</td>
+                    <td>${s.rollNo || '-'}</td>
+                    <td>${studentClass}</td>
+                    <td class="student-info">${studentName}</td>
+                    <td class="student-info">${s.fatherName || ''}</td>
+                    <td>${s.motherName || ''}</td>
+                    <td>${s.dob || ''}</td>
+                    <td>${s.apaarId || s.apaarID || '-'}</td>
+                    <td>${s.penNo || s.penNumber || '-'}</td>
                     ${subCells}
-                    <td class="summary-col">${grandTotal}<\/td>
-                    <td class="summary-col">${finalResult.percentage}%<\/td>
-                    <td class="summary-col">-<\/td>
-                    <td class="summary-col">${finalResult.grade}<\/td>
-                    <td class="summary-col">${finalResult.remarks}<\/td>
+                    <td class="summary-col">${grandTotal}</td>
+                    <td class="summary-col">${finalResult.percentage}%</td>
+                    <td class="summary-col">-</td>
+                    <td class="summary-col">${finalResult.grade}</td>
+                    <td class="summary-col">${finalResult.remarks}</td>
+                    ${actionsHtml}
                 </tr>`;
             }
-            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class. Try 'Oct 2025' if you have uploaded data.<\/td><\/tr>";
+            if (!foundAny) tbody.innerHTML = "<tr><td colspan='60'>No results found for the selected session and class.<\/td><\/tr>";
         } catch (error) {
             console.error(error);
-            tbody.innerHTML = "<tr><td colspan='60'>Error loading database. Check console.<\/td><\/tr>";
+            tbody.innerHTML = "<tr><td colspan='60'>Error loading data. Check console.<\/td><\/tr>";
         }
     }
 
+    // ---------- EDIT MODAL ----------
+    const editModal = document.getElementById('editModal');
+    const editForm = document.getElementById('editForm');
+    const editDocId = document.getElementById('editDocId');
+    const editAdmNo = document.getElementById('editAdmNo');
+    const editRollNo = document.getElementById('editRollNo');
+    const editClass = document.getElementById('editClass');
+    const editName = document.getElementById('editName');
+    const editFather = document.getElementById('editFather');
+    const editMother = document.getElementById('editMother');
+    const editDob = document.getElementById('editDob');
+    const editApaar = document.getElementById('editApaar');
+    const editPen = document.getElementById('editPen');
+    const editStatus = document.getElementById('editStatus');
+
+    let currentEditId = null;
+
+    function openEditModal(student) {
+        currentEditId = student.id || student.admNo;
+        editDocId.value = currentEditId;
+        editAdmNo.value = student.admNo || '';
+        editRollNo.value = student.rollNo || '';
+        editClass.value = student.class || '';
+        editName.value = student.name || student.studentName || '';
+        editFather.value = student.fatherName || '';
+        editMother.value = student.motherName || '';
+        editDob.value = student.dob || '';
+        editApaar.value = student.apaarId || student.apaarID || '';
+        editPen.value = student.penNo || student.penNumber || '';
+        editStatus.value = student.status || 'approved';
+        editModal.style.display = 'block';
+    }
+
+    function closeEditModal() {
+        editModal.style.display = 'none';
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeEditModal);
+    document.getElementById('modalCancelBtn').addEventListener('click', closeEditModal);
+    window.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal(); });
+
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = editDocId.value;
+        if (!id) return;
+        const updatedData = {
+            admNo: editAdmNo.value.trim(),
+            rollNo: editRollNo.value.trim(),
+            class: editClass.value.trim(),
+            name: editName.value.trim(),
+            studentName: editName.value.trim(), // for compatibility
+            fatherName: editFather.value.trim(),
+            motherName: editMother.value.trim(),
+            dob: editDob.value,
+            apaarId: editApaar.value.trim(),
+            apaarID: editApaar.value.trim(),
+            penNo: editPen.value.trim(),
+            penNumber: editPen.value.trim(),
+            status: editStatus.value
+        };
+        try {
+            await updateDoc(doc(db, "students", id), updatedData);
+            showToast('✅ Record updated successfully.');
+            closeEditModal();
+            // Refresh will happen via onSnapshot
+        } catch (err) {
+            alert('Update failed: ' + err.message);
+        }
+    });
+
+    // ---------- DELETE (Admin only) ----------
+    async function deleteStudent(id) {
+        if (!confirm(`Permanently delete admission record ${id}?`)) return;
+        try {
+            await deleteDoc(doc(db, "students", id));
+            showToast('🗑️ Record deleted.');
+        } catch (err) {
+            alert('Delete failed: ' + err.message);
+        }
+    }
+
+    // ---------- REAL-TIME LISTENER (Firestore) ----------
+    let allStudents = [];
+
+    function listenToStudents() {
+        const q = query(collection(db, "students")); // we can filter later
+        onSnapshot(q, (snapshot) => {
+            const students = [];
+            snapshot.forEach(doc => {
+                students.push({ id: doc.id, ...doc.data() });
+            });
+            allStudents = students;
+            // Update pending approvals
+            renderPending(students);
+            // Update master table (approved only)
+            renderMasterTable(students);
+            // Attach edit/delete events after table render (delegated)
+            attachActionEvents();
+        }, (error) => {
+            console.error('Listener error:', error);
+        });
+    }
+
+    function attachActionEvents() {
+        // Edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const student = allStudents.find(s => s.admNo === id);
+                if (student) openEditModal(student);
+            });
+        });
+        // Delete buttons
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                deleteStudent(id);
+            });
+        });
+    }
+
+    // ---------- TOAST ----------
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#1a5d1a';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        toast.style.zIndex = '9999';
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ---------- REFRESH (manual) ----------
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        showToast('🔄 Refreshing data...');
+        // listener will handle update
+    });
+
+    // ---------- INIT ----------
+    listenToStudents();
+
+    // Expose renderMasterTable for filter changes
     window.renderMasterTable = renderMasterTable;
-    document.addEventListener('DOMContentLoaded', renderMasterTable);
+
 </script>
 </body>
 </html>
-
