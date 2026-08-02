@@ -21,6 +21,13 @@
     </nav>
 
     <main class="p-4 max-w-7xl mx-auto">
+        <!-- Warning banner (shown only when falling back to localStorage) -->
+        <div id="fallbackBanner" class="hidden bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-4 rounded-xl mb-4 no-print">
+            <p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i> Using local storage</p>
+            <p class="text-sm">Firestore permissions are missing. Data is saved in your browser only. <br>
+            To enable cloud sync, update your Firestore security rules to allow reads/writes.</p>
+        </div>
+
         <!-- Controls -->
         <div class="bg-white p-6 rounded-3xl shadow-sm mb-6 border border-slate-200 no-print">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -31,6 +38,12 @@
                 <div class="flex gap-2 col-span-2 justify-end">
                     <button onclick="openAddModal()" class="flex-1 bg-indigo-600 text-white font-black py-3 rounded-xl shadow-md hover:bg-indigo-700 transition">
                         <i class="fas fa-plus mr-2"></i> ADD PERIOD
+                    </button>
+                    <button onclick="exportData()" class="bg-emerald-600 text-white p-3 rounded-xl" title="Export to JSON">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button onclick="importData()" class="bg-blue-600 text-white p-3 rounded-xl" title="Import from JSON">
+                        <i class="fas fa-upload"></i>
                     </button>
                     <button onclick="window.print()" class="bg-slate-800 text-white p-3 rounded-xl">
                         <i class="fas fa-print"></i>
@@ -115,17 +128,50 @@
     </div>
 
     <script type="module">
+        // -----------------------------
+        // CONFIG
+        // -----------------------------
+        const STORAGE_KEY = 'timetable_data';
+        const PERIODS = ['P1','P2','P3','P4','P5','P6','P7','P8','P9','P10'];
+
+        // -----------------------------
+        // IMPORTS
+        // -----------------------------
         import { db } from './init-firebase.js';
         import { collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const PERIODS = ['P1','P2','P3','P4','P5','P6','P7','P8','P9','P10'];
+        // -----------------------------
+        // STATE
+        // -----------------------------
+        let useFirestore = true;      // will be set to false if Firestore fails
+        let allEntries = {};          // { teacher: { P1: 'subject', ... } }
 
-        // Load and render timetable
+        // -----------------------------
+        // DOM REFS
+        // -----------------------------
+        const body = document.getElementById('timetableBody');
+        const banner = document.getElementById('fallbackBanner');
+
+        // -----------------------------
+        // HELPERS – LocalStorage
+        // -----------------------------
+        function saveToLocal(entries) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+        }
+
+        function loadFromLocal() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : {};
+        }
+
+        // -----------------------------
+        // LOAD DATA (Firestore first, fallback to local)
+        // -----------------------------
         async function loadTimetable() {
-            const body = document.getElementById('timetableBody');
             body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">Loading timetable...</td></tr>';
 
             try {
+                // Try Firestore
                 const snap = await getDocs(collection(db, 'timetables'));
                 const entries = {};
                 snap.forEach(docSnap => {
@@ -135,33 +181,51 @@
                         entries[data.teacher][data.period] = data.subject;
                     }
                 });
-
-                const teachers = Object.keys(entries).sort();
-                if (teachers.length === 0) {
-                    body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">No timetable entries yet. Add a period!</td></tr>';
-                    return;
-                }
-
-                let html = '';
-                teachers.forEach((teacher, idx) => {
-                    const row = entries[teacher];
-                    html += `<tr class="border-b border-slate-100 teacher-row" data-teacher="${teacher}">
-                        <td class="p-3 bg-slate-50 font-black text-indigo-900 border-r">${idx+1}</td>
-                        <td class="p-3 font-bold text-left border-r">${teacher}</td>`;
-                    PERIODS.forEach(p => {
-                        const subject = row[p] || '';
-                        html += `<td class="p-3 period-cell" data-period="${p}">${subject}</td>`;
-                    });
-                    html += '</tr>';
-                });
-                body.innerHTML = html;
-            } catch (e) {
-                console.error('Load error:', e);
-                body.innerHTML = `<tr><td colspan="12" class="p-8 text-red-500">Error loading data: ${e.message}</td></tr>`;
+                // Success – save to local as backup and render
+                allEntries = entries;
+                saveToLocal(entries);
+                useFirestore = true;
+                banner.classList.add('hidden');
+                renderTimetable(entries);
+            } catch (err) {
+                console.warn('Firestore read failed, using localStorage:', err);
+                // Fallback to localStorage
+                useFirestore = false;
+                banner.classList.remove('hidden');
+                const localData = loadFromLocal();
+                allEntries = localData;
+                renderTimetable(localData);
             }
         }
 
-        // Save (add/update) a period
+        // -----------------------------
+        // RENDER TABLE
+        // -----------------------------
+        function renderTimetable(entries) {
+            const teachers = Object.keys(entries).sort();
+            if (teachers.length === 0) {
+                body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">No timetable entries yet. Add a period!</td></tr>';
+                return;
+            }
+
+            let html = '';
+            teachers.forEach((teacher, idx) => {
+                const row = entries[teacher];
+                html += `<tr class="border-b border-slate-100 teacher-row" data-teacher="${teacher}">
+                    <td class="p-3 bg-slate-50 font-black text-indigo-900 border-r">${idx+1}</td>
+                    <td class="p-3 font-bold text-left border-r">${teacher}</td>`;
+                PERIODS.forEach(p => {
+                    const subject = row[p] || '';
+                    html += `<td class="p-3 period-cell" data-period="${p}">${subject}</td>`;
+                });
+                html += '</tr>';
+            });
+            body.innerHTML = html;
+        }
+
+        // -----------------------------
+        // SAVE PERIOD (Firestore or localStorage)
+        // -----------------------------
         window.savePeriod = async () => {
             const teacher = document.getElementById('teacherInp').value.trim();
             const period = document.getElementById('periodInp').value;
@@ -170,22 +234,36 @@
             if (!teacher) return alert('Please enter a teacher name.');
             if (!subject) return alert('Please enter a subject.');
 
-            const docId = `${teacher.replace(/\s+/g,'_')}_${period}`;
-            try {
-                await setDoc(doc(db, 'timetables', docId), {
-                    teacher,
-                    period,
-                    subject,
-                    updatedAt: new Date().toISOString()
-                });
-                closeAddModal();
-                loadTimetable();
-            } catch (e) {
-                alert('Save failed: ' + e.message);
+            // Update local state
+            if (!allEntries[teacher]) allEntries[teacher] = {};
+            allEntries[teacher][period] = subject;
+            saveToLocal(allEntries);
+            renderTimetable(allEntries);
+
+            // Try to save to Firestore if available
+            if (useFirestore) {
+                const docId = `${teacher.replace(/\s+/g,'_')}_${period}`;
+                try {
+                    await setDoc(doc(db, 'timetables', docId), {
+                        teacher,
+                        period,
+                        subject,
+                        updatedAt: new Date().toISOString()
+                    });
+                } catch (e) {
+                    console.warn('Firestore save failed, but data is saved locally:', e);
+                    // Switch to local-only mode
+                    useFirestore = false;
+                    banner.classList.remove('hidden');
+                }
             }
+
+            closeAddModal();
         };
 
-        // Filter by teacher name (highlight matching rows)
+        // -----------------------------
+        // FILTER
+        // -----------------------------
         window.filterTeachers = () => {
             const term = document.getElementById('teacherFilter').value.toLowerCase().trim();
             const rows = document.querySelectorAll('.teacher-row');
@@ -199,7 +277,9 @@
             });
         };
 
-        // Modal controls
+        // -----------------------------
+        // MODAL
+        // -----------------------------
         window.openAddModal = (teacher = '', period = '', subject = '') => {
             document.getElementById('teacherInp').value = teacher;
             document.getElementById('periodInp').value = period || 'P1';
@@ -210,7 +290,7 @@
             document.getElementById('addModal').style.display = 'none';
         };
 
-        // Click on a cell to edit it
+        // Click on any cell to edit
         document.addEventListener('click', (e) => {
             const cell = e.target.closest('.period-cell');
             if (!cell) return;
@@ -222,7 +302,54 @@
             openAddModal(teacher, period, subject);
         });
 
-        // Print: hide modal and show footer
+        // -----------------------------
+        // EXPORT / IMPORT (JSON)
+        // -----------------------------
+        window.exportData = () => {
+            const data = allEntries;
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `timetable_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        window.importData = () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        allEntries = data;
+                        saveToLocal(data);
+                        renderTimetable(data);
+                        // Optionally sync to Firestore if online
+                        if (useFirestore) {
+                            // We could batch sync, but for simplicity we just note it's local-only now
+                            // Force local mode to avoid partial sync issues.
+                            useFirestore = false;
+                            banner.classList.remove('hidden');
+                            alert('Data imported locally. To sync to cloud, fix Firestore permissions.');
+                        }
+                    } catch (err) {
+                        alert('Invalid JSON file.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        };
+
+        // -----------------------------
+        // PRINT handling
+        // -----------------------------
         window.addEventListener('beforeprint', () => {
             document.getElementById('printFooter').classList.remove('hidden');
         });
@@ -230,11 +357,11 @@
             document.getElementById('printFooter').classList.add('hidden');
         });
 
-        // Initial load
+        // -----------------------------
+        // INIT
+        // -----------------------------
         document.addEventListener('DOMContentLoaded', loadTimetable);
     </script>
 </body>
-</html>
-
-
-
+</html>                    
+        
