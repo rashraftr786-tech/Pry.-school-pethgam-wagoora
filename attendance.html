@@ -183,12 +183,74 @@
   document.getElementById('attendanceDate').valueAsDate = new Date();
 
   // 2. Load Students from Firebase Admissions Collection
-  async function loadStudents() {
-    const selectedClass = document.getElementById('classSelect').value;
-    const tableBody = document.getElementById('attendanceTable');
-    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Searching Cloud Records...</td></tr>";
+async function loadStudents() {
+  const selectedClass = document.getElementById('classSelect').value;
+  const tableBody = document.getElementById('attendanceTable');
+  tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Loading students...</td></tr>";
 
-    try {
+  if (!selectedClass) {
+    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Please select a class</td></tr>";
+    return;
+  }
+
+  try {
+    // ✅ CHANGE: Use your master collection name (students / master / profiles)
+    const masterCollection = "students"; // ← Change this to your actual collection name
+    const q = query(
+      collection(db, masterCollection),
+      where("class", "==", selectedClass) // ← Use the actual field name for class
+    );
+    
+    const querySnapshot = await getDocs(q);
+    tableBody.innerHTML = "";
+    let students = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      students.push({
+        // ✅ Map your actual field names to what the UI expects
+        studentName: data.name || data.fullName || data.studentName || "Unknown",
+        admNo: data.admNo || data.admissionNumber || data.rollNo || "N/A",
+        studentClass: data.class || data.grade || data.studentClass || selectedClass
+      });
+    });
+
+    if (students.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in class ${selectedClass}</td></tr>`;
+      updateSummary();
+      return;
+    }
+
+    students.sort((a, b) => a.studentName.localeCompare(b.studentName));
+
+    students.forEach((s, index) => {
+      const row = `
+        <tr data-admno="${s.admNo}" data-name="${s.studentName}">
+          <td>${index + 1}</td>
+          <td>${s.studentName}</td>
+          <td>${s.admNo}</td>
+          <td>
+            <select class="status-select" onchange="handleStatusChange(this)">
+              <option value="P">Present</option>
+              <option value="A">Absent</option>
+              <option value="L">Leave</option>
+              <option value="HD">Half Day</option>
+            </select>
+          </td>
+          <td style="text-align:center;">
+            <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
+          </td>
+          <td><input class="remarks-input" placeholder="Remarks" style="width:100px; padding:5px;"></td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+    updateSummary();
+  } catch (error) {
+    console.error("Error loading students:", error);
+    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">⚠️ Error: ${error.message}</td></tr>`;
+  }
+}
       // Create a query to find students in the selected class
       const q = query(collection(db, "admissions"), where("studentClass", "==", selectedClass));
       const querySnapshot = await getDocs(q);
