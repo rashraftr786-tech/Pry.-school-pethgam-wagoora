@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Timetable Manager | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body class="bg-slate-50 min-h-screen">
 
+    <!-- Navbar -->
     <nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -20,59 +21,91 @@
     </nav>
 
     <main class="p-4 max-w-7xl mx-auto">
+        <!-- Controls -->
         <div class="bg-white p-6 rounded-3xl shadow-sm mb-6 border border-slate-200 no-print">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 <div>
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Select Class</label>
-                    <select id="classFilter" onchange="loadTimetable()" class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="1st">1st Primary</option>
-                        <option value="2nd">2nd Primary</option>
-                        <option value="3rd">3rd Primary</option>
-                        <option value="4th">4th Primary</option>
-                        <option value="5th">5th Primary</option>
-                    </select>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Filter by Teacher</label>
+                    <input type="text" id="teacherFilter" onkeyup="filterTeachers()" placeholder="Enter teacher name..." class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
-                <div>
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Teacher View (Filter)</label>
-                    <input type="text" id="teacherSearch" onkeyup="filterByTeacher()" placeholder="Enter Teacher Name..." class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none">
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="openAddModal()" class="flex-1 bg-indigo-600 text-white font-black py-3 rounded-xl shadow-md hover:bg-indigo-700 transition">ADD PERIOD</button>
-                    <button onclick="window.print()" class="bg-slate-800 text-white p-3 rounded-xl"><i class="fas fa-print"></i></button>
+                <div class="flex gap-2 col-span-2 justify-end">
+                    <button onclick="openAddModal()" class="flex-1 bg-indigo-600 text-white font-black py-3 rounded-xl shadow-md hover:bg-indigo-700 transition">
+                        <i class="fas fa-plus mr-2"></i> ADD PERIOD
+                    </button>
+                    <button onclick="window.print()" class="bg-slate-800 text-white p-3 rounded-xl">
+                        <i class="fas fa-print"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
+        <!-- Timetable Table -->
         <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-center border-collapse">
+                <table class="w-full text-center border-collapse text-sm">
                     <thead>
                         <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-100">
-                            <th class="p-4 text-[11px] font-black uppercase border-r">Day</th>
-                            <th class="p-4 text-[11px] font-black uppercase">P1<br><span class="text-[9px] opacity-60">10:00-10:40</span></th>
-                            <th class="p-4 text-[11px] font-black uppercase">P2<br><span class="text-[9px] opacity-60">10:40-11:20</span></th>
-                            <th class="p-4 text-[11px] font-black uppercase">P3<br><span class="text-[9px] opacity-60">11:20-12:00</span></th>
-                            <th class="p-4 text-[11px] font-black uppercase bg-amber-50">Break</th>
-                            <th class="p-4 text-[11px] font-black uppercase">P4<br><span class="text-[9px] opacity-60">12:30-01:10</span></th>
-                            <th class="p-4 text-[11px] font-black uppercase">P5<br><span class="text-[9px] opacity-60">01:10-01:50</span></th>
-                            <th class="p-4 text-[11px] font-black uppercase">P6<br><span class="text-[9px] opacity-60">01:50-02:30</span></th>
+                            <th class="p-3 text-[11px] font-black uppercase border-r">S. No.</th>
+                            <th class="p-3 text-[11px] font-black uppercase border-r">Name of the Teacher</th>
+                            <th class="p-3 text-[10px] font-bold">9:30–10:05</th>
+                            <th class="p-3 text-[10px] font-bold">10:05–10:40</th>
+                            <th class="p-3 text-[10px] font-bold">10:40–11:15</th>
+                            <th class="p-3 text-[10px] font-bold">11:15–11:50</th>
+                            <th class="p-3 text-[10px] font-bold">11:50–12:25</th>
+                            <th class="p-3 text-[10px] font-bold">12:25–1:00</th>
+                            <th class="p-3 text-[10px] font-bold">1:00–2:00</th>
+                            <th class="p-3 text-[10px] font-bold">2:00–2:40</th>
+                            <th class="p-3 text-[10px] font-bold">2:40–3:20</th>
+                            <th class="p-3 text-[10px] font-bold">3:20–3:30</th>
                         </tr>
                     </thead>
-                    <tbody id="timetableBody" class="text-sm font-bold text-slate-700">
-                        </tbody>
+                    <tbody id="timetableBody" class="font-semibold text-slate-700">
+                        <!-- dynamically generated -->
+                    </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Official Footer (only shown in print) -->
+        <div id="printFooter" class="hidden print:block mt-10 text-center text-sm border-t pt-6">
+            <p class="font-bold text-lg">Office of the Headmaster</p>
+            <p class="font-bold">Government Primary School Pethgam Wagoora – 193109</p>
+            <p class="italic">Time Table With Effect From April 2026</p>
+            <div class="grid grid-cols-4 gap-4 mt-6 text-xs">
+                <div>Absentism</div>
+                <div>Morning Assembly</div>
+                <div>Absentism</div>
+                <div>Absentism</div>
+                <div>Absentism</div>
+                <div>Absentism</div>
+                <div>Absentistion</div>
+                <div>Absentistion</div>
+                <div>Absentistion</div>
+                <div>Absentistion</div>
+            </div>
+            <p class="mt-8 text-right font-bold">Signature of Headmaster</p>
+        </div>
     </main>
 
+    <!-- Add / Edit Modal -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
-            <h2 class="text-xl font-black mb-4">Assign Period</h2>
+            <h2 class="text-xl font-black mb-4">Assign / Edit Period</h2>
             <div class="space-y-3">
-                <select id="dayInp" class="w-full p-3 border rounded-xl font-bold"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select>
-                <select id="periodInp" class="w-full p-3 border rounded-xl font-bold"><option value="P1">Period 1</option><option value="P2">Period 2</option><option value="P3">Period 3</option><option value="P4">Period 4</option><option value="P5">Period 5</option><option value="P6">Period 6</option></select>
-                <input type="text" id="subjectInp" placeholder="Subject Name" class="w-full p-3 border rounded-xl font-bold">
-                <input type="text" id="teacherInp" placeholder="Teacher Name" class="w-full p-3 border rounded-xl font-bold">
+                <input type="text" id="teacherInp" placeholder="Teacher Name" class="w-full p-3 border rounded-xl font-bold" />
+                <select id="periodInp" class="w-full p-3 border rounded-xl font-bold">
+                    <option value="P1">9:30–10:05</option>
+                    <option value="P2">10:05–10:40</option>
+                    <option value="P3">10:40–11:15</option>
+                    <option value="P4">11:15–11:50</option>
+                    <option value="P5">11:50–12:25</option>
+                    <option value="P6">12:25–1:00</option>
+                    <option value="P7">1:00–2:00</option>
+                    <option value="P8">2:00–2:40</option>
+                    <option value="P9">2:40–3:20</option>
+                    <option value="P10">3:20–3:30</option>
+                </select>
+                <input type="text" id="subjectInp" placeholder="Subject (e.g., 4th Mathematics)" class="w-full p-3 border rounded-xl font-bold" />
                 <div class="flex gap-2 mt-4">
                     <button onclick="closeAddModal()" class="flex-1 bg-slate-200 py-3 rounded-xl font-bold">Cancel</button>
                     <button onclick="savePeriod()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">Save</button>
@@ -83,74 +116,125 @@
 
     <script type="module">
         import { db } from './init-firebase.js';
-        import { collection, getDocs, setDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        
-        // Load existing timetable data from Firestore
-        window.loadTimetable = async () => {
-            const classLevel = document.getElementById('classFilter').value;
+        const PERIODS = ['P1','P2','P3','P4','P5','P6','P7','P8','P9','P10'];
+
+        // Load and render timetable
+        async function loadTimetable() {
             const body = document.getElementById('timetableBody');
-            body.innerHTML = "";
+            body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">Loading timetable...</td></tr>';
 
             try {
-                const snap = await getDocs(collection(db, "timetables"));
-                const data = {};
-                snap.forEach(d => { if(d.id.startsWith(classLevel)) data[d.id] = d.data(); });
-
-                days.forEach(day => {
-                    let row = `<tr class="border-b border-slate-100">
-                        <td class="p-4 bg-slate-50 font-black text-indigo-900 border-r uppercase text-[10px]">${day}</td>`;
-                    
-                    ["P1", "P2", "P3"].forEach(p => {
-                        const cellData = data[`${classLevel}_${day}_${p}`] || {sub: "-", tea: "-"};
-                        row += `<td class="p-4 period-cell" data-teacher="${cellData.tea}"><div class="text-indigo-600">${cellData.sub}</div><div class="text-[9px] text-slate-400 uppercase">${cellData.tea}</div></td>`;
-                    });
-
-                    row += `<td class="p-4 bg-amber-50 text-[10px] text-amber-600 font-black italic">MDM</td>`;
-
-                    ["P4", "P5", "P6"].forEach(p => {
-                        const cellData = data[`${classLevel}_${day}_${p}`] || {sub: "-", tea: "-"};
-                        row += `<td class="p-4 period-cell" data-teacher="${cellData.tea}"><div class="text-indigo-600">${cellData.sub}</div><div class="text-[9px] text-slate-400 uppercase">${cellData.tea}</div></td>`;
-                    });
-
-                    row += `</tr>`;
-                    body.innerHTML += row;
+                const snap = await getDocs(collection(db, 'timetables'));
+                const entries = {};
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.teacher && data.period && data.subject) {
+                        if (!entries[data.teacher]) entries[data.teacher] = {};
+                        entries[data.teacher][data.period] = data.subject;
+                    }
                 });
-            } catch (e) { console.error(e); }
-        };
 
+                const teachers = Object.keys(entries).sort();
+                if (teachers.length === 0) {
+                    body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">No timetable entries yet. Add a period!</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                teachers.forEach((teacher, idx) => {
+                    const row = entries[teacher];
+                    html += `<tr class="border-b border-slate-100 teacher-row" data-teacher="${teacher}">
+                        <td class="p-3 bg-slate-50 font-black text-indigo-900 border-r">${idx+1}</td>
+                        <td class="p-3 font-bold text-left border-r">${teacher}</td>`;
+                    PERIODS.forEach(p => {
+                        const subject = row[p] || '';
+                        html += `<td class="p-3 period-cell" data-period="${p}">${subject}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                body.innerHTML = html;
+            } catch (e) {
+                console.error('Load error:', e);
+                body.innerHTML = `<tr><td colspan="12" class="p-8 text-red-500">Error loading data: ${e.message}</td></tr>`;
+            }
+        }
+
+        // Save (add/update) a period
         window.savePeriod = async () => {
-            const classLevel = document.getElementById('classFilter').value;
-            const day = document.getElementById('dayInp').value;
+            const teacher = document.getElementById('teacherInp').value.trim();
             const period = document.getElementById('periodInp').value;
-            const docId = `${classLevel}_${day}_${period}`;
+            const subject = document.getElementById('subjectInp').value.trim();
 
-            await setDoc(doc(db, "timetables", docId), {
-                sub: document.getElementById('subjectInp').value,
-                tea: document.getElementById('teacherInp').value
-            });
-            
-            closeAddModal();
-            loadTimetable();
+            if (!teacher) return alert('Please enter a teacher name.');
+            if (!subject) return alert('Please enter a subject.');
+
+            const docId = `${teacher.replace(/\s+/g,'_')}_${period}`;
+            try {
+                await setDoc(doc(db, 'timetables', docId), {
+                    teacher,
+                    period,
+                    subject,
+                    updatedAt: new Date().toISOString()
+                });
+                closeAddModal();
+                loadTimetable();
+            } catch (e) {
+                alert('Save failed: ' + e.message);
+            }
         };
 
-        window.filterByTeacher = () => {
-            const term = document.getElementById('teacherSearch').value.toLowerCase();
-            document.querySelectorAll('.period-cell').forEach(cell => {
-                const teacher = cell.getAttribute('data-teacher').toLowerCase();
-                if(term && teacher !== term && teacher !== "-") {
-                    cell.style.opacity = "0.2";
+        // Filter by teacher name (highlight matching rows)
+        window.filterTeachers = () => {
+            const term = document.getElementById('teacherFilter').value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.teacher-row');
+            rows.forEach(row => {
+                const teacher = row.dataset.teacher.toLowerCase();
+                if (term && !teacher.includes(term)) {
+                    row.style.opacity = '0.15';
                 } else {
-                    cell.style.opacity = "1";
+                    row.style.opacity = '1';
                 }
             });
         };
 
-        window.openAddModal = () => document.getElementById('addModal').style.display = 'flex';
-        window.closeAddModal = () => document.getElementById('addModal').style.display = 'none';
+        // Modal controls
+        window.openAddModal = (teacher = '', period = '', subject = '') => {
+            document.getElementById('teacherInp').value = teacher;
+            document.getElementById('periodInp').value = period || 'P1';
+            document.getElementById('subjectInp').value = subject;
+            document.getElementById('addModal').style.display = 'flex';
+        };
+        window.closeAddModal = () => {
+            document.getElementById('addModal').style.display = 'none';
+        };
 
+        // Click on a cell to edit it
+        document.addEventListener('click', (e) => {
+            const cell = e.target.closest('.period-cell');
+            if (!cell) return;
+            const row = cell.closest('.teacher-row');
+            if (!row) return;
+            const teacher = row.dataset.teacher;
+            const period = cell.dataset.period;
+            const subject = cell.textContent.trim();
+            openAddModal(teacher, period, subject);
+        });
+
+        // Print: hide modal and show footer
+        window.addEventListener('beforeprint', () => {
+            document.getElementById('printFooter').classList.remove('hidden');
+        });
+        window.addEventListener('afterprint', () => {
+            document.getElementById('printFooter').classList.add('hidden');
+        });
+
+        // Initial load
         document.addEventListener('DOMContentLoaded', loadTimetable);
     </script>
 </body>
 </html>
+
+
+
