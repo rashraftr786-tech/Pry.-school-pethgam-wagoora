@@ -514,58 +514,61 @@
         openModal('add');
     });
 
-    // Submit
-    editForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const docId = editDocId.value;
-        const payload = {
-            admNo: editAdmNo.value.trim(),
-            rollNo: editRollNo.value.trim(),
-            class: editClass.value.trim(),
-            name: editName.value.trim(),
-            studentName: editName.value.trim(),
-            fatherName: editFather.value.trim(),
-            motherName: editMother.value.trim(),
-            dob: editDob.value,
-            gender: editGender.value,
-            address: editAddress.value.trim(),
-            contact: editContact.value.trim(),
-            apaarId: editApaar.value.trim(),
-            apaarID: editApaar.value.trim(),
-            penNo: editPen.value.trim(),
-            penNumber: editPen.value.trim(),
-            dateOfAdmission: editDateOfAdmission.value,
-            classAdmitted: editClassAdmitted.value.trim(),
-            admittedVide: editAdmittedVide.value.trim(),
-            dcIssuedBy: editDcIssuedBy.value.trim(),
-            dateOfWithdrawal: editDateOfWithdrawal.value,
-            status: editStatus.value
-        };
+    // ---- Form Submit (Add or Update) ----
+editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const docId = editDocId.value;
+    const payload = {
+        admNo: editAdmNo.value.trim(),
+        rollNo: editRollNo.value.trim(),
+        class: editClass.value.trim(),
+        name: editName.value.trim(),
+        studentName: editName.value.trim(),
+        fatherName: editFather.value.trim(),
+        motherName: editMother.value.trim(),
+        dob: editDob.value,
+        gender: editGender.value,
+        address: editAddress.value.trim(),
+        contact: editContact.value.trim(),
+        apaarId: editApaar.value.trim(),
+        apaarID: editApaar.value.trim(),
+        penNo: editPen.value.trim(),
+        penNumber: editPen.value.trim(),
+        dateOfAdmission: editDateOfAdmission.value,
+        classAdmitted: editClassAdmitted.value.trim(),
+        admittedVide: editAdmittedVide.value.trim(),
+        dcIssuedBy: editDcIssuedBy.value.trim(),
+        dateOfWithdrawal: editDateOfWithdrawal.value,
+        status: editStatus.value
+    };
 
-        if (!payload.admNo || !payload.class || !payload.name) {
-            alert('Admission No, Class, and Name are required.');
-            return;
-        }
+    if (!payload.admNo || !payload.class || !payload.name) {
+        alert('Admission No, Class, and Name are required.');
+        return;
+    }
 
-        try {
-            if (docId) {
-                await updateDoc(doc(db, "students", docId), payload);
-                showToast('✅ Record updated successfully.');
-            } else {
-                // Check duplicate admNo
-                const existing = allStudents.find(s => s.admNo === payload.admNo);
-                if (existing) {
-                    alert(`Admission No ${payload.admNo} already exists.`);
-                    return;
-                }
-                await addDoc(collection(db, "students"), payload);
-                showToast('✅ Student added successfully.');
+    try {
+        if (docId) {
+            // UPDATE existing record
+            await updateDoc(doc(db, "students", docId), payload);
+            showToast('✅ Record updated successfully.');
+        } else {
+            // ADD new record - Check duplicate admNo
+            const existing = allStudents.find(s => s.admNo === payload.admNo);
+            if (existing) {
+                alert(`Admission No ${payload.admNo} already exists.`);
+                return;
             }
-            closeModal();
-        } catch (err) {
-            alert('Operation failed: ' + err.message);
+            // ✅ FIX: Use setDoc with admNo as the Document ID
+            await setDoc(doc(db, "students", payload.admNo), payload);
+            showToast('✅ Student added successfully.');
         }
-    });
+        closeModal();
+    } catch (err) {
+        console.error('Firestore error:', err);
+        alert('❌ Operation failed: ' + err.message);
+    }
+});
 
     // ---------- DELETE ----------
     async function deleteStudent(id) {
