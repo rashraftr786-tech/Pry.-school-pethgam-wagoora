@@ -31,43 +31,102 @@
     </div>
 
     <script type="module">
+        // ============================================================
+        // 🔧 ADJUST THESE VARIABLES TO MATCH YOUR MASTER PROFILE STRUCTURE
+        // ============================================================
+        const MASTER_COLLECTION = "students";        // Your master profile collection name
+        const NAME_FIELD = "name";                  // Field for student's full name
+        const PHONE_FIELD = "fatherContact";        // Field for parent's phone number (used for WhatsApp)
+        // ============================================================
+
         import { db } from './init-firebase.js';
         import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Load students from your Admissions collection
+        // Load students from Master Profile collection
         async function load() {
-            const snap = await getDocs(collection(db, "admissions"));
-            const select = document.getElementById('studentSelect');
-            snap.forEach(doc => {
-                const s = doc.data();
-                const opt = document.createElement('option');
-                opt.value = s.fatherContact; // Pulls contact from form
-                opt.dataset.name = s.studentName;
-                opt.textContent = `${s.studentName} (${s.fatherContact})`;
-                select.appendChild(opt);
-            });
+            try {
+                const snap = await getDocs(collection(db, MASTER_COLLECTION));
+                const select = document.getElementById('studentSelect');
+                // Clear any existing options except the first placeholder
+                select.innerHTML = '<option value="">-- Choose Student --</option>';
+                
+                snap.forEach(doc => {
+                    const s = doc.data();
+                    // Use the fields defined above; fallback to empty string if missing
+                    const name = s[NAME_FIELD] || s.name || s.studentName || "Unknown";
+                    const phone = s[PHONE_FIELD] || s.fatherContact || s.phone || s.mobile || "";
+                    
+                    if (!phone) {
+                        console.warn(`No phone number found for student: ${name}`);
+                        return; // skip this student
+                    }
+                    
+                    const opt = document.createElement('option');
+                    opt.value = phone;
+                    opt.dataset.name = name;
+                    opt.textContent = `${name} (${phone})`;
+                    select.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Error loading students:", error);
+                alert("Failed to load student data. Check console for details.");
+            }
         }
 
         window.updateMsg = () => {
-            const name = document.getElementById('studentSelect').selectedOptions[0].dataset.name || "Student";
+            const select = document.getElementById('studentSelect');
+            const selectedOption = select.selectedOptions[0];
+            const name = selectedOption ? selectedOption.dataset.name : "Student";
             const type = document.getElementById('template').value;
-            if(type === "Absent") document.getElementById('msgBody').value = `Dear Parent, your ward ${name} is absent today from GPS Pethgam. Please ensure regular attendance.`;
+            const msgArea = document.getElementById('msgBody');
+            
+            if (type === "Absent") {
+                msgArea.value = `Dear Parent, your ward ${name} is absent today from GPS Pethgam. Please ensure regular attendance.`;
+            } else if (type === "Fee") {
+                msgArea.value = `Dear Parent, the monthly fee for ${name} is due. Please clear it at the school office.`;
+            } else {
+                msgArea.value = "";
+            }
         };
 
         window.sendWA = async () => {
-            const phone = document.getElementById('studentSelect').value;
+            const select = document.getElementById('studentSelect');
+            const phone = select.value;
             const msg = document.getElementById('msgBody').value;
-            const name = document.getElementById('studentSelect').selectedOptions[0].dataset.name;
+            const name = select.selectedOptions[0]?.dataset.name || "Student";
 
-            // Save to Comm. Logs
-            await addDoc(collection(db, "comm_logs"), {
-                recipient: name, phone: phone, message: msg, type: "WhatsApp", date: new Date().toLocaleDateString()
-            });
+            if (!phone) {
+                alert("Please select a student first.");
+                return;
+            }
+            if (!msg.trim()) {
+                alert("Please enter a message or choose a template.");
+                return;
+            }
 
-            window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            try {
+                // Save to Communication Logs
+                await addDoc(collection(db, "comm_logs"), {
+                    recipient: name,
+                    phone: phone,
+                    message: msg,
+                    type: "WhatsApp",
+                    date: new Date().toLocaleDateString(),
+                    timestamp: new Date().toISOString()
+                });
+
+                // Open WhatsApp with the message
+                window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            } catch (error) {
+                console.error("Error logging communication:", error);
+                alert("Failed to log the message, but WhatsApp will still open.");
+                // Still open WhatsApp even if logging fails
+                window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
         };
+
+        // Load students on page load
         load();
     </script>
 </body>
 </html>
-
