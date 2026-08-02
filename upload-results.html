@@ -69,8 +69,35 @@ import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/f
 
 const SUBJECTS = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
 
-// Parse a single row: first 8 columns are student info, then 40 columns of marks (5 subjects * 8),
-// then APAAR and PEN are the last two non-empty values.
+// ✅ NEW: Robust date parser – handles Excel serial numbers and text dates
+function parseDate(value) {
+  if (value === undefined || value === null) return '';
+  // If it's a number (Excel serial date)
+  if (typeof value === 'number' && value > 30000 && value < 60000) {
+    // Convert Excel serial to JS Date
+    const dateObj = new Date((value - 25569) * 86400 * 1000);
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toISOString().split('T')[0];
+    }
+  }
+  let str = String(value).trim();
+  // If it contains a space (e.g., "2016-07-11 00:00:00"), take only the date part
+  if (str.includes(' ')) {
+    str = str.split(' ')[0];
+  }
+  // Check if it matches YYYY-MM-DD
+  if (str.match(/^\d{4}-\d{2}-\d{2}/)) {
+    return str;
+  }
+  // Try parsing as generic date
+  const d = new Date(str);
+  if (!isNaN(d.getTime()) && str.length > 0) {
+    return d.toISOString().split('T')[0];
+  }
+  return str;
+}
+
+// Parse a single row: first 8 columns are student info, then marks, then APAAR/PEN at the end
 function parseStudentRow(row) {
   if (!row || row.length < 8) return null;
   const admNo = String(row[0] || '').trim();
@@ -82,7 +109,9 @@ function parseStudentRow(row) {
   const fatherName = String(row[4] || '').trim();
   const motherName = String(row[5] || '').trim();
   const contact = String(row[6] || '').trim();
-  const dob = String(row[7] || '').trim();
+  
+  // ✅ FIX: Parse DOB using the robust date parser
+  const dob = parseDate(row[7]);
 
   // Marks start at column 8 (0-indexed)
   let colOffset = 8;
@@ -107,18 +136,14 @@ function parseStudentRow(row) {
 
   // After marks, the remaining columns include Grand Total, %, Grade, etc.
   // APAAR and PEN are the last two non-empty values.
+  const remaining = row.slice(colOffset);
+  const nonEmpty = remaining.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
   let apaarId = '';
   let penNo = '';
-  // Get all values after marks
-  const remaining = row.slice(colOffset);
-  // Filter out empty strings, null, undefined
-  const nonEmpty = remaining.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
   if (nonEmpty.length >= 2) {
-    // The last two are APAAR and PEN
     apaarId = String(nonEmpty[nonEmpty.length - 2]).trim();
     penNo = String(nonEmpty[nonEmpty.length - 1]).trim();
   } else if (nonEmpty.length === 1) {
-    // Only one left – assume it's PEN, APAAR missing
     penNo = String(nonEmpty[0]).trim();
   }
 
@@ -180,7 +205,7 @@ processBtn.addEventListener('click', async () => {
       };
       await setDoc(resultDocRef, finalData, { merge: true });
 
-      // Update students collection with ALL fields
+      // Update students collection with ALL fields (DOB now in YYYY-MM-DD)
       const studentRef = doc(db, "students", admNo);
       await setDoc(studentRef, {
         admNo,
@@ -190,7 +215,7 @@ processBtn.addEventListener('click', async () => {
         fatherName,
         motherName,
         contact,
-        dob,
+        dob, // ✅ Now a readable date string
         apaarId,
         apaarID: apaarId,
         penNo,
@@ -273,3 +298,5 @@ async function loadExistingMarks(adm) {
 </script>
 </body>
 </html>  
+
+          
