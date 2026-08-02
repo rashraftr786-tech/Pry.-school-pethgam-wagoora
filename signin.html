@@ -1,785 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In · SchoolERP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In · SchoolERP</title>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
-    </script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+  </script>
 
-    <style>
-        /* ──────────────────────────────────────────────────────────────
-           RESET & VARIABLES
-           ────────────────────────────────────────────────────────────── */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.10);
-            --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            --glass-blur: blur(20px);
-            --text-primary: #f0f4fe;
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --text-muted: rgba(255, 255, 255, 0.35);
-            --accent: #6c8cff;
-            --accent-hover: #7a9aff;
-            --danger: #ff6b6b;
-            --success: #51cf66;
-            --radius: 2rem;
-            --transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0b0e1a;
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 1rem;
-        }
-
-        /* ─── Animated Background ─── */
-        .bg-orbs {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .bg-orbs .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.2;
-            animation: orbFloat 22s ease-in-out infinite alternate;
-        }
-
-        .bg-orbs .orb:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            top: -10%;
-            right: -5%;
-            background: radial-gradient(circle, #6c8cff, #3a5bd1);
-            animation-duration: 24s;
-        }
-
-        .bg-orbs .orb:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            bottom: -10%;
-            left: -5%;
-            background: radial-gradient(circle, #f093fb, #f5576c);
-            animation-duration: 28s;
-            animation-delay: -4s;
-            opacity: 0.15;
-        }
-
-        .bg-orbs .orb:nth-child(3) {
-            width: 350px;
-            height: 350px;
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: radial-gradient(circle, #4facfe, #00f2fe);
-            animation-duration: 20s;
-            animation-delay: -8s;
-            opacity: 0.12;
-        }
-
-        @keyframes orbFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(30px, -40px) scale(1.05);
-            }
-            66% {
-                transform: translate(-20px, 30px) scale(0.95);
-            }
-            100% {
-                transform: translate(10px, -20px) scale(1.02);
-            }
-        }
-
-        /* ─── Glass Card ─── */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            box-shadow: var(--glass-shadow);
-        }
-
-        /* ─── Sign In Card ─── */
-        .signin-card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 440px;
-            padding: 2.8rem 2.5rem 2.5rem;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .signin-card:hover {
-            border-color: rgba(255, 255, 255, 0.14);
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8),
-                0 0 60px rgba(108, 140, 255, 0.04);
-        }
-
-        /* ─── Logo / Brand ─── */
-        .brand {
-            margin-bottom: 0.5rem;
-        }
-
-        .brand .logo-icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 0.2rem;
-        }
-
-        .brand h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #f0f4fe 60%, #6c8cff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .brand .sub {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 500;
-            margin-top: 0.1rem;
-        }
-
-        /* ─── Role Toggle (3 buttons) ─── */
-        .role-toggle {
-            display: flex;
-            gap: 0.4rem;
-            justify-content: center;
-            margin: 1.2rem 0 1.5rem;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 0.3rem;
-            border-radius: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .role-toggle button {
-            flex: 1;
-            padding: 0.5rem 0.6rem;
-            border: none;
-            border-radius: 2rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            background: transparent;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
-        .role-toggle button.active {
-            background: rgba(108, 140, 255, 0.2);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(108, 140, 255, 0.15);
-        }
-
-        .role-toggle button:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-        }
-
-        /* ─── Form ─── */
-        .form-group {
-            text-align: left;
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 0.4rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.85rem 1.2rem;
-            border-radius: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            transition: var(--transition);
-            outline: none;
-            font-family: inherit;
-        }
-
-        .form-group input:focus {
-            border-color: rgba(108, 140, 255, 0.4);
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 30px rgba(108, 140, 255, 0.04);
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .form-group .input-icon {
-            position: relative;
-        }
-
-        .form-group .input-icon span {
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .form-group .input-icon input {
-            padding-left: 3rem;
-        }
-
-        /* ─── Error Message ─── */
-        .error-msg {
-            background: rgba(255, 107, 107, 0.08);
-            border: 1px solid rgba(255, 107, 107, 0.15);
-            border-radius: 1rem;
-            padding: 0.7rem 1rem;
-            font-size: 0.8rem;
-            color: #ff6b6b;
-            margin-bottom: 1.2rem;
-            display: none;
-            text-align: left;
-        }
-
-        .error-msg.show {
-            display: block;
-            animation: shake 0.4s ease;
-        }
-
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-6px);
-            }
-            75% {
-                transform: translateX(6px);
-            }
-        }
-
-        /* ─── Sign In Button ─── */
-        .btn-signin {
-            width: 100%;
-            padding: 0.9rem;
-            border: none;
-            border-radius: 3rem;
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: var(--transition);
-            background: linear-gradient(135deg, #6c8cff, #5a6fd6);
-            color: #fff;
-            box-shadow: 0 8px 30px rgba(108, 140, 255, 0.25);
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-        }
-
-        .btn-signin:hover:not(:disabled) {
-            background: linear-gradient(135deg, #7a9aff, #6c8cff);
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 12px 40px rgba(108, 140, 255, 0.35);
-        }
-
-        .btn-signin:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-signin .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        .btn-signin.loading .spinner {
-            display: inline-block;
-        }
-        .btn-signin.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ─── Demo Credentials ─── */
-        .demo-cred {
-            margin-top: 1.5rem;
-            padding: 0.8rem 1rem;
-            background: rgba(245, 215, 66, 0.06);
-            border-radius: 1rem;
-            border: 1px solid rgba(245, 215, 66, 0.08);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .demo-cred strong {
-            color: #f5d742;
-            font-weight: 600;
-        }
-
-        .demo-cred .cred-row {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin-top: 0.3rem;
-        }
-
-        .demo-cred .cred-row code {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 0.15rem 0.8rem;
-            border-radius: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            color: var(--text-primary);
-        }
-
-        .fill-btn {
-            background: none;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 0.7rem;
-            text-decoration: underline;
-            padding: 0.1rem 0.3rem;
-            transition: var(--transition);
-        }
-
-        .fill-btn:hover {
-            color: #fff;
-        }
-
-        .role-hint {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 0.4rem;
-        }
-
-        .role-hint span {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.1rem 0.5rem;
-            border-radius: 0.5rem;
-            margin: 0 0.1rem;
-        }
-
-        /* ─── Footer Link ─── */
-        .footer-link {
-            margin-top: 1.5rem;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .footer-link a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-link a:hover {
-            color: #fff;
-        }
-
-        /* ─── Responsive ─── */
-        @media (max-width: 480px) {
-            .signin-card {
-                padding: 2rem 1.5rem 1.8rem;
-                border-radius: 1.8rem;
-            }
-            .brand h1 {
-                font-size: 1.3rem;
-            }
-            .brand .logo-icon {
-                font-size: 2.4rem;
-            }
-            .role-toggle button {
-                font-size: 0.65rem;
-                padding: 0.4rem 0.4rem;
-            }
-            .form-group input {
-                padding: 0.7rem 1rem;
-                font-size: 0.9rem;
-            }
-            .demo-cred .cred-row {
-                flex-direction: column;
-                gap: 0.3rem;
-                align-items: center;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .signin-card {
-                padding: 1.5rem 1rem 1.5rem;
-            }
-            .brand h1 {
-                font-size: 1.1rem;
-            }
-            .role-toggle button {
-                font-size: 0.55rem;
-                padding: 0.3rem 0.2rem;
-            }
-        }
-    </style>
+  <style>
+    /* ── Same CSS as before – keep it ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0b0e1a;
+      color: #f0f4fe;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .glass {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+      padding: 2.8rem 2.5rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .brand h1 {
+      font-size: 1.6rem;
+      background: linear-gradient(135deg, #f0f4fe 60%, #6c8cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .role-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1.2rem 0 1.5rem;
+      background: rgba(255,255,255,0.04);
+      padding: 0.3rem;
+      border-radius: 3rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .role-toggle button {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      transition: 0.3s;
+    }
+    .role-toggle button.active {
+      background: rgba(108,140,255,0.2);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(108,140,255,0.15);
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 0.4rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.85rem 1.2rem;
+      border-radius: 2rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #f0f4fe;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.3s;
+    }
+    .form-group input:focus {
+      border-color: rgba(108,140,255,0.4);
+      background: rgba(255,255,255,0.06);
+    }
+    .error-msg {
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.15);
+      border-radius: 1rem;
+      padding: 0.7rem 1rem;
+      font-size: 0.8rem;
+      color: #ff6b6b;
+      margin-bottom: 1.2rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .btn-signin {
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 3rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      background: linear-gradient(135deg, #6c8cff, #5a6fd6);
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(108,140,255,0.25);
+    }
+    .btn-signin:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(108,140,255,0.35);
+    }
+    .btn-signin:disabled { opacity: 0.6; cursor: not-allowed; }
+    .demo-cred {
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      background: rgba(245,215,66,0.06);
+      border-radius: 1rem;
+      border: 1px solid rgba(245,215,66,0.08);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.65);
+    }
+    .demo-cred strong { color: #f5d742; }
+    .demo-cred .cred-row { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.3rem; }
+    .demo-cred .cred-row code { background: rgba(255,255,255,0.06); padding: 0.15rem 0.8rem; border-radius: 1rem; color: #f0f4fe; }
+    .fill-btn { background: none; border: none; color: #6c8cff; cursor: pointer; text-decoration: underline; font-size: 0.7rem; }
+    .footer-link { margin-top: 1.5rem; font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+    .footer-link a { color: rgba(255,255,255,0.65); text-decoration: none; }
+    .footer-link a:hover { color: #fff; }
+    @media (max-width: 480px) { .glass { padding: 2rem 1.5rem; } }
+  </style>
 </head>
 <body>
 
-    <!-- ─── Animated Background ─── -->
-    <div class="bg-orbs" aria-hidden="true">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
+<div class="glass">
+  <div class="brand">
+    <h1>🏫 ERP Portal</h1>
+    <div style="font-size:0.75rem; color:rgba(255,255,255,0.5);">GPS Pethgam Wagoora</div>
+  </div>
+
+  <div class="role-toggle">
+    <button class="active" data-role="admin">👤 Admin</button>
+    <button data-role="teacher">👨‍🏫 Teacher</button>
+    <button data-role="student">👩‍🎓 Student</button>
+  </div>
+
+  <div class="error-msg" id="errorMsg"><span id="errorText"></span></div>
+
+  <form id="signinForm">
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="emailInput" placeholder="admin@demo.com" value="admin@demo.com" required />
     </div>
-
-    <!-- ─── Sign In Card ─── -->
-    <div class="signin-card glass" role="main" aria-label="Sign in form">
-
-        <!-- Brand -->
-        <div class="brand">
-            <span class="logo-icon">🏫</span>
-            <h1>ERP Portal</h1>
-            <div class="sub">GPS Pethgam Wagoora</div>
-        </div>
-
-        <!-- Role Toggle (3 roles) -->
-        <div class="role-toggle" role="group" aria-label="Select role">
-            <button class="active" data-role="admin" id="roleAdmin">👤 Admin</button>
-            <button data-role="teacher" id="roleTeacher">👨‍🏫 Teacher</button>
-            <button data-role="student" id="roleStudent">👩‍🎓 Student</button>
-        </div>
-        <div class="role-hint">
-            ⚡ Selected role determines your dashboard view
-        </div>
-
-        <!-- Error Message -->
-        <div class="error-msg" id="errorMsg">
-            <span id="errorText">Invalid credentials. Please try again.</span>
-        </div>
-
-        <!-- Form -->
-        <form id="signinForm" autocomplete="off" novalidate>
-            <div class="form-group">
-                <label for="emailInput">Email Address</label>
-                <div class="input-icon">
-                    <span>✉️</span>
-                    <input
-                    type="email"
-                    id="emailInput"
-                    placeholder="admin@demo.com"
-                    value="admin@demo.com"
-                    required
-                    />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="passwordInput">Password</label>
-                <div class="input-icon">
-                    <span>🔒</span>
-                    <input
-                    type="password"
-                    id="passwordInput"
-                    placeholder="••••••••"
-                    value="123456"
-                    required
-                    />
-                </div>
-            </div>
-
-            <button type="submit" class="btn-signin" id="signinBtn">
-                <span class="spinner"></span>
-                <span class="btn-text">🚀 Sign In</span>
-            </button>
-        </form>
-
-        <!-- Demo Credentials -->
-        <div class="demo-cred">
-            <div style="font-size:0.7rem; opacity:0.6; margin-bottom:0.3rem;">🔑 Trial Credentials (any role works)</div>
-            <div class="cred-row">
-                <span>
-                    <strong>Email</strong>
-                    <code>admin@demo.com</code>
-                    <button class="fill-btn" data-field="email">fill</button>
-                </span>
-                <span>
-                    <strong>Password</strong>
-                    <code>123456</code>
-                    <button class="fill-btn" data-field="password">fill</button>
-                </span>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer-link">
-            <a href="forgot-password.html">Forgot password?</a> &middot;
-            <a href="index.html">Back to home</a>
-        </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" value="123456" required />
     </div>
+    <button type="submit" class="btn-signin" id="signinBtn">🚀 Sign In</button>
+  </form>
 
-    <script>
-        (function() {
-            'use strict';
+  <div class="demo-cred">
+    <div style="opacity:0.6; margin-bottom:0.3rem;">🔑 Trial Credentials</div>
+    <div class="cred-row">
+      <span><strong>Email</strong> <code>admin@demo.com</code> <button class="fill-btn" data-field="email">fill</button></span>
+      <span><strong>Password</strong> <code>123456</code> <button class="fill-btn" data-field="password">fill</button></span>
+    </div>
+  </div>
 
-            // ─── DOM refs ───
-            const form = document.getElementById('signinForm');
-            const emailInput = document.getElementById('emailInput');
-            const passwordInput = document.getElementById('passwordInput');
-            const signinBtn = document.getElementById('signinBtn');
-            const errorMsg = document.getElementById('errorMsg');
-            const errorText = document.getElementById('errorText');
+  <div class="footer-link">
+    <a href="forgot-password.html">Forgot password?</a> &middot;
+    <a href="index.html">Back to home</a>
+  </div>
+</div>
 
-            // Role buttons
-            const roleAdmin = document.getElementById('roleAdmin');
-            const roleTeacher = document.getElementById('roleTeacher');
-            const roleStudent = document.getElementById('roleStudent');
+<script>
+  (function() {
+    'use strict';
 
-            let selectedRole = 'admin'; // default
+    // ---- DOM refs ----
+    const form = document.getElementById('signinForm');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const signinBtn = document.getElementById('signinBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorText = document.getElementById('errorText');
+    const roleBtns = document.querySelectorAll('.role-toggle button');
+    let selectedRole = 'admin';
 
-            // ─── Role toggle logic ───
-            function setActiveRole(role) {
-                // Remove active class from all
-                [roleAdmin, roleTeacher, roleStudent].forEach(btn => btn.classList.remove('active'));
-                // Add active to the selected one
-                if (role === 'admin') roleAdmin.classList.add('active');
-                else if (role === 'teacher') roleTeacher.classList.add('active');
-                else if (role === 'student') roleStudent.classList.add('active');
-                selectedRole = role;
-                hideError();
-            }
+    // ---- Role toggle ----
+    roleBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        roleBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedRole = this.dataset.role;
+        hideError();
+      });
+    });
 
-            roleAdmin.addEventListener('click', () => setActiveRole('admin'));
-            roleTeacher.addEventListener('click', () => setActiveRole('teacher'));
-            roleStudent.addEventListener('click', () => setActiveRole('student'));
+    // ---- Fill demo credentials ----
+    document.querySelectorAll('.fill-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const field = this.dataset.field;
+        if (field === 'email') {
+          emailInput.value = 'admin@demo.com';
+          emailInput.focus();
+        } else {
+          passwordInput.value = '123456';
+          passwordInput.focus();
+        }
+        hideError();
+      });
+    });
 
-            // ─── Fill demo credentials ───
-            document.querySelectorAll('.fill-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const field = this.dataset.field;
-                    if (field === 'email') {
-                        emailInput.value = 'admin@demo.com';
-                        emailInput.focus();
-                    } else if (field === 'password') {
-                        passwordInput.value = '123456';
-                        passwordInput.focus();
-                    }
-                    hideError();
-                });
-            });
+    // ---- Error helpers ----
+    function showError(msg) {
+      errorText.textContent = msg || 'Invalid credentials.';
+      errorMsg.classList.add('show');
+    }
+    function hideError() {
+      errorMsg.classList.remove('show');
+    }
 
-            // ─── Error helpers ───
-            function showError(message) {
-                errorText.textContent = message || 'Invalid credentials. Please try again.';
-                errorMsg.classList.add('show');
-            }
+    // ---- Firebase config (from your init-firebase.js) ----
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgVFdfKpCrLkoRsMI2gS7ajlJUzVdYLZU",
+      authDomain: "pry-school-pethgam-wagoora.firebaseapp.com",
+      projectId: "pry-school-pethgam-wagoora",
+      storageBucket: "pry-school-pethgam-wagoora.firebasestorage.app",
+      messagingSenderId: "255417366612",
+      appId: "1:255417366612:web:81cec46aa75cb7d4ba95c1",
+      measurementId: "G-JE9WY9T6FJ"
+    };
 
-            function hideError() {
-                errorMsg.classList.remove('show');
-            }
+    // ---- Initialize Firebase ----
+    let auth = null;
+    let firebaseInitialized = false;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      firebaseInitialized = true;
+      console.log('✅ Firebase initialized.');
+    } catch (e) {
+      console.warn('Firebase init error:', e);
+    }
 
-            // ─── Set loading state ───
-            function setLoading(loading) {
-                if (loading) {
-                    signinBtn.classList.add('loading');
-                    signinBtn.disabled = true;
-                } else {
-                    signinBtn.classList.remove('loading');
-                    signinBtn.disabled = false;
-                }
-            }
+    // ---- Sign in handler ----
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      hideError();
 
-            // ─── Firebase config (REPLACE WITH YOUR OWN) ───
-            const firebaseConfig = {
-                apiKey: "AIzaSyDummyKeyReplaceWithYourOwn",
-                authDomain: "your-project.firebaseapp.com",
-                projectId: "your-project",
-                storageBucket: "your-project.appspot.com",
-                messagingSenderId: "123456789",
-                appId: "1:123456789:web:abcdef123456"
-            };
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
 
-            // Initialize Firebase
-            let auth = null;
-            let firebaseInitialized = false;
+      if (!email || !password) {
+        showError('Please enter both email and password.');
+        return;
+      }
 
-            try {
-                if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "AIzaSyDummyKeyReplaceWithYourOwn") {
-                    firebase.initializeApp(firebaseConfig);
-                    auth = firebase.auth();
-                    firebaseInitialized = true;
-                    console.log('✅ Firebase initialized successfully.');
-                } else {
-                    console.warn('⚠️ Firebase config not set. Using demo mode.');
-                }
-            } catch (e) {
-                console.warn('⚠️ Firebase init error:', e.message);
-            }
+      signinBtn.disabled = true;
+      signinBtn.textContent = '⏳ Signing in...';
 
-            // ─── Sign in handler ───
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                hideError();
+      // If Firebase is not available → DEMO MODE
+      if (!firebaseInitialized || !auth) {
+        if (email === 'admin@demo.com' && password === '123456') {
+          // Demo success
+          localStorage.setItem('userRole', selectedRole);
+          localStorage.setItem('userEmail', email);
+          setTimeout(() => {
+            window.location.href = 'master-profile.html';
+          }, 800);
+        } else {
+          showError('Invalid credentials. Use admin@demo.com / 123456');
+          signinBtn.disabled = false;
+          signinBtn.textContent = '🚀 Sign In';
+        }
+        return;
+      }
 
-                const email = emailInput.value.trim();
-                const password = passwordInput.value.trim();
+      // ---- Real Firebase Auth ----
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log('✅ Signed in:', user.email);
+          // Save role (we use the selected role for now, later fetch from Firestore)
+          localStorage.setItem('userRole', selectedRole);
+          localStorage.setItem('userEmail', user.email);
+          window.location.href = 'master-profile.html';
+        })
+        .catch((error) => {
+          console.error('Auth error:', error);
+          let msg = 'Invalid email or password.';
+          if (error.code === 'auth/user-not-found') {
+            msg = 'No account found with this email. Please sign up.';
+          } else if (error.code === 'auth/wrong-password') {
+            msg = 'Incorrect password.';
+          } else if (error.code === 'auth/too-many-requests') {
+            msg = 'Too many failed attempts. Try again later.';
+          }
+          showError(msg);
+          signinBtn.disabled = false;
+          signinBtn.textContent = '🚀 Sign In';
+        });
+    });
 
-                if (!email || !password) {
-                    showError('Please enter both email and password.');
-                    return;
-                }
+    // ---- Clear error on input ----
+    emailInput.addEventListener('input', hideError);
+    passwordInput.addEventListener('input', hideError);
 
-                if (!email.includes('@')) {
-                    showError('Please enter a valid email address.');
-                    return;
-                }
-
-                // ── Demo mode ──
-                if (!firebaseInitialized || !auth) {
-                    if (email === 'admin@demo.com' && password === '123456') {
-                        // Store the selected role and redirect
-                        localStorage.setItem('userRole', selectedRole);
-                        localStorage.setItem('userEmail', email);
-                        showSuccessAndRedirect();
-                    } else {
-                        showError('Invalid credentials. Use admin@demo.com / 123456');
-                    }
-                    return;
-                }
-
-                // ── Firebase sign in ──
-                setLoading(true);
-
-                auth.signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        setLoading(false);
-                        console.log('✅ Signed in:', userCredential.user.email);
-
-                        // In production, fetch role from Firestore here.
-                        // For now, we use the selected toggle role.
-                        // Replace this with a Firestore query to get the actual role.
-                        localStorage.setItem('userRole', selectedRole);
-                        localStorage.setItem('userEmail', userCredential.user.email);
-                        showSuccessAndRedirect();
-                    })
-                    .catch((error) => {
-                        setLoading(false);
-                        handleFirebaseError(error);
-                    });
-            });
-
-            // ─── Handle Firebase errors ───
-            function handleFirebaseError(error) {
-                let message = 'Something went wrong. Please try again.';
-
-                if (error.code) {
-                    switch (error.code) {
-                        case 'auth/invalid-credential':
-                        case 'auth/wrong-password':
-                        case 'auth/user-not-found':
-                            message = 'Invalid email or password. Please check your credentials.';
-                            break;
-                        case 'auth/too-many-requests':
-                            message = 'Too many failed attempts. Please try again later.';
-                            break;
-                        case 'auth/network-request-failed':
-                            message = 'Network error. Check your internet connection.';
-                            break;
-                        case 'auth/invalid-email':
-                            message = 'Please enter a valid email address.';
-                            break;
-                        case 'auth/user-disabled':
-                            message = 'This account has been disabled. Contact support.';
-                            break;
-                        default:
-                            message = error.message || 'Authentication failed.';
-                    }
-                }
-
-                showError(message);
-
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
-                    passwordInput.style.borderColor = 'rgba(255,107,107,0.5)';
-                    setTimeout(() => {
-                        passwordInput.style.borderColor = '';
-                    }, 2000);
-                }
-            }
-
-            // ─── Success: store role & redirect to index ───
-            function showSuccessAndRedirect() {
-                const btn = signinBtn;
-                btn.textContent = '✅ Signed in!';
-                btn.style.background = 'linear-gradient(135deg, #51cf66, #40c057)';
-                btn.disabled = true;
-
-                setTimeout(() => {
-                    // Redirect to the main dashboard (index.html) which uses RBAC
-                    window.location.href = 'index.html';
-                }, 1000);
-            }
-
-            // ─── Clear error on input ───
-            emailInput.addEventListener('input', hideError);
-            passwordInput.addEventListener('input', hideError);
-
-            console.log('🔐 Sign-in page ready with 3 roles: Admin, Teacher, Student');
-            console.log('📝 Use admin@demo.com / 123456 to sign in.');
-            console.log(`👤 Selected role: ${selectedRole} (set via toggle)`);
-
-            if (!firebaseInitialized) {
-                console.warn('⚠️ Firebase not configured. Running in DEMO mode.');
-            }
-
-        })();
-    </script>
-
+    console.log('🔐 Sign-in page ready.');
+    if (!firebaseInitialized) {
+      console.warn('⚠️ Firebase not initialized – running in DEMO mode.');
+    } else {
+      console.log('📝 Use a real Firebase user or demo admin@demo.com / 123456');
+    }
+  })();
+</script>
 </body>
-</html>
+</html>                                               
+        
+
+                        
+                
