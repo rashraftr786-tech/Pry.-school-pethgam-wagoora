@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Upload Results | GPS Pethgam Wagoora</title>
   <style>
-    /* ... your existing styles (unchanged) ... */
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
     .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     .admin-nav { background: #1a5d1a; padding: 10px; display: flex; gap: 15px; justify-content: center; margin: -20px -20px 20px -20px; }
@@ -33,7 +32,7 @@
 <div class="container">
   <div class="excel-upload-section">
     <h3>📂 Upload Result Oct 2025 (Excel file)</h3>
-    <p>✅ Works with your exact template: 4 header rows, subjects English, Mathematics, Environment Science, Urdu, Kashmiri</p>
+    <p>✅ Works with your template: columns: Adm No, Roll No, Class, Name, Father, Mother, Contact, DOB, then marks for subjects, <strong>APAAR & PEN at the very end</strong>.</p>
     <input type="file" id="excelFile" accept=".xlsx, .xls" />
     <button class="upload-btn" id="processExcelBtn">⬆️ Upload & Process</button>
     <div class="progress-bar" style="display:none;" id="progressContainer">
@@ -70,17 +69,23 @@ import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/f
 
 const SUBJECTS = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
 
-function parseStudentRow(row, startColIndex) {
-  const admNo = row[startColIndex] ? String(row[startColIndex]).trim() : null;
-  const rollNo = row[startColIndex + 1] ? String(row[startColIndex + 1]).trim() : '';
-  const className = row[startColIndex + 2] || '';
-  const studentName = row[startColIndex + 3] || '';
-  const fatherName = row[startColIndex + 4] || '';
-  const motherName = row[startColIndex + 5] || '';
-  const contact = row[startColIndex + 6] || '';
-  const dob = row[startColIndex + 7] || '';
-  if (!admNo || admNo === '') return null;
-  let colOffset = startColIndex + 8;
+// Parse a single row: first 8 columns are student info, then 40 columns of marks (5 subjects * 8),
+// then APAAR and PEN are the last two non-empty values.
+function parseStudentRow(row) {
+  if (!row || row.length < 8) return null;
+  const admNo = String(row[0] || '').trim();
+  if (!admNo) return null;
+
+  const rollNo = String(row[1] || '').trim();
+  const className = String(row[2] || '').trim();
+  const studentName = String(row[3] || '').trim();
+  const fatherName = String(row[4] || '').trim();
+  const motherName = String(row[5] || '').trim();
+  const contact = String(row[6] || '').trim();
+  const dob = String(row[7] || '').trim();
+
+  // Marks start at column 8 (0-indexed)
+  let colOffset = 8;
   const marks = {};
   for (let subIdx = 0; subIdx < SUBJECTS.length; subIdx++) {
     const subject = SUBJECTS[subIdx];
@@ -90,16 +95,34 @@ function parseStudentRow(row, startColIndex) {
       if (val === undefined || val === null || val === '' || val === 'Ab') val = 0;
       fa.push(isNaN(Number(val)) ? 0 : Number(val));
     }
-    let ccaVal = row[colOffset + 7];
+    let ccaVal = row[colOffset + 6];
     if (ccaVal === undefined || ccaVal === '' || ccaVal === 'Ab') ccaVal = 0;
     const cca = Number(ccaVal);
-    let saVal = row[colOffset + 8];
+    let saVal = row[colOffset + 7];
     if (saVal === undefined || saVal === '' || saVal === 'Ab') saVal = 0;
     const sa = Number(saVal);
     marks[subject] = { fa, cca, sa };
-    colOffset += 10;
+    colOffset += 8;
   }
-  return { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks };
+
+  // After marks, the remaining columns include Grand Total, %, Grade, etc.
+  // APAAR and PEN are the last two non-empty values.
+  let apaarId = '';
+  let penNo = '';
+  // Get all values after marks
+  const remaining = row.slice(colOffset);
+  // Filter out empty strings, null, undefined
+  const nonEmpty = remaining.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
+  if (nonEmpty.length >= 2) {
+    // The last two are APAAR and PEN
+    apaarId = String(nonEmpty[nonEmpty.length - 2]).trim();
+    penNo = String(nonEmpty[nonEmpty.length - 1]).trim();
+  } else if (nonEmpty.length === 1) {
+    // Only one left – assume it's PEN, APAAR missing
+    penNo = String(nonEmpty[0]).trim();
+  }
+
+  return { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, apaarId, penNo, marks };
 }
 
 const fileInput = document.getElementById('excelFile');
@@ -141,26 +164,41 @@ processBtn.addEventListener('click', async () => {
         continue;
       }
       consecutiveMissing = 0;
-      if (row.length < 8) continue;
-      const studentData = parseStudentRow(row, 0);
+      const studentData = parseStudentRow(row);
       if (!studentData) { errorCount++; continue; }
-      const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, marks } = studentData;
+      const { admNo, rollNo, className, studentName, fatherName, motherName, contact, dob, apaarId, penNo, marks } = studentData;
       const resultDocRef = doc(db, "results", admNo);
       const existing = await getDoc(resultDocRef);
       const existingData = existing.exists() ? existing.data() : {};
       const finalData = {
         admNo, rollNo: rollNo || existingData.rollNo || '', className, studentName: studentName || existingData.studentName || '',
-        fatherName, motherName, contact, dob, marks, session: "Oct 2025",
+        fatherName, motherName, contact, dob, apaarId, penNo,
+        marks, session: "Oct 2025",
         uploadedAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         attendance: existingData.attendance || '', remarks: existingData.remarks || '',
         discipline: existingData.discipline || '', sports: existingData.sports || '', artCraft: existingData.artCraft || ''
       };
       await setDoc(resultDocRef, finalData, { merge: true });
+
+      // Update students collection with ALL fields
       const studentRef = doc(db, "students", admNo);
       await setDoc(studentRef, {
-        admNo, name: studentName, class: className, rollNo, fatherName, motherName,
+        admNo,
+        name: studentName,
+        class: className,
+        rollNo,
+        fatherName,
+        motherName,
+        contact,
+        dob,
+        apaarId,
+        apaarID: apaarId,
+        penNo,
+        penNumber: penNo,
+        status: 'approved',
         lastUpdated: new Date().toISOString()
       }, { merge: true });
+
       successCount++;
       const percent = Math.floor((successCount / (rows.length - 4)) * 100);
       progressFill.style.width = `${percent}%`;
@@ -176,6 +214,7 @@ processBtn.addEventListener('click', async () => {
   }
 });
 
+// ----- Manual entry code (unchanged) -----
 const subjectsList = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
 const tbody = document.getElementById('marksBody');
 subjectsList.forEach(sub => {
@@ -233,4 +272,4 @@ async function loadExistingMarks(adm) {
 }
 </script>
 </body>
-</html>
+</html>  
