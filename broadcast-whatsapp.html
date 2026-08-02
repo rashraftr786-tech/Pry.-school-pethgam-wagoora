@@ -32,47 +32,69 @@
 
     <script type="module">
         // ============================================================
-        // 🔧 ADJUST THESE VARIABLES TO MATCH YOUR MASTER PROFILE STRUCTURE
+        // 🔧 ADJUST THESE THREE VARIABLES TO MATCH YOUR FIRESTORE
         // ============================================================
-        const MASTER_COLLECTION = "students";        // Your master profile collection name
-        const NAME_FIELD = "name";                  // Field for student's full name
-        const PHONE_FIELD = "fatherContact";        // Field for parent's phone number (used for WhatsApp)
+        const MASTER_COLLECTION = "students";   // <<-- CHANGE to your actual collection name
+        const NAME_FIELD = "name";              // <<-- field for student name
+        const PHONE_FIELD = "fatherContact";    // <<-- field for parent's phone number
         // ============================================================
 
         import { db } from './init-firebase.js';
         import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Load students from Master Profile collection
+        // Load students from Master Profile
         async function load() {
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '<option value="">-- Loading... --</option>';
+
             try {
+                console.log(`🔍 Fetching from collection: "${MASTER_COLLECTION}"`);
                 const snap = await getDocs(collection(db, MASTER_COLLECTION));
-                const select = document.getElementById('studentSelect');
-                // Clear any existing options except the first placeholder
+                console.log(`✅ Found ${snap.size} documents in "${MASTER_COLLECTION}"`);
+
+                // Clear dropdown (keep placeholder)
                 select.innerHTML = '<option value="">-- Choose Student --</option>';
-                
+
+                if (snap.empty) {
+                    alert(`⚠️ No documents found in collection "${MASTER_COLLECTION}". Check your collection name.`);
+                    select.innerHTML = '<option value="">-- No students --</option>';
+                    return;
+                }
+
+                let loadedCount = 0;
                 snap.forEach(doc => {
-                    const s = doc.data();
-                    // Use the fields defined above; fallback to empty string if missing
-                    const name = s[NAME_FIELD] || s.name || s.studentName || "Unknown";
-                    const phone = s[PHONE_FIELD] || s.fatherContact || s.phone || s.mobile || "";
-                    
+                    const data = doc.data();
+                    console.log("📄 Document data:", data); // <<-- shows all fields in the console
+
+                    // Try multiple possible field names
+                    const name = data[NAME_FIELD] || data.name || data.fullName || data.studentName || "Unknown";
+                    const phone = data[PHONE_FIELD] || data.fatherContact || data.phone || data.mobile || data.parentPhone || "";
+
                     if (!phone) {
-                        console.warn(`No phone number found for student: ${name}`);
-                        return; // skip this student
+                        console.warn(`⚠️ No phone number for ${name} – skipping`);
+                        return;
                     }
-                    
+
                     const opt = document.createElement('option');
                     opt.value = phone;
                     opt.dataset.name = name;
                     opt.textContent = `${name} (${phone})`;
                     select.appendChild(opt);
+                    loadedCount++;
                 });
+
+                console.log(`✅ Loaded ${loadedCount} students with phone numbers.`);
+                if (loadedCount === 0) {
+                    alert(`⚠️ Found ${snap.size} documents, but none had a phone number.\nCheck the PHONE_FIELD variable.`);
+                }
             } catch (error) {
-                console.error("Error loading students:", error);
-                alert("Failed to load student data. Check console for details.");
+                console.error("❌ Error loading students:", error);
+                alert(`❌ Failed to load: ${error.message}\nCheck console for details.`);
+                select.innerHTML = '<option value="">-- Error loading --</option>';
             }
         }
 
+        // Update message based on template
         window.updateMsg = () => {
             const select = document.getElementById('studentSelect');
             const selectedOption = select.selectedOptions[0];
@@ -89,6 +111,7 @@
             }
         };
 
+        // Send WhatsApp and log
         window.sendWA = async () => {
             const select = document.getElementById('studentSelect');
             const phone = select.value;
@@ -114,19 +137,18 @@
                     date: new Date().toLocaleDateString(),
                     timestamp: new Date().toISOString()
                 });
-
-                // Open WhatsApp with the message
-                window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+                console.log("✅ Log saved");
             } catch (error) {
-                console.error("Error logging communication:", error);
-                alert("Failed to log the message, but WhatsApp will still open.");
-                // Still open WhatsApp even if logging fails
-                window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+                console.error("❌ Log save failed:", error);
+                // Continue anyway
             }
+
+            // Open WhatsApp
+            window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        // Load students on page load
+        // Load when page loads
         load();
     </script>
 </body>
-</html>
+</html>            
