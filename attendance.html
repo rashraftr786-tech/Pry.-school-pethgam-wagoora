@@ -175,99 +175,60 @@
 </footer>
 
 <script type="module">
-  // 1. Firebase Imports
+  // ============================================================
+  // 🔧 ADJUST THESE TWO VARIABLES TO MATCH YOUR FIRESTORE STRUCTURE
+  // ============================================================
+  const MASTER_COLLECTION = "students";    // Your master profile collection name
+  const CLASS_FIELD = "class";             // Field name for class (e.g., "class", "grade", "studentClass")
+  const NAME_FIELD = "name";               // Field name for student's full name
+  const ADM_FIELD = "admNo";               // Field name for admission/roll number
+  // ============================================================
+
   import { db } from './init-firebase.js';
   import { collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   // Set default date
   document.getElementById('attendanceDate').valueAsDate = new Date();
 
-  // 2. Load Students from Firebase Admissions Collection
-async function loadStudents() {
-  const selectedClass = document.getElementById('classSelect').value;
-  const tableBody = document.getElementById('attendanceTable');
-  tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Loading students...</td></tr>";
+  // 2. Load Students from Master Profile Collection
+  async function loadStudents() {
+    const selectedClass = document.getElementById('classSelect').value;
+    const tableBody = document.getElementById('attendanceTable');
+    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Loading students...</td></tr>";
 
-  if (!selectedClass) {
-    tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Please select a class</td></tr>";
-    return;
-  }
-
-  try {
-    // ✅ CHANGE: Use your master collection name (students / master / profiles)
-    const masterCollection = "students"; // ← Change this to your actual collection name
-    const q = query(
-      collection(db, masterCollection),
-      where("class", "==", selectedClass) // ← Use the actual field name for class
-    );
-    
-    const querySnapshot = await getDocs(q);
-    tableBody.innerHTML = "";
-    let students = [];
-
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      students.push({
-        // ✅ Map your actual field names to what the UI expects
-        studentName: data.name || data.fullName || data.studentName || "Unknown",
-        admNo: data.admNo || data.admissionNumber || data.rollNo || "N/A",
-        studentClass: data.class || data.grade || data.studentClass || selectedClass
-      });
-    });
-
-    if (students.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in class ${selectedClass}</td></tr>`;
+    if (!selectedClass) {
+      tableBody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Please select a class</td></tr>";
       updateSummary();
       return;
     }
 
-    students.sort((a, b) => a.studentName.localeCompare(b.studentName));
-
-    students.forEach((s, index) => {
-      const row = `
-        <tr data-admno="${s.admNo}" data-name="${s.studentName}">
-          <td>${index + 1}</td>
-          <td>${s.studentName}</td>
-          <td>${s.admNo}</td>
-          <td>
-            <select class="status-select" onchange="handleStatusChange(this)">
-              <option value="P">Present</option>
-              <option value="A">Absent</option>
-              <option value="L">Leave</option>
-              <option value="HD">Half Day</option>
-            </select>
-          </td>
-          <td style="text-align:center;">
-            <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
-          </td>
-          <td><input class="remarks-input" placeholder="Remarks" style="width:100px; padding:5px;"></td>
-        </tr>
-      `;
-      tableBody.innerHTML += row;
-    });
-    updateSummary();
-  } catch (error) {
-    console.error("Error loading students:", error);
-    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">⚠️ Error: ${error.message}</td></tr>`;
-  }
-}
-      // Create a query to find students in the selected class
-      const q = query(collection(db, "admissions"), where("studentClass", "==", selectedClass));
+    try {
+      // Query the master collection using the class field
+      const q = query(
+        collection(db, MASTER_COLLECTION),
+        where(CLASS_FIELD, "==", selectedClass)
+      );
       const querySnapshot = await getDocs(q);
-      
       tableBody.innerHTML = "";
       let students = [];
+
       querySnapshot.forEach((doc) => {
-        students.push(doc.data());
+        const data = doc.data();
+        // Map actual fields to what the UI expects
+        students.push({
+          studentName: data[NAME_FIELD] || data.name || data.fullName || "Unknown",
+          admNo: data[ADM_FIELD] || data.admNo || data.rollNo || data.admissionNumber || "N/A",
+          studentClass: data[CLASS_FIELD] || data.class || data.grade || selectedClass
+        });
       });
 
       if (students.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No students found in ${selectedClass}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999;">No students found in class ${selectedClass}</td></tr>`;
         updateSummary();
         return;
       }
 
-      // Sort students by name
+      // Sort by name
       students.sort((a, b) => a.studentName.localeCompare(b.studentName));
 
       students.forEach((s, index) => {
@@ -287,7 +248,7 @@ async function loadStudents() {
             <td style="text-align:center;">
               <input type="checkbox" class="mdm-check" checked onchange="updateSummary()">
             </td>
-            <td><input class="remarks-input" placeholder="Remarks" style="width: 100px; padding:5px;"></td>
+            <td><input class="remarks-input" placeholder="Remarks" style="width:100px; padding:5px;"></td>
           </tr>
         `;
         tableBody.innerHTML += row;
@@ -295,7 +256,7 @@ async function loadStudents() {
       updateSummary();
     } catch (error) {
       console.error("Error loading students:", error);
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error connecting to Cloud.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">⚠️ Error: ${error.message}</td></tr>`;
     }
   }
 
@@ -345,7 +306,8 @@ async function loadStudents() {
 
   // 4. Global helper functions
   window.handleStatusChange = function(select) {
-    const mdmCheck = select.parentElement.nextElementSibling.querySelector('.mdm-check');
+    const row = select.closest('tr');
+    const mdmCheck = row.querySelector('.mdm-check');
     if (select.value === "A" || select.value === "L") {
       mdmCheck.checked = false;
     } else {
@@ -391,13 +353,18 @@ async function loadStudents() {
     window.print();
   }
 
-  // Bind buttons
+  // Bind functions globally
   window.loadStudents = loadStudents;
   window.saveAttendance = saveAttendance;
+  window.handleStatusChange = window.handleStatusChange;
+  window.updateSummary = window.updateSummary;
+  window.preparePrint = window.preparePrint;
 
 </script>
-
 
 </body>
 </html>
 
+
+
+            
