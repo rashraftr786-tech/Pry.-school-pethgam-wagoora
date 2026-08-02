@@ -180,8 +180,9 @@
 </div>
 
 <script type="module">
+    // ✅ FIX: Import setDoc (it was missing)
     import { db } from './init-firebase.js';
-    import { collection, doc, getDoc, updateDoc, deleteDoc, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const storage = getStorage();
@@ -205,7 +206,7 @@
     }
     buildHeader();
 
-    // ---------- PHOTO UPLOAD (unchanged) ----------
+    // ---------- PHOTO UPLOAD ----------
     const photoAdmNoInput = document.getElementById('photoAdmNo');
     const searchStudentBtn = document.getElementById('searchStudentForPhoto');
     const selectPhotoBtn = document.getElementById('selectPhotoBtn');
@@ -224,10 +225,11 @@
         if (!admNo) { photoStatus.innerText = 'Enter Admission Number'; return; }
         photoStatus.innerText = 'Searching...';
         try {
+            // ✅ This now works because document ID = admNo
             const studentRef = doc(db, "students", admNo);
             const studentSnap = await getDoc(studentRef);
             if (!studentSnap.exists()) {
-                photoStatus.innerText = 'Student not found.';
+                photoStatus.innerText = 'Student not found. (Admission No may not match document ID)';
                 previewName.innerText = 'Not found';
                 previewPhoto.src = "https://via.placeholder.com/80?text=No+Photo";
                 selectedStudentData = null;
@@ -473,13 +475,12 @@
         if (mode === 'add') {
             modalTitle.innerText = '➕ Add New Student';
             modalSubmitBtn.innerText = '💾 Add Student';
-            // Clear all fields (reset already done)
-            // Set default status
             editStatus.value = 'approved';
         } else if (mode === 'edit' && student) {
             modalTitle.innerText = '✏️ Edit Student Record';
             modalSubmitBtn.innerText = '🔄 Update Student';
-            editDocId.value = student.id || student.admNo;
+            // For edit, docId is set to admNo (since we use admNo as document ID)
+            editDocId.value = student.admNo; // or student.id (they should be same)
             editAdmNo.value = student.admNo || '';
             editRollNo.value = student.rollNo || '';
             editClass.value = student.class || '';
@@ -515,60 +516,60 @@
     });
 
     // ---- Form Submit (Add or Update) ----
-editForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const docId = editDocId.value;
-    const payload = {
-        admNo: editAdmNo.value.trim(),
-        rollNo: editRollNo.value.trim(),
-        class: editClass.value.trim(),
-        name: editName.value.trim(),
-        studentName: editName.value.trim(),
-        fatherName: editFather.value.trim(),
-        motherName: editMother.value.trim(),
-        dob: editDob.value,
-        gender: editGender.value,
-        address: editAddress.value.trim(),
-        contact: editContact.value.trim(),
-        apaarId: editApaar.value.trim(),
-        apaarID: editApaar.value.trim(),
-        penNo: editPen.value.trim(),
-        penNumber: editPen.value.trim(),
-        dateOfAdmission: editDateOfAdmission.value,
-        classAdmitted: editClassAdmitted.value.trim(),
-        admittedVide: editAdmittedVide.value.trim(),
-        dcIssuedBy: editDcIssuedBy.value.trim(),
-        dateOfWithdrawal: editDateOfWithdrawal.value,
-        status: editStatus.value
-    };
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const docId = editDocId.value;
+        const payload = {
+            admNo: editAdmNo.value.trim(),
+            rollNo: editRollNo.value.trim(),
+            class: editClass.value.trim(),
+            name: editName.value.trim(),
+            studentName: editName.value.trim(),
+            fatherName: editFather.value.trim(),
+            motherName: editMother.value.trim(),
+            dob: editDob.value,
+            gender: editGender.value,
+            address: editAddress.value.trim(),
+            contact: editContact.value.trim(),
+            apaarId: editApaar.value.trim(),
+            apaarID: editApaar.value.trim(),
+            penNo: editPen.value.trim(),
+            penNumber: editPen.value.trim(),
+            dateOfAdmission: editDateOfAdmission.value,
+            classAdmitted: editClassAdmitted.value.trim(),
+            admittedVide: editAdmittedVide.value.trim(),
+            dcIssuedBy: editDcIssuedBy.value.trim(),
+            dateOfWithdrawal: editDateOfWithdrawal.value,
+            status: editStatus.value
+        };
 
-    if (!payload.admNo || !payload.class || !payload.name) {
-        alert('Admission No, Class, and Name are required.');
-        return;
-    }
-
-    try {
-        if (docId) {
-            // UPDATE existing record
-            await updateDoc(doc(db, "students", docId), payload);
-            showToast('✅ Record updated successfully.');
-        } else {
-            // ADD new record - Check duplicate admNo
-            const existing = allStudents.find(s => s.admNo === payload.admNo);
-            if (existing) {
-                alert(`Admission No ${payload.admNo} already exists.`);
-                return;
-            }
-            // ✅ FIX: Use setDoc with admNo as the Document ID
-            await setDoc(doc(db, "students", payload.admNo), payload);
-            showToast('✅ Student added successfully.');
+        if (!payload.admNo || !payload.class || !payload.name) {
+            alert('Admission No, Class, and Name are required.');
+            return;
         }
-        closeModal();
-    } catch (err) {
-        console.error('Firestore error:', err);
-        alert('❌ Operation failed: ' + err.message);
-    }
-});
+
+        try {
+            if (docId) {
+                // UPDATE: docId should be the admission number
+                await updateDoc(doc(db, "students", docId), payload);
+                showToast('✅ Record updated successfully.');
+            } else {
+                // ADD new record - Check duplicate admNo
+                const existing = allStudents.find(s => s.admNo === payload.admNo);
+                if (existing) {
+                    alert(`Admission No ${payload.admNo} already exists.`);
+                    return;
+                }
+                // ✅ Use setDoc with admission number as document ID
+                await setDoc(doc(db, "students", payload.admNo), payload);
+                showToast('✅ Student added successfully.');
+            }
+            closeModal();
+        } catch (err) {
+            console.error('Firestore error:', err);
+            alert('❌ Operation failed: ' + err.message);
+        }
+    });
 
     // ---------- DELETE ----------
     async function deleteStudent(id) {
@@ -587,6 +588,7 @@ editForm.addEventListener('submit', async (e) => {
         onSnapshot(q, (snapshot) => {
             const students = [];
             snapshot.forEach(doc => {
+                // Store doc.id as well (but we'll use admNo as primary key)
                 students.push({ id: doc.id, ...doc.data() });
             });
             allStudents = students;
