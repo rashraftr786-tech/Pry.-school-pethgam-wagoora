@@ -1,0 +1,110 @@
+{
+  "documentType": "School Timetable",
+  "formatVersion": "1.1",
+  "title": "School Timetable",
+  "header": {
+    "office": "Office of the",
+    "school": "Headmaster Government Primary School",
+    "location": "Pethgam Wagoora 193109",
+    "effective": "April 2026"
+  },
+  "layout": {
+    "titleBox": true,
+    "centeredHeader": true,
+    "tableBorders": true,
+    "teacherColumnAlignment": "left",
+    "printStyles": {
+      "enabled": true,
+      "pageMargin": "12mm",
+      "titleBoxFontSize": "24px",
+      "cellFontSize": "12px",
+      "cellPadding": "8px 5px"
+    }
+  },
+  "periods": [
+    "9:30–10:05",
+    "10:05–10:40",
+    "10:40–11:15",
+    "11:15–11:50",
+    "11:50–12:25",
+    "12:25–1:00",
+    "1:00–2:00",
+    "2:00–2:40",
+    "2:40–3:20",
+    "3:20–3:30"
+  ],
+  "rows": [
+    {
+      "sno": 1,
+      "teacher": "Mohammad Ashraf Rather",
+      "schedule": [
+        "Morning Assembly",
+        "4th Mathematics",
+        "5th EVS.",
+        "3rd English",
+        "1st & 2nd Urdu",
+        "3rd EVS",
+        "Recess Break",
+        "5th English",
+        "KG English",
+        "TABLE TIME"
+      ]
+    },
+    {
+      "sno": 2,
+      "teacher": "Mohammad Iqbal Rather",
+      "schedule": [
+        "Morning Assembly",
+        "5th Mathematics",
+        "KG Mathematics",
+        "4th EVS",
+        "3rd Mathematics",
+        "1st & 2nd Mathematics",
+        "Recess Break",
+        "1st & 2nd English",
+        "4th English",
+        "TABLE TIME"
+      ]
+    },
+    {
+      "sno": 3,
+      "teacher": "Zamrooda Bano",
+      "schedule": [
+        "Morning Assembly",
+        "KG Kashmiri",
+        "1st & 2nd Kashmiri",
+        "5th Urdu",
+        "5th Kashmiri",
+        "4th Urdu",
+        "Recess Break",
+        "3rd & 4th Kashmiri",
+        "3rd Urdu",
+        "TABLE TIME"
+      ]
+    },
+    {
+      "sno": "",
+      "teacher": "",
+      "schedule": [
+        "Morning Assembly",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Recess Break",
+        "",
+        "",
+        "TABLE TIME"
+      ],
+      "rowType": "spacer"
+    }
+  ],
+  "signature": {
+    "label": "Signature of Headmaster",
+    "alignment": "right"
+  },
+  "notes": [
+    "Blank row preserved as spacer row."
+  ]
+}
