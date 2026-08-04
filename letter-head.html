@@ -70,12 +70,20 @@ body{
 
 .info{
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-between;
+    align-items:center;
     margin-top:15px;
+}
+
+.info-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
 label{
     font-weight:bold;
+    white-space:nowrap;
 }
 
 input{
@@ -85,6 +93,10 @@ input{
     font-size:16px;
     padding:4px;
     font-family:inherit;
+}
+
+.info-item input{
+    width:220px;
 }
 
 .row{
@@ -212,9 +224,18 @@ overflow:hidden;
 
 </div>
 
+<!-- Letter No and Date Info Bar -->
 <div class="info">
 
-<div>
+<div class="info-item">
+
+<label>Letter No:</label>
+
+<input type="text" id="letterNo" placeholder="GPS/Peth/...">
+
+</div>
+
+<div class="info-item">
 
 <label>Date :</label>
 
@@ -238,14 +259,6 @@ overflow:hidden;
 <label>Subject</label>
 
 <input type="text" placeholder="Subject">
-
-</div>
-
-<div class="row">
-
-<label>Reference (Optional)</label>
-
-<input type="text" placeholder="Reference">
 
 </div>
 
@@ -282,7 +295,7 @@ new Date().toISOString().split("T")[0];
 
 function clearForm(){
 
-document.querySelectorAll('input, textarea').forEach(function(e){
+document.querySelectorAll('input[type="text"], textarea').forEach(function(e){
 
 e.value="";
 
@@ -294,3 +307,4 @@ e.value="";
 
 </body>
 </html>
+.
