@@ -91,7 +91,19 @@ input{
     margin-top:12px;
 }
 
-textarea{
+.address-box{
+    width:100%;
+    min-height:90px;
+    margin-top:6px;
+    border:1px solid #999;
+    padding:8px;
+    font-size:16px;
+    line-height:1.4;
+    resize:vertical;
+    font-family:"Times New Roman",serif;
+}
+
+.letter-body{
     width:100%;
     min-height:450px;
     margin-top:18px;
@@ -180,7 +192,7 @@ overflow:hidden;
 
 <div class="header">
 
-<img src="logo.png" class="logo">
+<img src="logo.png" class="logo" alt="Logo">
 
 <div class="title">
 
@@ -212,27 +224,12 @@ overflow:hidden;
 
 </div>
 
+<!-- Single Box for Recipient Address -->
 <div class="row">
 
-<label>To</label>
+<label>To / Recipient Address</label>
 
-<input type="text" placeholder="Name of Authority / Office">
-
-</div>
-
-<div class="row">
-
-<label>Designation</label>
-
-<input type="text" placeholder="Designation">
-
-</div>
-
-<div class="row">
-
-<label>Office Address</label>
-
-<input type="text" placeholder="Office Address">
+<textarea class="address-box" placeholder="To,&#10;Name of Authority / Designation&#10;Office Address"></textarea>
 
 </div>
 
@@ -252,7 +249,7 @@ overflow:hidden;
 
 </div>
 
-<textarea placeholder="Write your official letter here..."></textarea>
+<textarea class="letter-body" placeholder="Write your official letter here..."></textarea>
 
 <div class="signature">
 
@@ -285,13 +282,11 @@ new Date().toISOString().split("T")[0];
 
 function clearForm(){
 
-document.querySelectorAll('input[type="text"]').forEach(function(e){
+document.querySelectorAll('input, textarea').forEach(function(e){
 
 e.value="";
 
 });
-
-document.querySelector("textarea").value="";
 
 }
 
