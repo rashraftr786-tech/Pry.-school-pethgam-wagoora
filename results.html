@@ -1,480 +1,1043 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Result | GPS Pethgam Wagoora</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    @page { size: A4; margin: 1cm; }
-    body {
-      background: linear-gradient(145deg, #d4e8d4 0%, #bdd8bd 100%);
-      font-family: 'Segoe UI', 'Poppins', Roboto, sans-serif;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .nav-header {
-      background: #1a5d1a;
-      padding: 8px 20px;
-      border-radius: 60px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 25px;
-      width: 100%;
-      max-width: 1200px;
-    }
-    .nav-header a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 12px;
-      padding: 5px 14px;
-      border-radius: 40px;
-    }
-    .nav-header a:hover { background: #2e7d32; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPS Pethgam Wagoora - Professional Marksheet System</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+    </script>
 
-    .search-card {
-      max-width: 550px;
-      width: 100%;
-      margin: 0 auto 30px;
-      background: white;
-      border-radius: 48px;
-      padding: 18px 25px;
-      text-align: center;
-      box-shadow: 0 12px 20px rgba(0,0,0,0.1);
-    }
-    .search-card h2 { color: #1a5d1a; margin-bottom: 12px; font-size: 22px; }
-    .search-card input {
-      padding: 8px 16px;
-      width: 190px;
-      margin: 5px;
-      border: 2px solid #ccc;
-      border-radius: 40px;
-    }
-    .search-card button {
-      background: #1a5d1a;
-      color: white;
-      border: none;
-      padding: 8px 22px;
-      border-radius: 40px;
-      font-weight: bold;
-      margin-top: 8px;
-      cursor: pointer;
-    }
+    <!-- Firebase SDKs (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js">
+    </script>
 
-    /* Marksheet container with watermark */
-    .marksheet {
-      max-width: 1100px;
-      width: 100%;
-      margin: 0 auto;
-      background: white;
-      border-radius: 28px;
-      box-shadow: 0 20px 30px rgba(0,0,0,0.2);
-      overflow: hidden;
-      display: none;
-      border: 2px solid #2e7d32;
-      box-shadow: 0 0 0 6px #f0f7f0, 0 0 0 10px #c8e6c9;
-      position: relative;
-    }
-    /* Watermark school logo */
-    .marksheet::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('logo.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 35%;
-      opacity: 0.08;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .marksheet > * { position: relative; z-index: 1; }
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-after: always;
+                display: block;
+            }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .marksheet-container {
+                margin: 10px auto;
+                border: 4px solid #6d59c0 !important;
+                box-shadow: none;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                page-break-inside: avoid;
+            }
+            /* hide all marksheets except the one being printed */
+            .marksheet-container:not(.active-print) {
+                display: none !important;
+            }
+        }
 
-    /* Header – two lines + smaller address */
-    .marksheet-header {
-      background: linear-gradient(115deg, #0b3d0b, #1f6d1f);
-      padding: 15px 20px;
-      text-align: center;
-      color: white;
-    }
-    .school-name-line1 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-    .school-name-line2 {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-top: 4px;
-    }
-    .school-address {
-      font-size: 11px;
-      opacity: 0.85;
-      margin-top: 8px;
-    }
+        .marksheet-container {
+            background: white;
+            width: 210mm;
+            min-height: 290mm;
+            padding: 15px;
+            margin: 20px auto;
+            position: relative;
+            border: 4px solid #6d59c0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Student info – larger font */
-    .student-info-row {
-      display: flex;
-      flex-wrap: wrap;
-      background: #fff7e8;
-      padding: 16px 22px;
-      gap: 20px;
-      border-bottom: 2px solid #ffb74d;
-    }
-    .details-grid {
-      flex: 3;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-      gap: 8px 18px;
-      font-size: 13px;
-    }
-    .detail-item strong {
-      color: #1a5d1a;
-      display: inline-block;
-      min-width: 100px;
-    }
-    .photo-area { flex: 1; text-align: center; }
-    .photo-area img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 3px solid #ffb74d;
-      background: white;
-    }
+        .marksheet-container::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            width: 400px;
+            height: 400px;
+            background-image: url('new-logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    /* Marks table – larger font */
-    .marks-table-wrapper { padding: 12px 22px; overflow-x: auto; }
-    .marks-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    .marks-table th, .marks-table td {
-      border: 1px solid #bbb;
-      padding: 6px 4px;
-      text-align: center;
-    }
-    .marks-table th { background: #ffb74d; color: #2c2c2c; }
-    .subject-cell {
-      background: #f5f5f5;
-      font-weight: bold;
-      text-align: left;
-      padding-left: 10px;
-    }
-    .grand-total-row { background: #e8f5e9; font-weight: bold; }
+        .header-bg {
+            position: relative;
+            z-index: 1;
+            background-color: #6d59c0 !important;
+            color: white !important;
+            border-bottom: 2px solid #000;
+        }
+        .cell-label {
+            background-color: #e0e7ff !important;
+            color: #1e40af !important;
+            font-weight: bold;
+            border: 1px solid #94a3b8;
+            padding: 4px;
+            font-size: 11px;
+        }
+        .cell-value {
+            border: 1px solid #94a3b8;
+            padding: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            color: #000;
+        }
+        table {
+            position: relative;
+            z-index: 1;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th,
+        td {
+            border: 1px solid #94a3b8;
+            text-align: center;
+            font-size: 11px;
+            padding: 3px;
+        }
+        .sub-name {
+            color: #b91c1c;
+            text-align: left;
+            font-weight: bold;
+            padding-left: 5px;
+            font-size: 12px;
+        }
+        .footer-tab {
+            background-color: #334155 !important;
+            color: white !important;
+            font-size: 10px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+        .photo-box {
+            position: relative;
+            z-index: 1;
+            width: 110px;
+            height: 120px;
+            border: 2px solid #6d59c0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+        }
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            height: 120px;
+            gap: 8px;
+            padding: 10px;
+            border-bottom: 2px solid #334155;
+        }
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+        .bar {
+            width: 100%;
+            background-color: #3b82f6 !important;
+            border: 1px solid #1e40af;
+            min-height: 1px;
+        }
+        .prof-img {
+            width: 40px;
+            height: 30px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+        .grid,
+        .border,
+        .flex {
+            position: relative;
+            z-index: 1;
+        }
 
-    /* Info panels */
-    .info-panels {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      padding: 5px 22px 15px;
-    }
-    .grade-key, .final-results {
-      flex: 1;
-      background: #f1f8e9;
-      border-radius: 24px;
-      padding: 10px 18px;
-      font-size: 12px;
-    }
-    .final-results { background: #fff3e0; }
-    .grade-key h4, .final-results h4 { font-size: 14px; margin-bottom: 6px; }
-    .grade-key table { width: 100%; font-size: 11px; }
-    .final-results p { margin: 4px 0; }
+        /* toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .toast.success {
+            background: #065f46;
+            border-left: 6px solid #34d399;
+        }
+        .toast.error {
+            background: #7f1d1d;
+            border-left: 6px solid #f87171;
+        }
+        .toast.info {
+            background: #1e3a5f;
+            border-left: 6px solid #60a5fa;
+        }
 
-    /* Bottom row: chart + verification */
-    .bottom-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 5px 22px 15px;
-      align-items: stretch;
-    }
-    .chart-container { flex: 2; min-width: 250px; }
-    .verification-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      background: #faf8f0;
-      border-radius: 28px;
-      padding: 15px 10px;
-    }
-    .qr-code canvas, .barcode svg { width: 100px; height: 100px; }
-    .verification-container small { font-size: 10px; margin-top: 5px; }
+        /* spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-    /* Extra activities */
-    .extra-activities {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 8px 22px;
-      background: #f9f9f9;
-    }
-    .extra-box {
-      flex: 1;
-      background: white;
-      border-radius: 20px;
-      padding: 8px;
-      text-align: center;
-      font-size: 11px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    .remarks {
-      background: #fff8e1;
-      margin: 10px 22px;
-      padding: 12px 20px;
-      border-radius: 24px;
-      font-size: 12px;
-      border-left: 6px solid #ffb74d;
-    }
-    .signatures {
-      display: flex;
-      justify-content: space-between;
-      padding: 15px 30px 25px;
-      font-size: 11px;
-    }
-    .print-btn {
-      display: block;
-      width: 180px;
-      margin: 15px auto 25px;
-      background: #1a5d1a;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 40px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        .btn-sm {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+        .btn-sm:hover {
+            transform: scale(1.04);
+            opacity: 0.9;
+        }
 
-    @media print {
-      .nav-header, .search-card, .print-btn { display: none; }
-      body { background: white; padding: 0; margin: 0; }
-      .marksheet { box-shadow: none; border: 1px solid #1a5d1a; border-radius: 0; }
-      .marksheet::before { opacity: 0.12; }
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    }
-  </style>
+        .action-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Firestore config card */
+        .config-card {
+            border: 2px dashed #6d59c0;
+            background: #f8f5ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .config-card input {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+            width: 100%;
+        }
+        .config-card label {
+            font-weight: 600;
+            font-size: 12px;
+            color: #334155;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .config-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body>
-<div class="nav-header">
-  <a href="admission.html">📝 Admission</a>
-  <a href="adm-register.html">📋 Register</a>
-  <a href="upload-results.html">📤 Upload Marks</a>
-  <a href="results.html">🎓 Online Result</a>
-  <a href="master-profile.html">📊 Master Record</a>
-  <a href="ver-survey.html">📋 VER Survey</a>
-</div>
+<body class="bg-gray-100 p-4">
 
-<div class="search-card">
-  <h2>🌟 Student Result Portal</h2>
-  <input type="text" id="admNo" placeholder="Admission No (e.g., 117)">
-  <span style="font-weight:bold;">OR</span>
-  <input type="text" id="rollNo" placeholder="Roll No (e.g., 404)">
-  <div><button id="searchBtn">🔍 Get Marksheet</button></div>
-</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
-<div id="marksheetContainer" class="marksheet"></div>
+    <!-- ====== TOP PANEL ====== -->
+    <div class="no-print max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-xl mb-10 border-b-4 border-indigo-600">
 
-<script type="module">
-  import { db } from './init-firebase.js';
-  import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  function calculateGrade(percentage) {
-    if (percentage > 85) return { grade: "A+", level: "Sky" };
-    if (percentage > 70) return { grade: "A", level: "Mountain" };
-    if (percentage > 55) return { grade: "B", level: "Stream" };
-    if (percentage > 40) return { grade: "C", level: "Stream" };
-    if (percentage > 33) return { grade: "D", level: "Stream" };
-    return { grade: "E", level: "Stream" };
-  }
-
-  async function findAdmByRoll(roll) {
-    const q = query(collection(db, "students"), where("rollNo", "==", String(roll)));
-    const snap = await getDocs(q);
-    return snap.empty ? null : snap.docs[0].data().admNo;
-  }
-
-  async function fetchStudentData(admNo) {
-    const studentRef = doc(db, "students", admNo);
-    const studentSnap = await getDoc(studentRef);
-    if (!studentSnap.exists()) return null;
-    const student = studentSnap.data();
-    const resQuery = query(collection(db, "results"), where("admNo", "==", String(admNo)), where("session", "==", "Oct 2025"));
-    const resSnap = await getDocs(resQuery);
-    const result = resSnap.empty ? null : resSnap.docs[0].data();
-    return { student, result };
-  }
-
-  document.getElementById('searchBtn').addEventListener('click', async () => {
-    const admVal = document.getElementById('admNo').value.trim();
-    const rollVal = document.getElementById('rollNo').value.trim();
-    let admNo = admVal;
-    if (!admNo && rollVal) admNo = await findAdmByRoll(rollVal);
-    if (!admNo) { alert('Please enter a valid Admission Number or Roll Number.'); return; }
-    const container = document.getElementById('marksheetContainer');
-    container.style.display = 'block';
-    container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Loading marksheet...</div>';
-    const data = await fetchStudentData(admNo);
-    if (!data || !data.result) {
-      container.innerHTML = '<div style="text-align:center; color:red; padding:40px;">❌ No record found for Oct 2025 session.</div>';
-      return;
-    }
-    renderMarksheet(data.student, data.result);
-  });
-
-  function renderMarksheet(student, result) {
-    const subjects = ['English', 'Mathematics', 'Environment Science', 'Urdu', 'Kashmiri'];
-    const display = ['English', 'Math', 'EVS', 'Urdu', 'Kashmiri'];
-    let grandTotal = 0;
-    let subjectPercentages = [];
-    let rowsHtml = '';
-
-    for (let i=0; i<subjects.length; i++) {
-      const subKey = subjects[i];
-      const m = result.marks?.[subKey] || { fa: [0,0,0,0,0,0], cca:0, sa:0 };
-      const fa = m.fa.map(v => Number(v)||0);
-      const faSum = fa.reduce((a,b)=>a+b,0);
-      const cc = Number(m.cca)||0;
-      const sa = Number(m.sa)||0;
-      const subTotal = faSum + cc + sa;
-      grandTotal += subTotal;
-      const subPercent = (subTotal / 100) * 100;
-      subjectPercentages.push(subPercent);
-      const gradeInfo = calculateGrade(subPercent);
-      rowsHtml += `<tr>
-        <td class="subject-cell">${display[i]}</td>
-        ${fa.map(v => `<td>${v}</td>`).join('')}
-        <td>${faSum}</td><td>${cc}</td><td>${sa}</td>
-        <td><strong>${subTotal}</strong></td>
-        <td>${gradeInfo.grade}</td>
-        <td>${gradeInfo.level}</td>
-      </tr>`;
-    }
-
-    const overallPercent = (grandTotal / 500) * 100;
-    const overallGrade = calculateGrade(overallPercent);
-    const resultText = overallPercent >= 33 ? '✅ PROMOTED' : '❌ NOT PROMOTED';
-
-    const gradeKeyHtml = `
-      <h4>📊 Percentage / Grade Key</h4>
-      <table style="width:100%">
-        <tr><td>>85% - 100%</td><td>A+ (Sky)</td></tr>
-        <tr><td>>70% - 85%</td><td>A (Mountain)</td></tr>
-        <tr><td>>55% - 70%</td><td>B (Stream)</td></tr>
-        <tr><td>>40% - 55%</td><td>C (Stream)</td></tr>
-        <tr><td>>33% - 40%</td><td>D (Stream)</td></tr>
-      </table>
-    `;
-    const finalHtml = `
-      <h4>🎯 Final Results</h4>
-      <p><strong>Total Marks:</strong> ${grandTotal} / 500</p>
-      <p><strong>%age:</strong> ${overallPercent.toFixed(2)}%</p>
-      <p><strong>Result:</strong> ${resultText}</p>
-      <p><strong>Grade:</strong> ${overallGrade.grade}</p>
-      <p><strong>Proficiency:</strong> ${overallGrade.level}</p>
-    `;
-
-    const attendance = result.attendance || '92%';
-    const discipline = result.discipline || 'A';
-    const sports = result.sports || 'Excellent';
-    const artCraft = result.artCraft || 'A+';
-    const socialSkills = result.socialSkills || 'Good';
-    const teamwork = result.teamwork || 'A';
-    const remarks = result.remarks || `${student.name || ''} has shown ${overallGrade.level.toLowerCase()} performance.`;
-
-    let photoUrl = student.photoURL && student.photoURL !== '' ? student.photoURL : 'https://via.placeholder.com/100?text=No+Photo';
-    const verifyId = `${student.admNo}_${Date.now()}`;
-    const verificationUrl = `${window.location.origin}${window.location.pathname}?verify=${verifyId}`;
-
-    const marksheetHtml = `
-      <div class="marksheet-header">
-        <div class="school-name-line1">GOVERNMENT PRIMARY SCHOOL</div>
-        <div class="school-name-line2">PETHGAM WAGOORA</div>
-        <div class="school-address">Wagoora Babareshi Road, Baramulla, J&K - 193109 | UDISE: 01022202207</div>
-      </div>
-      <div class="student-info-row">
-        <div class="details-grid">
-          <div><strong>Student Name:</strong> ${student.name || student.studentName || ''}</div>
-          <div><strong>Adm. No:</strong> ${student.admNo}</div>
-          <div><strong>Roll No:</strong> ${student.rollNo || '-'}</div>
-          <div><strong>Father's Name:</strong> ${student.fatherName || ''}</div>
-          <div><strong>Mother's Name:</strong> ${student.motherName || ''}</div>
-          <div><strong>D.O.B:</strong> ${student.dob || ''}</div>
-          <div><strong>Class:</strong> ${student.class || ''}</div>
-          <div><strong>Session:</strong> Oct 2025</div>
-          <div><strong>Apaar ID:</strong> ${student.apaarId || student.apaarID || '-'}</div>
-          <div><strong>PEN No.:</strong> ${student.penNo || student.penNumber || '-'}</div>
+        <!-- Title & Print All -->
+        <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+            <h2 class="text-2xl font-bold text-indigo-900">📋 GPS Pethgam Marksheet Panel</h2>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="window.print()" class="bg-indigo-600 text-white px-6 py-2 rounded font-bold hover:bg-indigo-700 transition">
+                    🖨️ Print All (PDF)
+                </button>
+                <button onclick="saveAllToFirestore()" class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700 transition" id="saveAllBtn">
+                    ☁️ Save All to Firestore
+                </button>
+            </div>
         </div>
-        <div class="photo-area"><img src="${photoUrl}" alt="Photo" onerror="this.src='https://via.placeholder.com/100?text=No+Photo'"></div>
-      </div>
-      
-      <div class="marks-table-wrapper">
-        <table class="marks-table">
-          <thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>T(30)</th><th>CC(20)</th><th>Sum(50)</th><th>Total</th><th>Grade</th><th>Proficiency</th></tr></thead>
-          <tbody>${rowsHtml}<tr class="grand-total-row"><td colspan="7"><strong>Grand Total</strong></td><td><strong>74</strong></td><td><strong>50</strong></td><td><strong>119</strong></td><td><strong>${grandTotal}</strong></td><td colspan="2"><strong>Overall: ${overallGrade.grade}</strong></td></tr></tbody>
-        </table>
-      </div>
-      
-      <div class="info-panels">
-        <div class="grade-key">${gradeKeyHtml}</div>
-        <div class="final-results">${finalHtml}</div>
-      </div>
-      
-      <div class="bottom-row">
-        <div class="chart-container"><canvas id="subjectChart"></canvas></div>
-        <div class="verification-container">
-          <div class="qr-code"><div id="qrCodeDiv"></div><small>Scan to Verify</small></div>
-          <div class="barcode"><svg id="studentBarcode"></svg><small>Student ID Barcode</small></div>
+
+        <!-- Firestore Config -->
+        <div class="config-card">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-bold text-indigo-800">🔥 Firestore Configuration</span>
+                <button onclick="toggleFirestoreConfig()" class="text-sm text-indigo-600 underline">Toggle</button>
+            </div>
+            <div id="firestoreConfigArea">
+                <div class="config-row">
+                    <div>
+                        <label>Project ID</label>
+                        <input id="fbProjectId" placeholder="your-project-id" value="gps-pethgam-marksheet" />
+                    </div>
+                    <div>
+                        <label>Collection Name</label>
+                        <input id="fbCollection" placeholder="marksheets" value="marksheets" />
+                    </div>
+                </div>
+                <div class="text-xs text-slate-500 mt-2">
+                    ⚠️ Make sure Firestore security rules allow writes. For production, use environment variables.
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="extra-activities">
-        <div class="extra-box">🏃‍♂️ <strong>Sports</strong><br>${sports}</div>
-        <div class="extra-box">🤝 <strong>Teamwork</strong><br>${teamwork}</div>
-        <div class="extra-box">📏 <strong>Discipline</strong><br>${discipline}</div>
-        <div class="extra-box">🎨 <strong>Art & Craft</strong><br>${artCraft}</div>
-        <div class="extra-box">🗣️ <strong>Social Skills</strong><br>${socialSkills}</div>
-        <div class="extra-box">📊 <strong>Attendance</strong><br>${attendance}</div>
-      </div>
-      
-      <div class="remarks"><strong>📝 General Remarks</strong><br>${remarks}</div>
-      <div class="signatures">
-        <div>Sign. Form Teacher</div><div>Sign. Exam I/C</div><div>Parents Signature</div><div>Seal & Sign. Headmaster</div>
-      </div>
-      <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
-    `;
-    
-    document.getElementById('marksheetContainer').innerHTML = marksheetHtml;
-    
-    // Bar chart
-    new Chart(document.getElementById('subjectChart'), {
-      type: 'bar',
-      data: { labels: display, datasets: [{ label: 'Percentage (%)', data: subjectPercentages, backgroundColor: ['#2e7d32','#ffb74d','#42a5f5','#ab47bc','#ef5350'], borderRadius: 8, barPercentage: 0.7 }] },
-      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage', font: { size: 11 } } } } }
-    });
-    // Barcode
-    JsBarcode("#studentBarcode", `${student.admNo}-${student.rollNo || '000'}`, { format: "CODE128", width: 1.6, height: 55, displayValue: true, fontSize: 10 });
-    // QR code
-    new QRCode(document.getElementById("qrCodeDiv"), { text: verificationUrl, width: 100, height: 100, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
-  }
-</script>
+
+        <!-- Upload Excel -->
+        <div class="mb-6 p-4 bg-indigo-50 rounded-lg">
+            <label class="block text-sm font-bold text-indigo-900 mb-2">📂 Upload Excel Data</label>
+            <input type="file" id="excelUpload" accept=".xlsx, .xls" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-indigo-600 file:text-white hover:file:bg-indigo-700" />
+        </div>
+
+        <!-- Student List -->
+        <div id="studentListControl" class="hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm border">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="p-2 border">Roll</th>
+                            <th class="p-2 border">Name</th>
+                            <th class="p-2 border">Photo</th>
+                            <th class="p-2 border">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== MARKSHEET WRAPPER ====== -->
+    <div id="marksheetWrapper"></div>
+
+    <script>
+        // ============================================================
+        // 1. GLOBALS
+        // ============================================================
+        let allStudentsData = [];
+        let studentPhotos = {};
+        let firebaseInitialized = false;
+
+        // ============================================================
+        // 2. TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const el = document.getElementById('toast');
+            el.textContent = message;
+            el.className = `toast ${type} show`;
+            clearTimeout(el._timeout);
+            el._timeout = setTimeout(() => { el.classList.remove('show'); }, 4000);
+        }
+
+        // ============================================================
+        // 3. FIRESTORE INIT
+        // ============================================================
+        function getFirestoreConfig() {
+            const projectId = document.getElementById('fbProjectId').value.trim() || 'gps-pethgam-marksheet';
+            const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+            return { projectId, collection };
+        }
+
+        function initFirebase() {
+            try {
+                const { projectId } = getFirestoreConfig();
+                // Use a default config – user can override with their own
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDummyKeyForDemoPurposesOnly",
+                    authDomain: `${projectId}.firebaseapp.com`,
+                    projectId: projectId,
+                    storageBucket: `${projectId}.appspot.com`,
+                    messagingSenderId: "123456789",
+                    appId: "1:123456789:web:abcdef"
+                };
+                // If Firebase is already initialized, use existing app
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                firebaseInitialized = true;
+                return firebase.firestore();
+            } catch (e) {
+                console.warn('Firebase init warning:', e);
+                showToast('⚠️ Firebase not configured. Save disabled.', 'error');
+                firebaseInitialized = false;
+                return null;
+            }
+        }
+
+        function getDb() {
+            if (!firebaseInitialized) return initFirebase();
+            return firebase.firestore();
+        }
+
+        // ============================================================
+        // 4. EXCEL UPLOAD
+        // ============================================================
+        document.getElementById('excelUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                    allStudentsData = rows.slice(3).filter(r => r[3]);
+                    if (allStudentsData.length === 0) {
+                        showToast('No student data found in Excel.', 'error');
+                        return;
+                    }
+                    renderStudentList();
+                    generateAllMarksheets();
+                    showToast(`✅ Loaded ${allStudentsData.length} students.`, 'success');
+                } catch (err) {
+                    showToast('❌ Error reading Excel: ' + err.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // ============================================================
+        // 5. STUDENT LIST
+        // ============================================================
+        function renderStudentList() {
+            const container = document.getElementById('studentListControl');
+            const tbody = document.getElementById('studentTableBody');
+            container.classList.remove('hidden');
+            tbody.innerHTML = '';
+            allStudentsData.forEach((row, index) => {
+                const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
+                const admNo = row[0] || '000';
+                const hasPhoto = !!studentPhotos[name];
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-2 border text-center font-bold">${row[1] || '-'}</td>
+                        <td class="p-2 border font-bold">${name}</td>
+                        <td class="p-2 border text-center" id="status-${index}">${hasPhoto ? '✅' : '❌'}</td>
+                        <td class="p-2 border">
+                            <div class="action-cell">
+                                <input type="file" id="input-${index}" class="hidden" accept="image/*" onchange="uploadPhoto(this, '${name}', ${index})">
+                                <button onclick="document.getElementById('input-${index}').click()" class="btn-sm bg-emerald-500 text-white">📷 Photo</button>
+                                <button onclick="downloadIndividual('${admNo}')" class="btn-sm bg-blue-600 text-white">⬇️ PDF</button>
+                                <button onclick="saveSingleToFirestore('${admNo}')" class="btn-sm bg-purple-600 text-white">☁️ Save</button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function uploadPhoto(input, name, index) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    studentPhotos[name] = e.target.result;
+                    const statusEl = document.getElementById(`status-${index}`);
+                    if (statusEl) statusEl.innerText = '✅';
+                    generateAllMarksheets();
+                    showToast(`📸 Photo updated for ${name}`, 'success');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // ============================================================
+        // 6. GRADE & PROFICIENCY HELPERS
+        // ============================================================
+        function getGrade(s) {
+            let score = Number(s) || 0;
+            if (score >= 85) return 'A+';
+            if (score >= 70) return 'A';
+            if (score >= 55) return 'B';
+            if (score >= 40) return 'C';
+            if (score >= 33) return 'D';
+            return 'E';
+        }
+
+        function getProficiency(s) {
+            let score = Number(s) || 0;
+            if (score >= 85) return 'Sky';
+            if (score >= 55) return 'Mountain';
+            return 'Stream';
+        }
+
+        // ============================================================
+        // 7. BUILD STUDENT DATA OBJECT (for Firestore & marksheet)
+        // ============================================================
+        function buildStudentData(row) {
+            const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
+            const admNo = row[0] || '000';
+
+            const subjects = [
+                { n: 'English', g: row[17] || 0, fa: [row[8], row[9], row[10], row[11], row[12], row[13]], t: row[14] || 0,
+                    cc: row[15] || 0, s: row[16] || 0 },
+                { n: 'Math', g: row[27] || 0, fa: [row[18], row[19], row[20], row[21], row[22], row[23]], t: row[24] || 0,
+                    cc: row[25] || 0, s: row[26] || 0 },
+                { n: 'EVS', g: row[37] || 0, fa: [row[28], row[29], row[30], row[31], row[32], row[33]], t: row[34] || 0,
+                    cc: row[35] || 0, s: row[36] || 0 },
+                { n: 'Urdu', g: row[47] || 0, fa: [row[38], row[39], row[40], row[41], row[42], row[43]], t: row[44] || 0,
+                    cc: row[45] || 0, s: row[46] || 0 },
+                { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[54] || 0,
+                    cc: row[55] || 0, s: row[56] || 0 }
+            ];
+
+            const total = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
+            const perc = total / 5;
+
+            // Ranks (will be computed later in generateAllMarksheets)
+            // We'll compute ranks in the marksheet generation phase
+
+            const grandFA = [0, 0, 0, 0, 0, 0];
+            subjects.forEach(s => { s.fa.forEach((v, i) => grandFA[i] += (Number(v) || 0)); });
+            const grandT30 = subjects.reduce((a, b) => a + (Number(b.t) || 0), 0);
+            const grandCC20 = subjects.reduce((a, b) => a + (Number(b.cc) || 0), 0);
+            const grandSum50 = subjects.reduce((a, b) => a + (Number(b.s) || 0), 0);
+            const grandTotal100 = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
+
+            const bestSub = subjects.reduce((prev, curr) => (Number(prev.g) > Number(curr.g)) ? prev : curr);
+            const weakSub = subjects.reduce((prev, curr) => (Number(prev.g) < Number(curr.g)) ? prev : curr);
+
+            return {
+                admNo,
+                name,
+                rollNo: row[1] || '',
+                class: row[2] || '',
+                fatherName: row[4] || '',
+                motherName: row[5] || '',
+                dob: row[7] || '',
+                apaarId: row[65] || 'N/A',
+                penNo: row[66] || 'N/A',
+                photo: studentPhotos[name] || '',
+                subjects: subjects.map(s => ({
+                    name: s.n,
+                    total: Number(s.g) || 0,
+                    grade: getGrade(s.g),
+                    proficiency: getProficiency(s.g),
+                    fa1: Number(s.fa[0]) || 0,
+                    fa2: Number(s.fa[1]) || 0,
+                    fa3: Number(s.fa[2]) || 0,
+                    fa4: Number(s.fa[3]) || 0,
+                    fa5: Number(s.fa[4]) || 0,
+                    fa6: Number(s.fa[5]) || 0,
+                    t: Number(s.t) || 0,
+                    cc: Number(s.cc) || 0,
+                    s: Number(s.s) || 0,
+                })),
+                grandTotal: total,
+                percentage: parseFloat(perc.toFixed(1)),
+                overallGrade: getGrade(perc),
+                proficiencyLevel: getProficiency(perc),
+                result: perc >= 33 ? 'PROMOTED' : 'REPEATER',
+                bestSubject: bestSub.n,
+                bestSubjectMarks: Number(bestSub.g),
+                weakSubject: weakSub.n,
+                weakSubjectMarks: Number(weakSub.g),
+                grandFA: grandFA,
+                grandT30: grandT30,
+                grandCC20: grandCC20,
+                grandSum50: grandSum50,
+                grandTotal100: grandTotal100,
+                // ranks will be filled later
+                schoolRank: 0,
+                classRank: 0,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // ============================================================
+        // 8. GENERATE ALL MARKSHEETS
+        // ============================================================
+        function generateAllMarksheets() {
+            const wrapper = document.getElementById('marksheetWrapper');
+            wrapper.innerHTML = '';
+            if (allStudentsData.length === 0) return;
+
+            // Build student objects with totals for ranking
+            const studentsWithTotals = allStudentsData.map(row => ({
+                row: row,
+                total: (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) || 0) + (
+                    Number(row[57]) || 0),
+                class: row[2] || ''
+            }));
+
+            const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
+
+            studentsWithTotals.forEach((std, idx) => {
+                const row = std.row;
+                const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
+                const admNo = row[0] || '000';
+
+                const sRank = schoolSorted.findIndex(s => s.total === std.total) + 1;
+                const classStudents = studentsWithTotals.filter(s => s.class === std.class);
+                const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
+                const cRank = classSorted.findIndex(s => s.total === std.total) + 1;
+
+                // Store rank in the data object for Firestore
+                const dataObj = buildStudentData(row);
+                dataObj.schoolRank = sRank;
+                dataObj.classRank = cRank;
+
+                const subjects = [
+                    { n: 'English', g: row[17] || 0, fa: [row[8], row[9], row[10], row[11], row[12], row[13]], t: row[14] || 0,
+                        cc: row[15] || 0, s: row[16] || 0 },
+                    { n: 'Math', g: row[27] || 0, fa: [row[18], row[19], row[20], row[21], row[22], row[23]], t: row[24] || 0,
+                        cc: row[25] || 0, s: row[26] || 0 },
+                    { n: 'EVS', g: row[37] || 0, fa: [row[28], row[29], row[30], row[31], row[32], row[33]], t: row[34] || 0,
+                        cc: row[35] || 0, s: row[36] || 0 },
+                    { n: 'Urdu', g: row[47] || 0, fa: [row[38], row[39], row[40], row[41], row[42], row[43]], t: row[44] || 0,
+                        cc: row[45] || 0, s: row[46] || 0 },
+                    { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[54] ||
+                            0, cc: row[55] || 0, s: row[56] || 0 }
+                ];
+
+                const perc = std.total / 5;
+                const bestSub = subjects.reduce((prev, curr) => (Number(prev.g) > Number(curr.g)) ? prev : curr);
+                const weakSub = subjects.reduce((prev, curr) => (Number(prev.g) < Number(curr.g)) ? prev : curr);
+
+                const grandFA = [0, 0, 0, 0, 0, 0];
+                subjects.forEach(s => { s.fa.forEach((v, i) => grandFA[i] += (Number(v) || 0)); });
+                const grandT30 = subjects.reduce((a, b) => a + (Number(b.t) || 0), 0);
+                const grandCC20 = subjects.reduce((a, b) => a + (Number(b.cc) || 0), 0);
+                const grandSum50 = subjects.reduce((a, b) => a + (Number(b.s) || 0), 0);
+                const grandTotal100 = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
+
+                // Store the data object on the row for later use
+                row._dataObj = dataObj;
+
+                const div = document.createElement('div');
+                div.className = 'marksheet-container page-break';
+                div.id = `marksheet-${admNo}`;
+                div.setAttribute('data-adm', admNo);
+
+                div.innerHTML = `
+                    <div class="header-bg p-2 flex justify-between items-center">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-white">
+                            <img src="new-logo.png" alt="School Logo" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                        </div>
+                        <div class="text-center flex-grow">
+                            <h1 class="text-2xl font-black uppercase leading-tight">Government Primary School</h1>
+                            <h2 class="text-lg font-bold leading-tight">PETHGAM WAGOORA 193109</h2>
+                            <p class="text-[10px] font-medium uppercase tracking-wide">Wagoora Babareshi Road Near Zonal Education office Wagoora</p>
+                        </div>
+                    </div>
+
+                    <div class="flex mt-1">
+                        <div class="flex-grow grid grid-cols-4 border-l border-t">
+                            <div class="cell-label">Student Name:</div><div class="cell-value col-span-1">${name}</div>
+                            <div class="cell-label">Adm. No:</div><div class="cell-value">${admNo}</div>
+                            <div class="cell-label">Fathers Name:</div><div class="cell-value">${row[4]||''}</div>
+                            <div class="cell-label">D.O.B:</div><div class="cell-value">${row[7] || ''}</div>
+                            <div class="cell-label">Mothers Name:</div><div class="cell-value">${row[5]||''}</div>
+                            <div class="cell-label">Class:</div><div class="cell-value">${row[2]||''}</div>
+                            <div class="cell-label">Academic Session:</div><div class="cell-value">Nov. 2025</div>
+                            <div class="cell-label">Roll No:</div><div class="cell-value">${row[1]||''}</div>
+                            <div class="cell-label">Apaar ID:</div><div class="cell-value">${row[65]||'N/A'}</div>
+                            <div class="cell-label">PEN No.</div><div class="cell-value">${row[66]||'N/A'}</div>
+                        </div>
+                        <div class="photo-box ml-1">
+                            ${studentPhotos[name] ? `<img src="${studentPhotos[name]}" class="w-full h-full object-cover">` : `<span class="text-gray-400">PHOTO</span>`}
+                        </div>
+                    </div>
+
+                    <table class="mt-1">
+                        <thead class="bg-indigo-100">
+                            <tr><th rowspan="2">Subject</th><th colspan="6">Formative (5 each)</th><th rowspan="2">T(30)</th><th rowspan="2">CC(20)</th><th rowspan="2">Sum(50)</th><th rowspan="2">Total</th><th rowspan="2">Grade</th><th rowspan="2">Proficiency</th></tr>
+                            <tr class="text-[9px]"><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th></tr>
+                        </thead>
+                        <tbody>
+                            ${subjects.map(s => `<tr><td class="sub-name">${s.n}</td>${s.fa.map(v=>`<td>${v||0}</td>`).join('')}<td class="font-bold">${s.t}</td><td>${s.cc}</td><td>${s.s}</td><td class="font-bold bg-blue-50">${s.g}</td><td>${getGrade(s.g)}</td><td class="font-bold text-blue-800">${getProficiency(s.g)}</td></tr>`).join('')}
+                        </tbody>
+                        <tfoot class="bg-gray-200 font-bold">
+                            <tr>
+                                <td>Grand Total</td>${grandFA.map(v => `<td>${v}</td>`).join('')}
+                                <td>${grandT30}</td><td>${grandCC20}</td><td>${grandSum50}</td><td class="bg-blue-100">${grandTotal100}</td>
+                                <td colspan="2" class="text-center">Overall: ${getGrade(perc)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="grid grid-cols-3 gap-1 mt-1">
+                        <div class="border border-slate-300">
+                            <div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Percentage/Grade Key</div>
+                            <table class="text-[9px] w-full">
+                                <tr><td>>85% to 100%</td><td>A+</td></tr>
+                                <tr><td>>70% to 85%</td><td>A</td></tr>
+                                <tr><td>>55% to 70%</td><td>B</td></tr>
+                                <tr><td>>40% to 55%</td><td>C</td></tr>
+                                <tr><td>>33% to 40%</td><td>D</td></tr>
+                            </table>
+                        </div>
+                        <div class="border border-slate-300">
+                            <div class="bg-red-500 text-white text-[10px] font-bold text-center py-1">Level of Proficiency</div>
+                            <table class="w-full text-[10px]">
+                                <tr><td class="font-bold">Sky</td><td><img src="https://img.freepik.com/free-photo/blue-sky-with-white-clouds_1127-282.jpg" class="prof-img"></td><td>${perc >= 85 ? '✔' : ''}</td></tr>
+                                <tr><td class="font-bold">Mountain</td><td><img src="https://i.ibb.co/dsD45z0Z/IMG-20260409-201036.jpg" class="prof-img"></td><td>${perc >= 55 && perc < 85 ? '✔' : ''}</td></tr>
+                                <tr><td class="font-bold">Stream</td><td><img src="https://i.ibb.co/JwkmZSc0/IMG-20260407-220351.jpg" class="prof-img"></td><td>${perc < 55 ? '✔' : ''}</td></tr>
+                            </table>
+                        </div>
+                        <div class="border border-slate-300">
+                            <div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Final Results</div>
+                            <table class="w-full text-[10px] text-left">
+                                <tr><td class="bg-blue-50 px-1 border">Total Marks Obtained</td><td class="font-bold border text-center">${std.total}</td></tr>
+                                <tr><td class="bg-blue-50 px-1 border">Max. Marks</td><td class="font-bold border text-center">500</td></tr>
+                                <tr><td class="bg-blue-50 px-1 border">Overall %age</td><td class="font-bold border text-center">${perc.toFixed(1)}%</td></tr>
+                                <tr><td class="bg-blue-50 px-1 border">Result</td><td class="font-bold border text-center">${perc >= 33 ? 'PROMOTED' : 'REPEATER'}</td></tr>
+                                <tr><td class="bg-blue-50 px-1 border">Class Position</td><td class="font-bold border text-center">${cRank === 1 ? '1st Position' : cRank === 2 ? '2nd Position' : cRank === 3 ? '3rd Position' : 'Qualified'}</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-1 mt-1">
+                        <div class="border p-1">
+                            <div class="bg-orange-400 text-white text-[10px] font-bold text-center mb-1">Subject wise Bar Graph Chart</div>
+                            <div class="bar-container">
+                                ${subjects.map(s => `<div class="bar-item"><span class="text-[9px]">${s.g}</span><div class="bar" style="height: ${s.g}%;"></div><span class="text-[8px]">${s.n}</span></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="grid grid-rows-2 gap-1">
+                            <div class="grid grid-cols-2 gap-1">
+                                <div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">SCHOOL RANK</div><div class="text-xl font-bold">${sRank}</div></div>
+                                <div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">CLASS RANK</div><div class="text-xl font-bold">${cRank}</div></div>
+                            </div>
+                            <div class="border border-slate-400">
+                                <table class="w-full h-full text-[9px] border-collapse">
+                                    <tr>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Attendance</td>
+                                        <td class="border border-slate-400 w-12"></td>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Discipline</td>
+                                        <td class="border border-slate-400 w-12"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Sports</td>
+                                        <td class="border border-slate-400"></td>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Art & Craft</td>
+                                        <td class="border border-slate-400"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Teamwork</td>
+                                        <td class="border border-slate-400"></td>
+                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Social Skills</td>
+                                        <td class="border border-slate-400"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-400 mt-1">
+                        <div class="bg-purple-500 text-white text-[10px] font-bold text-center py-1 uppercase">General Remarks</div>
+                        <div class="p-2 text-[11px] font-bold min-h-[60px]">
+                            ${name} has shown ${getProficiency(perc)} level performance. Exceptional in ${bestSub.n} (${bestSub.g}). 
+                            ${perc < 55 ? 'Focus needed on ' + weakSub.n + '.' : 'Keep maintaining excellence.'} Overall: ${getGrade(perc)}.
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end px-4 mt-4">
+                        <div class="text-center">
+                            <svg id="barcode-${admNo}"></svg>
+                            <p class="text-[8px] uppercase font-bold text-slate-500">Student Identity Barcode</p>
+                        </div>
+                        <div class="text-center">
+                            <div id="qrcode-${admNo}" class="mx-auto bg-white p-1 border border-slate-800"></div>
+                            <p class="text-[8px] uppercase font-bold mt-1 text-slate-500">Scan for Verification</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-16"></div>
+
+                    <div class="grid grid-cols-4 gap-4 px-2">
+                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Form Teacher</div>
+                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Exam I/C</div>
+                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Parents Signature</div>
+                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Seal & Sign. Headmaster</div>
+                    </div>
+                `;
+                wrapper.appendChild(div);
+
+                // Barcode & QR
+                setTimeout(() => {
+                    try {
+                        JsBarcode(`#barcode-${admNo}`, admNo.toString(), {
+                            format: "CODE39",
+                            width: 1.5,
+                            height: 40,
+                            displayValue: true,
+                            fontSize: 10,
+                            margin: 5
+                        });
+                    } catch (e) { console.warn('Barcode error', e); }
+                    try {
+                        const qrEl = document.getElementById(`qrcode-${admNo}`);
+                        if (qrEl) {
+                            new QRCode(qrEl, {
+                                text: `VERIFIED: ${name} | Adm: ${admNo} | GPS Pethgam Wagoora`,
+                                width: 80,
+                                height: 80,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.M
+                            });
+                        }
+                    } catch (e) { console.warn('QR error', e); }
+                }, 150);
+            });
+        }
+
+        // ============================================================
+        // 9. INDIVIDUAL DOWNLOAD (PDF via print)
+        // ============================================================
+        function downloadIndividual(admNo) {
+            const allMarksheets = document.querySelectorAll('.marksheet-container');
+            if (allMarksheets.length === 0) {
+                showToast('No marksheets to download.', 'error');
+                return;
+            }
+
+            // Find target
+            let target = null;
+            allMarksheets.forEach(el => {
+                if (el.getAttribute('data-adm') === admNo) {
+                    target = el;
+                }
+            });
+
+            if (!target) {
+                showToast(`Marksheet for Adm ${admNo} not found.`, 'error');
+                return;
+            }
+
+            // Hide all, show target
+            allMarksheets.forEach(el => el.classList.remove('active-print'));
+            target.classList.add('active-print');
+
+            // Also hide the top panel and other UI elements during print
+            const panel = document.querySelector('.no-print');
+            if (panel) panel.style.display = 'none';
+
+            // Print
+            window.print();
+
+            // Restore after print
+            setTimeout(() => {
+                allMarksheets.forEach(el => el.classList.remove('active-print'));
+                if (panel) panel.style.display = '';
+                showToast(`📄 Marksheet for Adm ${admNo} sent to print.`, 'info');
+            }, 1000);
+        }
+
+        // ============================================================
+        // 10. FIRESTORE SAVE FUNCTIONS
+        // ============================================================
+        async function saveSingleToFirestore(admNo) {
+            const btn = event && event.target ? event.target : document.querySelector(`[onclick*="saveSingleToFirestore('${admNo}')"]`);
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span>Saving...';
+            }
+
+            try {
+                const db = getDb();
+                if (!db) {
+                    showToast('❌ Firebase not initialized. Check config.', 'error');
+                    if (btn) { btn.disabled = false;
+                        btn.innerHTML = '☁️ Save'; }
+                    return;
+                }
+
+                // Find the student row
+                const row = allStudentsData.find(r => (r[0] || '000') === admNo);
+                if (!row) {
+                    showToast(`❌ Student with Adm ${admNo} not found.`, 'error');
+                    if (btn) { btn.disabled = false;
+                        btn.innerHTML = '☁️ Save'; }
+                    return;
+                }
+
+                // Build data object (includes ranks)
+                let dataObj = row._dataObj;
+                if (!dataObj) {
+                    // Rebuild if not stored
+                    dataObj = buildStudentData(row);
+                    // compute ranks
+                    const studentsWithTotals = allStudentsData.map(r => ({
+                        row: r,
+                        total: (Number(r[17]) || 0) + (Number(r[27]) || 0) + (Number(r[37]) || 0) + (Number(r[47]) || 0) + (
+                            Number(r[57]) || 0),
+                        class: r[2] || ''
+                    }));
+                    const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
+                    const sRank = schoolSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                    const classStudents = studentsWithTotals.filter(s => s.class === dataObj.class);
+                    const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
+                    const cRank = classSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                    dataObj.schoolRank = sRank;
+                    dataObj.classRank = cRank;
+                }
+
+                const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+                const docRef = db.collection(collection).doc(admNo.toString());
+                await docRef.set(dataObj, { merge: true });
+
+                showToast(`✅ Saved ${dataObj.name} (Adm: ${admNo}) to Firestore.`, 'success');
+            } catch (err) {
+                console.error('Firestore save error:', err);
+                showToast(`❌ Save failed: ${err.message}`, 'error');
+            }
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '☁️ Save';
+            }
+        }
+
+        async function saveAllToFirestore() {
+            const btn = document.getElementById('saveAllBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Saving All...';
+
+            try {
+                const db = getDb();
+                if (!db) {
+                    showToast('❌ Firebase not initialized. Check config.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '☁️ Save All to Firestore';
+                    return;
+                }
+
+                if (allStudentsData.length === 0) {
+                    showToast('No student data to save.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '☁️ Save All to Firestore';
+                    return;
+                }
+
+                const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+                let successCount = 0;
+                let failCount = 0;
+
+                // Build all data objects with ranks
+                const studentsWithTotals = allStudentsData.map(row => ({
+                    row: row,
+                    total: (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) || 0) + (
+                        Number(row[57]) || 0),
+                    class: row[2] || ''
+                }));
+                const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
+
+                for (let i = 0; i < allStudentsData.length; i++) {
+                    const row = allStudentsData[i];
+                    const admNo = row[0] || '000';
+                    const dataObj = buildStudentData(row);
+                    const sRank = schoolSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                    const classStudents = studentsWithTotals.filter(s => s.class === dataObj.class);
+                    const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
+                    const cRank = classSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                    dataObj.schoolRank = sRank;
+                    dataObj.classRank = cRank;
+
+                    try {
+                        const docRef = db.collection(collection).doc(admNo.toString());
+                        await docRef.set(dataObj, { merge: true });
+                        successCount++;
+                    } catch (e) {
+                        failCount++;
+                        console.warn(`Failed to save ${admNo}:`, e);
+                    }
+                }
+
+                if (failCount === 0) {
+                    showToast(`✅ All ${successCount} students saved to Firestore!`, 'success');
+                } else {
+                    showToast(`⚠️ Saved ${successCount}, failed ${failCount}. Check console.`, 'error');
+                }
+            } catch (err) {
+                console.error('Firestore batch save error:', err);
+                showToast(`❌ Batch save failed: ${err.message}`, 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '☁️ Save All to Firestore';
+        }
+
+        // ============================================================
+        // 11. TOGGLE FIRESTORE CONFIG
+        // ============================================================
+        function toggleFirestoreConfig() {
+            const area = document.getElementById('firestoreConfigArea');
+            if (area.style.display === 'none') {
+                area.style.display = '';
+            } else {
+                area.style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // 12. INIT
+        // ============================================================
+        // Try to init Firebase on load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                initFirebase();
+            } catch (e) {
+                console.warn('Firebase init on load skipped:', e);
+            }
+            // Show config area by default
+            document.getElementById('firestoreConfigArea').style.display = '';
+        });
+
+        // Expose functions globally
+        window.downloadIndividual = downloadIndividual;
+        window.saveSingleToFirestore = saveSingleToFirestore;
+        window.saveAllToFirestore = saveAllToFirestore;
+        window.toggleFirestoreConfig = toggleFirestoreConfig;
+        window.uploadPhoto = uploadPhoto;
+        window.generateAllMarksheets = generateAllMarksheets;
+        window.renderStudentList = renderStudentList;
+    </script>
+
 </body>
-</html>    .
+</html>    
       
