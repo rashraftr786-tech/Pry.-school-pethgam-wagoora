@@ -17,26 +17,31 @@ body{
     font-family:"Times New Roman",serif;
 }
 
+/* Fixed A4 Page constraints for single page rendering */
 .page{
     width:210mm;
-    min-height:297mm;
+    height:297mm;
     margin:12px auto;
     background:white;
-    padding:18mm;
+    padding:12mm 15mm;
     box-shadow:0 0 10px rgba(0,0,0,.25);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
 
 .header{
     display:flex;
     align-items:center;
-    gap:15px;
+    gap:12px;
     border-bottom:3px solid #0B5394;
-    padding-bottom:10px;
+    padding-bottom:8px;
+    flex-shrink:0;
 }
 
 .logo{
-    width:80px;
-    height:80px;
+    width:75px;
+    height:75px;
     object-fit:contain;
 }
 
@@ -47,38 +52,39 @@ body{
 
 .title h1{
     margin:0;
-    font-size:16px;
+    font-size:15px;
     font-weight:bold;
 }
 
 .title h2{
-    margin:5px 0;
-    font-size:24px;
+    margin:3px 0;
+    font-size:22px;
     color:#0B5394;
     text-transform:uppercase;
 }
 
 .title h3{
     margin:0;
-    font-size:15px;
+    font-size:14px;
 }
 
 .title p{
-    margin:3px 0;
-    font-size:13px;
+    margin:2px 0;
+    font-size:12px;
 }
 
 .info{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-top:15px;
+    margin-top:10px;
+    flex-shrink:0;
 }
 
 .info-item{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:6px;
 }
 
 label{
@@ -90,98 +96,110 @@ input{
     width:100%;
     border:none;
     border-bottom:1px solid black;
-    font-size:16px;
-    padding:4px;
+    font-size:15px;
+    padding:2px 4px;
     font-family:inherit;
 }
 
 .info-item input{
-    width:220px;
+    width:200px;
 }
 
 .row{
-    margin-top:12px;
+    margin-top:8px;
+    flex-shrink:0;
 }
 
 .address-box{
     width:100%;
-    min-height:90px;
-    margin-top:6px;
+    height:70px;
+    margin-top:4px;
     border:1px solid #999;
-    padding:8px;
-    font-size:16px;
-    line-height:1.4;
-    resize:vertical;
+    padding:6px;
+    font-size:15px;
+    line-height:1.3;
+    resize:none;
     font-family:"Times New Roman",serif;
 }
 
+/* Dynamically fills all available remaining vertical space */
 .letter-body{
     width:100%;
-    min-height:580px;
-    margin-top:18px;
+    flex:1;
+    margin-top:10px;
     border:1px solid #999;
-    padding:12px;
-    font-size:17px;
-    line-height:1.6;
-    resize:vertical;
+    padding:10px;
+    font-size:16px;
+    line-height:1.5;
+    resize:none;
     font-family:"Times New Roman",serif;
 }
 
 .signature{
-    width:300px;
+    width:280px;
     margin-left:auto;
-    margin-top:60px;
+    margin-top:20px;
     text-align:center;
-    line-height:1.8;
+    line-height:1.5;
+    flex-shrink:0;
 }
 
 .toolbar{
     text-align:center;
-    margin:15px;
+    margin:10px;
 }
 
 button{
-    padding:10px 18px;
-    font-size:15px;
+    padding:8px 16px;
+    font-size:14px;
     cursor:pointer;
     margin:5px;
 }
 
 .footer{
     text-align:center;
-    margin-top:35px;
+    margin-top:15px;
     border-top:1px solid #999;
-    padding-top:8px;
-    font-size:12px;
+    padding-top:6px;
+    font-size:11px;
     color:#444;
+    flex-shrink:0;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 0;
 }
 
 @media print{
 
 body{
-background:white;
+    background:white;
 }
 
 .toolbar{
-display:none;
+    display:none;
 }
 
 .page{
-margin:0;
-box-shadow:none;
-width:100%;
-min-height:auto;
+    margin:0;
+    box-shadow:none;
+    width:210mm;
+    height:297mm;
+    padding:12mm 15mm;
+    box-sizing:border-box;
+    page-break-after:avoid;
+    page-break-inside:avoid;
 }
 
 input,
 textarea{
-border:none;
-outline:none;
+    border:none !important;
+    outline:none !important;
 }
 
 textarea{
-height:auto;
-overflow:hidden;
+    overflow:hidden;
 }
 
 }
@@ -262,6 +280,7 @@ overflow:hidden;
 
 </div>
 
+<!-- Expands dynamically to fit single page -->
 <textarea class="letter-body" placeholder="Write your official letter here..."></textarea>
 
 <div class="signature">
@@ -272,7 +291,7 @@ Head of Institution<br>
 
 Government Primary School Pethgam Wagoora
 
-<br><br><br>
+<br><br>
 
 _________________________<br>
 
@@ -297,7 +316,11 @@ function clearForm(){
 
 document.querySelectorAll('input[type="text"], textarea').forEach(function(e){
 
-e.value="";
+if(e.id === "letterNo"){
+    e.value = "GPS/PW/2026/20";
+} else {
+    e.value = "";
+}
 
 });
 
