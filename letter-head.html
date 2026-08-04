@@ -11,13 +11,14 @@
     box-sizing:border-box;
 }
 
-body{
+html, body{
     margin:0;
+    padding:0;
     background:#e9e9e9;
     font-family:"Times New Roman",serif;
 }
 
-/* Fixed A4 Page constraints for single page rendering */
+/* Strict A4 Page constraints for single page rendering */
 .page{
     width:210mm;
     height:297mm;
@@ -112,7 +113,7 @@ input{
 
 .address-box{
     width:100%;
-    height:70px;
+    height:75px;
     margin-top:4px;
     border:1px solid #999;
     padding:6px;
@@ -122,7 +123,7 @@ input{
     font-family:"Times New Roman",serif;
 }
 
-/* Dynamically fills all available remaining vertical space */
+/* Flex item dynamically fills remaining space on the single page */
 .letter-body{
     width:100%;
     flex:1;
@@ -138,7 +139,7 @@ input{
 .signature{
     width:280px;
     margin-left:auto;
-    margin-top:20px;
+    margin-top:25px;
     text-align:center;
     line-height:1.5;
     flex-shrink:0;
@@ -173,8 +174,13 @@ button{
 
 @media print{
 
-body{
+html, body{
     background:white;
+    width:210mm;
+    height:297mm;
+    margin:0;
+    padding:0;
+    overflow:hidden;
 }
 
 .toolbar{
@@ -280,7 +286,7 @@ textarea{
 
 </div>
 
-<!-- Expands dynamically to fit single page -->
+<!-- Expands dynamically to fill single page without overflow -->
 <textarea class="letter-body" placeholder="Write your official letter here..."></textarea>
 
 <div class="signature">
@@ -290,12 +296,6 @@ textarea{
 Head of Institution<br>
 
 Government Primary School Pethgam Wagoora
-
-<br><br>
-
-_________________________<br>
-
-Official Seal
 
 </div>
 
@@ -329,4 +329,4 @@ if(e.id === "letterNo"){
 </script>
 
 </body>
-</html>
+</html> 
