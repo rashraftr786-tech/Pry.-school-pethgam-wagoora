@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GPS Pethgam Wagoora - Professional Marksheet System</title>
+    <title>GPS Pethgam Wagoora – Professional Marksheet System</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
@@ -43,7 +43,6 @@
                 print-color-adjust: exact !important;
                 page-break-inside: avoid;
             }
-            /* hide all marksheets except the one being printed */
             .marksheet-container:not(.active-print) {
                 display: none !important;
             }
@@ -59,7 +58,6 @@
             border: 4px solid #6d59c0;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-
         .marksheet-container::before {
             content: "";
             position: absolute;
@@ -76,7 +74,6 @@
             pointer-events: none;
             z-index: 0;
         }
-
         .header-bg {
             position: relative;
             z-index: 1;
@@ -175,7 +172,6 @@
             z-index: 1;
         }
 
-        /* toast notification */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -210,7 +206,6 @@
             border-left: 6px solid #60a5fa;
         }
 
-        /* spinner */
         .spinner {
             display: inline-block;
             width: 18px;
@@ -241,7 +236,6 @@
             transform: scale(1.04);
             opacity: 0.9;
         }
-
         .action-cell {
             display: flex;
             flex-wrap: wrap;
@@ -250,7 +244,6 @@
             align-items: center;
         }
 
-        /* Firestore config card */
         .config-card {
             border: 2px dashed #6d59c0;
             background: #f8f5ff;
@@ -315,7 +308,7 @@
                 <div class="config-row">
                     <div>
                         <label>Project ID</label>
-                        <input id="fbProjectId" placeholder="your-project-id" value="gps-pethgam-marksheet" />
+                        <input id="fbProjectId" placeholder="your-project-id" value="pry-school-pethgam-wagoora" />
                     </div>
                     <div>
                         <label>Collection Name</label>
@@ -360,88 +353,86 @@
         // 1. GLOBALS
         // ============================================================
         let allStudentsData = [];
-        let studentPhotos = {};
+        let studentPhotos = {}; // key: admNo, value: dataURL
         let firebaseInitialized = false;
+        let firestoreInstance = null;
 
         // ============================================================
         // 2. TOAST
         // ============================================================
-        function showToast(message, type = 'info') {
+        function showToast(message, type) {
+            type = type || 'info';
             const el = document.getElementById('toast');
             el.textContent = message;
-            el.className = `toast ${type} show`;
+            el.className = 'toast ' + type + ' show';
             clearTimeout(el._timeout);
-            el._timeout = setTimeout(() => { el.classList.remove('show'); }, 4000);
+            el._timeout = setTimeout(function() { el.classList.remove('show'); }, 4000);
         }
 
         // ============================================================
-        // 3. FIRESTORE INIT
+        // 3. FIRESTORE INIT (compat SDK only)
         // ============================================================
         function getFirestoreConfig() {
-            const projectId = document.getElementById('fbProjectId').value.trim() || 'gps-pethgam-marksheet';
-            const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
-            return { projectId, collection };
+            var projectId = document.getElementById('fbProjectId').value.trim() || 'pry-school-pethgam-wagoora';
+            var collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+            return { projectId: projectId, collection: collection };
         }
 
         function initFirebase() {
             try {
-                const { projectId } = getFirestoreConfig();
-                // Use a default config – user can override with their own
-                const firebaseConfig = {
+                var config = {
                     apiKey: "AIzaSyDgVFdfKpCrLkoRsMI2gS7ajlJUzVdYLZU",
-authDomain: "pry-school-pethgam-wagoora.firebaseapp.com",
-projectId: "pry-school-pethgam-wagoora",
-storageBucket: "pry-school-pethgam-wagoora.firebasestorage.app",
-messagingSenderId: "255417366612",
-appId: "1:255417366612:web:81cec46aa75cb7d4ba95c1",
-measurementId: "G-JE9WY9T6FJ"
-};
+                    authDomain: "pry-school-pethgam-wagoora.firebaseapp.com",
+                    projectId: "pry-school-pethgam-wagoora",
+                    storageBucket: "pry-school-pethgam-wagoora.firebasestorage.app",
+                    messagingSenderId: "255417366612",
+                    appId: "1:255417366612:web:81cec46aa75cb7d4ba95c1",
+                    measurementId: "G-JE9WY9T6FJ"
+                };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const auth = getAuth(app);
-
-export { db, storage, auth };
-                // If Firebase is already initialized, use existing app
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
+                if (!firebase.apps || !firebase.apps.length) {
+                    firebase.initializeApp(config);
                 }
                 firebaseInitialized = true;
-                return firebase.firestore();
+                firestoreInstance = firebase.firestore();
+                return firestoreInstance;
             } catch (e) {
                 console.warn('Firebase init warning:', e);
                 showToast('⚠️ Firebase not configured. Save disabled.', 'error');
                 firebaseInitialized = false;
+                firestoreInstance = null;
                 return null;
             }
         }
 
         function getDb() {
-            if (!firebaseInitialized) return initFirebase();
-            return firebase.firestore();
+            if (!firebaseInitialized || !firestoreInstance) {
+                return initFirebase();
+            }
+            return firestoreInstance;
         }
 
         // ============================================================
         // 4. EXCEL UPLOAD
         // ============================================================
         document.getElementById('excelUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
+            var file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
+            var reader = new FileReader();
+            reader.onload = function(evt) {
                 try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
-                    allStudentsData = rows.slice(3).filter(r => r[3]);
+                    var data = new Uint8Array(evt.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
+                    var rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                    // Expect data rows to have at least 4 columns; skip header rows
+                    allStudentsData = rows.slice(3).filter(function(r) { return r[3] && r[3].toString().trim(); });
                     if (allStudentsData.length === 0) {
                         showToast('No student data found in Excel.', 'error');
                         return;
                     }
                     renderStudentList();
                     generateAllMarksheets();
-                    showToast(`✅ Loaded ${allStudentsData.length} students.`, 'success');
+                    showToast('✅ Loaded ' + allStudentsData.length + ' students.', 'success');
                 } catch (err) {
                     showToast('❌ Error reading Excel: ' + err.message, 'error');
                 }
@@ -453,50 +444,59 @@ export { db, storage, auth };
         // 5. STUDENT LIST
         // ============================================================
         function renderStudentList() {
-            const container = document.getElementById('studentListControl');
-            const tbody = document.getElementById('studentTableBody');
+            var container = document.getElementById('studentListControl');
+            var tbody = document.getElementById('studentTableBody');
             container.classList.remove('hidden');
             tbody.innerHTML = '';
-            allStudentsData.forEach((row, index) => {
-                const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
-                const admNo = row[0] || '000';
-                const hasPhoto = !!studentPhotos[name];
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="p-2 border text-center font-bold">${row[1] || '-'}</td>
-                        <td class="p-2 border font-bold">${name}</td>
-                        <td class="p-2 border text-center" id="status-${index}">${hasPhoto ? '✅' : '❌'}</td>
-                        <td class="p-2 border">
-                            <div class="action-cell">
-                                <input type="file" id="input-${index}" class="hidden" accept="image/*" onchange="uploadPhoto(this, '${name}', ${index})">
-                                <button onclick="document.getElementById('input-${index}').click()" class="btn-sm bg-emerald-500 text-white">📷 Photo</button>
-                                <button onclick="downloadIndividual('${admNo}')" class="btn-sm bg-blue-600 text-white">⬇️ PDF</button>
-                                <button onclick="saveSingleToFirestore('${admNo}')" class="btn-sm bg-purple-600 text-white">☁️ Save</button>
-                            </div>
-                        </td>
-                    </tr>`;
+            allStudentsData.forEach(function(row, index) {
+                var admNo = (row[0] || '000').toString();
+                var name = row[3] ? row[3].toString().toUpperCase().trim() : 'UNKNOWN';
+                var hasPhoto = !!studentPhotos[admNo];
+                tbody.innerHTML +=
+                    '<tr>' +
+                    '<td class="p-2 border text-center font-bold">' + (row[1] || '-') + '</td>' +
+                    '<td class="p-2 border font-bold">' + name + '</td>' +
+                    '<td class="p-2 border text-center" id="status-' + index + '">' + (hasPhoto ? '✅' : '❌') +
+                    '</td>' +
+                    '<td class="p-2 border">' +
+                    '<div class="action-cell">' +
+                    '<input type="file" id="input-' + index + '" class="hidden" accept="image/*" onchange="uploadPhoto(this, ' +
+                    index + ')">' +
+                    '<button onclick="document.getElementById(\'input-' + index +
+                    '\').click()" class="btn-sm bg-emerald-500 text-white">📷 Photo</button>' +
+                    '<button onclick="downloadIndividual(\'' + admNo +
+                    '\')" class="btn-sm bg-blue-600 text-white">⬇️ PDF</button>' +
+                    '<button onclick="saveSingleToFirestore(\'' + admNo +
+                    '\')" class="btn-sm bg-purple-600 text-white">☁️ Save</button>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
             });
         }
 
-        function uploadPhoto(input, name, index) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    studentPhotos[name] = e.target.result;
-                    const statusEl = document.getElementById(`status-${index}`);
-                    if (statusEl) statusEl.innerText = '✅';
-                    generateAllMarksheets();
-                    showToast(`📸 Photo updated for ${name}`, 'success');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
+        function uploadPhoto(input, index) {
+            if (!input || !input.files || !input.files[0]) return;
+            var row = allStudentsData[index];
+            if (!row) return;
+            var admNo = (row[0] || '000').toString();
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                studentPhotos[admNo] = e.target.result;
+                var statusEl = document.getElementById('status-' + index);
+                if (statusEl) statusEl.innerText = '✅';
+                generateAllMarksheets();
+                showToast('📸 Photo updated for Adm ' + admNo, 'success');
+            };
+            reader.readAsDataURL(input.files[0]);
+            // Reset input so the same file can be re-uploaded
+            input.value = '';
         }
 
         // ============================================================
         // 6. GRADE & PROFICIENCY HELPERS
         // ============================================================
         function getGrade(s) {
-            let score = Number(s) || 0;
+            var score = Number(s) || 0;
             if (score >= 85) return 'A+';
             if (score >= 70) return 'A';
             if (score >= 55) return 'B';
@@ -506,20 +506,20 @@ export { db, storage, auth };
         }
 
         function getProficiency(s) {
-            let score = Number(s) || 0;
+            var score = Number(s) || 0;
             if (score >= 85) return 'Sky';
             if (score >= 55) return 'Mountain';
             return 'Stream';
         }
 
         // ============================================================
-        // 7. BUILD STUDENT DATA OBJECT (for Firestore & marksheet)
+        // 7. BUILD STUDENT DATA OBJECT
         // ============================================================
         function buildStudentData(row) {
-            const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
-            const admNo = row[0] || '000';
+            var name = row[3] ? row[3].toString().toUpperCase().trim() : 'UNKNOWN';
+            var admNo = (row[0] || '000').toString();
 
-            const subjects = [
+            var subjects = [
                 { n: 'English', g: row[17] || 0, fa: [row[8], row[9], row[10], row[11], row[12], row[13]], t: row[14] || 0,
                     cc: row[15] || 0, s: row[16] || 0 },
                 { n: 'Math', g: row[27] || 0, fa: [row[18], row[19], row[20], row[21], row[22], row[23]], t: row[24] || 0,
@@ -528,29 +528,28 @@ export { db, storage, auth };
                     cc: row[35] || 0, s: row[36] || 0 },
                 { n: 'Urdu', g: row[47] || 0, fa: [row[38], row[39], row[40], row[41], row[42], row[43]], t: row[44] || 0,
                     cc: row[45] || 0, s: row[46] || 0 },
-                { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[54] || 0,
-                    cc: row[55] || 0, s: row[56] || 0 }
+                { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[54] ||
+                        0, cc: row[55] || 0, s: row[56] || 0 }
             ];
 
-            const total = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
-            const perc = total / 5;
+            var total = subjects.reduce(function(a, b) { return a + (Number(b.g) || 0); }, 0);
+            var perc = total / 5;
 
-            // Ranks (will be computed later in generateAllMarksheets)
-            // We'll compute ranks in the marksheet generation phase
+            var grandFA = [0, 0, 0, 0, 0, 0];
+            subjects.forEach(function(s) {
+                s.fa.forEach(function(v, i) { grandFA[i] += (Number(v) || 0); });
+            });
+            var grandT30 = subjects.reduce(function(a, b) { return a + (Number(b.t) || 0); }, 0);
+            var grandCC20 = subjects.reduce(function(a, b) { return a + (Number(b.cc) || 0); }, 0);
+            var grandSum50 = subjects.reduce(function(a, b) { return a + (Number(b.s) || 0); }, 0);
+            var grandTotal100 = subjects.reduce(function(a, b) { return a + (Number(b.g) || 0); }, 0);
 
-            const grandFA = [0, 0, 0, 0, 0, 0];
-            subjects.forEach(s => { s.fa.forEach((v, i) => grandFA[i] += (Number(v) || 0)); });
-            const grandT30 = subjects.reduce((a, b) => a + (Number(b.t) || 0), 0);
-            const grandCC20 = subjects.reduce((a, b) => a + (Number(b.cc) || 0), 0);
-            const grandSum50 = subjects.reduce((a, b) => a + (Number(b.s) || 0), 0);
-            const grandTotal100 = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
-
-            const bestSub = subjects.reduce((prev, curr) => (Number(prev.g) > Number(curr.g)) ? prev : curr);
-            const weakSub = subjects.reduce((prev, curr) => (Number(prev.g) < Number(curr.g)) ? prev : curr);
+            var bestSub = subjects.reduce(function(prev, curr) { return (Number(prev.g) > Number(curr.g)) ? prev : curr; });
+            var weakSub = subjects.reduce(function(prev, curr) { return (Number(prev.g) < Number(curr.g)) ? prev : curr; });
 
             return {
-                admNo,
-                name,
+                admNo: admNo,
+                name: name,
                 rollNo: row[1] || '',
                 class: row[2] || '',
                 fatherName: row[4] || '',
@@ -558,22 +557,24 @@ export { db, storage, auth };
                 dob: row[7] || '',
                 apaarId: row[65] || 'N/A',
                 penNo: row[66] || 'N/A',
-                photo: studentPhotos[name] || '',
-                subjects: subjects.map(s => ({
-                    name: s.n,
-                    total: Number(s.g) || 0,
-                    grade: getGrade(s.g),
-                    proficiency: getProficiency(s.g),
-                    fa1: Number(s.fa[0]) || 0,
-                    fa2: Number(s.fa[1]) || 0,
-                    fa3: Number(s.fa[2]) || 0,
-                    fa4: Number(s.fa[3]) || 0,
-                    fa5: Number(s.fa[4]) || 0,
-                    fa6: Number(s.fa[5]) || 0,
-                    t: Number(s.t) || 0,
-                    cc: Number(s.cc) || 0,
-                    s: Number(s.s) || 0,
-                })),
+                photo: studentPhotos[admNo] || '',
+                subjects: subjects.map(function(s) {
+                    return {
+                        name: s.n,
+                        total: Number(s.g) || 0,
+                        grade: getGrade(s.g),
+                        proficiency: getProficiency(s.g),
+                        fa1: Number(s.fa[0]) || 0,
+                        fa2: Number(s.fa[1]) || 0,
+                        fa3: Number(s.fa[2]) || 0,
+                        fa4: Number(s.fa[3]) || 0,
+                        fa5: Number(s.fa[4]) || 0,
+                        fa6: Number(s.fa[5]) || 0,
+                        t: Number(s.t) || 0,
+                        cc: Number(s.cc) || 0,
+                        s: Number(s.s) || 0,
+                    };
+                }),
                 grandTotal: total,
                 percentage: parseFloat(perc.toFixed(1)),
                 overallGrade: getGrade(perc),
@@ -588,7 +589,6 @@ export { db, storage, auth };
                 grandCC20: grandCC20,
                 grandSum50: grandSum50,
                 grandTotal100: grandTotal100,
-                // ranks will be filled later
                 schoolRank: 0,
                 classRank: 0,
                 timestamp: new Date().toISOString()
@@ -599,238 +599,252 @@ export { db, storage, auth };
         // 8. GENERATE ALL MARKSHEETS
         // ============================================================
         function generateAllMarksheets() {
-            const wrapper = document.getElementById('marksheetWrapper');
+            var wrapper = document.getElementById('marksheetWrapper');
             wrapper.innerHTML = '';
             if (allStudentsData.length === 0) return;
 
-            // Build student objects with totals for ranking
-            const studentsWithTotals = allStudentsData.map(row => ({
-                row: row,
-                total: (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) || 0) + (
-                    Number(row[57]) || 0),
-                class: row[2] || ''
-            }));
+            // Build totals for ranking
+            var studentsWithTotals = allStudentsData.map(function(row) {
+                var total = (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) ||
+                        0) + (Number(row[57]) || 0);
+                return { row: row, total: total, class: row[2] || '' };
+            });
 
-            const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
+            var schoolSorted = studentsWithTotals.slice().sort(function(a, b) { return b.total - a.total; });
 
-            studentsWithTotals.forEach((std, idx) => {
-                const row = std.row;
-                const name = row[3] ? row[3].toString().toUpperCase() : "UNKNOWN";
-                const admNo = row[0] || '000';
+            studentsWithTotals.forEach(function(std, idx) {
+                var row = std.row;
+                var name = row[3] ? row[3].toString().toUpperCase().trim() : 'UNKNOWN';
+                var admNo = (row[0] || '000').toString();
 
-                const sRank = schoolSorted.findIndex(s => s.total === std.total) + 1;
-                const classStudents = studentsWithTotals.filter(s => s.class === std.class);
-                const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
-                const cRank = classSorted.findIndex(s => s.total === std.total) + 1;
+                var sRank = 1;
+                for (var i = 0; i < schoolSorted.length; i++) {
+                    if (schoolSorted[i].total === std.total) {
+                        sRank = i + 1;
+                        break;
+                    }
+                }
 
-                // Store rank in the data object for Firestore
-                const dataObj = buildStudentData(row);
+                var classStudents = studentsWithTotals.filter(function(s) { return s.class === std.class; });
+                var classSorted = classStudents.slice().sort(function(a, b) { return b.total - a.total; });
+                var cRank = 1;
+                for (var j = 0; j < classSorted.length; j++) {
+                    if (classSorted[j].total === std.total) {
+                        cRank = j + 1;
+                        break;
+                    }
+                }
+
+                var dataObj = buildStudentData(row);
                 dataObj.schoolRank = sRank;
                 dataObj.classRank = cRank;
-
-                const subjects = [
-                    { n: 'English', g: row[17] || 0, fa: [row[8], row[9], row[10], row[11], row[12], row[13]], t: row[14] || 0,
-                        cc: row[15] || 0, s: row[16] || 0 },
-                    { n: 'Math', g: row[27] || 0, fa: [row[18], row[19], row[20], row[21], row[22], row[23]], t: row[24] || 0,
-                        cc: row[25] || 0, s: row[26] || 0 },
-                    { n: 'EVS', g: row[37] || 0, fa: [row[28], row[29], row[30], row[31], row[32], row[33]], t: row[34] || 0,
-                        cc: row[35] || 0, s: row[36] || 0 },
-                    { n: 'Urdu', g: row[47] || 0, fa: [row[38], row[39], row[40], row[41], row[42], row[43]], t: row[44] || 0,
-                        cc: row[45] || 0, s: row[46] || 0 },
-                    { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[54] ||
-                            0, cc: row[55] || 0, s: row[56] || 0 }
-                ];
-
-                const perc = std.total / 5;
-                const bestSub = subjects.reduce((prev, curr) => (Number(prev.g) > Number(curr.g)) ? prev : curr);
-                const weakSub = subjects.reduce((prev, curr) => (Number(prev.g) < Number(curr.g)) ? prev : curr);
-
-                const grandFA = [0, 0, 0, 0, 0, 0];
-                subjects.forEach(s => { s.fa.forEach((v, i) => grandFA[i] += (Number(v) || 0)); });
-                const grandT30 = subjects.reduce((a, b) => a + (Number(b.t) || 0), 0);
-                const grandCC20 = subjects.reduce((a, b) => a + (Number(b.cc) || 0), 0);
-                const grandSum50 = subjects.reduce((a, b) => a + (Number(b.s) || 0), 0);
-                const grandTotal100 = subjects.reduce((a, b) => a + (Number(b.g) || 0), 0);
-
-                // Store the data object on the row for later use
                 row._dataObj = dataObj;
 
-                const div = document.createElement('div');
+                var subjects = [
+                    { n: 'English', g: row[17] || 0, fa: [row[8], row[9], row[10], row[11], row[12], row[13]], t: row[14] ||
+                            0, cc: row[15] || 0, s: row[16] || 0 },
+                    { n: 'Math', g: row[27] || 0, fa: [row[18], row[19], row[20], row[21], row[22], row[23]], t: row[24] ||
+                            0, cc: row[25] || 0, s: row[26] || 0 },
+                    { n: 'EVS', g: row[37] || 0, fa: [row[28], row[29], row[30], row[31], row[32], row[33]], t: row[34] ||
+                            0, cc: row[35] || 0, s: row[36] || 0 },
+                    { n: 'Urdu', g: row[47] || 0, fa: [row[38], row[39], row[40], row[41], row[42], row[43]], t: row[44] ||
+                            0, cc: row[45] || 0, s: row[46] || 0 },
+                    { n: 'Kashmiri', g: row[57] || 0, fa: [row[48], row[49], row[50], row[51], row[52], row[53]], t: row[
+                            54] || 0, cc: row[55] || 0, s: row[56] || 0 }
+                ];
+
+                var perc = std.total / 5;
+
+                var grandFA = [0, 0, 0, 0, 0, 0];
+                subjects.forEach(function(s) {
+                    s.fa.forEach(function(v, i) { grandFA[i] += (Number(v) || 0); });
+                });
+                var grandT30 = subjects.reduce(function(a, b) { return a + (Number(b.t) || 0); }, 0);
+                var grandCC20 = subjects.reduce(function(a, b) { return a + (Number(b.cc) || 0); }, 0);
+                var grandSum50 = subjects.reduce(function(a, b) { return a + (Number(b.s) || 0); }, 0);
+                var grandTotal100 = subjects.reduce(function(a, b) { return a + (Number(b.g) || 0); }, 0);
+
+                var bestSub = subjects.reduce(function(prev, curr) { return (Number(prev.g) > Number(curr.g)) ? prev :
+                    curr; });
+                var weakSub = subjects.reduce(function(prev, curr) { return (Number(prev.g) < Number(curr.g)) ? prev :
+                    curr; });
+
+                var photoHtml = '';
+                if (studentPhotos[admNo]) {
+                    photoHtml = '<img src="' + studentPhotos[admNo] + '" class="w-full h-full object-cover" alt="photo">';
+                } else {
+                    photoHtml = '<span class="text-gray-400 text-xs">PHOTO</span>';
+                }
+
+                var div = document.createElement('div');
                 div.className = 'marksheet-container page-break';
-                div.id = `marksheet-${admNo}`;
+                div.id = 'marksheet-' + admNo;
                 div.setAttribute('data-adm', admNo);
 
-                div.innerHTML = `
-                    <div class="header-bg p-2 flex justify-between items-center">
-                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-white">
-                            <img src="new-logo.png" alt="School Logo" class="w-full h-full object-contain" onerror="this.style.display='none'">
-                        </div>
-                        <div class="text-center flex-grow">
-                            <h1 class="text-2xl font-black uppercase leading-tight">Government Primary School</h1>
-                            <h2 class="text-lg font-bold leading-tight">PETHGAM WAGOORA 193109</h2>
-                            <p class="text-[10px] font-medium uppercase tracking-wide">Wagoora Babareshi Road Near Zonal Education office Wagoora</p>
-                        </div>
-                    </div>
+                div.innerHTML =
+                    '<div class="header-bg p-2 flex justify-between items-center">' +
+                    '<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-white">' +
+                    '<img src="new-logo.png" alt="School Logo" class="w-full h-full object-contain" onerror="this.style.display=\'none\'">' +
+                    '</div>' +
+                    '<div class="text-center flex-grow">' +
+                    '<h1 class="text-2xl font-black uppercase leading-tight">Government Primary School</h1>' +
+                    '<h2 class="text-lg font-bold leading-tight">PETHGAM WAGOORA 193109</h2>' +
+                    '<p class="text-[10px] font-medium uppercase tracking-wide">Wagoora Babareshi Road Near Zonal Education office Wagoora</p>' +
+                    '</div>' +
+                    '</div>' +
 
-                    <div class="flex mt-1">
-                        <div class="flex-grow grid grid-cols-4 border-l border-t">
-                            <div class="cell-label">Student Name:</div><div class="cell-value col-span-1">${name}</div>
-                            <div class="cell-label">Adm. No:</div><div class="cell-value">${admNo}</div>
-                            <div class="cell-label">Fathers Name:</div><div class="cell-value">${row[4]||''}</div>
-                            <div class="cell-label">D.O.B:</div><div class="cell-value">${row[7] || ''}</div>
-                            <div class="cell-label">Mothers Name:</div><div class="cell-value">${row[5]||''}</div>
-                            <div class="cell-label">Class:</div><div class="cell-value">${row[2]||''}</div>
-                            <div class="cell-label">Academic Session:</div><div class="cell-value">Nov. 2025</div>
-                            <div class="cell-label">Roll No:</div><div class="cell-value">${row[1]||''}</div>
-                            <div class="cell-label">Apaar ID:</div><div class="cell-value">${row[65]||'N/A'}</div>
-                            <div class="cell-label">PEN No.</div><div class="cell-value">${row[66]||'N/A'}</div>
-                        </div>
-                        <div class="photo-box ml-1">
-                            ${studentPhotos[name] ? `<img src="${studentPhotos[name]}" class="w-full h-full object-cover">` : `<span class="text-gray-400">PHOTO</span>`}
-                        </div>
-                    </div>
+                    '<div class="flex mt-1">' +
+                    '<div class="flex-grow grid grid-cols-4 border-l border-t">' +
+                    '<div class="cell-label">Student Name:</div><div class="cell-value col-span-1">' + name + '</div>' +
+                    '<div class="cell-label">Adm. No:</div><div class="cell-value">' + admNo + '</div>' +
+                    '<div class="cell-label">Fathers Name:</div><div class="cell-value">' + (row[4] || '') + '</div>' +
+                    '<div class="cell-label">D.O.B:</div><div class="cell-value">' + (row[7] || '') + '</div>' +
+                    '<div class="cell-label">Mothers Name:</div><div class="cell-value">' + (row[5] || '') + '</div>' +
+                    '<div class="cell-label">Class:</div><div class="cell-value">' + (row[2] || '') + '</div>' +
+                    '<div class="cell-label">Academic Session:</div><div class="cell-value">Nov. 2025</div>' +
+                    '<div class="cell-label">Roll No:</div><div class="cell-value">' + (row[1] || '') + '</div>' +
+                    '<div class="cell-label">Apaar ID:</div><div class="cell-value">' + (row[65] || 'N/A') + '</div>' +
+                    '<div class="cell-label">PEN No.</div><div class="cell-value">' + (row[66] || 'N/A') + '</div>' +
+                    '</div>' +
+                    '<div class="photo-box ml-1">' + photoHtml + '</div>' +
+                    '</div>' +
 
-                    <table class="mt-1">
-                        <thead class="bg-indigo-100">
-                            <tr><th rowspan="2">Subject</th><th colspan="6">Formative (5 each)</th><th rowspan="2">T(30)</th><th rowspan="2">CC(20)</th><th rowspan="2">Sum(50)</th><th rowspan="2">Total</th><th rowspan="2">Grade</th><th rowspan="2">Proficiency</th></tr>
-                            <tr class="text-[9px]"><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th></tr>
-                        </thead>
-                        <tbody>
-                            ${subjects.map(s => `<tr><td class="sub-name">${s.n}</td>${s.fa.map(v=>`<td>${v||0}</td>`).join('')}<td class="font-bold">${s.t}</td><td>${s.cc}</td><td>${s.s}</td><td class="font-bold bg-blue-50">${s.g}</td><td>${getGrade(s.g)}</td><td class="font-bold text-blue-800">${getProficiency(s.g)}</td></tr>`).join('')}
-                        </tbody>
-                        <tfoot class="bg-gray-200 font-bold">
-                            <tr>
-                                <td>Grand Total</td>${grandFA.map(v => `<td>${v}</td>`).join('')}
-                                <td>${grandT30}</td><td>${grandCC20}</td><td>${grandSum50}</td><td class="bg-blue-100">${grandTotal100}</td>
-                                <td colspan="2" class="text-center">Overall: ${getGrade(perc)}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    '<table class="mt-1">' +
+                    '<thead class="bg-indigo-100">' +
+                    '<tr><th rowspan="2">Subject</th><th colspan="6">Formative (5 each)</th><th rowspan="2">T(30)</th><th rowspan="2">CC(20)</th><th rowspan="2">Sum(50)</th><th rowspan="2">Total</th><th rowspan="2">Grade</th><th rowspan="2">Proficiency</th></tr>' +
+                    '<tr class="text-[9px]"><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th></tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    subjects.map(function(s) {
+                        return '<tr><td class="sub-name">' + s.n + '</td>' +
+                            s.fa.map(function(v) { return '<td>' + (v || 0) + '</td>'; }).join('') +
+                            '<td class="font-bold">' + s.t + '</td><td>' + s.cc + '</td><td>' + s.s +
+                            '</td><td class="font-bold bg-blue-50">' + s.g +
+                            '</td><td>' + getGrade(s.g) + '</td><td class="font-bold text-blue-800">' +
+                            getProficiency(s.g) + '</td></tr>';
+                    }).join('') +
+                    '</tbody>' +
+                    '<tfoot class="bg-gray-200 font-bold">' +
+                    '<tr><td>Grand Total</td>' + grandFA.map(function(v) { return '<td>' + v + '</td>'; }).join('') +
+                    '<td>' + grandT30 + '</td><td>' + grandCC20 + '</td><td>' + grandSum50 +
+                    '</td><td class="bg-blue-100">' + grandTotal100 +
+                    '</td><td colspan="2" class="text-center">Overall: ' + getGrade(perc) + '</td></tr>' +
+                    '</tfoot>' +
+                    '</table>' +
 
-                    <div class="grid grid-cols-3 gap-1 mt-1">
-                        <div class="border border-slate-300">
-                            <div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Percentage/Grade Key</div>
-                            <table class="text-[9px] w-full">
-                                <tr><td>>85% to 100%</td><td>A+</td></tr>
-                                <tr><td>>70% to 85%</td><td>A</td></tr>
-                                <tr><td>>55% to 70%</td><td>B</td></tr>
-                                <tr><td>>40% to 55%</td><td>C</td></tr>
-                                <tr><td>>33% to 40%</td><td>D</td></tr>
-                            </table>
-                        </div>
-                        <div class="border border-slate-300">
-                            <div class="bg-red-500 text-white text-[10px] font-bold text-center py-1">Level of Proficiency</div>
-                            <table class="w-full text-[10px]">
-                                <tr><td class="font-bold">Sky</td><td><img src="https://img.freepik.com/free-photo/blue-sky-with-white-clouds_1127-282.jpg" class="prof-img"></td><td>${perc >= 85 ? '✔' : ''}</td></tr>
-                                <tr><td class="font-bold">Mountain</td><td><img src="https://i.ibb.co/dsD45z0Z/IMG-20260409-201036.jpg" class="prof-img"></td><td>${perc >= 55 && perc < 85 ? '✔' : ''}</td></tr>
-                                <tr><td class="font-bold">Stream</td><td><img src="https://i.ibb.co/JwkmZSc0/IMG-20260407-220351.jpg" class="prof-img"></td><td>${perc < 55 ? '✔' : ''}</td></tr>
-                            </table>
-                        </div>
-                        <div class="border border-slate-300">
-                            <div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Final Results</div>
-                            <table class="w-full text-[10px] text-left">
-                                <tr><td class="bg-blue-50 px-1 border">Total Marks Obtained</td><td class="font-bold border text-center">${std.total}</td></tr>
-                                <tr><td class="bg-blue-50 px-1 border">Max. Marks</td><td class="font-bold border text-center">500</td></tr>
-                                <tr><td class="bg-blue-50 px-1 border">Overall %age</td><td class="font-bold border text-center">${perc.toFixed(1)}%</td></tr>
-                                <tr><td class="bg-blue-50 px-1 border">Result</td><td class="font-bold border text-center">${perc >= 33 ? 'PROMOTED' : 'REPEATER'}</td></tr>
-                                <tr><td class="bg-blue-50 px-1 border">Class Position</td><td class="font-bold border text-center">${cRank === 1 ? '1st Position' : cRank === 2 ? '2nd Position' : cRank === 3 ? '3rd Position' : 'Qualified'}</td></tr>
-                            </table>
-                        </div>
-                    </div>
+                    '<div class="grid grid-cols-3 gap-1 mt-1">' +
+                    '<div class="border border-slate-300">' +
+                    '<div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Percentage/Grade Key</div>' +
+                    '<table class="text-[9px] w-full">' +
+                    '<tr><td>>85% to 100%</td><td>A+</td></tr>' +
+                    '<tr><td>>70% to 85%</td><td>A</td></tr>' +
+                    '<tr><td>>55% to 70%</td><td>B</td></tr>' +
+                    '<tr><td>>40% to 55%</td><td>C</td></tr>' +
+                    '<tr><td>>33% to 40%</td><td>D</td></tr>' +
+                    '</table></div>' +
+                    '<div class="border border-slate-300">' +
+                    '<div class="bg-red-500 text-white text-[10px] font-bold text-center py-1">Level of Proficiency</div>' +
+                    '<table class="w-full text-[10px]">' +
+                    '<tr><td class="font-bold">Sky</td><td><img src="https://img.freepik.com/free-photo/blue-sky-with-white-clouds_1127-282.jpg" class="prof-img"></td><td>' +
+                    (perc >= 85 ? '✔' : '') + '</td></tr>' +
+                    '<tr><td class="font-bold">Mountain</td><td><img src="https://i.ibb.co/dsD45z0Z/IMG-20260409-201036.jpg" class="prof-img"></td><td>' +
+                    (perc >= 55 && perc < 85 ? '✔' : '') + '</td></tr>' +
+                    '<tr><td class="font-bold">Stream</td><td><img src="https://i.ibb.co/JwkmZSc0/IMG-20260407-220351.jpg" class="prof-img"></td><td>' +
+                    (perc < 55 ? '✔' : '') + '</td></tr>' +
+                    '</table></div>' +
+                    '<div class="border border-slate-300">' +
+                    '<div class="bg-purple-600 text-white text-[10px] font-bold text-center py-1">Final Results</div>' +
+                    '<table class="w-full text-[10px] text-left">' +
+                    '<tr><td class="bg-blue-50 px-1 border">Total Marks Obtained</td><td class="font-bold border text-center">' +
+                    std.total + '</td></tr>' +
+                    '<tr><td class="bg-blue-50 px-1 border">Max. Marks</td><td class="font-bold border text-center">500</td></tr>' +
+                    '<tr><td class="bg-blue-50 px-1 border">Overall %age</td><td class="font-bold border text-center">' +
+                    perc.toFixed(1) + '%</td></tr>' +
+                    '<tr><td class="bg-blue-50 px-1 border">Result</td><td class="font-bold border text-center">' +
+                    (perc >= 33 ? 'PROMOTED' : 'REPEATER') + '</td></tr>' +
+                    '<tr><td class="bg-blue-50 px-1 border">Class Position</td><td class="font-bold border text-center">' +
+                    (cRank === 1 ? '1st Position' : cRank === 2 ? '2nd Position' : cRank === 3 ? '3rd Position' :
+                        'Qualified') + '</td></tr>' +
+                    '</table></div></div>' +
 
-                    <div class="grid grid-cols-2 gap-1 mt-1">
-                        <div class="border p-1">
-                            <div class="bg-orange-400 text-white text-[10px] font-bold text-center mb-1">Subject wise Bar Graph Chart</div>
-                            <div class="bar-container">
-                                ${subjects.map(s => `<div class="bar-item"><span class="text-[9px]">${s.g}</span><div class="bar" style="height: ${s.g}%;"></div><span class="text-[8px]">${s.n}</span></div>`).join('')}
-                            </div>
-                        </div>
-                        <div class="grid grid-rows-2 gap-1">
-                            <div class="grid grid-cols-2 gap-1">
-                                <div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">SCHOOL RANK</div><div class="text-xl font-bold">${sRank}</div></div>
-                                <div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">CLASS RANK</div><div class="text-xl font-bold">${cRank}</div></div>
-                            </div>
-                            <div class="border border-slate-400">
-                                <table class="w-full h-full text-[9px] border-collapse">
-                                    <tr>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Attendance</td>
-                                        <td class="border border-slate-400 w-12"></td>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Discipline</td>
-                                        <td class="border border-slate-400 w-12"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Sports</td>
-                                        <td class="border border-slate-400"></td>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Art & Craft</td>
-                                        <td class="border border-slate-400"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Teamwork</td>
-                                        <td class="border border-slate-400"></td>
-                                        <td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Social Skills</td>
-                                        <td class="border border-slate-400"></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    '<div class="grid grid-cols-2 gap-1 mt-1">' +
+                    '<div class="border p-1">' +
+                    '<div class="bg-orange-400 text-white text-[10px] font-bold text-center mb-1">Subject wise Bar Graph Chart</div>' +
+                    '<div class="bar-container">' +
+                    subjects.map(function(s) {
+                        var h = Math.min(Math.max(Number(s.g) || 0, 1), 100);
+                        return '<div class="bar-item"><span class="text-[9px]">' + s.g +
+                            '</span><div class="bar" style="height:' + h +
+                            '%;"></div><span class="text-[8px]">' + s.n + '</span></div>';
+                    }).join('') +
+                    '</div></div>' +
+                    '<div class="grid grid-rows-2 gap-1">' +
+                    '<div class="grid grid-cols-2 gap-1">' +
+                    '<div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">SCHOOL RANK</div><div class="text-xl font-bold">' +
+                    sRank + '</div></div>' +
+                    '<div class="border border-slate-700 text-center"><div class="bg-slate-700 text-white text-[9px] py-1">CLASS RANK</div><div class="text-xl font-bold">' +
+                    cRank + '</div></div></div>' +
+                    '<div class="border border-slate-400">' +
+                    '<table class="w-full h-full text-[9px] border-collapse">' +
+                    '<tr><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Attendance</td><td class="border border-slate-400 w-12"></td><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Discipline</td><td class="border border-slate-400 w-12"></td></tr>' +
+                    '<tr><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Sports</td><td class="border border-slate-400"></td><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Art & Craft</td><td class="border border-slate-400"></td></tr>' +
+                    '<tr><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Teamwork</td><td class="border border-slate-400"></td><td class="bg-red-700 text-white font-bold px-1 border border-slate-400">Social Skills</td><td class="border border-slate-400"></td></tr>' +
+                    '</table></div></div></div>' +
 
-                    <div class="border border-slate-400 mt-1">
-                        <div class="bg-purple-500 text-white text-[10px] font-bold text-center py-1 uppercase">General Remarks</div>
-                        <div class="p-2 text-[11px] font-bold min-h-[60px]">
-                            ${name} has shown ${getProficiency(perc)} level performance. Exceptional in ${bestSub.n} (${bestSub.g}). 
-                            ${perc < 55 ? 'Focus needed on ' + weakSub.n + '.' : 'Keep maintaining excellence.'} Overall: ${getGrade(perc)}.
-                        </div>
-                    </div>
+                    '<div class="border border-slate-400 mt-1">' +
+                    '<div class="bg-purple-500 text-white text-[10px] font-bold text-center py-1 uppercase">General Remarks</div>' +
+                    '<div class="p-2 text-[11px] font-bold min-h-[60px]">' +
+                    name + ' has shown ' + getProficiency(perc) +
+                    ' level performance. Exceptional in ' + bestSub.n + ' (' + bestSub.g + '). ' +
+                    (perc < 55 ? 'Focus needed on ' + weakSub.n + '.' : 'Keep maintaining excellence.') +
+                    ' Overall: ' + getGrade(perc) + '.' +
+                    '</div></div>' +
 
-                    <div class="flex justify-between items-end px-4 mt-4">
-                        <div class="text-center">
-                            <svg id="barcode-${admNo}"></svg>
-                            <p class="text-[8px] uppercase font-bold text-slate-500">Student Identity Barcode</p>
-                        </div>
-                        <div class="text-center">
-                            <div id="qrcode-${admNo}" class="mx-auto bg-white p-1 border border-slate-800"></div>
-                            <p class="text-[8px] uppercase font-bold mt-1 text-slate-500">Scan for Verification</p>
-                        </div>
-                    </div>
+                    '<div class="flex justify-between items-end px-4 mt-4">' +
+                    '<div class="text-center"><svg id="barcode-' + admNo +
+                    '"></svg><p class="text-[8px] uppercase font-bold text-slate-500">Student Identity Barcode</p></div>' +
+                    '<div class="text-center"><div id="qrcode-' + admNo +
+                    '" class="mx-auto bg-white p-1 border border-slate-800"></div><p class="text-[8px] uppercase font-bold mt-1 text-slate-500">Scan for Verification</p></div>' +
+                    '</div>' +
 
-                    <div class="mt-16"></div>
+                    '<div class="mt-16"></div>' +
 
-                    <div class="grid grid-cols-4 gap-4 px-2">
-                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Form Teacher</div>
-                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Exam I/C</div>
-                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Parents Signature</div>
-                        <div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Seal & Sign. Headmaster</div>
-                    </div>
-                `;
+                    '<div class="grid grid-cols-4 gap-4 px-2">' +
+                    '<div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Form Teacher</div>' +
+                    '<div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Sign. Exam I/C</div>' +
+                    '<div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Parents Signature</div>' +
+                    '<div class="footer-tab border-t-2 border-slate-500 pt-2 font-bold">Seal & Sign. Headmaster</div>' +
+                    '</div>';
+
                 wrapper.appendChild(div);
 
-                // Barcode & QR
-                setTimeout(() => {
+                // Render barcode & QR after DOM update
+                setTimeout(function() {
                     try {
-                        JsBarcode(`#barcode-${admNo}`, admNo.toString(), {
-                            format: "CODE39",
+                        JsBarcode('#barcode-' + admNo, admNo, {
+                            format: 'CODE39',
                             width: 1.5,
                             height: 40,
                             displayValue: true,
                             fontSize: 10,
                             margin: 5
                         });
-                    } catch (e) { console.warn('Barcode error', e); }
+                    } catch (e) { /* ignore */ }
                     try {
-                        const qrEl = document.getElementById(`qrcode-${admNo}`);
+                        var qrEl = document.getElementById('qrcode-' + admNo);
                         if (qrEl) {
                             new QRCode(qrEl, {
-                                text: `VERIFIED: ${name} | Adm: ${admNo} | GPS Pethgam Wagoora`,
+                                text: 'VERIFIED: ' + name + ' | Adm: ' + admNo +
+                                    ' | GPS Pethgam Wagoora',
                                 width: 80,
                                 height: 80,
-                                colorDark: "#000000",
-                                colorLight: "#ffffff",
+                                colorDark: '#000000',
+                                colorLight: '#ffffff',
                                 correctLevel: QRCode.CorrectLevel.M
                             });
                         }
-                    } catch (e) { console.warn('QR error', e); }
-                }, 150);
+                    } catch (e) { /* ignore */ }
+                }, 200);
             });
         }
 
@@ -838,56 +852,52 @@ export { db, storage, auth };
         // 9. INDIVIDUAL DOWNLOAD (PDF via print)
         // ============================================================
         function downloadIndividual(admNo) {
-            const allMarksheets = document.querySelectorAll('.marksheet-container');
+            var allMarksheets = document.querySelectorAll('.marksheet-container');
             if (allMarksheets.length === 0) {
                 showToast('No marksheets to download.', 'error');
                 return;
             }
 
-            // Find target
-            let target = null;
-            allMarksheets.forEach(el => {
-                if (el.getAttribute('data-adm') === admNo) {
-                    target = el;
-                }
+            var target = null;
+            allMarksheets.forEach(function(el) {
+                if (el.getAttribute('data-adm') === admNo) target = el;
             });
 
             if (!target) {
-                showToast(`Marksheet for Adm ${admNo} not found.`, 'error');
+                showToast('Marksheet for Adm ' + admNo + ' not found.', 'error');
                 return;
             }
 
-            // Hide all, show target
-            allMarksheets.forEach(el => el.classList.remove('active-print'));
+            allMarksheets.forEach(function(el) { el.classList.remove('active-print'); });
             target.classList.add('active-print');
 
-            // Also hide the top panel and other UI elements during print
-            const panel = document.querySelector('.no-print');
+            var panel = document.querySelector('.no-print');
             if (panel) panel.style.display = 'none';
 
-            // Print
             window.print();
 
-            // Restore after print
-            setTimeout(() => {
-                allMarksheets.forEach(el => el.classList.remove('active-print'));
+            setTimeout(function() {
+                allMarksheets.forEach(function(el) { el.classList.remove('active-print'); });
                 if (panel) panel.style.display = '';
-                showToast(`📄 Marksheet for Adm ${admNo} sent to print.`, 'info');
+                showToast('📄 Marksheet for Adm ' + admNo + ' sent to print.', 'info');
             }, 1000);
         }
 
         // ============================================================
         // 10. FIRESTORE SAVE FUNCTIONS
         // ============================================================
-        async function saveSingleToFirestore(admNo) {
-            const btn = event && event.target ? event.target : document.querySelector(`[onclick*="saveSingleToFirestore('${admNo}')"]`);
+        function saveSingleToFirestore(admNo) {
+            var btn = null;
+            var btns = document.querySelectorAll('button[onclick*="saveSingleToFirestore(\'' + admNo + '\')"]');
+            if (btns.length) btn = btns[0];
+
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = '<span class="spinner"></span>Saving...';
             }
 
             try {
-                const db = getDb();
+                var db = getDb();
                 if (!db) {
                     showToast('❌ Firebase not initialized. Check config.', 'error');
                     if (btn) { btn.disabled = false;
@@ -895,59 +905,74 @@ export { db, storage, auth };
                     return;
                 }
 
-                // Find the student row
-                const row = allStudentsData.find(r => (r[0] || '000') === admNo);
+                var row = null;
+                for (var i = 0; i < allStudentsData.length; i++) {
+                    if ((allStudentsData[i][0] || '000').toString() === admNo) {
+                        row = allStudentsData[i];
+                        break;
+                    }
+                }
                 if (!row) {
-                    showToast(`❌ Student with Adm ${admNo} not found.`, 'error');
+                    showToast('❌ Student with Adm ' + admNo + ' not found.', 'error');
                     if (btn) { btn.disabled = false;
                         btn.innerHTML = '☁️ Save'; }
                     return;
                 }
 
-                // Build data object (includes ranks)
-                let dataObj = row._dataObj;
+                var dataObj = row._dataObj;
                 if (!dataObj) {
-                    // Rebuild if not stored
                     dataObj = buildStudentData(row);
-                    // compute ranks
-                    const studentsWithTotals = allStudentsData.map(r => ({
-                        row: r,
-                        total: (Number(r[17]) || 0) + (Number(r[27]) || 0) + (Number(r[37]) || 0) + (Number(r[47]) || 0) + (
-                            Number(r[57]) || 0),
-                        class: r[2] || ''
-                    }));
-                    const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
-                    const sRank = schoolSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
-                    const classStudents = studentsWithTotals.filter(s => s.class === dataObj.class);
-                    const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
-                    const cRank = classSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                    // Recompute ranks
+                    var studentsWithTotals = allStudentsData.map(function(r) {
+                        var total = (Number(r[17]) || 0) + (Number(r[27]) || 0) + (Number(r[37]) || 0) + (Number(
+                            r[47]) || 0) + (Number(r[57]) || 0);
+                        return { row: r, total: total, class: r[2] || '' };
+                    });
+                    var schoolSorted = studentsWithTotals.slice().sort(function(a, b) { return b.total - a.total; });
+                    var sRank = 1;
+                    for (var k = 0; k < schoolSorted.length; k++) {
+                        if (schoolSorted[k].total === dataObj.grandTotal) { sRank = k + 1; break; }
+                    }
+                    var classStudents = studentsWithTotals.filter(function(s) { return s.class === dataObj.class; });
+                    var classSorted = classStudents.slice().sort(function(a, b) { return b.total - a.total; });
+                    var cRank = 1;
+                    for (var m = 0; m < classSorted.length; m++) {
+                        if (classSorted[m].total === dataObj.grandTotal) { cRank = m + 1; break; }
+                    }
                     dataObj.schoolRank = sRank;
                     dataObj.classRank = cRank;
+                    row._dataObj = dataObj;
                 }
 
-                const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
-                const docRef = db.collection(collection).doc(admNo.toString());
-                await docRef.set(dataObj, { merge: true });
-
-                showToast(`✅ Saved ${dataObj.name} (Adm: ${admNo}) to Firestore.`, 'success');
+                var collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+                var docRef = db.collection(collection).doc(admNo);
+                docRef.set(dataObj, { merge: true })
+                    .then(function() {
+                        showToast('✅ Saved ' + dataObj.name + ' (Adm: ' + admNo + ') to Firestore.', 'success');
+                        if (btn) { btn.disabled = false;
+                            btn.innerHTML = '☁️ Save'; }
+                    })
+                    .catch(function(err) {
+                        console.error('Firestore save error:', err);
+                        showToast('❌ Save failed: ' + err.message, 'error');
+                        if (btn) { btn.disabled = false;
+                            btn.innerHTML = '☁️ Save'; }
+                    });
             } catch (err) {
-                console.error('Firestore save error:', err);
-                showToast(`❌ Save failed: ${err.message}`, 'error');
-            }
-
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '☁️ Save';
+                console.error('saveSingleToFirestore error:', err);
+                showToast('❌ Save failed: ' + err.message, 'error');
+                if (btn) { btn.disabled = false;
+                    btn.innerHTML = '☁️ Save'; }
             }
         }
 
-        async function saveAllToFirestore() {
-            const btn = document.getElementById('saveAllBtn');
+        function saveAllToFirestore() {
+            var btn = document.getElementById('saveAllBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>Saving All...';
 
             try {
-                const db = getDb();
+                var db = getDb();
                 if (!db) {
                     showToast('❌ Firebase not initialized. Check config.', 'error');
                     btn.disabled = false;
@@ -962,70 +987,85 @@ export { db, storage, auth };
                     return;
                 }
 
-                const collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
-                let successCount = 0;
-                let failCount = 0;
+                var collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
+                var successCount = 0;
+                var failCount = 0;
+                var total = allStudentsData.length;
 
-                // Build all data objects with ranks
-                const studentsWithTotals = allStudentsData.map(row => ({
-                    row: row,
-                    total: (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) || 0) + (
-                        Number(row[57]) || 0),
-                    class: row[2] || ''
-                }));
-                const schoolSorted = [...studentsWithTotals].sort((a, b) => b.total - a.total);
+                var studentsWithTotals = allStudentsData.map(function(row) {
+                    var totalMarks = (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (
+                        Number(row[47]) || 0) + (Number(row[57]) || 0);
+                    return { row: row, total: totalMarks, class: row[2] || '' };
+                });
+                var schoolSorted = studentsWithTotals.slice().sort(function(a, b) { return b.total - a.total; });
 
-                for (let i = 0; i < allStudentsData.length; i++) {
-                    const row = allStudentsData[i];
-                    const admNo = row[0] || '000';
-                    const dataObj = buildStudentData(row);
-                    const sRank = schoolSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
-                    const classStudents = studentsWithTotals.filter(s => s.class === dataObj.class);
-                    const classSorted = [...classStudents].sort((a, b) => b.total - a.total);
-                    const cRank = classSorted.findIndex(s => s.total === dataObj.grandTotal) + 1;
+                var promises = [];
+                for (var i = 0; i < allStudentsData.length; i++) {
+                    var row = allStudentsData[i];
+                    var admNo = (row[0] || '000').toString();
+                    var dataObj = buildStudentData(row);
+
+                    // Compute ranks
+                    var sRank = 1;
+                    for (var k = 0; k < schoolSorted.length; k++) {
+                        if (schoolSorted[k].total === dataObj.grandTotal) { sRank = k + 1; break; }
+                    }
+                    var classStudents = studentsWithTotals.filter(function(s) { return s.class === dataObj.class; });
+                    var classSorted = classStudents.slice().sort(function(a, b) { return b.total - a.total; });
+                    var cRank = 1;
+                    for (var m = 0; m < classSorted.length; m++) {
+                        if (classSorted[m].total === dataObj.grandTotal) { cRank = m + 1; break; }
+                    }
                     dataObj.schoolRank = sRank;
                     dataObj.classRank = cRank;
 
-                    try {
-                        const docRef = db.collection(collection).doc(admNo.toString());
-                        await docRef.set(dataObj, { merge: true });
-                        successCount++;
-                    } catch (e) {
-                        failCount++;
-                        console.warn(`Failed to save ${admNo}:`, e);
-                    }
+                    var docRef = db.collection(collection).doc(admNo);
+                    var p = docRef.set(dataObj, { merge: true })
+                        .then(function() { successCount++; })
+                        .catch(function(e) {
+                            failCount++;
+                            console.warn('Failed to save ' + admNo + ':', e);
+                        });
+                    promises.push(p);
                 }
 
-                if (failCount === 0) {
-                    showToast(`✅ All ${successCount} students saved to Firestore!`, 'success');
-                } else {
-                    showToast(`⚠️ Saved ${successCount}, failed ${failCount}. Check console.`, 'error');
-                }
+                Promise.all(promises)
+                    .then(function() {
+                        if (failCount === 0) {
+                            showToast('✅ All ' + successCount + ' students saved to Firestore!', 'success');
+                        } else {
+                            showToast('⚠️ Saved ' + successCount + ', failed ' + failCount +
+                                '. Check console.', 'error');
+                        }
+                        btn.disabled = false;
+                        btn.innerHTML = '☁️ Save All to Firestore';
+                    })
+                    .catch(function(err) {
+                        console.error('Batch save error:', err);
+                        showToast('❌ Batch save failed: ' + err.message, 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = '☁️ Save All to Firestore';
+                    });
+
             } catch (err) {
-                console.error('Firestore batch save error:', err);
-                showToast(`❌ Batch save failed: ${err.message}`, 'error');
+                console.error('saveAllToFirestore error:', err);
+                showToast('❌ Batch save failed: ' + err.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = '☁️ Save All to Firestore';
             }
-
-            btn.disabled = false;
-            btn.innerHTML = '☁️ Save All to Firestore';
         }
 
         // ============================================================
         // 11. TOGGLE FIRESTORE CONFIG
         // ============================================================
         function toggleFirestoreConfig() {
-            const area = document.getElementById('firestoreConfigArea');
-            if (area.style.display === 'none') {
-                area.style.display = '';
-            } else {
-                area.style.display = 'none';
-            }
+            var area = document.getElementById('firestoreConfigArea');
+            area.style.display = (area.style.display === 'none') ? '' : 'none';
         }
 
         // ============================================================
         // 12. INIT
         // ============================================================
-        // Try to init Firebase on load
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 initFirebase();
@@ -1047,5 +1087,4 @@ export { db, storage, auth };
     </script>
 
 </body>
-</html>    
-      
+</html>
