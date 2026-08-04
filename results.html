@@ -275,7 +275,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* Fallback for logo */
         .logo-fallback {
             display: flex;
             align-items: center;
@@ -365,7 +364,7 @@
         // ============================================================
         // 1. GLOBALS
         // ============================================================
-        let allStudentsData = []; // array of row objects with column indices
+        let allStudentsData = []; // array of row objects (arrays)
         let studentPhotos = {}; // key: admNo, value: dataURL
         let firebaseInitialized = false;
         let firestoreInstance = null;
@@ -427,7 +426,7 @@
         }
 
         // ============================================================
-        // 4. EXCEL UPLOAD with header detection
+        // 4. EXCEL UPLOAD with robust header detection + fallback
         // ============================================================
         document.getElementById('excelUpload').addEventListener('change', function(e) {
             var file = e.target.files[0];
@@ -439,92 +438,62 @@
                     var workbook = XLSX.read(data, { type: 'array' });
                     var rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
 
-                    // Find header row by searching for keywords
+                    // --- Step 1: Try to find header row by keywords ---
                     var headerRowIndex = -1;
                     var headerRow = null;
                     for (var i = 0; i < Math.min(10, rows.length); i++) {
                         var row = rows[i];
                         if (!row || row.length === 0) continue;
                         var rowStr = row.join(' ').toLowerCase();
-                        if (rowStr.includes('student name') || rowStr.includes('adm no') || rowStr.includes('roll no')) {
+                        if (rowStr.includes('student name') || rowStr.includes('adm no') || rowStr.includes('roll no') ||
+                            rowStr.includes('father name')) {
                             headerRowIndex = i;
                             headerRow = row;
                             break;
                         }
                     }
-                    if (headerRowIndex === -1) {
-                        showToast('Could not find header row. Ensure it contains "Student Name".', 'error');
-                        return;
-                    }
 
-                    // Build column map from header row
-                    columnMap = {};
-                    var fields = {
-                        'adm no': 'admNo',
-                        'student name': 'name',
-                        'roll no': 'rollNo',
-                        'class': 'class',
-                        'father name': 'fatherName',
-                        'mother name': 'motherName',
-                        'date of birth': 'dob',
-                        'apaar id': 'apaarId',
-                        'pen no': 'penNo'
-                    };
-                    // Also map subject columns: we'll keep using fixed indices for subjects as per original structure
-                    // But we can also try to find columns by header names for subjects
-                    // For simplicity, we keep the original numeric indices for marks (since the Excel format is known)
-                    // However, we will read the actual data rows and assign values accordingly.
-
-                    // For now, we just identify the index of key fields: dob, apaarId, penNo
-                    for (var j = 0; j < headerRow.length; j++) {
-                        var cell = headerRow[j] ? headerRow[j].toString().trim().toLowerCase() : '';
-                        for (var key in fields) {
-                            if (cell.includes(key)) {
-                                columnMap[fields[key]] = j;
-                                break;
+                    // If we found a header, build column map
+                    if (headerRowIndex !== -1) {
+                        columnMap = {};
+                        var fields = {
+                            'adm no': 'admNo',
+                            'student name': 'name',
+                            'roll no': 'rollNo',
+                            'class': 'class',
+                            'father name': 'fatherName',
+                            'mother name': 'motherName',
+                            'date of birth': 'dob',
+                            'apaar id': 'apaarId',
+                            'pen no': 'penNo'
+                        };
+                        for (var j = 0; j < headerRow.length; j++) {
+                            var cell = headerRow[j] ? headerRow[j].toString().trim().toLowerCase() : '';
+                            for (var key in fields) {
+                                if (cell.includes(key)) {
+                                    columnMap[fields[key]] = j;
+                                    break;
+                                }
                             }
                         }
+                        // Data rows start after header
+                        var dataRows = rows.slice(headerRowIndex + 1).filter(function(r) {
+                            // Use name column if found, else fallback to index 3
+                            var nameIdx = columnMap['name'] !== undefined ? columnMap['name'] : 3;
+                            return r.length > 0 && r[nameIdx] && r[nameIdx].toString().trim();
+                        });
+                        allStudentsData = dataRows.map(function(row) { return processRow(row); });
+                    } else {
+                        // --- Fallback: Use fixed column indices (original format) ---
+                        console.warn('Header not detected, using fixed column layout.');
+                        // Assume rows start at index 3 (skip 3 header rows)
+                        var dataRows = rows.slice(3).filter(function(r) { return r.length > 0 && r[3] && r[3].toString()
+                                .trim(); });
+                        allStudentsData = dataRows.map(function(row) { return processRow(row); });
                     }
-
-                    // Extract data rows: all rows after header row
-                    var dataRows = rows.slice(headerRowIndex + 1).filter(function(r) {
-                        return r.length > 0 && r[columnMap['name'] || 3] && r[columnMap['name'] || 3].toString().trim();
-                    });
-
-                    // Convert to array of objects with indices for easier access
-                    allStudentsData = dataRows.map(function(row) {
-                        // Convert DOB if present
-                        var dobVal = columnMap['dob'] !== undefined ? row[columnMap['dob']] : row[7];
-                        var dob = '';
-                        if (dobVal) {
-                            if (typeof dobVal === 'number' && dobVal > 30000 && dobVal < 60000) {
-                                // Excel serial date conversion
-                                var dateObj = new Date((dobVal - 25569) * 86400 * 1000);
-                                var dd = String(dateObj.getDate()).padStart(2, '0');
-                                var mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-                                var yyyy = dateObj.getFullYear();
-                                dob = dd + '/' + mm + '/' + yyyy;
-                            } else {
-                                dob = dobVal.toString();
-                            }
-                        }
-
-                        var apaarId = (columnMap['apaarId'] !== undefined) ? row[columnMap['apaarId']] : row[65];
-                        var penNo = (columnMap['penNo'] !== undefined) ? row[columnMap['penNo']] : row[66];
-
-                        // Keep all original columns for marks (indices 8-66)
-                        // We'll store the original row as array for backward compatibility
-                        // and also include the converted fields.
-                        var rowArray = row.slice(0); // clone
-                        // Override dob, apaarId, penNo in the array at positions 7, 65, 66
-                        rowArray[7] = dob;
-                        rowArray[65] = apaarId || 'N/A';
-                        rowArray[66] = penNo || 'N/A';
-                        return rowArray;
-                    });
 
                     if (allStudentsData.length === 0) {
-                        showToast('No student data found after header row.', 'error');
+                        showToast('No student data found. Check your Excel layout.', 'error');
                         return;
                     }
 
@@ -532,11 +501,68 @@
                     generateAllMarksheets();
                     showToast('✅ Loaded ' + allStudentsData.length + ' students.', 'success');
                 } catch (err) {
+                    console.error('Upload error:', err);
                     showToast('❌ Error reading Excel: ' + err.message, 'error');
                 }
             };
             reader.readAsArrayBuffer(file);
         });
+
+        // Helper to process a single row: convert DOB, extract APAAR/PEN, keep fixed indices for marks
+        function processRow(row) {
+            // Determine indices for key fields (if columnMap available, else use defaults)
+            var nameIdx = columnMap['name'] !== undefined ? columnMap['name'] : 3;
+            var admIdx = columnMap['admNo'] !== undefined ? columnMap['admNo'] : 0;
+            var rollIdx = columnMap['rollNo'] !== undefined ? columnMap['rollNo'] : 1;
+            var classIdx = columnMap['class'] !== undefined ? columnMap['class'] : 2;
+            var fatherIdx = columnMap['fatherName'] !== undefined ? columnMap['fatherName'] : 4;
+            var motherIdx = columnMap['motherName'] !== undefined ? columnMap['motherName'] : 5;
+            var dobIdx = columnMap['dob'] !== undefined ? columnMap['dob'] : 7;
+            var apaarIdx = columnMap['apaarId'] !== undefined ? columnMap['apaarId'] : 65;
+            var penIdx = columnMap['penNo'] !== undefined ? columnMap['penNo'] : 66;
+
+            // Clone the row
+            var rowArray = row.slice(0);
+
+            // Ensure we have at least 67 columns (0..66) – pad if necessary
+            while (rowArray.length < 67) rowArray.push('');
+
+            // Convert DOB if it's a number (Excel serial date)
+            var dobVal = rowArray[dobIdx];
+            var dob = '';
+            if (dobVal) {
+                if (typeof dobVal === 'number' && dobVal > 30000 && dobVal < 60000) {
+                    var dateObj = new Date((dobVal - 25569) * 86400 * 1000);
+                    var dd = String(dateObj.getDate()).padStart(2, '0');
+                    var mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    var yyyy = dateObj.getFullYear();
+                    dob = dd + '/' + mm + '/' + yyyy;
+                } else {
+                    dob = dobVal.toString();
+                }
+            }
+            rowArray[7] = dob; // Override DOB at fixed position 7
+
+            // Extract APAAR ID and PEN No
+            var apaarId = rowArray[apaarIdx] || 'N/A';
+            var penNo = rowArray[penIdx] || 'N/A';
+            rowArray[65] = apaarId;
+            rowArray[66] = penNo;
+
+            // Ensure marks are numbers (for subject columns 8-66)
+            // We'll convert all numeric fields to numbers
+            for (var i = 8; i <= 66; i++) {
+                var val = rowArray[i];
+                if (val !== undefined && val !== null && val !== '') {
+                    var num = Number(val);
+                    rowArray[i] = isNaN(num) ? 0 : num;
+                } else {
+                    rowArray[i] = 0;
+                }
+            }
+
+            return rowArray;
+        }
 
         // ============================================================
         // 5. STUDENT LIST
@@ -778,7 +804,6 @@
                 div.id = 'marksheet-' + admNo;
                 div.setAttribute('data-adm', admNo);
 
-                // Logo with fallback
                 var logoHtml = '<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center overflow-hidden border-2 border-white">' +
                     '<img src="new-logo.png" alt="School Logo" class="w-full h-full object-contain" onerror="this.style.display=\'none\'; this.parentElement.innerHTML=\'<div class=\\\'logo-fallback\\\'>GPS</div>\';">' +
                     '</div>';
@@ -946,7 +971,7 @@
                     } catch (e) { /* ignore */ }
                 }, 200);
             });
-        }}
+                            }
 
         // ============================================================
         // 9. INDIVIDUAL DOWNLOAD (PDF via print)
@@ -1186,4 +1211,4 @@
     </script>
 
 </body>
-</html>        
+</html>
