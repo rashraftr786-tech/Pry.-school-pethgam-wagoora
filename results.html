@@ -20,7 +20,6 @@
     </script>
 
     <style>
-        /* (same styles as before, unchanged) */
         @media print {
             .no-print {
                 display: none !important;
@@ -427,7 +426,7 @@
         }
 
         // ============================================================
-        // 4. EXCEL UPLOAD with enhanced header detection
+        // 4. EXCEL UPLOAD – using fixed indices for APAAR & PEN
         // ============================================================
         document.getElementById('excelUpload').addEventListener('change', function(e) {
             var file = e.target.files[0];
@@ -439,7 +438,7 @@
                     var workbook = XLSX.read(data, { type: 'array' });
                     var rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
 
-                    // --- Step 1: Find header row by keywords ---
+                    // --- Try to find header row for other fields (name, roll, etc.) ---
                     var headerRowIndex = -1;
                     var headerRow = null;
                     for (var i = 0; i < Math.min(10, rows.length); i++) {
@@ -454,7 +453,6 @@
                         }
                     }
 
-                    // --- Step 2: Build column map from header ---
                     if (headerRowIndex !== -1) {
                         columnMap = {};
                         var fields = {
@@ -464,11 +462,7 @@
                             'class': 'class',
                             'father name': 'fatherName',
                             'mother name': 'motherName',
-                            'date of birth': 'dob',
-                            'apaar id': 'apaarId',
-                            'aadhaar': 'apaarId',      // alternative
-                            'pen no': 'penNo',
-                            'pen number': 'penNo'
+                            'date of birth': 'dob'
                         };
                         for (var j = 0; j < headerRow.length; j++) {
                             var cell = headerRow[j] ? headerRow[j].toString().trim().toLowerCase() : '';
@@ -479,44 +473,14 @@
                                 }
                             }
                         }
-                        console.log('Column map from header:', columnMap);
+                        // APAAR and PEN are fixed at columns 65 and 66 – do not override
+                        console.log('Column map from header (excluding APAAR/PEN):', columnMap);
                     } else {
-                        console.warn('Header not detected, will use fallback indices.');
+                        console.warn('Header not detected, using fallback indices for basic fields.');
+                        // We'll still use defaults for others
                     }
 
-                    // --- Step 3: If apaarId or penNo not found, search first few data rows ---
-                    function findColumnIndex(keyword, rows, maxRows) {
-                        maxRows = maxRows || 5;
-                        for (var r = 0; r < Math.min(rows.length, maxRows); r++) {
-                            var row = rows[r];
-                            if (!row) continue;
-                            for (var c = 0; c < row.length; c++) {
-                                var cell = row[c];
-                                if (cell && cell.toString().toLowerCase().includes(keyword.toLowerCase())) {
-                                    return c;
-                                }
-                            }
-                        }
-                        return -1;
-                    }
-
-                    if (columnMap['apaarId'] === undefined) {
-                        var apaarIdx = findColumnIndex('apaar', rows);
-                        if (apaarIdx === -1) apaarIdx = findColumnIndex('aadhaar', rows);
-                        if (apaarIdx !== -1) {
-                            columnMap['apaarId'] = apaarIdx;
-                            console.log('Found APAAR column at index:', apaarIdx);
-                        }
-                    }
-                    if (columnMap['penNo'] === undefined) {
-                        var penIdx = findColumnIndex('pen', rows);
-                        if (penIdx !== -1) {
-                            columnMap['penNo'] = penIdx;
-                            console.log('Found PEN column at index:', penIdx);
-                        }
-                    }
-
-                    // --- Step 4: Extract data rows ---
+                    // --- Extract data rows ---
                     var dataRows = [];
                     if (headerRowIndex !== -1) {
                         dataRows = rows.slice(headerRowIndex + 1).filter(function(r) {
@@ -546,9 +510,9 @@
             reader.readAsArrayBuffer(file);
         });
 
-        // Helper to process a single row
+        // Helper to process a single row – APAAR and PEN always at indices 65 and 66
         function processRow(row) {
-            // Determine indices (fallback to fixed if not mapped)
+            // Determine indices for other fields (fallback to fixed if not mapped)
             var nameIdx = columnMap['name'] !== undefined ? columnMap['name'] : 3;
             var admIdx = columnMap['admNo'] !== undefined ? columnMap['admNo'] : 0;
             var rollIdx = columnMap['rollNo'] !== undefined ? columnMap['rollNo'] : 1;
@@ -556,8 +520,6 @@
             var fatherIdx = columnMap['fatherName'] !== undefined ? columnMap['fatherName'] : 4;
             var motherIdx = columnMap['motherName'] !== undefined ? columnMap['motherName'] : 5;
             var dobIdx = columnMap['dob'] !== undefined ? columnMap['dob'] : 7;
-            var apaarIdx = columnMap['apaarId'] !== undefined ? columnMap['apaarId'] : 65;
-            var penIdx = columnMap['penNo'] !== undefined ? columnMap['penNo'] : 66;
 
             var rowArray = row.slice(0);
             while (rowArray.length < 67) rowArray.push('');
@@ -578,13 +540,14 @@
             }
             rowArray[7] = dob;
 
-            // Extract APAAR ID and PEN No
-            var apaarId = rowArray[apaarIdx] || 'N/A';
-            var penNo = rowArray[penIdx] || 'N/A';
+            // --- APAAR ID is at column BN → index 65 (zero-based) ---
+            // --- PEN No is at column BO → index 66 ---
+            var apaarId = rowArray[65] || 'N/A';
+            var penNo = rowArray[66] || 'N/A';
             rowArray[65] = apaarId;
             rowArray[66] = penNo;
 
-            // Convert marks to numbers
+            // Convert marks to numbers for columns 8-66
             for (var i = 8; i <= 66; i++) {
                 var val = rowArray[i];
                 if (val !== undefined && val !== null && val !== '') {
@@ -670,7 +633,7 @@
         }
 
         // ============================================================
-        // 7. BUILD STUDENT DATA OBJECT (unchanged)
+        // 7. BUILD STUDENT DATA OBJECT
         // ============================================================
         function buildStudentData(row) {
             var name = row[3] ? row[3].toString().toUpperCase().trim() : 'UNKNOWN';
@@ -1241,3 +1204,4 @@
 
 </body>
 </html>
+                    (per  
