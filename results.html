@@ -20,6 +20,7 @@
     </script>
 
     <style>
+        /* (same styles as before, unchanged) */
         @media print {
             .no-print {
                 display: none !important;
@@ -364,11 +365,11 @@
         // ============================================================
         // 1. GLOBALS
         // ============================================================
-        let allStudentsData = []; // array of row objects (arrays)
-        let studentPhotos = {}; // key: admNo, value: dataURL
+        let allStudentsData = [];
+        let studentPhotos = {};
         let firebaseInitialized = false;
         let firestoreInstance = null;
-        let columnMap = {}; // maps field names to column indices
+        let columnMap = {};
 
         // ============================================================
         // 2. TOAST
@@ -383,7 +384,7 @@
         }
 
         // ============================================================
-        // 3. FIRESTORE INIT (compat SDK only)
+        // 3. FIRESTORE INIT
         // ============================================================
         function getFirestoreConfig() {
             var projectId = document.getElementById('fbProjectId').value.trim() || 'pry-school-pethgam-wagoora';
@@ -426,7 +427,7 @@
         }
 
         // ============================================================
-        // 4. EXCEL UPLOAD with robust header detection + fallback
+        // 4. EXCEL UPLOAD with enhanced header detection
         // ============================================================
         document.getElementById('excelUpload').addEventListener('change', function(e) {
             var file = e.target.files[0];
@@ -438,7 +439,7 @@
                     var workbook = XLSX.read(data, { type: 'array' });
                     var rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
 
-                    // --- Step 1: Try to find header row by keywords ---
+                    // --- Step 1: Find header row by keywords ---
                     var headerRowIndex = -1;
                     var headerRow = null;
                     for (var i = 0; i < Math.min(10, rows.length); i++) {
@@ -453,7 +454,7 @@
                         }
                     }
 
-                    // If we found a header, build column map
+                    // --- Step 2: Build column map from header ---
                     if (headerRowIndex !== -1) {
                         columnMap = {};
                         var fields = {
@@ -465,7 +466,9 @@
                             'mother name': 'motherName',
                             'date of birth': 'dob',
                             'apaar id': 'apaarId',
-                            'pen no': 'penNo'
+                            'aadhaar': 'apaarId',      // alternative
+                            'pen no': 'penNo',
+                            'pen number': 'penNo'
                         };
                         for (var j = 0; j < headerRow.length; j++) {
                             var cell = headerRow[j] ? headerRow[j].toString().trim().toLowerCase() : '';
@@ -476,21 +479,56 @@
                                 }
                             }
                         }
-                        // Data rows start after header
-                        var dataRows = rows.slice(headerRowIndex + 1).filter(function(r) {
-                            // Use name column if found, else fallback to index 3
+                        console.log('Column map from header:', columnMap);
+                    } else {
+                        console.warn('Header not detected, will use fallback indices.');
+                    }
+
+                    // --- Step 3: If apaarId or penNo not found, search first few data rows ---
+                    function findColumnIndex(keyword, rows, maxRows) {
+                        maxRows = maxRows || 5;
+                        for (var r = 0; r < Math.min(rows.length, maxRows); r++) {
+                            var row = rows[r];
+                            if (!row) continue;
+                            for (var c = 0; c < row.length; c++) {
+                                var cell = row[c];
+                                if (cell && cell.toString().toLowerCase().includes(keyword.toLowerCase())) {
+                                    return c;
+                                }
+                            }
+                        }
+                        return -1;
+                    }
+
+                    if (columnMap['apaarId'] === undefined) {
+                        var apaarIdx = findColumnIndex('apaar', rows);
+                        if (apaarIdx === -1) apaarIdx = findColumnIndex('aadhaar', rows);
+                        if (apaarIdx !== -1) {
+                            columnMap['apaarId'] = apaarIdx;
+                            console.log('Found APAAR column at index:', apaarIdx);
+                        }
+                    }
+                    if (columnMap['penNo'] === undefined) {
+                        var penIdx = findColumnIndex('pen', rows);
+                        if (penIdx !== -1) {
+                            columnMap['penNo'] = penIdx;
+                            console.log('Found PEN column at index:', penIdx);
+                        }
+                    }
+
+                    // --- Step 4: Extract data rows ---
+                    var dataRows = [];
+                    if (headerRowIndex !== -1) {
+                        dataRows = rows.slice(headerRowIndex + 1).filter(function(r) {
                             var nameIdx = columnMap['name'] !== undefined ? columnMap['name'] : 3;
                             return r.length > 0 && r[nameIdx] && r[nameIdx].toString().trim();
                         });
-                        allStudentsData = dataRows.map(function(row) { return processRow(row); });
                     } else {
-                        // --- Fallback: Use fixed column indices (original format) ---
-                        console.warn('Header not detected, using fixed column layout.');
-                        // Assume rows start at index 3 (skip 3 header rows)
-                        var dataRows = rows.slice(3).filter(function(r) { return r.length > 0 && r[3] && r[3].toString()
-                                .trim(); });
-                        allStudentsData = dataRows.map(function(row) { return processRow(row); });
+                        // Fallback: use fixed layout (skip 3 header rows)
+                        dataRows = rows.slice(3).filter(function(r) { return r.length > 0 && r[3] && r[3].toString().trim(); });
                     }
+
+                    allStudentsData = dataRows.map(function(row) { return processRow(row); });
 
                     if (allStudentsData.length === 0) {
                         showToast('No student data found. Check your Excel layout.', 'error');
@@ -508,9 +546,9 @@
             reader.readAsArrayBuffer(file);
         });
 
-        // Helper to process a single row: convert DOB, extract APAAR/PEN, keep fixed indices for marks
+        // Helper to process a single row
         function processRow(row) {
-            // Determine indices for key fields (if columnMap available, else use defaults)
+            // Determine indices (fallback to fixed if not mapped)
             var nameIdx = columnMap['name'] !== undefined ? columnMap['name'] : 3;
             var admIdx = columnMap['admNo'] !== undefined ? columnMap['admNo'] : 0;
             var rollIdx = columnMap['rollNo'] !== undefined ? columnMap['rollNo'] : 1;
@@ -521,13 +559,10 @@
             var apaarIdx = columnMap['apaarId'] !== undefined ? columnMap['apaarId'] : 65;
             var penIdx = columnMap['penNo'] !== undefined ? columnMap['penNo'] : 66;
 
-            // Clone the row
             var rowArray = row.slice(0);
-
-            // Ensure we have at least 67 columns (0..66) – pad if necessary
             while (rowArray.length < 67) rowArray.push('');
 
-            // Convert DOB if it's a number (Excel serial date)
+            // Convert DOB if it's an Excel serial number
             var dobVal = rowArray[dobIdx];
             var dob = '';
             if (dobVal) {
@@ -541,7 +576,7 @@
                     dob = dobVal.toString();
                 }
             }
-            rowArray[7] = dob; // Override DOB at fixed position 7
+            rowArray[7] = dob;
 
             // Extract APAAR ID and PEN No
             var apaarId = rowArray[apaarIdx] || 'N/A';
@@ -549,8 +584,7 @@
             rowArray[65] = apaarId;
             rowArray[66] = penNo;
 
-            // Ensure marks are numbers (for subject columns 8-66)
-            // We'll convert all numeric fields to numbers
+            // Convert marks to numbers
             for (var i = 8; i <= 66; i++) {
                 var val = rowArray[i];
                 if (val !== undefined && val !== null && val !== '') {
@@ -565,7 +599,7 @@
         }
 
         // ============================================================
-        // 5. STUDENT LIST
+        // 5. STUDENT LIST (unchanged)
         // ============================================================
         function renderStudentList() {
             var container = document.getElementById('studentListControl');
@@ -636,7 +670,7 @@
         }
 
         // ============================================================
-        // 7. BUILD STUDENT DATA OBJECT
+        // 7. BUILD STUDENT DATA OBJECT (unchanged)
         // ============================================================
         function buildStudentData(row) {
             var name = row[3] ? row[3].toString().toUpperCase().trim() : 'UNKNOWN';
@@ -719,14 +753,13 @@
         }
 
         // ============================================================
-        // 8. GENERATE ALL MARKSHEETS
+        // 8. GENERATE ALL MARKSHEETS (unchanged except logo filename)
         // ============================================================
         function generateAllMarksheets() {
             var wrapper = document.getElementById('marksheetWrapper');
             wrapper.innerHTML = '';
             if (allStudentsData.length === 0) return;
 
-            // Build totals for ranking
             var studentsWithTotals = allStudentsData.map(function(row) {
                 var total = (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (Number(row[47]) ||
                         0) + (Number(row[57]) || 0);
@@ -943,7 +976,6 @@
 
                 wrapper.appendChild(div);
 
-                // Render barcode & QR after DOM update
                 setTimeout(function() {
                     try {
                         JsBarcode('#barcode-' + admNo, admNo, {
@@ -971,10 +1003,10 @@
                     } catch (e) { /* ignore */ }
                 }, 200);
             });
-                            }
+        }
 
         // ============================================================
-        // 9. INDIVIDUAL DOWNLOAD (PDF via print)
+        // 9. INDIVIDUAL DOWNLOAD (unchanged)
         // ============================================================
         function downloadIndividual(admNo) {
             var allMarksheets = document.querySelectorAll('.marksheet-container');
@@ -1009,7 +1041,7 @@
         }
 
         // ============================================================
-        // 10. FIRESTORE SAVE FUNCTIONS
+        // 10. FIRESTORE SAVE FUNCTIONS (unchanged)
         // ============================================================
         function saveSingleToFirestore(admNo) {
             var btn = null;
@@ -1047,7 +1079,6 @@
                 var dataObj = row._dataObj;
                 if (!dataObj) {
                     dataObj = buildStudentData(row);
-                    // Recompute ranks
                     var studentsWithTotals = allStudentsData.map(function(r) {
                         var total = (Number(r[17]) || 0) + (Number(r[27]) || 0) + (Number(r[37]) || 0) + (Number(
                             r[47]) || 0) + (Number(r[57]) || 0);
@@ -1115,7 +1146,6 @@
                 var collection = document.getElementById('fbCollection').value.trim() || 'marksheets';
                 var successCount = 0;
                 var failCount = 0;
-                var total = allStudentsData.length;
 
                 var studentsWithTotals = allStudentsData.map(function(row) {
                     var totalMarks = (Number(row[17]) || 0) + (Number(row[27]) || 0) + (Number(row[37]) || 0) + (
@@ -1130,7 +1160,6 @@
                     var admNo = (row[0] || '000').toString();
                     var dataObj = buildStudentData(row);
 
-                    // Compute ranks
                     var sRank = 1;
                     for (var k = 0; k < schoolSorted.length; k++) {
                         if (schoolSorted[k].total === dataObj.grandTotal) { sRank = k + 1; break; }
@@ -1181,7 +1210,7 @@
         }
 
         // ============================================================
-        // 11. TOGGLE FIRESTORE CONFIG
+        // 11. TOGGLE FIRESTORE CONFIG (unchanged)
         // ============================================================
         function toggleFirestoreConfig() {
             var area = document.getElementById('firestoreConfigArea');
@@ -1189,7 +1218,7 @@
         }
 
         // ============================================================
-        // 12. INIT
+        // 12. INIT (unchanged)
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             try {
