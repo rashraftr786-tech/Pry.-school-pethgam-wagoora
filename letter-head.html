@@ -3,160 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Official Letter Head</title>
+<title>Official Letter - Government Primary School Pethgam Wagoora</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
-
+*{box-sizing:border-box;}
 body{
     margin:0;
-    background:#f2f2f2;
+    background:#ececec;
     font-family:"Times New Roman",serif;
 }
-
 .page{
     width:210mm;
     min-height:297mm;
     background:#fff;
-    margin:15px auto;
+    margin:10px auto;
     padding:18mm;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
+    box-shadow:0 0 10px rgba(0,0,0,.25);
+    position:relative;
 }
-
 .header{
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    border-bottom:2px solid #000;
-    padding-bottom:8px;
+    gap:15px;
+    border-bottom:3px solid #0b5394;
+    padding-bottom:10px;
 }
-
 .logo{
-    width:70px;
-    height:70px;
+    width:80px;
+    height:80px;
     object-fit:contain;
 }
-
 .title{
     flex:1;
     text-align:center;
-    line-height:1.35;
 }
-
 .title h1{
     margin:0;
-    font-size:18px;
-    text-transform:uppercase;
+    font-size:15px;
 }
-
 .title h2{
-    margin:3px 0;
-    font-size:23px;
-    font-weight:bold;
+    margin:4px 0;
+    font-size:24px;
+    color:#0b5394;
 }
-
 .title h3{
-    margin:2px 0;
-    font-size:16px;
+    margin:0;
+    font-size:15px;
 }
-
 .title p{
     margin:2px;
-    font-size:14px;
+    font-size:13px;
 }
-
-.details{
-    margin-top:18px;
+.info{
+    margin-top:15px;
     display:flex;
     justify-content:space-between;
-    font-size:16px;
+    align-items:center;
 }
-
 input{
     border:none;
     border-bottom:1px solid #000;
-    font-size:16px;
     font-family:inherit;
-    padding:2px;
+    font-size:16px;
 }
-
-.subject{
-    margin-top:18px;
-    font-size:17px;
+label{
+    font-weight:bold;
 }
-
-.subject input{
-    width:82%;
+.row{
+    margin-top:12px;
 }
-
+.row input{
+    width:100%;
+}
 textarea{
     width:100%;
-    height:450px;
-    border:1px solid #999;
+    min-height:420px;
     margin-top:15px;
+    border:1px solid #999;
     padding:10px;
     font-size:17px;
+    line-height:1.6;
     resize:vertical;
     font-family:"Times New Roman",serif;
-    line-height:1.6;
 }
-
 .signature{
-    margin-top:60px;
-    text-align:right;
-    line-height:1.6;
-}
-
-.buttons{
+    margin-top:50px;
+    width:300px;
+    margin-left:auto;
     text-align:center;
-    margin:20px;
 }
-
+.toolbar{
+    text-align:center;
+    margin:10px;
+}
 button{
-    padding:10px 22px;
-    font-size:16px;
+    padding:8px 16px;
+    margin:3px;
     cursor:pointer;
-    margin:5px;
 }
-
+.refbox{
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+.smallbtn{
+    padding:2px 8px;
+}
 @media print{
-
-body{
-background:#fff;
-}
-
+body{background:#fff;}
+.toolbar{display:none;}
 .page{
 margin:0;
 box-shadow:none;
 width:100%;
-min-height:auto;
-padding:15mm;
 }
-
-.buttons{
-display:none;
-}
-
-input,textarea{
+textarea,input{
 border:none;
 outline:none;
 }
-
-textarea{
-height:auto;
-overflow:hidden;
 }
-
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="buttons">
+<div class="toolbar">
 <button onclick="window.print()">🖨 Print</button>
 <button onclick="clearForm()">🗑 Clear</button>
 </div>
@@ -169,57 +140,84 @@ overflow:hidden;
 
 <div class="title">
 
-<h1>Government of Jammu & Kashmir (UT)</h1>
+<h1>GOVERNMENT OF JAMMU & KASHMIR (UT)</h1>
 
-<h2>OFFICE OF THE CHIEF EDUCATION OFFICER BARAMULLA</h2>
+<h2>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h2>
 
-<h3>Kanli Bagh Road, Mini Secretariat Baramulla-193101, J&K</h3>
+<h3>Wagoora Babareshi Road, Near Zonal Education Office, Wagoora, Baramulla – 193109</h3>
 
-<p>E-mail : ceoplgbla@gmail.com</p>
-
-</div>
-
-<img src="logo.png" class="logo">
+<p><b>UDISE:</b> 01022202207 |
+<b>Email:</b> pspethgam@gmail.com |
+<b>Contact (HOI):</b> 9596449881</p>
 
 </div>
 
-<div class="details">
+</div>
+
+<div class="info">
+
+<div class="refbox">
+
+<label>Letter No.&nbsp;</label>
+
+<input id="ref" style="width:180px;" readonly>
+
+<button class="smallbtn" onclick="down()">−</button>
+
+<button class="smallbtn" onclick="up()">+</button>
+
+</div>
 
 <div>
-<strong>Ref. No.</strong>
 
-<input type="text" style="width:220px;">
-</div>
+<label>Date : </label>
 
-<div>
-<strong>Date</strong>
+<input type="date" id="date">
 
-<input type="date">
 </div>
 
 </div>
 
-<div class="subject">
-
-<strong>Subject :</strong>
-
-<input type="text" placeholder="Enter Subject">
-
+<div class="row">
+<label>To</label>
+<input type="text" placeholder="Authority / Office">
 </div>
 
-<textarea placeholder="Type your letter here..."></textarea>
+<div class="row">
+<label>Designation</label>
+<input type="text">
+</div>
+
+<div class="row">
+<label>Office Address</label>
+<input type="text">
+</div>
+
+<div class="row">
+<label>Subject</label>
+<input type="text">
+</div>
+
+<div class="row">
+<label>Reference (Optional)</label>
+<input type="text">
+</div>
+
+<textarea placeholder="Type the letter here..."></textarea>
 
 <div class="signature">
 
-<strong>Yours faithfully</strong>
+<b>(Mohammad Ashraf Rather)</b><br>
+
+Head of Institution<br>
+
+Government Primary School Pethgam Wagoora
 
 <br><br><br>
 
-<b>Chief Education Officer</b>
+_________________________<br>
 
-<br>
-
-<b>Baramulla</b>
+Official Seal
 
 </div>
 
@@ -227,15 +225,51 @@ overflow:hidden;
 
 <script>
 
+let year=new Date().getFullYear();
+
+let serial=1;
+
+function updateRef(){
+
+document.getElementById("ref").value=
+"GPS/PW/"+year+"/"+String(serial).padStart(2,"0");
+
+}
+
+function up(){
+
+serial++;
+
+updateRef();
+
+}
+
+function down(){
+
+if(serial>1) serial--;
+
+updateRef();
+
+}
+
+updateRef();
+
+document.getElementById("date").value=
+new Date().toISOString().split("T")[0];
+
 function clearForm(){
 
-document.querySelectorAll("input").forEach(i=>i.value="");
+document.querySelectorAll("input[type=text]").forEach(e=>e.value="");
 
 document.querySelector("textarea").value="";
+
+serial=1;
+
+updateRef();
 
 }
 
 </script>
 
 </body>
-</html>  
+</html>
