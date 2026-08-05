@@ -1,1046 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Child Profile Portfolio - GPS Pethgam Wagoora</title>
-    <style>
-        :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --secondary: #0d9488;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile</title>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+    }
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 40px;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 12px;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-        /* Top Student Selector Bar */
-        .selector-bar {
-            background-color: #ffffff;
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            box-shadow: var(--shadow);
-        }
+    .profile-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 450px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
 
-        .selector-bar label {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+      padding: 30px 20px 20px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
 
-        .selector-bar select {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            font-weight: 600;
-            font-size: 0.9rem;
-            background-color: #f1f5f9;
-            color: var(--text-main);
-            outline: none;
-            cursor: pointer;
-        }
+    .avatar-container {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #ffffff;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+    }
 
-        /* 1. Header Section */
-        .header-card {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            color: #ffffff;
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
+    .avatar-container i {
+      font-size: 42px;
+      color: var(--primary-color);
+    }
 
-        .school-banner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
+    .profile-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
 
-        .school-logo-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .profile-header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
 
-        .school-logo {
-            width: 50px;
-            height: 50px;
-            background-color: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
+    .profile-body {
+      padding: 24px 20px;
+    }
 
-        .school-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+    .info-group {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
 
-        .student-header-grid {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 16px;
-            align-items: center;
-        }
+    .info-group:last-child {
+      border-bottom: none;
+    }
 
-        .student-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 3px solid #ffffff;
-            object-fit: cover;
-            background-color: #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #475569;
-        }
+    .info-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #eef2ff;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      font-size: 1.1rem;
+    }
 
-        .student-main-info h1 {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-        }
+    .info-content label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
 
-        .id-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
+    .info-content span {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
 
-        .pill {
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
+    .card-actions {
+      padding: 0 20px 24px;
+      display: flex;
+      gap: 10px;
+    }
 
-        .qr-box {
-            text-align: center;
-            background: #ffffff;
-            padding: 8px;
-            border-radius: 8px;
-            color: #000;
-        }
+    .btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
 
-        .qr-placeholder {
-            width: 65px;
-            height: 65px;
-            background: #f1f5f9;
-            border: 1px dashed #94a3b8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            text-align: center;
-            margin: 0 auto;
-        }
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
 
-        /* Navigation Bar */
-        .nav-tabs {
-            display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            margin-bottom: 20px;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-        }
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
 
-        .nav-tabs::-webkit-scrollbar {
-            display: none;
-        }
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
 
-        .tab-btn {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
+    .modal {
+      background: var(--card-bg);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
 
-        .tab-btn.active {
-            background-color: var(--primary-light);
-            color: #ffffff;
-            border-color: var(--primary-light);
-        }
+    .modal h3 {
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
 
-        /* Grid Layouts & Cards */
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .form-group {
+      margin-bottom: 14px;
+    }
 
-        .card-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
 
-        @media (min-width: 768px) {
-            .card-grid-2 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
 
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
+    .form-group input:focus {
+      outline: 2px solid var(--primary-color);
+      border-color: transparent;
+    }
 
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-        .info-table td {
-            padding: 6px 0;
-            font-size: 0.875rem;
-        }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: var(--text-main);
+    }
 
-        .info-table td.label {
-            color: var(--text-muted);
-            font-weight: 500;
-            width: 40%;
-        }
-
-        .info-table td.value {
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        /* Performance Dashboard Cards */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        @media (min-width: 640px) {
-            .metrics-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .metric-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 12px;
-            border-left: 4px solid var(--primary-light);
-            box-shadow: var(--shadow);
-        }
-
-        .metric-card.green { border-left-color: var(--success); }
-        .metric-card.amber { border-left-color: var(--accent); }
-        .metric-card.teal { border-left-color: var(--secondary); }
-
-        .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .metric-val {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin: 4px 0;
-        }
-
-        /* Progress Bars */
-        .progress-bar-bg {
-            background-color: #e2e8f0;
-            border-radius: 10px;
-            height: 10px;
-            width: 100%;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            background-color: var(--primary-light);
-            transition: width 0.4s ease-in-out;
-        }
-
-        .progress-fill.green { background-color: var(--success); }
-        .progress-fill.amber { background-color: var(--accent); }
-
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin-top: 8px;
-        }
-
-        .data-table th {
-            background-color: #f1f5f9;
-            text-align: left;
-            padding: 8px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .data-table td {
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        /* Badges */
-        .badge {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-success { background: #d1fae5; color: #065f46; }
-
-        /* Timeline & Gallery */
-        .timeline {
-            border-left: 2px solid var(--primary-light);
-            padding-left: 16px;
-            margin-left: 8px;
-        }
-
-        .timeline-item {
-            margin-bottom: 12px;
-            position: relative;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -21px;
-            top: 4px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary-light);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat( auto-fill, minmax(110px, 1fr) );
-            gap: 10px;
-        }
-
-        .gallery-item {
-            aspect-ratio: 1;
-            background-color: #e2e8f0;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-            padding: 4px;
-            border: 1px dashed #cbd5e1;
-        }
-
-        /* Buttons & Panels */
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .btn {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-        }
-
-        .btn-primary { background: var(--primary-light); color: white; }
-        .btn-secondary { background: #64748b; color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-success { background: var(--success); color: white; }
-
-        .teacher-panel {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #0f172a;
-            color: #94a3b8;
-            padding: 24px 16px;
-            border-radius: var(--radius);
-            font-size: 0.8rem;
-            margin-top: 30px;
-        }
-
-        footer a { color: #38bdf8; text-decoration: none; }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        @media (min-width: 640px) {
-            .footer-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-    </style>
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-
-    <!-- STUDENT SELECTOR BAR -->
-    <div class="selector-bar">
-        <div>
-            <label for="student-select">🎓 Active Student Record: </label>
-            <select id="student-select" onchange="switchStudent(this.value)">
-                <option value="1042">Mohammad Shahid (Adm: GPSW-1042)</option>
-                <option value="1043">Aaliya Jan (Adm: GPSW-1043)</option>
-                <option value="1044">Sahil Ahmad (Adm: GPSW-1044)</option>
-            </select>
-        </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">
-            💡 Tip: Select a student or add <code>?studentId=1043</code> to the browser URL.
-        </div>
+  <!-- Student Profile Card -->
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <i class="fa-solid fa-child"></i>
+      </div>
+      <h2 id="display-name">Loading...</h2>
+      <p id="display-id">ID: --</p>
     </div>
 
-    <!-- 1. HEADER SECTION -->
-    <header class="header-card">
-        <div class="school-banner">
-            <div class="school-logo-group">
-                <div class="school-logo">GPS</div>
-                <div>
-                    <div class="school-title">Govt. Primary School Pethgam Wagoora</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8;">Zone Wagoora • District Baramulla</div>
-                </div>
-            </div>
-            <span class="pill" style="background: rgba(16, 185, 129, 0.3);">Active Student</span>
+    <div class="profile-body">
+      <div class="info-group">
+        <div class="info-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="info-content">
+          <label>Class / Grade</label>
+          <span id="display-class">--</span>
         </div>
+      </div>
 
-        <div class="student-header-grid">
-            <div class="student-avatar" id="header-avatar">👤</div>
-            <div class="student-main-info">
-                <h1 id="header-name">Mohammad Shahid</h1>
-                <div style="font-size: 0.85rem; opacity: 0.9;">
-                    Class: <b id="header-class">Class 4th (A)</b> | Academic Session: <b>2026-27</b>
-                </div>
-                <div class="id-pills">
-                    <span class="pill">Adm No: <b id="header-adm">GPSW-1042</b></span>
-                    <span class="pill">APAAR ID: <b id="header-apaar">9876-5432-1098</b></span>
-                    <span class="pill">PEN: <b id="header-pen">2026019283</b></span>
-                </div>
-            </div>
-            <div class="qr-box">
-                <div class="qr-placeholder">[QR CODE]</div>
-                <div style="font-size: 0.65rem; margin-top: 4px; font-weight: bold;">Scan Profile</div>
-            </div>
+      <div class="info-group">
+        <div class="info-icon"><i class="fa-solid fa-user-group"></i></div>
+        <div class="info-content">
+          <label>Parent / Guardian</label>
+          <span id="display-parent">--</span>
         </div>
-    </header>
+      </div>
 
-    <!-- NAVIGATION TABS -->
-    <nav class="nav-tabs">
-        <button class="tab-btn active">Overview</button>
-        <button class="tab-btn">Academic & Exams</button>
-        <button class="tab-btn">Attendance</button>
-        <button class="tab-btn">Health & Co-Curricular</button>
-        <button class="tab-btn">Parent & Address</button>
-        <button class="tab-btn">Documents</button>
-    </nav>
-
-    <!-- 6. PERFORMANCE DASHBOARD -->
-    <section class="metrics-grid">
-        <div class="metric-card">
-            <div class="metric-label">Overall Marks</div>
-            <div class="metric-val" id="metric-marks">86.4%</div>
-            <div class="progress-bar-bg"><div class="progress-fill" id="bar-marks" style="width: 86.4%;"></div></div>
+      <div class="info-group">
+        <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+        <div class="info-content">
+          <label>Contact Number</label>
+          <span id="display-contact">--</span>
         </div>
-        <div class="metric-card green">
-            <div class="metric-label">Current Grade</div>
-            <div class="metric-val" style="color: var(--success);" id="metric-grade">A1</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Academic Performance</div>
-        </div>
-        <div class="metric-card teal">
-            <div class="metric-label">Attendance</div>
-            <div class="metric-val" style="color: var(--secondary);" id="metric-attendance">92.5%</div>
-            <div class="progress-bar-bg"><div class="progress-fill green" id="bar-attendance" style="width: 92.5%;"></div></div>
-        </div>
-        <div class="metric-card amber">
-            <div class="metric-label">Homework Status</div>
-            <div class="metric-val" style="color: var(--accent);" id="metric-homework">95%</div>
-            <div class="progress-bar-bg"><div class="progress-fill amber" id="bar-homework" style="width: 95%;"></div></div>
-        </div>
-    </section>
-
-    <!-- MAIN TWO COLUMN GRID -->
-    <div class="card-grid-2">
-
-        <!-- 2. BASIC INFORMATION CARD -->
-        <div class="card">
-            <div class="section-title">📋 Basic Information</div>
-            <table class="info-table">
-                <tr><td class="label">Full Name</td><td class="value" id="info-fullname">Mohammad Shahid</td></tr>
-                <tr><td class="label">Gender</td><td class="value" id="info-gender">Male</td></tr>
-                <tr><td class="label">Date of Birth</td><td class="value" id="info-dob">12 March 2016</td></tr>
-                <tr><td class="label">Age</td><td class="value" id="info-age">10 Years 4 Months</td></tr>
-                <tr><td class="label">Blood Group</td><td class="value" id="info-blood">B+ Positive</td></tr>
-                <tr><td class="label">Religion</td><td class="value" id="info-religion">Islam</td></tr>
-                <tr><td class="label">Category</td><td class="value" id="info-category">General / Rural</td></tr>
-                <tr><td class="label">Aadhaar No.</td><td class="value" id="info-aadhaar">XXXX-XXXX-1042</td></tr>
-                <tr><td class="label">Student Mobile</td><td class="value" id="info-mobile">+91 9906X XXXXX</td></tr>
-            </table>
-        </div>
-
-        <!-- 5. ACADEMIC DETAILS -->
-        <div class="card">
-            <div class="section-title">🏫 Academic Profile</div>
-            <table class="info-table">
-                <tr><td class="label">Admission Date</td><td class="value" id="info-admdate">05 April 2021</td></tr>
-                <tr><td class="label">Admission Class</td><td class="value" id="info-admclass">1st Standard</td></tr>
-                <tr><td class="label">Present Class</td><td class="value" id="info-presentclass">Class 4th - Sec A</td></tr>
-                <tr><td class="label">Roll Number</td><td class="value" id="info-roll">14</td></tr>
-                <tr><td class="label">House System</td><td class="value" id="info-house">Chinar House</td></tr>
-                <tr><td class="label">Medium</td><td class="value" id="info-medium">English / Urdu</td></tr>
-                <tr><td class="label">Previous School</td><td class="value" id="info-prevschool">N/A (First Admission)</td></tr>
-                <tr><td class="label">TC Number</td><td class="value" id="info-tc">N/A</td></tr>
-                <tr><td class="label">Attendance %</td><td class="value"><span class="badge badge-success" id="info-attbadge">92.5%</span></td></tr>
-            </table>
-        </div>
-
-        <!-- 3. PARENT & GUARDIAN INFORMATION -->
-        <div class="card">
-            <div class="section-title">👨‍👩‍👦 Parent / Guardian Details</div>
-            <table class="info-table">
-                <tr><td class="label">Father's Name</td><td class="value" id="info-father">Abdul Rashid Rather</td></tr>
-                <tr><td class="label">Mother's Name</td><td class="value" id="info-mother">Naseema Begum</td></tr>
-                <tr><td class="label">Guardian Name</td><td class="value" id="info-guardian">Abdul Rashid Rather</td></tr>
-                <tr><td class="label">Occupation</td><td class="value" id="info-occupation">Farming / Skilled Worker</td></tr>
-                <tr><td class="label">Mobile Number</td><td class="value" id="info-parentmobile">+91 9858X XXXXX</td></tr>
-                <tr><td class="label">WhatsApp No.</td><td class="value" id="info-whatsapp">+91 9858X XXXXX</td></tr>
-                <tr><td class="label">Email ID</td><td class="value" id="info-email">parent.shahid@gmail.com</td></tr>
-                <tr><td class="label">Annual Income</td><td class="value" id="info-income">₹ 75,000 / annum</td></tr>
-                <tr><td class="label">Family Type</td><td class="value" id="info-family">Nuclear</td></tr>
-            </table>
-        </div>
-
-        <!-- 4. ADDRESS DETAILS -->
-        <div class="card">
-            <div class="section-title">📍 Address Details</div>
-            <table class="info-table">
-                <tr><td class="label">House No.</td><td class="value" id="info-house-no">H-45, Mohalla Ratherpora</td></tr>
-                <tr><td class="label">Village</td><td class="value" id="info-village">Pethgam Wagoora</td></tr>
-                <tr><td class="label">Panchayat</td><td class="value" id="info-panchayat">Pethgam Halqa</td></tr>
-                <tr><td class="label">Tehsil</td><td class="value" id="info-tehsil">Wagoora</td></tr>
-                <tr><td class="label">District</td><td class="value" id="info-district">Baramulla</td></tr>
-                <tr><td class="label">State / UT</td><td class="value" id="info-state">Jammu & Kashmir</td></tr>
-                <tr><td class="label">PIN Code</td><td class="value" id="info-pin">193109</td></tr>
-            </table>
-            <div style="margin-top: 12px;">
-                <button class="btn btn-outline" style="width: 100%;">🗺️ Open Google Map Location</button>
-            </div>
-        </div>
-
+      </div>
     </div>
 
-    <!-- 8. SUBJECT WISE PERFORMANCE -->
-    <div class="card" style="margin-bottom: 20px;">
-        <div class="section-title">📚 Subject-Wise Performance & Progress</div>
-        <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-            <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                    <span>English</span>
-                    <span id="sub-english-val">88% (A1)</span>
-                </div>
-                <div class="progress-bar-bg"><div class="progress-fill" id="sub-english-bar" style="width: 88%;"></div></div>
-            </div>
-            <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                    <span>Urdu</span>
-                    <span id="sub-urdu-val">82% (A2)</span>
-                </div>
-                <div class="progress-bar-bg"><div class="progress-fill" id="sub-urdu-bar" style="width: 82%;"></div></div>
-            </div>
-            <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                    <span>Environmental Studies (EVS)</span>
-                    <span id="sub-evs-val">94% (A1)</span>
-                </div>
-                <div class="progress-bar-bg"><div class="progress-fill green" id="sub-evs-bar" style="width: 94%;"></div></div>
-            </div>
-            <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                    <span>Mathematics</span>
-                    <span id="sub-math-val">79% (B1)</span>
-                </div>
-                <div class="progress-bar-bg"><div class="progress-fill amber" id="sub-math-bar" style="width: 79%;"></div></div>
-            </div>
-        </div>
+    <div class="card-actions">
+      <button class="btn btn-primary" onclick="openEditModal()">
+        <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+      </button>
     </div>
+  </div>
 
-    <!-- 7. EXAMINATION RECORDS -->
-    <div class="card" style="margin-bottom: 20px;">
-        <div class="section-title">📝 Examination Records</div>
-        <div style="overflow-x: auto;">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Exam Term</th>
-                        <th>Max Marks</th>
-                        <th>Marks Obtained</th>
-                        <th>Percentage</th>
-                        <th>Grade</th>
-                        <th>Rank</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="exam-table-body">
-                    <!-- Populated dynamically -->
-                </tbody>
-            </table>
+  <!-- Edit Profile Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3>Edit Child Profile</h3>
+      <form id="editForm">
+        <div class="form-group">
+          <label for="editName">Full Name</label>
+          <input type="text" id="editName" required />
         </div>
+        <div class="form-group">
+          <label for="editClass">Class / Grade</label>
+          <input type="text" id="editClass" required />
+        </div>
+        <div class="form-group">
+          <label for="editParent">Parent Name</label>
+          <input type="text" id="editParent" />
+        </div>
+        <div class="form-group">
+          <label for="editContact">Contact Phone</label>
+          <input type="text" id="editContact" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- 15. BEHAVIOURAL OBSERVATION & 16. TEACHER NOTES -->
-    <div class="card-grid-2" style="margin-top: 20px;">
+  <!-- Firebase Script Integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        <div class="card">
-            <div class="section-title">⭐ Behaviour & Personality Trait Assessment</div>
-            <table class="info-table">
-                <tr><td class="label">Discipline</td><td class="value" id="trait-discipline">⭐⭐⭐⭐⭐ (Exemplary)</td></tr>
-                <tr><td class="label">Communication</td><td class="value" id="trait-communication">⭐⭐⭐⭐☆ (Good)</td></tr>
-                <tr><td class="label">Leadership</td><td class="value" id="trait-leadership">⭐⭐⭐⭐☆ (Active)</td></tr>
-                <tr><td class="label">Creativity</td><td class="value" id="trait-creativity">⭐⭐⭐⭐⭐ (Highly Creative)</td></tr>
-            </table>
-        </div>
+    // Replace with your project config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-        <div class="card">
-            <div class="section-title">📝 Class Teacher Daily Log & Notes</div>
-            <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
-                <div style="background: #f8fafc; padding: 8px; border-radius: 6px;">
-                    <b>Daily Observation:</b> <span id="note-obs">Active curiosity in science lessons.</span>
-                </div>
-                <div style="background: #f8fafc; padding: 8px; border-radius: 6px;">
-                    <b>Homework Remarks:</b> <span id="note-hw">Regular and neat handwriting in notebook.</span>
-                </div>
-                <div style="background: #f8fafc; padding: 8px; border-radius: 6px;">
-                    <b>Target:</b> <span id="note-target">Practice multi-digit multiplication.</span>
-                </div>
-            </div>
-        </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    </div>
+    // Get Student ID from URL query string (e.g. profile.html?id=101)
+    const urlParams = new URLSearchParams(window.location.search);
+    const studentId = urlParams.get('id') || '101'; // Fallback ID for testing
 
-    <!-- 18. DOCUMENTS VAULT -->
-    <div class="card" style="margin-top: 20px;">
-        <div class="section-title">📁 Student Documents Vault</div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px;">
-            <button class="btn btn-outline" style="justify-content: space-between;">📄 Birth Certificate <span>⬇️</span></button>
-            <button class="btn btn-outline" style="justify-content: space-between;">🆔 Aadhaar Card <span>⬇️</span></button>
-            <button class="btn btn-outline" style="justify-content: space-between;">🎓 APAAR ID Document <span>⬇️</span></button>
-            <button class="btn btn-outline" style="justify-content: space-between;">🏦 Bank Passbook Copy <span>⬇️</span></button>
-            <button class="btn btn-outline" style="justify-content: space-between;">📊 Progress Report Card <span>⬇️</span></button>
-        </div>
-    </div>
+    const docRef = doc(db, "students", studentId);
 
-    <!-- 20. DOWNLOAD SECTION -->
-    <div class="card" style="margin-top: 20px; background: #f0fdf4; border-color: #bbf7d0;">
-        <div class="section-title" style="color: #166534;">📥 Official Student Documents Download</div>
-        <div class="btn-group">
-            <button class="btn btn-success">📥 Download Profile PDF</button>
-            <button class="btn btn-primary">🪪 Download Student ID Card</button>
-            <button class="btn btn-primary">📊 Download Marksheet</button>
-            <button class="btn btn-outline">📜 Bonafide Certificate</button>
-        </div>
-    </div>
+    // Load Profile Data from Firebase
+    async function fetchProfile() {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          
+          // Populate Profile
+          document.getElementById('display-name').innerText = data.name || 'N/A';
+          document.getElementById('display-id').innerText = `ID: ${studentId}`;
+          document.getElementById('display-class').innerText = data.class || 'N/A';
+          document.getElementById('display-parent').innerText = data.parentName || 'N/A';
+          document.getElementById('display-contact').innerText = data.parentContact || 'N/A';
 
-    <!-- 21. TEACHER ACTION PANEL -->
-    <div class="teacher-panel" style="margin-top: 20px;">
-        <div class="section-title">🔐 Teacher Action Management Panel (HOI / Staff Access)</div>
-        <div class="btn-group">
-            <button class="btn btn-primary">✏️ Edit Profile</button>
-            <button class="btn btn-success">🎓 Promote Student</button>
-            <button class="btn btn-primary">📝 Enter Marks</button>
-            <button class="btn btn-primary">📅 Update Attendance</button>
-            <button class="btn btn-secondary">💬 Send SMS</button>
-            <button class="btn btn-outline" onclick="window.print()">🖨️ Print Profile</button>
-        </div>
-    </div>
-
-    <!-- 22. FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <div style="font-weight: bold; color: #ffffff; font-size: 0.95rem; margin-bottom: 4px;">Govt. Primary School Pethgam Wagoora</div>
-                <div style="font-style: italic;">"Nurturing Young Minds for a Brighter Tomorrow"</div>
-                <div style="margin-top: 8px;">UDISE Code: <b>01022202207</b></div>
-            </div>
-            <div>
-                <div style="font-weight: bold; color: #ffffff; margin-bottom: 4px;">Contact & Location</div>
-                <div>Zone Wagoora, District Baramulla</div>
-                <div>Jammu & Kashmir - 193109</div>
-                <div>Email: <a href="mailto:gpspethgamwagoora@gmail.com">gpspethgamwagoora@gmail.com</a></div>
-            </div>
-            <div>
-                <div style="font-weight: bold; color: #ffffff; margin-bottom: 4px;">Portal Information</div>
-                <div>Academic Session: 2026-27</div>
-                <div>Last Updated: August 2026</div>
-                <div>System Status: <span style="color: #4ade80;">● Online</span></div>
-            </div>
-        </div>
-        <div style="border-top: 1px solid #334155; padding-top: 12px; text-align: center; font-size: 0.75rem;">
-            © 2026 Government Primary School Pethgam Wagoora. All Rights Reserved.
-        </div>
-    </footer>
-
-</div>
-
-<!-- JAVASCRIPT DATABASE & DYNAMIC ENGINE -->
-<script>
-// 1. DATABASE OF REAL STUDENTS
-const studentDatabase = {
-    "1042": {
-        name: "Mohammad Shahid",
-        admNo: "GPSW-1042",
-        apaar: "9876-5432-1098",
-        pen: "2026019283",
-        classSec: "Class 4th (A)",
-        gender: "Male",
-        dob: "12 March 2016",
-        age: "10 Years 4 Months",
-        blood: "B+ Positive",
-        religion: "Islam",
-        category: "General / Rural",
-        aadhaarMasked: "XXXX-XXXX-1042",
-        mobile: "+91 9906X XXXXX",
-        admDate: "05 April 2021",
-        admClass: "1st Standard",
-        presentClass: "Class 4th - Sec A",
-        roll: "14",
-        house: "Chinar House",
-        medium: "English / Urdu",
-        prevSchool: "N/A (First Admission)",
-        tc: "N/A",
-        father: "Abdul Rashid Rather",
-        mother: "Naseema Begum",
-        guardian: "Abdul Rashid Rather",
-        occupation: "Farming / Skilled Worker",
-        parentMobile: "+91 9858X XXXXX",
-        whatsapp: "+91 9858X XXXXX",
-        email: "parent.shahid@gmail.com",
-        income: "₹ 75,000 / annum",
-        family: "Nuclear",
-        houseNo: "H-45, Mohalla Ratherpora",
-        village: "Pethgam Wagoora",
-        panchayat: "Pethgam Halqa",
-        tehsil: "Wagoora",
-        district: "Baramulla",
-        state: "Jammu & Kashmir",
-        pin: "193109",
-        marks: "86.4%",
-        grade: "A1",
-        attendance: "92.5%",
-        homework: "95%",
-        subjects: { english: 88, urdu: 82, evs: 94, math: 79 },
-        exams: [
-            { term: "Unit Test I", max: 100, obt: 88, pct: "88.0%", grade: "A1", rank: "2nd" },
-            { term: "Mid-Term Exam", max: 200, obt: 172, pct: "86.0%", grade: "A1", rank: "3rd" },
-            { term: "Unit Test II", max: 100, obt: 85, pct: "85.0%", grade: "A1", rank: "2nd" }
-        ],
-        traits: { discipline: "⭐⭐⭐⭐⭐ (Exemplary)", comm: "⭐⭐⭐⭐☆ (Good)", lead: "⭐⭐⭐⭐☆ (Active)", creat: "⭐⭐⭐⭐⭐ (Highly Creative)" },
-        notes: { obs: "Active curiosity in science lessons.", hw: "Regular and neat handwriting.", target: "Practice multi-digit multiplication." }
-    },
-    "1043": {
-        name: "Aaliya Jan",
-        admNo: "GPSW-1043",
-        apaar: "9876-5432-1099",
-        pen: "2026019284",
-        classSec: "Class 4th (A)",
-        gender: "Female",
-        dob: "05 August 2016",
-        age: "10 Years 0 Months",
-        blood: "O+ Positive",
-        religion: "Islam",
-        category: "General / Rural",
-        aadhaarMasked: "XXXX-XXXX-1043",
-        mobile: "+91 9419X XXXXX",
-        admDate: "10 April 2021",
-        admClass: "1st Standard",
-        presentClass: "Class 4th - Sec A",
-        roll: "02",
-        house: "Pine House",
-        medium: "English / Urdu",
-        prevSchool: "N/A",
-        tc: "N/A",
-        father: "Ghulam Hassan",
-        mother: "Rafiqa Bano",
-        guardian: "Ghulam Hassan",
-        occupation: "Business",
-        parentMobile: "+91 9419X XXXXX",
-        whatsapp: "+91 9419X XXXXX",
-        email: "hassan.aaliya@gmail.com",
-        income: "₹ 1,20,000 / annum",
-        family: "Joint",
-        houseNo: "H-12, Main Street",
-        village: "Pethgam Wagoora",
-        panchayat: "Pethgam Halqa",
-        tehsil: "Wagoora",
-        district: "Baramulla",
-        state: "Jammu & Kashmir",
-        pin: "193109",
-        marks: "92.8%",
-        grade: "A1",
-        attendance: "96.0%",
-        homework: "98%",
-        subjects: { english: 95, urdu: 90, evs: 96, math: 90 },
-        exams: [
-            { term: "Unit Test I", max: 100, obt: 94, pct: "94.0%", grade: "A1", rank: "1st" },
-            { term: "Mid-Term Exam", max: 200, obt: 185, pct: "92.5%", grade: "A1", rank: "1st" },
-            { term: "Unit Test II", max: 100, obt: 92, pct: "92.0%", grade: "A1", rank: "1st" }
-        ],
-        traits: { discipline: "⭐⭐⭐⭐⭐ (Exemplary)", comm: "⭐⭐⭐⭐⭐ (Excellent)", lead: "⭐⭐⭐⭐⭐ (Group Leader)", creat: "⭐⭐⭐⭐☆ (Very Good)" },
-        notes: { obs: "Top performer, very helpful to peers.", hw: "Always turns in homework early.", target: "Maintain consistent high reading speed." }
-    },
-    "1044": {
-        name: "Sahil Ahmad",
-        admNo: "GPSW-1044",
-        apaar: "9876-5432-1100",
-        pen: "2026019285",
-        classSec: "Class 4th (B)",
-        gender: "Male",
-        dob: "20 November 2015",
-        age: "10 Years 8 Months",
-        blood: "A+ Positive",
-        religion: "Islam",
-        category: "General / Rural",
-        aadhaarMasked: "XXXX-XXXX-1044",
-        mobile: "+91 7006X XXXXX",
-        admDate: "12 April 2021",
-        admClass: "1st Standard",
-        presentClass: "Class 4th - Sec B",
-        roll: "18",
-        house: "Deodar House",
-        medium: "English / Urdu",
-        prevSchool: "N/A",
-        tc: "N/A",
-        father: "Tariq Ahmad",
-        mother: "Dilshada Begum",
-        guardian: "Tariq Ahmad",
-        occupation: "Public Sector Employee",
-        parentMobile: "+91 7006X XXXXX",
-        whatsapp: "+91 7006X XXXXX",
-        email: "tariq.sahil@gmail.com",
-        income: "₹ 95,000 / annum",
-        family: "Nuclear",
-        houseNo: "H-88, Upper Colony",
-        village: "Pethgam Wagoora",
-        panchayat: "Pethgam Halqa",
-        tehsil: "Wagoora",
-        district: "Baramulla",
-        state: "Jammu & Kashmir",
-        pin: "193109",
-        marks: "78.5%",
-        grade: "B1",
-        attendance: "88.2%",
-        homework: "82%",
-        subjects: { english: 75, urdu: 80, evs: 82, math: 77 },
-        exams: [
-            { term: "Unit Test I", max: 100, obt: 76, pct: "76.0%", grade: "B1", rank: "8th" },
-            { term: "Mid-Term Exam", max: 200, obt: 158, pct: "79.0%", grade: "B1", rank: "6th" },
-            { term: "Unit Test II", max: 100, obt: 80, pct: "80.0%", grade: "B1", rank: "5th" }
-        ],
-        traits: { discipline: "⭐⭐⭐⭐☆ (Very Good)", comm: "⭐⭐⭐☆☆ (Fair)", lead: "⭐⭐⭐☆☆ (Participative)", creat: "⭐⭐⭐⭐☆ (Good)" },
-        notes: { obs: "Shows steady improvement in mathematics.", hw: "Requires occasional reminders for homework.", target: "Improve daily attendance consistency." }
+          // Pre-fill Edit Inputs
+          document.getElementById('editName').value = data.name || '';
+          document.getElementById('editClass').value = data.class || '';
+          document.getElementById('editParent').value = data.parentName || '';
+          document.getElementById('editContact').value = data.parentContact || '';
+        } else {
+          document.getElementById('display-name').innerText = "Student Not Found";
+        }
+      } catch (err) {
+        console.error("Error loading profile:", err);
+      }
     }
-};
 
-// 2. DYNAMIC SWITCHING FUNCTION
-function switchStudent(admKey) {
-    const data = studentDatabase[admKey];
-    if (!data) return;
+    // Save Profile Changes back to Firebase
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    // Header updates
-    document.getElementById("header-name").innerText = data.name;
-    document.getElementById("header-class").innerText = data.classSec;
-    document.getElementById("header-adm").innerText = data.admNo;
-    document.getElementById("header-apaar").innerText = data.apaar;
-    document.getElementById("header-pen").innerText = data.pen;
+      const updatedData = {
+        name: document.getElementById('editName').value,
+        class: document.getElementById('editClass').value,
+        parentName: document.getElementById('editParent').value,
+        parentContact: document.getElementById('editContact').value,
+        updatedAt: new Date().toISOString()
+      };
 
-    // Basic Info
-    document.getElementById("info-fullname").innerText = data.name;
-    document.getElementById("info-gender").innerText = data.gender;
-    document.getElementById("info-dob").innerText = data.dob;
-    document.getElementById("info-age").innerText = data.age;
-    document.getElementById("info-blood").innerText = data.blood;
-    document.getElementById("info-religion").innerText = data.religion;
-    document.getElementById("info-category").innerText = data.category;
-    document.getElementById("info-aadhaar").innerText = data.aadhaarMasked;
-    document.getElementById("info-mobile").innerText = data.mobile;
-
-    // Academic Profile
-    document.getElementById("info-admdate").innerText = data.admDate;
-    document.getElementById("info-admclass").innerText = data.admClass;
-    document.getElementById("info-presentclass").innerText = data.presentClass;
-    document.getElementById("info-roll").innerText = data.roll;
-    document.getElementById("info-house").innerText = data.house;
-    document.getElementById("info-medium").innerText = data.medium;
-    document.getElementById("info-prevschool").innerText = data.prevSchool;
-    document.getElementById("info-tc").innerText = data.tc;
-    document.getElementById("info-attbadge").innerText = data.attendance;
-
-    // Parent Info
-    document.getElementById("info-father").innerText = data.father;
-    document.getElementById("info-mother").innerText = data.mother;
-    document.getElementById("info-guardian").innerText = data.guardian;
-    document.getElementById("info-occupation").innerText = data.occupation;
-    document.getElementById("info-parentmobile").innerText = data.parentMobile;
-    document.getElementById("info-whatsapp").innerText = data.whatsapp;
-    document.getElementById("info-email").innerText = data.email;
-    document.getElementById("info-income").innerText = data.income;
-    document.getElementById("info-family").innerText = data.family;
-
-    // Address
-    document.getElementById("info-house-no").innerText = data.houseNo;
-    document.getElementById("info-village").innerText = data.village;
-    document.getElementById("info-panchayat").innerText = data.panchayat;
-    document.getElementById("info-tehsil").innerText = data.tehsil;
-    document.getElementById("info-district").innerText = data.district;
-    document.getElementById("info-state").innerText = data.state;
-    document.getElementById("info-pin").innerText = data.pin;
-
-    // Metrics & Bars
-    document.getElementById("metric-marks").innerText = data.marks;
-    document.getElementById("bar-marks").style.width = data.marks;
-    document.getElementById("metric-grade").innerText = data.grade;
-    document.getElementById("metric-attendance").innerText = data.attendance;
-    document.getElementById("bar-attendance").style.width = data.attendance;
-    document.getElementById("metric-homework").innerText = data.homework;
-    document.getElementById("bar-homework").style.width = data.homework;
-
-    // Subject Performance Bars
-    document.getElementById("sub-english-val").innerText = data.subjects.english + "%";
-    document.getElementById("sub-english-bar").style.width = data.subjects.english + "%";
-    document.getElementById("sub-urdu-val").innerText = data.subjects.urdu + "%";
-    document.getElementById("sub-urdu-bar").style.width = data.subjects.urdu + "%";
-    document.getElementById("sub-evs-val").innerText = data.subjects.evs + "%";
-    document.getElementById("sub-evs-bar").style.width = data.subjects.evs + "%";
-    document.getElementById("sub-math-val").innerText = data.subjects.math + "%";
-    document.getElementById("sub-math-bar").style.width = data.subjects.math + "%";
-
-    // Exam Table Dynamic Population
-    const tbody = document.getElementById("exam-table-body");
-    tbody.innerHTML = "";
-    data.exams.forEach(ex => {
-        const row = `<tr>
-            <td><b>${ex.term}</b></td>
-            <td>${ex.max}</td>
-            <td>${ex.obt}</td>
-            <td>${ex.pct}</td>
-            <td><span class="badge badge-success">${ex.grade}</span></td>
-            <td>${ex.rank}</td>
-            <td><button class="btn btn-outline" style="padding: 2px 6px; font-size: 0.75rem;">Marksheet</button></td>
-        </tr>`;
-        tbody.innerHTML += row;
+      try {
+        await updateDoc(docRef, updatedData);
+        alert('Profile updated successfully!');
+        closeEditModal();
+        fetchProfile(); // Refresh UI
+      } catch (err) {
+        console.error("Error updating profile:", err);
+        alert('Failed to update profile.');
+      }
     });
 
-    // Behaviour & Notes
-    document.getElementById("trait-discipline").innerText = data.traits.discipline;
-    document.getElementById("trait-communication").innerText = data.traits.comm;
-    document.getElementById("trait-leadership").innerText = data.traits.lead;
-    document.getElementById("trait-creativity").innerText = data.traits.creat;
+    // Modal Control Functions
+    window.openEditModal = () => {
+      document.getElementById('editModal').style.display = 'flex';
+    };
 
-    document.getElementById("note-obs").innerText = data.notes.obs;
-    document.getElementById("note-hw").innerText = data.notes.hw;
-    document.getElementById("note-target").innerText = data.notes.target;
-}
+    window.closeEditModal = () => {
+      document.getElementById('editModal').style.display = 'none';
+    };
 
-// 3. AUTO INITIALIZATION (DROPDOWN OR URL QUERY PARAMETER)
-window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const studentIdFromUrl = urlParams.get('studentId') || '1042';
-
-    // Sync Dropdown Selection
-    const select = document.getElementById('student-select');
-    if (studentDatabase[studentIdFromUrl]) {
-        select.value = studentIdFromUrl;
-    }
-
-    // Trigger update
-    switchStudent(select.value);
-});
-</script>
-
+    // Initialize on page load
+    fetchProfile();
+  </script>
 </body>
 </html>
