@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SchoolERP · Categorized Module Dashboard</title>
-    <link rel="icon" type="image/png" href="logo.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0,
+                   maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#07111f">
+    <meta name="description"
+          content="School ERP - Government Primary School Pethgam Wagoora">
+    <meta name="author"
+          content="Government Primary School Pethgam Wagoora">
+
+    <link rel="icon" type="image/x-icon"
+          href="assets/images/favicon.ico">
+
+    <link rel="manifest" href="manifest.json">
+
+    <title>School ERP | Government Primary School Pethgam Wagoora</title>
+
     <style>
-        /* ──────────────────────────────────────────────────────────────
-           RESET & VARIABLES
-           ────────────────────────────────────────────────────────────── */
-        *,
-        *::before,
-        *::after {
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            --glass-blur: blur(18px);
-            --text-primary: #f0f4fe;
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --accent: #6c8cff;
-            --accent-glow: rgba(108, 140, 255, 0.25);
-            --radius: 2rem;
-            --transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         html {
@@ -35,865 +36,2012 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0b0e1a;
-            color: var(--text-primary);
             min-height: 100vh;
+            font-family:
+                Inter,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(0, 174, 255, 0.20),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(130, 80, 255, 0.20),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 50% 90%,
+                    rgba(0, 255, 190, 0.12),
+                    transparent 35%
+                ),
+                #050a13;
+
             overflow-x: hidden;
-            line-height: 1.5;
         }
 
-        /* ─── Animated Background Orbs ─── */
-        .bg-orbs {
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           ANIMATED BACKGROUND
+        ========================================================= */
+
+        .background {
             position: fixed;
             inset: 0;
-            z-index: 0;
-            pointer-events: none;
+            z-index: -10;
             overflow: hidden;
+            pointer-events: none;
         }
 
-        .bg-orbs .orb {
+        .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.2;
-            animation: orbFloat 22s ease-in-out infinite alternate;
+            filter: blur(4px);
+            opacity: 0.45;
+            animation: floatOrb 14s ease-in-out infinite;
         }
 
-        .bg-orbs .orb:nth-child(1) {
-            width: 600px;
-            height: 600px;
-            top: -10%;
-            right: -5%;
-            background: radial-gradient(circle, #6c8cff, #3a5bd1);
-            animation-duration: 24s;
+        .orb.one {
+            width: 260px;
+            height: 260px;
+            background: #00b7ff;
+            top: 5%;
+            left: -80px;
         }
 
-        .bg-orbs .orb:nth-child(2) {
-            width: 500px;
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>School ERP — Govt. Primary School Pethgam Wagoora</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
-
-    <!-- Font Awesome 6 (Free) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    <style>
-        /* ===== CSS VARIABLES ===== */
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: 0 12px 48px rgba(0, 0, 0, 0.20);
-            --glass-blur: 18px;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.82);
-            --text-muted: rgba(255, 255, 255, 0.55);
-            --accent-1: #6ec8ff;
-            --accent-2: #a78bfa;
-            --accent-3: #f472b6;
-            --card-radius: 24px;
-            --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        .orb.two {
+            width: 300px;
+            height: 300px;
+            background: #7a42ff;
+            right: -100px;
+            top: 25%;
+            animation-delay: -4s;
         }
 
-        /* ===== RESET & BASE ===== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .orb.three {
+            width: 220px;
+            height: 220px;
+            background: #00e6a8;
+            left: 35%;
+            bottom: -100px;
+            animation-delay: -8s;
         }
 
-        html {
-            scroll-behavior: smooth;
+        @keyframes floatOrb {
+
+            0%,100% {
+                transform:
+                    translate3d(0,0,0)
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    translate3d(40px,-35px,0)
+                    scale(1.12);
+            }
         }
 
-        body {
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            background: radial-gradient(ellipse at 10% 20%, #0b1a2e, #0a0f1a 80%);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
-        /* ===== ANIMATED BACKGROUND PARTICLES ===== */
-        #bg-canvas {
+        /* =========================================================
+           PARTICLES
+        ========================================================= */
+
+        .particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            inset: 0;
+            z-index: -5;
             pointer-events: none;
         }
 
-        /* ===== GLASS CONTAINER ===== */
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1400px;
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255,255,255,.65);
+            border-radius: 50%;
+            animation: particleMove linear infinite;
+        }
+
+        @keyframes particleMove {
+
+            from {
+                transform:
+                    translateY(110vh)
+                    translateX(0);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            85% {
+                opacity: .7;
+            }
+
+            to {
+                transform:
+                    translateY(-10vh)
+                    translateX(80px);
+                opacity: 0;
+            }
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
             width: 100%;
-            margin: 0 auto;
-            padding: 24px;
+
+            padding: 14px 20px;
+
+            background: rgba(5, 10, 20, .62);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,.10);
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,.18);
+        }
+
+        .nav {
+            max-width: 1250px;
+            margin: auto;
+
             display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        /* ===== GLASS CARD BASE ===== */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius);
-            box-shadow: var(--glass-shadow);
-            transition: var(--transition-smooth);
-        }
-
-        .glass:hover {
-            background: rgba(255, 255, 255, 0.13);
-            border-color: rgba(255, 255, 255, 0.28);
-            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.30);
-            transform: translateY(-2px);
-        }
-
-        /* ===== HEADER / HERO ===== */
-        .hero {
-            padding: 32px 40px;
-            display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
-            position: relative;
-            overflow: hidden;
+            gap: 15px;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(110, 200, 255, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: heroGlow 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes heroGlow {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                transform: translate(-60px, 40px) scale(1.3);
-            }
-        }
-
-        .hero-brand {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            z-index: 1;
-        }
-
-        .hero-logo {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 700;
-            color: #0a0f1a;
-            box-shadow: 0 8px 32px rgba(110, 200, 255, 0.25);
-            flex-shrink: 0;
-        }
-
-        .hero-title h1 {
-            font-size: clamp(1.4rem, 4vw, 2.4rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fff 50%, var(--accent-1));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-
-        .hero-title .sub {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            -webkit-text-fill-color: var(--text-secondary);
-            background: none;
-            display: block;
-            margin-top: 2px;
-        }
-
-        .hero-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px 32px;
-            z-index: 1;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .hero-meta i {
-            color: var(--accent-1);
-            width: 20px;
-            margin-right: 6px;
-        }
-
-        .hero-meta span {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        /* ===== STATS ROW ===== */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-        }
-
-        .stat-card {
-            padding: 20px 24px;
-            text-align: center;
-            transition: var(--transition-smooth);
-            cursor: default;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            background: rgba(255, 255, 255, 0.14);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* ===== NAVIGATION SECTIONS ===== */
-        .nav-section {
-            padding: 28px 32px 32px;
-        }
-
-        .nav-section-header {
+        .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 22px;
         }
 
-        .nav-section-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
+        .brand-logo {
+
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            border-radius: 15px;
+
+            padding: 6px;
+
+            background:
+                rgba(255,255,255,.10);
+
+            border:
+                1px solid rgba(255,255,255,.18);
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.30);
         }
 
-        .nav-section-header .badge {
-            font-size: 0.7rem;
-            padding: 2px 12px;
-            border-radius: 100px;
-            background: rgba(255, 255, 255, 0.10);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            font-weight: 500;
+        .brand-text h1 {
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 800;
         }
 
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 14px;
+        .brand-text span {
+            display: block;
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            color: rgba(255,255,255,.62);
         }
 
-        .nav-item {
+        .nav-actions {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 8px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            text-decoration: none;
-            color: var(--text-secondary);
-            transition: var(--transition-smooth);
-            text-align: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
-            min-height: 90px;
         }
 
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
-            opacity: 0;
-            transition: var(--transition-smooth);
+        .nav-btn {
+
+            padding: 10px 15px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid rgba(255,255,255,.14);
+
+            background:
+                rgba(255,255,255,.07);
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .25s ease;
         }
 
-        .nav-item:hover {
-            transform: translateY(-4px) scale(1.02);
-            background: rgba(255, 255, 255, 0.10);
-            border-color: rgba(255, 255, 255, 0.20);
-            color: #fff;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        .nav-item:hover::after {
-            opacity: 1;
-        }
-
-        .nav-item i {
-            font-size: 1.6rem;
-            color: var(--accent-1);
-            transition: var(--transition-smooth);
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-item:hover i {
-            transform: scale(1.15) rotate(-2deg);
-            color: #fff;
-        }
-
-        .nav-item span {
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            line-height: 1.3;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* accent colours per section */
-        .nav-item.admin i {
-            color: var(--accent-1);
-        }
-        .nav-item.modules i {
-            color: var(--accent-2);
-        }
-        .nav-item.student i {
-            color: var(--accent-3);
-        }
-
-        .nav-item.admin:hover i {
-            color: #6ec8ff;
-        }
-        .nav-item.modules:hover i {
-            color: #a78bfa;
-        }
-        .nav-item.student:hover i {
-            color: #f472b6;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            padding: 24px 32px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .footer a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-
-        .footer a:hover {
-            color: #fff;
-        }
-
-        .footer-socials {
-            display: flex;
-            gap: 14px;
-        }
-
-        .footer-socials a {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-smooth);
-            color: var(--text-muted);
-        }
-
-        .footer-socials a:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.20);
-            color: #fff;
+        .nav-btn:hover {
+            background: rgba(255,255,255,.14);
             transform: translateY(-2px);
         }
 
-        .footer .udise {
-            font-weight: 500;
-            color: var(--text-secondary);
-            letter-spacing: 0.02em;
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 55px 20px 50px;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.35fr)
+                minmax(300px, .65fr);
+
+            gap: 30px;
+
+            align-items: center;
+
+            margin-bottom: 45px;
+        }
+
+        .hero-content {
+            animation: heroIn .8s ease both;
+        }
+
+        @keyframes heroIn {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(25px);
             }
-            .app-container {
-                padding: 12px;
-                gap: 20px;
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0);
             }
+        }
+
+        .eyebrow {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 13px;
+
+            margin-bottom: 18px;
+
+            border-radius: 100px;
+
+            background:
+                rgba(0, 210, 255, .09);
+
+            border:
+                1px solid rgba(0, 210, 255, .22);
+
+            color: #83e8ff;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #36ffb4;
+
+            box-shadow:
+                0 0 12px #36ffb4;
+
+            animation: pulse 1.7s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: .5;
+            }
+        }
+
+        .hero h2 {
+
+            font-size:
+                clamp(34px, 6vw, 70px);
+
+            line-height: .98;
+
+            letter-spacing: -2.5px;
+
+            margin-bottom: 22px;
+
+            background:
+                linear-gradient(
+                    120deg,
+                    #ffffff 10%,
+                    #8deaff 50%,
+                    #a78bff 90%
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero h2 strong {
+            display: block;
+        }
+
+        .hero-description {
+
+            max-width: 680px;
+
+            color:
+                rgba(255,255,255,.67);
+
+            font-size: 15px;
+
+            line-height: 1.75;
+
+            margin-bottom: 25px;
+        }
+
+        .hero-buttons {
+
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .primary-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            padding: 14px 21px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #009dff,
+                    #635bff
+                );
+
+            box-shadow:
+                0 12px 30px
+                rgba(0,157,255,.25);
+
+            transition: .3s ease;
+        }
+
+        .primary-btn:hover {
+
+            transform:
+                translateY(-4px)
+                scale(1.02);
+
+            box-shadow:
+                0 18px 40px
+                rgba(0,157,255,.35);
+        }
+
+        .secondary-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 14px 21px;
+
+            border-radius: 15px;
+
+            border:
+                1px solid rgba(255,255,255,.16);
+
+            background:
+                rgba(255,255,255,.07);
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            backdrop-filter: blur(15px);
+
+            transition: .3s ease;
+        }
+
+        .secondary-btn:hover {
+            background:
+                rgba(255,255,255,.13);
+            transform:
+                translateY(-3px);
+        }
+
+
+        /* =========================================================
+           3D SCHOOL CARD
+        ========================================================= */
+
+        .school-card {
+
+            position: relative;
+
+            padding: 30px;
+
+            min-height: 350px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            text-align: center;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.14),
+                    rgba(255,255,255,.045)
+                );
+
+            border:
+                1px solid rgba(255,255,255,.18);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 30px 70px
+                rgba(0,0,0,.35),
+
+                inset 0 1px 0
+                rgba(255,255,255,.15);
+
+            transform-style: preserve-3d;
+
+            animation:
+                cardFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+
+            0%,100% {
+                transform:
+                    perspective(1000px)
+                    rotateY(-2deg)
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    perspective(1000px)
+                    rotateY(2deg)
+                    translateY(-10px);
+            }
+        }
+
+        .school-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            top: -70px;
+            right: -70px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(0,190,255,.18);
+
+            filter: blur(10px);
+        }
+
+        .school-logo {
+
+            width: 115px;
+            height: 115px;
+
+            object-fit: contain;
+
+            padding: 12px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(255,255,255,.10);
+
+            border:
+                1px solid rgba(255,255,255,.20);
+
+            box-shadow:
+                0 20px 45px rgba(0,0,0,.35);
+
+            transform:
+                translateZ(35px);
+
+            margin-bottom: 20px;
+        }
+
+        .school-card h3 {
+
+            font-size: 20px;
+
+            line-height: 1.3;
+
+            margin-bottom: 7px;
+
+            transform:
+                translateZ(25px);
+        }
+
+        .school-card p {
+
+            color:
+                rgba(255,255,255,.55);
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+            transform:
+                translateZ(20px);
+        }
+
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================= */
+
+        .section-heading {
+
+            display: flex;
+
+            justify-content: space-between;
+            align-items: end;
+
+            margin-bottom: 18px;
+        }
+
+        .section-heading h3 {
+
+            font-size: 20px;
+        }
+
+        .section-heading p {
+
+            color:
+                rgba(255,255,255,.48);
+
+            font-size: 12px;
+
+            margin-top: 4px;
+        }
+
+
+        /* =========================================================
+           ERP CARDS
+        ========================================================= */
+
+        .erp-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0,1fr));
+
+            gap: 15px;
+
+            margin-bottom: 45px;
+        }
+
+        .erp-card {
+
+            position: relative;
+
+            min-height: 150px;
+
+            padding: 20px;
+
+            border-radius: 21px;
+
+            background:
+                rgba(255,255,255,.065);
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+
+            overflow: hidden;
+
+            transition:
+                transform .3s ease,
+                background .3s ease,
+                border-color .3s ease;
+
+            box-shadow:
+                0 15px 35px
+                rgba(0,0,0,.16);
+        }
+
+        .erp-card:hover {
+
+            transform:
+                translateY(-7px)
+                perspective(700px)
+                rotateX(2deg);
+
+            background:
+                rgba(255,255,255,.105);
+
+            border-color:
+                rgba(255,255,255,.24);
+        }
+
+        .erp-icon {
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            font-size: 22px;
+
+            margin-bottom: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,180,255,.22),
+                    rgba(120,80,255,.22)
+                );
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            box-shadow:
+                inset 0 1px 0
+                rgba(255,255,255,.12);
+        }
+
+        .erp-card h4 {
+
+            font-size: 14px;
+
+            margin-bottom: 6px;
+        }
+
+        .erp-card p {
+
+            font-size: 11px;
+
+            line-height: 1.55;
+
+            color:
+                rgba(255,255,255,.48);
+        }
+
+        .arrow {
+
+            position: absolute;
+
+            right: 18px;
+            bottom: 18px;
+
+            color:
+                rgba(255,255,255,.55);
+
+            font-size: 15px;
+
+            transition: .25s ease;
+        }
+
+        .erp-card:hover .arrow {
+            transform:
+                translateX(5px);
+            color: white;
+        }
+
+
+        /* =========================================================
+           ACCESS PANEL
+        ========================================================= */
+
+        .access-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 45px;
+        }
+
+        .access-card {
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.10),
+                    rgba(255,255,255,.045)
+                );
+
+            border:
+                1px solid rgba(255,255,255,.13);
+
+            backdrop-filter:
+                blur(18px);
+
+            transition: .3s ease;
+        }
+
+        .access-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            background:
+                rgba(255,255,255,.13);
+        }
+
+        .access-card .role {
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+        }
+
+        .access-card p {
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            color:
+                rgba(255,255,255,.48);
+
+            margin-bottom: 15px;
+        }
+
+        .access-card a {
+
+            display: inline-flex;
+
+            padding: 9px 13px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.08);
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           INFORMATION PANEL
+        ========================================================= */
+
+        .info-panel {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 15px;
+
+            margin-bottom: 40px;
+        }
+
+        .info-box {
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255,255,255,.055);
+
+            border:
+                1px solid rgba(255,255,255,.10);
+
+            backdrop-filter:
+                blur(15px);
+        }
+
+        .info-label {
+
+            display: block;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color:
+                rgba(255,255,255,.38);
+
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+
+            padding:
+                30px 20px 35px;
+
+            border-top:
+                1px solid rgba(255,255,255,.08);
+
+            background:
+                rgba(0,0,0,.15);
+
+            text-align: center;
+        }
+
+        footer h4 {
+
+            font-size: 14px;
+
+            margin-bottom: 7px;
+        }
+
+        footer p {
+
+            color:
+                rgba(255,255,255,.42);
+
+            font-size: 10px;
+
+            line-height: 1.7;
+        }
+
+        .footer-links {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+            margin: 15px 0;
+        }
+
+        .footer-links a {
+
+            color:
+                rgba(255,255,255,.55);
+
+            font-size: 11px;
+
+            transition: .2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
             .hero {
-                padding: 24px 20px;
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
+                grid-template-columns: 1fr;
             }
-            .hero-brand {
-                justify-content: center;
+
+            .school-card {
+                min-height: 290px;
             }
-            .hero-meta {
-                justify-content: center;
-                font-size: 0.78rem;
-                gap: 10px 20px;
+
+            .erp-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
             }
-            .hero-logo {
-                width: 56px;
-                height: 56px;
-                font-size: 24px;
+
+            .access-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
             }
-            .nav-section {
-                padding: 20px 16px 24px;
+        }
+
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 10px 12px;
             }
-            .nav-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+
+            .brand-logo {
+                width: 43px;
+                height: 43px;
+            }
+
+            .brand-text h1 {
+                font-size: 13px;
+            }
+
+            .brand-text span {
+                font-size: 9px;
+            }
+
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 10px;
+            }
+
+            main {
+                padding:
+                    35px 13px 35px;
+            }
+
+            .hero {
+                gap: 25px;
+            }
+
+            .hero h2 {
+                font-size: 42px;
+                letter-spacing: -1.8px;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .school-card {
+                padding: 25px;
+                min-height: 270px;
+            }
+
+            .school-logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .erp-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+
                 gap: 10px;
             }
-            .nav-item {
-                min-height: 76px;
-                padding: 14px 6px;
-            }
-            .nav-item i {
-                font-size: 1.3rem;
-            }
-            .nav-item span {
-                font-size: 0.65rem;
-            }
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .stat-number {
-                font-size: 1.5rem;
-            }
-            .footer {
-                flex-direction: column;
-                text-align: center;
-                padding: 20px 16px;
-            }
-            .footer-socials {
-                justify-content: center;
-            }
-        }
 
-        @media (max-width: 480px) {
-            .nav-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .erp-card {
+                min-height: 145px;
+                padding: 15px;
             }
-            .hero-title h1 {
-                font-size: 1.2rem;
+
+            .erp-card h4 {
+                font-size: 12px;
             }
-            .stats-row {
-                grid-template-columns: 1fr 1fr;
+
+            .erp-card p {
+                font-size: 10px;
+            }
+
+            .erp-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
+            }
+
+            .access-grid {
+                grid-template-columns:
+                    1fr 1fr;
+
                 gap: 10px;
             }
-            .stat-card {
-                padding: 14px 12px;
+
+            .info-panel {
+                grid-template-columns:
+                    1fr;
             }
         }
 
-        /* ===== SCROLL ANIMATIONS ===== */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+
+        @media (max-width: 380px) {
+
+            .brand-text {
+                display: none;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .erp-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .access-grid {
+                grid-template-columns:
+                    1fr;
+            }
         }
 
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ===== 3D TILT (JS enhanced) ===== */
-        .tilt-3d {
-            transition: transform 0.1s ease;
-            will-change: transform;
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
     </style>
 </head>
+
+
 <body>
 
-    <!-- ===== ANIMATED BG CANVAS ===== -->
-    <canvas id="bg-canvas"></canvas>
+    <!-- =========================================================
+         ANIMATED BACKGROUND
+    ========================================================== -->
 
-    <!-- ===== APP CONTAINER ===== -->
-    <div class="app-container">
-
-        <!-- ===== HERO ===== -->
-        <header class="hero glass animate-on-scroll">
-            <div class="hero-brand">
-                <div class="hero-logo">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="hero-title">
-                    <h1>Govt. Primary School<br />Pethgam Wagoora</h1>
-                    <span class="sub"><i class="fas fa-map-pin" style="color:var(--accent-1);"></i> Wagoora Babareshi Road, Near ZEO Wagoora 193109</span>
-                </div>
-            </div>
-            <div class="hero-meta">
-                <span><i class="fas fa-envelope"></i> pspethgam@gmail.com</span>
-                <span><i class="fas fa-phone-alt"></i> 9596449881</span>
-                <span><i class="fas fa-qrcode"></i> UDISE: 01022202207</span>
-            </div>
-        </header>
-
-        <!-- ===== STATS ===== -->
-        <section class="stats-row animate-on-scroll">
-            <div class="stat-card glass">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Staff</div>
-            </div>
-            <div class="stat-card glass">
-                <div class="stat-number">186</div>
-                <div class="stat-label">Students</div>
-            </div>
-            <div class="stat-card glass">
-                <div class="stat-number">8</div>
-                <div class="stat-label">Classes</div>
-            </div>
-            <div class="stat-card glass">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Attendance</div>
-            </div>
-        </section>
-
-        <!-- ===== ADMIN SECTION ===== -->
-        <section class="nav-section glass animate-on-scroll">
-            <div class="nav-section-header">
-                <i class="fas fa-user-shield" style="color:var(--accent-1);font-size:1.4rem;"></i>
-                <h2>Admin</h2>
-                <span class="badge">9 modules</span>
-            </div>
-            <div class="nav-grid">
-                <a href="admin/broadcast-whatsapp.html" class="nav-item admin"><i class="fab fa-whatsapp"></i><span>Broadcast WhatsApp</span></a>
-                <a href="admin/comm-logs.html" class="nav-item admin"><i class="fas fa-history"></i><span>Comm Logs</span></a>
-                <a href="admin/document-vault.html" class="nav-item admin"><i class="fas fa-folder-open"></i><span>Document Vault</span></a>
-                <a href="admin/master-profile.html" class="nav-item admin"><i class="fas fa-user-cog"></i><span>Master Profile</span></a>
-                <a href="admin/send-email.html" class="nav-item admin"><i class="fas fa-envelope"></i><span>Send Email</span></a>
-                <a href="admin/send-sms.html" class="nav-item admin"><i class="fas fa-sms"></i><span>Send SMS</span></a>
-                <a href="admin/staff-entry.html" class="nav-item admin"><i class="fas fa-user-plus"></i><span>Staff Entry</span></a>
-                <a href="admin/staff-statement.html" class="nav-item admin"><i class="fas fa-file-alt"></i><span>Staff Statement</span></a>
-                <a href="admin/student-diary-teacher.html" class="nav-item admin"><i class="fas fa-book-open"></i><span>Student Diary (Teacher)</span></a>
-            </div>
-        </section>
-
-        <!-- ===== MODULES SECTION ===== -->
-        <section class="nav-section glass animate-on-scroll">
-            <div class="nav-section-header">
-                <i class="fas fa-cubes" style="color:var(--accent-2);font-size:1.4rem;"></i>
-                <h2>Modules</h2>
-                <span class="badge">20 modules</span>
-            </div>
-            <div class="nav-grid">
-                <a href="modules/VER.html" class="nav-item modules"><i class="fas fa-check-circle"></i><span>VER</span></a>
-                <a href="modules/aadhar-consent-form.html" class="nav-item modules"><i class="fas fa-id-card"></i><span>Aadhar Consent</span></a>
-                <a href="modules/adm-register.html" class="nav-item modules"><i class="fas fa-address-book"></i><span>Adm Register</span></a>
-                <a href="modules/bonafide.html" class="nav-item modules"><i class="fas fa-certificate"></i><span>Bonafide</span></a>
-                <a href="modules/child-population.html" class="nav-item modules"><i class="fas fa-users"></i><span>Child Population</span></a>
-                <a href="modules/child-profile.html" class="nav-item modules"><i class="fas fa-child"></i><span>Child Profile</span></a>
-                <a href="modules/leave-management.html" class="nav-item modules"><i class="fas fa-calendar-alt"></i><span>Leave Management</span></a>
-                <a href="modules/letter-head.html" class="nav-item modules"><i class="fas fa-file-signature"></i><span>Letter Head</span></a>
-                <a href="modules/library.html" class="nav-item modules"><i class="fas fa-book"></i><span>Library</span></a>
-                <a href="modules/mdm.html" class="nav-item modules"><i class="fas fa-utensils"></i><span>MDM</span></a>
-                <a href="modules/mdm-statement.html" class="nav-item modules"><i class="fas fa-chart-bar"></i><span>MDM Statement</span></a>
-                <a href="modules/reports-hub.html" class="nav-item modules"><i class="fas fa-file-pdf"></i><span>Reports Hub</span></a>
-                <a href="modules/roll-analyzer.html" class="nav-item modules"><i class="fas fa-chart-pie"></i><span>Roll Analyzer</span></a>
-                <a href="modules/roll-statement.html" class="nav-item modules"><i class="fas fa-list-ol"></i><span>Roll Statement</span></a>
-                <a href="modules/stop-watch.html" class="nav-item modules"><i class="fas fa-stopwatch"></i><span>Stop Watch</span></a>
-                <a href="modules/student-id.html" class="nav-item modules"><i class="fas fa-id-badge"></i><span>Student ID</span></a>
-                <a href="modules/tc.html" class="nav-item modules"><i class="fas fa-file-export"></i><span>TC</span></a>
-                <a href="modules/teaching-id.html" class="nav-item modules"><i class="fas fa-chalkboard-teacher"></i><span>Teaching ID</span></a>
-                <a href="modules/textbook-issue.html" class="nav-item modules"><i class="fas fa-book-open"></i><span>Textbook Issue</span></a>
-                <a href="modules/timetable.html" class="nav-item modules"><i class="fas fa-clock"></i><span>Timetable</span></a>
-                <a href="modules/wb.html" class="nav-item modules"><i class="fas fa-tasks"></i><span>WB</span></a>
-            </div>
-        </section>
-
-        <!-- ===== STUDENT SECTION ===== -->
-        <section class="nav-section glass animate-on-scroll">
-            <div class="nav-section-header">
-                <i class="fas fa-user-graduate" style="color:var(--accent-3);font-size:1.4rem;"></i>
-                <h2>Student</h2>
-                <span class="badge">4 modules</span>
-            </div>
-            <div class="nav-grid">
-                <a href="student/apaar-input.html" class="nav-item student"><i class="fas fa-address-card"></i><span>APAAR Input</span></a>
-                <a href="student/marks-sheet.html" class="nav-item student"><i class="fas fa-award"></i><span>Marks Sheet</span></a>
-                <a href="student/student-diary-parent.html" class="nav-item student"><i class="fas fa-book"></i><span>Student Diary (Parent)</span></a>
-                <a href="student/upload-results.html" class="nav-item student"><i class="fas fa-upload"></i><span>Upload Results</span></a>
-            </div>
-        </section>
-
-        <!-- ===== FOOTER ===== -->
-        <footer class="footer glass animate-on-scroll">
-            <div>
-                <span class="udise">UDISE 01022202207</span>
-                <span style="margin:0 12px;color:var(--text-muted);">|</span>
-                <span>Govt. Primary School Pethgam Wagoora</span>
-                <span style="margin:0 12px;color:var(--text-muted);">|</span>
-                <span>Near ZEO Wagoora, 193109</span>
-            </div>
-            <div class="footer-socials">
-                <a href="mailto:pspethgam@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                <a href="tel:+919596449881" aria-label="Phone"><i class="fas fa-phone"></i></a>
-                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            </div>
-        </footer>
-
+    <div class="background">
+        <div class="orb one"></div>
+        <div class="orb two"></div>
+        <div class="orb three"></div>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
+    <div class="particles" id="particles"></div>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header>
+
+        <nav class="nav">
+
+            <a href="index.html" class="brand">
+
+                <img
+                    src="assets/images/logo.png"
+                    class="brand-logo"
+                    alt="School Logo">
+
+                <div class="brand-text">
+
+                    <h1>
+                        Government Primary School
+                    </h1>
+
+                    <span>
+                        Pethgam Wagoora • School ERP
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <div class="nav-actions">
+
+                <a
+                    href="signin.html"
+                    class="nav-btn">
+                    🔐 Sign In
+                </a>
+
+                <button
+                    class="nav-btn"
+                    onclick="scrollToModules()">
+                    ☰ Modules
+                </button>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
+
+    <main>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    SCHOOL ERP • ONLINE
+                </div>
+
+
+                <h2>
+                    Smarter
+                    <strong>School Management.</strong>
+                </h2>
+
+
+                <p class="hero-description">
+
+                    A modern digital management platform for
+                    Government Primary School Pethgam Wagoora.
+                    Manage students, staff, attendance, results,
+                    Mid-Day Meal, documents, communication,
+                    reports and school records from one secure
+                    central system.
+
+                </p>
+
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="signin.html"
+                        class="primary-btn">
+                        🚀 Enter School ERP
+                    </a>
+
+                    <a
+                        href="#modules"
+                        class="secondary-btn">
+                        📚 Explore Modules
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- 3D SCHOOL CARD -->
+
+            <div class="school-card">
+
+                <img
+                    src="assets/images/logo.png"
+                    class="school-logo"
+                    alt="Government Primary School Pethgam Wagoora Logo">
+
+                <h3>
+                    Government Primary School
+                    Pethgam Wagoora
+                </h3>
+
+                <p>
+                    Wagoora Babareshi Road<br>
+                    Near Zonal Education Officer Wagoora<br>
+                    Baramulla, Jammu & Kashmir – 193109
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ERP MODULES
+        ====================================================== -->
+
+        <section id="modules">
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>School ERP Modules</h3>
+
+                    <p>
+                        Everything your school needs in one place
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="erp-grid">
+
+
+                <a
+                    href="modules/child-profile.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        👨‍🎓
+                    </div>
+
+                    <h4>Student Management</h4>
+
+                    <p>
+                        Child profiles, admission,
+                        student records and information.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/adm-register.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📋
+                    </div>
+
+                    <h4>Admission Register</h4>
+
+                    <p>
+                        Manage admissions and
+                        official student registers.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/roll-statement.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📊
+                    </div>
+
+                    <h4>Roll & Enrollment</h4>
+
+                    <p>
+                        Class-wise and gender-wise
+                        student strength analysis.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="student/marks-sheet.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        🏆
+                    </div>
+
+                    <h4>Results & Marks</h4>
+
+                    <p>
+                        Marks entry, results and
+                        student performance records.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/mdm.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        🍱
+                    </div>
+
+                    <h4>MDM Management</h4>
+
+                    <p>
+                        Daily meals, rice utilization,
+                        cooking cost and statements.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/leave-management.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📅
+                    </div>
+
+                    <h4>Attendance & Leave</h4>
+
+                    <p>
+                        Manage student and staff
+                        attendance and leave records.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="admin/staff-entry.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        👩‍🏫
+                    </div>
+
+                    <h4>Staff Management</h4>
+
+                    <p>
+                        Teaching and non-teaching
+                        staff records and profiles.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/reports-hub.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📈
+                    </div>
+
+                    <h4>Reports Hub</h4>
+
+                    <p>
+                        Generate consolidated reports
+                        and official school statements.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/library.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📚
+                    </div>
+
+                    <h4>Library</h4>
+
+                    <p>
+                        Books, issue records and
+                        library management.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/timetable.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        🕒
+                    </div>
+
+                    <h4>Time Table</h4>
+
+                    <p>
+                        Manage school timetable,
+                        classes and periods.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/textbook-issue.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📖
+                    </div>
+
+                    <h4>Textbook Issue</h4>
+
+                    <p>
+                        Track textbook distribution
+                        and student issue records.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+
+                <a
+                    href="modules/letter-head.html"
+                    class="erp-card">
+
+                    <div class="erp-icon">
+                        📄
+                    </div>
+
+                    <h4>Documents & Certificates</h4>
+
+                    <p>
+                        Bonafide, TC, certificates,
+                        letters and official documents.
+                    </p>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             ACCESS
+        ====================================================== -->
+
+        <section>
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>Portal Access</h3>
+
+                    <p>
+                        Secure access for every school role
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="access-grid">
+
+
+                <div class="access-card">
+
+                    <div class="role">
+                        🔐 Administrator
+                    </div>
+
+                    <p>
+                        Full control over school
+                        records, staff, students,
+                        reports and communication.
+                    </p>
+
+                    <a href="signin.html">
+                        Admin Login →
+                    </a>
+
+                </div>
+
+
+                <div class="access-card">
+
+                    <div class="role">
+                        👩‍🏫 Teacher
+                    </div>
+
+                    <p>
+                        Manage student records,
+                        results, diary and
+                        academic information.
+                    </p>
+
+                    <a href="signin.html">
+                        Teacher Login →
+                    </a>
+
+                </div>
+
+
+                <div class="access-card">
+
+                    <div class="role">
+                        👨‍🎓 Student
+                    </div>
+
+                    <p>
+                        Access results, student
+                        diary and academic records.
+                    </p>
+
+                    <a href="signin.html">
+                        Student Login →
+                    </a>
+
+                </div>
+
+
+                <div class="access-card">
+
+                    <div class="role">
+                        👨‍👩‍👧 Parent
+                    </div>
+
+                    <p>
+                        View child diary,
+                        academic information and
+                        school communication.
+                    </p>
+
+                    <a href="signin.html">
+                        Parent Login →
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             SCHOOL INFORMATION
+        ====================================================== -->
+
+         <section>
+
+            <div class="section-heading">
+
+                <div>
+                    <h3>School Information</h3>
+
+                    <p>
+                        Official institutional details
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="info-panel">
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        UDISE Code
+                    </span>
+
+                    <div class="info-value">
+                        01022202207
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Email
+                    </span>
+
+                    <div class="info-value">
+                        pspethgam@gmail.com
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Contact
+                    </span>
+
+                    <div class="info-value">
+                        9596449881
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Address
+                    </span>
+
+                    <div class="info-value">
+                        Wagoora Babareshi Road,
+                        Near Zonal Education Officer Wagoora,
+                        193109
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        District
+                    </span>
+
+                    <div class="info-value">
+                        Baramulla, Jammu & Kashmir
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Platform
+                    </span>
+
+                    <div class="info-value">
+                        Firebase • Cloud Enabled
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <h4>
+            Government Primary School Pethgam Wagoora
+        </h4>
+
+        <div class="footer-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="signin.html">
+                Sign In
+            </a>
+
+            <a href="modules/reports-hub.html">
+                Reports
+            </a>
+
+            <a href="modules/letter-head.html">
+                Documents
+            </a>
+
+        </div>
+
+        <p>
+            Wagoora Babareshi Road • Near Zonal Education
+            Officer Wagoora • 193109
+        </p>
+
+        <p>
+            © <span id="year"></span>
+            Government Primary School Pethgam Wagoora.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
     <script>
-        // ============================================================
-        //  1. ANIMATED BACKGROUND (particle system)
-        // ============================================================
-        (function initParticles() {
-            const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
-            let w, h;
-            const particles = [];
-            const COUNT = 70;
 
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
+        /* =====================================================
+           YEAR
+        ====================================================== */
+
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+
+        /* =====================================================
+           PARTICLES
+        ====================================================== */
+
+        const particles =
+            document.getElementById("particles");
+
+        for (let i = 0; i < 35; i++) {
+
+            const particle =
+                document.createElement("span");
+
+            particle.className = "particle";
+
+            particle.style.left =
+                Math.random() * 100 + "%";
+
+            particle.style.animationDuration =
+                (8 + Math.random() * 12) + "s";
+
+            particle.style.animationDelay =
+                (-Math.random() * 15) + "s";
+
+            particle.style.opacity =
+                Math.random();
+
+            particles.appendChild(particle);
+        }
+
+
+        /* =====================================================
+           SMOOTH MODULE SCROLL
+        ====================================================== */
+
+        function scrollToModules() {
+
+            const section =
+                document.getElementById("modules");
+
+            if (section) {
+
+                section.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
             }
-            window.addEventListener('resize', resize);
-            resize();
 
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.size = Math.random() * 2.8 + 1.2;
-                    this.speedX = (Math.random() - 0.5) * 0.35;
-                    this.speedY = (Math.random() - 0.5) * 0.35;
-                    this.opacity = Math.random() * 0.5 + 0.15;
-                    this.hue = 200 + Math.random() * 60; // blue-teal range
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x < 0 || this.x > w) { this.speedX *= -1;
-                        this.x = Math.max(0, Math.min(w, this.x)); }
-                    if (this.y < 0 || this.y > h) { this.speedY *= -1;
-                        this.y = Math.max(0, Math.min(h, this.y)); }
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${this.opacity})`;
-                    ctx.fill();
-                    // glow
-                    ctx.shadowColor = `hsla(${this.hue}, 80%, 70%, 0.2)`;
-                    ctx.shadowBlur = 12;
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                }
-            }
+        }
 
-            for (let i = 0; i < COUNT; i++) {
-                particles.push(new Particle());
-            }
 
-            // connect lines
-            function drawLines() {
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 150) {
-                            const alpha = (1 - dist / 150) * 0.18;
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(180, 220, 255, ${alpha})`;
-                            ctx.lineWidth = 0.8;
-                            ctx.stroke();
+        /* =====================================================
+           3D CARD MOUSE EFFECT
+           Disabled automatically on touch devices.
+        ====================================================== */
+
+        const schoolCard =
+            document.querySelector(".school-card");
+
+        if (
+            schoolCard &&
+            window.matchMedia("(pointer:fine)").matches
+        ) {
+
+            schoolCard.addEventListener(
+                "mousemove",
+                function(e) {
+
+                    const rect =
+                        schoolCard.getBoundingClientRect();
+
+                    const x =
+                        e.clientX - rect.left;
+
+                    const y =
+                        e.clientY - rect.top;
+
+                    const rotateY =
+                        ((x / rect.width) - .5) * 8;
+
+                    const rotateX =
+                        ((y / rect.height) - .5) * -8;
+
+                    schoolCard.style.animation =
+                        "none";
+
+                    schoolCard.style.transform =
+                        `perspective(1000px)
+                         rotateX(${rotateX}deg)
+                         rotateY(${rotateY}deg)
+                         translateY(-5px)`;
+
+                }
+            );
+
+
+            schoolCard.addEventListener(
+                "mouseleave",
+                function() {
+
+                    schoolCard.style.animation =
+                        "cardFloat 5s ease-in-out infinite";
+
+                    schoolCard.style.transform =
+                        "";
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           PREVENT BROKEN INTERNAL LINKS
+           ONLY WARNS IF A USER CLICKS A PLACEHOLDER.
+        ====================================================== */
+
+        document.querySelectorAll("a").forEach(
+            link => {
+
+                link.addEventListener(
+                    "click",
+                    function() {
+
+                        const href =
+                            this.getAttribute("href");
+
+                        if (
+                            !href ||
+                            href === "#"
+                        ) {
+                            return;
                         }
+
                     }
-                }
+                );
+
             }
+        );
 
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => { p.update();
-                    p.draw(); });
-                drawLines();
-                requestAnimationFrame(animate);
+
+        /* =====================================================
+           PAGE READY
+        ====================================================== */
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                document.body.classList.add(
+                    "page-loaded"
+                );
+
             }
-            animate();
-        })();
+        );
 
-        // ============================================================
-        //  2. SCROLL REVEAL (Intersection Observer)
-        // ============================================================
-        (function scrollReveal() {
-            const elements = document.querySelectorAll('.animate-on-scroll');
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
-                elements.forEach(el => observer.observe(el));
-                // force visible for any already in view
-                setTimeout(() => {
-                    elements.forEach(el => {
-                        const rect = el.getBoundingClientRect();
-                        if (rect.top < window.innerHeight * 0.85) {
-                            el.classList.add('visible');
-                        }
-                    });
-                }, 200);
-            } else {
-                elements.forEach(el => el.classList.add('visible'));
-            }
-        })();
-
-        // ============================================================
-        //  3. 3D TILT EFFECT (on glass cards with .tilt-3d)
-        // ============================================================
-        (function tilt3d() {
-            const cards = document.querySelectorAll('.glass:not(.stat-card)');
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = (e.clientX - rect.left) / rect.width - 0.5;
-                    const y = (e.clientY - rect.top) / rect.height - 0.5;
-                    const rotateX = y * -6;
-                    const rotateY = x * 6;
-                    card.style.transform =
-                        `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-                });
-            });
-        })();
-
-        // ============================================================
-        //  4. STATS COUNTER (animate numbers)
-        // ============================================================
-        (function animateStats() {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target;
-                        const text = el.textContent.trim();
-                        const num = parseFloat(text);
-                        if (!isNaN(num) && text.indexOf('%') === -1) {
-                            const isInt = Number.isInteger(num);
-                            let current = 0;
-                            const step = Math.max(1, Math.floor(num / 40));
-                            const timer = setInterval(() => {
-                                current += step;
-                                if (current >= num) {
-                                    current = num;
-                                    clearInterval(timer);
-                                }
-                                el.textContent = isInt ? Math.floor(current) : current.toFixed(1);
-                            }, 25);
-                        }
-                        observer.unobserve(el);
-                    }
-                });
-            }, { threshold: 0.5 });
-            statNumbers.forEach(el => observer.observe(el));
-        })();
-
-        // ============================================================
-        //  5. CONSOLE GREETING
-        // ============================================================
-        console.log('%c🏫 Govt. Primary School Pethgam Wagoora', 'font-size:18px;font-weight:700;color:#6ec8ff;');
-        console.log('%cUDISE: 01022202207 | 📧 pspethgam@gmail.com | 📞 9596449881', 'font-size:13px;color:#a78bfa;');
-        console.log('%c📍 Wagoora Babareshi Road, Near ZEO Wagoora 193109', 'font-size:13px;color:#f472b6;');
-        console.log('%c✨ ERP System • Glass Morphism • 3D Animated', 'font-size:12px;color:rgba(255,255,255,0.4);');
     </script>
 
 </body>
