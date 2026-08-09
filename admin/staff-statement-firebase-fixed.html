@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Statement – Add, Edit & PDF</title>
+    <!-- html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 28px 25px 20px;
+        }
+
+        /* ----- HEADER (matches screenshot) ----- */
+        .statement-header {
+            text-align: center;
+            border-bottom: 2px solid #1a2a4a;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .school-logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .statement-header .school-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2a4a;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .statement-header .school-sub {
+            font-size: 14px;
+            color: #2d3748;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .statement-header .zone-line {
+            font-size: 13px;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        .statement-header .zone-line span {
+            margin: 0 6px;
+        }
+
+        .statement-header .ref-line {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #1a2a4a;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .statement-header .ref-line .ref-no {
+            font-weight: 600;
+        }
+
+        .statement-header .ref-line .date-issue {
+            font-weight: 600;
+        }
+
+        .statement-header .title-main {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a2a4a;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ----- TOOLBAR ----- */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .toolbar .left h2 {
+            font-size: 17px;
+            color: #1a2a4a;
+            font-weight: 600;
+        }
+
+        .toolbar .left h2 span {
+            font-weight: 400;
+            font-size: 14px;
+            color: #5a6a8a;
+            margin-left: 8px;
+        }
+
+        .toolbar .right {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ----- BUTTONS ----- */
+        .btn {
+            padding: 9px 20px;
+            border: none;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #1a2a4a;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #2c3d66;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 42, 74, 0.25);
+        }
+
+        .btn-success {
+            background: #1f8b4c;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #1a7a41;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 139, 76, 0.25);
+        }
+
+        .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #a93226;
+        }
+
+        .btn-warning {
+            background: #e67e22;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d35400;
+        }
+
+        .btn-pdf {
+            background: #b71c1c;
+            color: #fff;
+        }
+        .btn-pdf:hover {
+            background: #8e1515;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.3);
+        }
+
+        .btn-sm {
+            padding: 3px 9px;
+            font-size: 11px;
+            border-radius: 4px;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        .btn-cancel:hover {
+            background: #d0d8e3;
+        }
+
+        /* ----- TABLE ----- */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+
+        table th,
+        table td {
+            padding: 6px 4px;
+            text-align: left;
+            vertical-align: middle;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        table th {
+            background: #f0f4fa;
+            color: #1a2a4a;
+            font-weight: 700;
+            border-bottom: 2px solid #d0d8e3;
+            font-size: 10.5px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        table td:first-child,
+        table th:first-child {
+            text-align: center;
+        }
+
+        table td:nth-child(3),
+        table th:nth-child(3) {
+            text-align: left;
+        }
+
+        table tbody tr:hover {
+            background: #f8faff;
+        }
+
+        .staff-name {
+            font-weight: 600;
+            color: #1a2639;
+        }
+
+        .photo-cell img {
+            border-radius: 4px;
+            border: 1px solid #dde3ed;
+            background: #fafafa;
+            width: 38px;
+            height: 48px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .no-photo {
+            font-size: 8px;
+            color: #aab;
+            background: #f0f2f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ----- COLUMN WIDTHS (table-layout: fixed) ----- */
+        .col-sno {
+            width: 3.5%;
+        }
+        .col-photo {
+            width: 5%;
+        }
+        .col-name {
+            width: 14%;
+        }
+        .col-desig {
+            width: 10%;
+        }
+        .col-qual {
+            width: 8%;
+        }
+        .col-subject {
+            width: 8%;
+        }
+        .col-doappt {
+            width: 8.5%;
+        }
+        .col-doj {
+            width: 8.5%;
+        }
+        .col-posting {
+            width: 10%;
+        }
+        .col-contact {
+            width: 7.5%;
+        }
+        .col-remarks {
+            width: 8%;
+        }
+        .col-actions {
+            width: 6%;
+        }
+
+        /* ----- NOTE & FOOTER ----- */
+        .note-section {
+            margin-top: 16px;
+            padding: 8px 14px;
+            background: #f8fafc;
+            border-left: 4px solid #1a2a4a;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #2d3748;
+        }
+
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 22px;
+            padding-top: 16px;
+            border-top: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .sig-box {
+            font-weight: 700;
+            color: #1a2a4a;
+            font-size: 14px;
+            padding: 6px 0;
+            min-width: 140px;
+            border-bottom: 2px solid #cbd5e1;
+            text-align: center;
+        }
+
+        /* ----- MODAL ----- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 740px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 28px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeSlide 0.25s ease;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-box h3 {
+            font-size: 21px;
+            color: #1a2a4a;
+            margin-bottom: 4px;
+        }
+
+        .modal-box .subhead {
+            color: #5a6a8a;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 18px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group label .required {
+            color: #c0392b;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 9px 12px;
+            border: 1px solid #dde3ed;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+            background: #fafcff;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a2a4a;
+            box-shadow: 0 0 0 3px rgba(26, 42, 74, 0.12);
+            background: #fff;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 44px;
+        }
+
+        .photo-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .photo-upload-wrapper .file-input-wrap {
+            position: relative;
+            display: inline-block;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .photo-upload-wrapper .file-input-wrap input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+        }
+
+        .photo-upload-wrapper .file-input-wrap .file-label {
+            display: block;
+            padding: 9px 14px;
+            border: 1px dashed #b0b8c9;
+            border-radius: 7px;
+            background: #f8faff;
+            text-align: center;
+            font-size: 13px;
+            color: #5a6a8a;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .photo-upload-wrapper .file-input-wrap .file-label:hover {
+            background: #eef4ff;
+            border-color: #1a2a4a;
+        }
+
+        .photo-preview {
+            width: 50px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #dde3ed;
+            background: #f0f2f5;
+            display: none;
+        }
+
+        .photo-preview.show {
+            display: block;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-remove-photo {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            height: 30px;
+        }
+
+        .btn-remove-photo.show {
+            display: inline-block;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 22px;
+            padding-top: 14px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        /* ----- TOAST ----- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a2a4a;
+            color: #fff;
+            padding: 12px 26px;
+            border-radius: 10px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.3s ease;
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            background: #1f8b4c;
+        }
+
+        .toast.error {
+            background: #c0392b;
+        }
+
+        .loader-row td {
+            padding: 40px 20px;
+            text-align: center;
+            color: #5a6a8a;
+            font-style: italic;
+        }
+
+        /* ----- PRINT / PDF STYLES ----- */
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 10px 12px;
+                max-width: 100%;
+            }
+
+            .toolbar {
+                display: none !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .col-actions {
+                display: none !important;
+            }
+
+            table th.col-actions,
+            table td.col-actions {
+                display: none !important;
+            }
+
+            .statement-header {
+                border-bottom: 2px solid #000;
+            }
+
+            .statement-header .ref-line {
+                background: #f4f4f4 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .footer-section {
+                border-top: 2px solid #000;
+            }
+
+            .sig-box {
+                border-bottom: 2px solid #000;
+            }
+
+            table {
+                font-size: 9.5px;
+            }
+
+            table th {
+                font-size: 8.5px;
+                padding: 3px 2px;
+                background: #eee !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            table td {
+                padding: 3px 2px;
+                font-size: 9px;
+                line-height: 1.2;
+            }
+
+            .photo-cell img {
+                width: 24px;
+                height: 32px;
+            }
+
+            .note-section {
+                font-size: 10px;
+                padding: 5px 10px;
+                background: #f8f8f8 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .sig-box {
+                font-size: 11px;
+            }
+
+            .statement-header .school-name {
+                font-size: 18px;
+            }
+
+            .statement-header .title-main {
+                font-size: 16px;
+            }
+
+            .statement-header .ref-line {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+
+            .school-logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Hide toolbar and actions when PDF is being generated */
+        .pdf-generation .toolbar {
+            display: none !important;
+        }
+
+        .pdf-generation .no-print {
+            display: none !important;
+        }
+
+        .pdf-generation .col-actions {
+            display: none !important;
+        }
+
+        .pdf-generation table th.col-actions,
+        .pdf-generation table td.col-actions {
+            display: none !important;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 700px) {
+            .container {
+                padding: 14px 12px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar .right {
+                justify-content: stretch;
+            }
+
+            .toolbar .right .btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-box {
+                padding: 18px 14px;
+            }
+
+            .footer-section {
+                flex-direction: column;
+                gap: 6px;
+                align-items: center;
+            }
+
+            .sig-box {
+                border-bottom: 1px solid #dde3ed;
+                width: 100%;
+            }
+
+            .statement-header .ref-line {
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                font-size: 13px;
+            }
+
+            .statement-header .school-name {
+                font-size: 17px;
+            }
+
+            .statement-header .title-main {
+                font-size: 16px;
+            }
+
+            .statement-header .zone-line {
+                font-size: 12px;
+            }
+
+            .photo-upload-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .photo-upload-wrapper .file-input-wrap {
+                min-width: unset;
+            }
+
+            .photo-actions {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .statement-header .school-name {
+                font-size: 14px;
+            }
+
+            .statement-header .title-main {
+                font-size: 14px;
+            }
+
+            .statement-header .ref-line {
+                font-size: 11px;
+            }
+
+            .school-logo {
+                width: 44px;
+                height: 44px;
+            }
+
+            table {
+                font-size: 10px;
+            }
+
+            table th {
+                font-size: 8px;
+                padding: 4px 2px;
+            }
+
+            table td {
+                padding: 4px 2px;
+                font-size: 9px;
+            }
+
+            .photo-cell img {
+                width: 28px;
+                height: 36px;
+            }
+
+            .btn {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="statementContainer">
+
+        <!-- ===== HEADER (matches screenshot) ===== -->
+        <div class="statement-header">
+            <img src="logo.png" alt="School Logo" class="school-logo" />
+            <div class="school-name">Government Primary School Pethgam Wagoora</div>
+            <div class="school-sub">Wagoora Babareshi Road Near Zonal Education Office Wagoora 193109</div>
+            <div class="zone-line">
+                <span>📍 Zone: Wagoora</span>
+                <span>|</span>
+                <span>🏛️ District: Baramulla</span>
+                <span>|</span>
+                <span>📋 UDISE Code: 01022202207</span>
+            </div>
+            <div class="ref-line">
+                <span class="ref-no">📄 Ref No: GPS/W/STAFF/2026/____</span>
+                <span class="date-issue">📅 Date of Issue: <strong id="headerDate"></strong></span>
+            </div>
+            <div class="title-main">📋 Staff Statement (Detailed Record)</div>
+        </div>
+
+        <!-- ===== TOOLBAR ===== -->
+        <div class="toolbar">
+            <div class="left">
+                <h2>
+                    👥 Staff List
+                    <span id="currentDate"></span>
+                </h2>
+            </div>
+            <div class="right">
+                <button class="btn btn-pdf" id="downloadPdfBtn">⬇ Download PDF</button>
+                <button class="btn btn-success" id="addStaffBtn">＋ Add Staff</button>
+                <button class="btn btn-primary" id="refreshBtn">⟳ Refresh</button>
+            </div>
+        </div>
+
+        <!-- ===== TABLE ===== -->
+        <div class="table-wrapper">
+            <table>
+                <colgroup>
+                    <col class="col-sno" />
+                    <col class="col-photo" />
+                    <col class="col-name" />
+                    <col class="col-desig" />
+                    <col class="col-qual" />
+                    <col class="col-subject" />
+                    <col class="col-doappt" />
+                    <col class="col-doj" />
+                    <col class="col-posting" />
+                    <col class="col-contact" />
+                    <col class="col-remarks" />
+                    <col class="col-actions" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>S.NO</th>
+                        <th>Photo</th>
+                        <th>Staff Name</th>
+                        <th>Designation</th>
+                        <th>Qualification</th>
+                        <th>Subject in PG</th>
+                        <th>Date of 1st Appointment</th>
+                        <th>D.O.J (Present School)</th>
+                        <th>Actual Place of Posting</th>
+                        <th>Contact No</th>
+                        <th>Remarks</th>
+                        <th class="no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="staffBody">
+                    <tr>
+                        <td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">Loading staff records…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== NOTE & FOOTER ===== -->
+        <div class="note-section">
+            <strong>Note:</strong> Submitted in Original to ZEO Wagoora/Cluster Head Wagoora for information.
+        </div>
+
+        <div class="footer-section">
+            <div class="sig-box">Dealing Assistant</div>
+            <div class="sig-box">Headmaster / Seal</div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="staffModal">
+        <div class="modal-box">
+            <h3 id="modalTitle">Add Staff Member</h3>
+            <div class="subhead" id="modalSubhead">Fill in the details below.</div>
+
+            <form id="staffForm" autocomplete="off">
+                <input type="hidden" id="editDocId" value="" />
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="fName">Staff Name <span class="required">*</span></label>
+                        <input type="text" id="fName" placeholder="e.g. Ramesh Kumar" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDesignation">Designation <span class="required">*</span></label>
+                        <input type="text" id="fDesignation" placeholder="e.g. Teacher" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fQualification">Qualification</label>
+                        <input type="text" id="fQualification" placeholder="e.g. M.A., B.Ed" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fSubjectPG">Subject in PG</label>
+                        <input type="text" id="fSubjectPG" placeholder="e.g. English" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDoFirstAppt">Date of 1st Appointment</label>
+                        <input type="date" id="fDoFirstAppt" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDojPresent">D.O.J (Present School)</label>
+                        <input type="date" id="fDojPresent" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fActualPosting">Actual Place of Posting</label>
+                        <input type="text" id="fActualPosting" placeholder="e.g. Wagoora" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fContact">Contact No</label>
+                        <input type="text" id="fContact" placeholder="e.g. 9876543210" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Photo <span class="required">*</span></label>
+                        <div class="photo-upload-wrapper">
+                            <div class="file-input-wrap">
+                                <input type="file" id="fPhotoInput" accept="image/*" />
+                                <span class="file-label" id="fileLabel">📷 Click to upload photo</span>
+                            </div>
+                            <div class="photo-actions">
+                                <img id="photoPreview" class="photo-preview" alt="Preview" />
+                                <button type="button" class="btn-remove-photo" id="removePhotoBtn">✕ Remove</button>
+                            </div>
+                        </div>
+                        <small style="color:#5a6a8a;font-size:12px;">JPG or PNG, max 200KB recommended.</small>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="fRemarks">Remarks</label>
+                        <textarea id="fRemarks" placeholder="Any additional notes…" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="modalCancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="modalSubmitBtn">💾 Save Staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        /*
+         * FIREBASE: Direct initialization in this page.
+         *
+         * This intentionally does NOT import db/auth from
+         * init-firebase.js.  Staff Entry is already working, but
+         * the previous Staff Statement page was receiving an invalid
+         * Firestore object.  Initializing Firestore directly here
+         * removes that dependency and guarantees that collection(db,...)
+         * receives a real Firestore instance.
+         */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            doc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import {
+            getAuth,
+            signInAnonymously,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgVFdfKpCrLkoRsMI2gS7ajlJUzVdYLZU",
+            authDomain: "pry-school-pethgam-wagoora.firebaseapp.com",
+            projectId: "pry-school-pethgam-wagoora",
+            storageBucket: "pry-school-pethgam-wagoora.firebasestorage.app",
+            messagingSenderId: "255417366612",
+            appId: "1:255417366612:web:81cec46aa75cb7d4ba95c1",
+            measurementId: "G-JE9WY9T6FJ"
+        };
+
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getFirestore(firebaseApp);
+        const auth = getAuth(firebaseApp);
+
+        (function () {
+            'use strict';
+
+            // ---- DOM refs ----
+            const tbody = document.getElementById('staffBody');
+            const dateEl = document.getElementById('currentDate');
+            const headerDate = document.getElementById('headerDate');
+            const addBtn = document.getElementById('addStaffBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const pdfBtn = document.getElementById('downloadPdfBtn');
+            const modal = document.getElementById('staffModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubhead = document.getElementById('modalSubhead');
+            const form = document.getElementById('staffForm');
+            const editDocId = document.getElementById('editDocId');
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const fileLabel = document.getElementById('fileLabel');
+
+            const fName = document.getElementById('fName');
+            const fDesignation = document.getElementById('fDesignation');
+            const fQualification = document.getElementById('fQualification');
+            const fSubjectPG = document.getElementById('fSubjectPG');
+            const fDoFirstAppt = document.getElementById('fDoFirstAppt');
+            const fDojPresent = document.getElementById('fDojPresent');
+            const fActualPosting = document.getElementById('fActualPosting');
+            const fContact = document.getElementById('fContact');
+            const fPhotoInput = document.getElementById('fPhotoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const removePhotoBtn = document.getElementById('removePhotoBtn');
+            const fRemarks = document.getElementById('fRemarks');
+
+            const toast = document.getElementById('toast');
+            let toastTimer = null;
+            let currentPhotoData = '';
+            let firebaseReady = false;
+
+            // ---- Helpers ----
+            function showToast(msg, type) {
+                type = type || 'success';
+                toast.textContent = msg;
+                toast.className = 'toast ' + type;
+                void toast.offsetWidth;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(function () {
+                    toast.classList.remove('show');
+                }, 4000);
+            }
+
+            function formatDate(dateValue) {
+                if (!dateValue) return '-';
+                if (typeof dateValue === 'string') {
+                    const d = new Date(dateValue + (dateValue.length === 10 ? 'T00:00:00' : ''));
+                    if (!isNaN(d)) return d.toLocaleDateString('en-GB');
+                    return dateValue;
+                }
+                if (dateValue && typeof dateValue.toDate === 'function') {
+                    return dateValue.toDate().toLocaleDateString('en-GB');
+                }
+                return String(dateValue);
+            }
+
+            function getTodayStr() {
+                return new Date().toLocaleDateString('en-GB');
+            }
+
+            function escapeHtml(value) {
+                return String(value == null ? '' : value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function setLoading(message) {
+                tbody.innerHTML =
+                    '<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">' +
+                    escapeHtml(message) + '</td></tr>';
+            }
+
+            // ---- FIRESTORE CRUD ----
+            async function getStaffRecords() {
+                if (!db || typeof db !== 'object') {
+                    throw new Error('Firestore was not initialized correctly.');
+                }
+                const snapshot = await getDocs(collection(db, 'staffRecords'));
+                const records = [];
+                snapshot.forEach(function (docSnap) {
+                    records.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                return records;
+            }
+
+            async function getStaffRecord(id) {
+                const records = await getStaffRecords();
+                return records.find(function (record) {
+                    return record.id === id;
+                }) || null;
+            }
+
+            async function addStaffRecord(record) {
+                const docRef = await addDoc(collection(db, 'staffRecords'), {
+                    ...record,
+                    role: record.role || 'staff',
+                    school: record.school || 'Government Primary School Pethgam Wagoora',
+                    status: record.status || 'active',
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                return docRef.id;
+            }
+
+            async function updateStaffRecord(id, updatedData) {
+                await updateDoc(doc(db, 'staffRecords', id), {
+                    ...updatedData,
+                    updatedAt: serverTimestamp()
+                });
+            }
+
+            async function deleteStaffRecord(id) {
+                await deleteDoc(doc(db, 'staffRecords', id));
+            }
+
+            // ---- Render Table ----
+            async function renderStaff() {
+                if (!firebaseReady) {
+                    setLoading('Connecting to Firebase…');
+                    return;
+                }
+
+                setLoading('Loading staff records from Firebase…');
+
+                try {
+                    const records = await getStaffRecords();
+
+                    if (records.length === 0) {
+                        tbody.innerHTML =
+                            '<tr><td colspan="12" style="padding:30px;text-align:center;color:#5a6a8a;">📭 No staff records found in Firestore.</td></tr>';
+                        return;
+                    }
+
+                    records.sort(function (a, b) {
+                        const nameA = (a.name || '').toLowerCase();
+                        const nameB = (b.name || '').toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    });
+
+                    let html = '';
+                    let sNo = 1;
+
+                    records.forEach(function (record) {
+                        let photoHtml = '<span class="no-photo">NO PHOTO</span>';
+                        if (record.photo && String(record.photo).startsWith('data:image')) {
+                            photoHtml = '<img src="' + escapeHtml(record.photo) + '" alt="Staff photo" />';
+                        }
+
+                        html += '<tr>' +
+                            '<td>' + sNo++ + '</td>' +
+                            '<td class="photo-cell">' + photoHtml + '</td>' +
+                            '<td class="staff-name">' + escapeHtml((record.name || '').toUpperCase()) + '</td>' +
+                            '<td>' + escapeHtml(record.designation || '-') + '</td>' +
+                            '<td>' + escapeHtml(record.qualification || '-') + '</td>' +
+                            '<td>' + escapeHtml(record.subjectPG || '-') + '</td>' +
+                            '<td>' + escapeHtml(formatDate(record.doFirstAppt)) + '</td>' +
+                            '<td>' + escapeHtml(formatDate(record.dojPresentSchool)) + '</td>' +
+                            '<td>' + escapeHtml(record.actualPosting || 'N.A.') + '</td>' +
+                            '<td>' + escapeHtml(record.contact || '-') + '</td>' +
+                            '<td>' + escapeHtml(record.remarks || '') + '</td>' +
+                            '<td class="no-print">' +
+                            '<div class="actions-cell">' +
+                            '<button class="btn btn-warning btn-sm edit-btn" data-id="' + escapeHtml(record.id) + '">✎ Edit</button>' +
+                            '<button class="btn btn-danger btn-sm delete-btn" data-id="' + escapeHtml(record.id) + '">✕</button>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    });
+
+                    tbody.innerHTML = html;
+
+                    document.querySelectorAll('.edit-btn').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            openEditModal(btn.dataset.id);
+                        });
+                    });
+
+                    document.querySelectorAll('.delete-btn').forEach(function (btn) {
+                        btn.addEventListener('click', async function () {
+                            const id = btn.dataset.id;
+                            if (!confirm('Delete this staff record permanently from Firebase?')) return;
+
+                            btn.disabled = true;
+                            try {
+                                await deleteStaffRecord(id);
+                                showToast('🗑️ Staff record deleted from Firebase.', 'success');
+                                await renderStaff();
+                            } catch (error) {
+                                console.error('Delete error:', error);
+                                showToast('❌ Delete failed: ' + (error.message || 'Permission denied.'), 'error');
+                                btn.disabled = false;
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('Firestore read error:', error);
+                    tbody.innerHTML =
+                        '<tr><td colspan="12" style="padding:30px;text-align:center;color:#b71c1c;">❌ Unable to load staff records from Firebase.<br><small>' +
+                        escapeHtml(error.message || 'Check Firestore rules and Firebase Authentication.') +
+                        '</small></td></tr>';
+                    showToast('Firebase read failed: ' + (error.message || 'Check Firestore permissions.'), 'error');
+                }
+            }
+
+            // ---- Modal functions ----
+            function resetPhotoUI() {
+                currentPhotoData = '';
+                photoPreview.src = '';
+                photoPreview.classList.remove('show');
+                removePhotoBtn.classList.remove('show');
+                fPhotoInput.value = '';
+                fileLabel.textContent = '📷 Click to upload photo';
+            }
+
+            function openModal(mode, data) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                form.reset();
+                resetPhotoUI();
+
+                if (mode === 'add') {
+                    modalTitle.textContent = '➕ Add Staff Member';
+                    modalSubhead.textContent = 'Fill in the details and click Save.';
+                    submitBtn.textContent = '💾 Save Staff';
+                    editDocId.value = '';
+                } else if (mode === 'edit' && data) {
+                    modalTitle.textContent = '✏️ Edit Staff Member';
+                    modalSubhead.textContent = 'Update the details below. Changes will be saved to Firebase.';
+                    submitBtn.textContent = '🔄 Update Staff';
+                    editDocId.value = data.id || '';
+                    fName.value = data.name || '';
+                    fDesignation.value = data.designation || '';
+                    fQualification.value = data.qualification || '';
+                    fSubjectPG.value = data.subjectPG || '';
+                    fDoFirstAppt.value = data.doFirstAppt || '';
+                    fDojPresent.value = data.dojPresentSchool || '';
+                    fActualPosting.value = data.actualPosting || '';
+                    fContact.value = data.contact || '';
+                    fRemarks.value = data.remarks || '';
+
+                    if (data.photo && String(data.photo).startsWith('data:image')) {
+                        currentPhotoData = data.photo;
+                        photoPreview.src = data.photo;
+                        photoPreview.classList.add('show');
+                        removePhotoBtn.classList.add('show');
+                        fileLabel.textContent = '📷 Change photo';
+                    }
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                form.reset();
+                resetPhotoUI();
+            }
+
+            async function openEditModal(id) {
+                try {
+                    showToast('Loading record from Firebase…', 'success');
+                    const record = await getStaffRecord(id);
+                    if (!record) {
+                        showToast('Record not found in Firebase.', 'error');
+                        return;
+                    }
+                    openModal('edit', record);
+                } catch (error) {
+                    console.error('Open edit error:', error);
+                    showToast('Unable to load record: ' + (error.message || 'Permission denied.'), 'error');
+                }
+            }
+
+            // ---- Photo handling ----
+            fPhotoInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    showToast('Please select an image file (JPG or PNG).', 'error');
+                    resetPhotoUI();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const maxWidth = 400;
+                        const maxHeight = 500;
+                        let width = img.width;
+                        let height = img.height;
+                        const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+                        width = Math.round(width * scale);
+                        height = Math.round(height * scale);
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        currentPhotoData = canvas.toDataURL('image/jpeg', 0.65);
+                        photoPreview.src = currentPhotoData;
+                        photoPreview.classList.add('show');
+                        removePhotoBtn.classList.add('show');
+                        fileLabel.textContent = '📷 ' + file.name;
+                    };
+                    img.onerror = function () {
+                        showToast('Unable to process the photograph.', 'error');
+                        resetPhotoUI();
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.onerror = function () {
+                    showToast('Failed to read image file.', 'error');
+                    resetPhotoUI();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removePhotoBtn.addEventListener('click', function () {
+                resetPhotoUI();
+            });
+
+            // ---- Form Submit ----
+            async function handleFormSubmit(e) {
+                e.preventDefault();
+
+                if (!firebaseReady) {
+                    showToast('Firebase is not ready yet. Please wait.', 'error');
+                    return;
+                }
+
+                const name = fName.value.trim();
+                const designation = fDesignation.value.trim();
+                const docId = editDocId.value.trim();
+
+                if (!name) {
+                    showToast('Staff Name is required.', 'error');
+                    fName.focus();
+                    return;
+                }
+
+                if (!designation) {
+                    showToast('Designation is required.', 'error');
+                    fDesignation.focus();
+                    return;
+                }
+
+                if (!docId && !currentPhotoData) {
+                    showToast('Please upload a photo for the staff member.', 'error');
+                    return;
+                }
+
+                const contact = fContact.value.trim();
+                if (contact && !/^\d{10}$/.test(contact)) {
+                    showToast('Contact number must contain exactly 10 digits.', 'error');
+                    fContact.focus();
+                    return;
+                }
+
+                const payload = {
+                    name: name,
+                    designation: designation,
+                    qualification: fQualification.value.trim() || 'N/A',
+                    subjectPG: fSubjectPG.value.trim() || 'N/A',
+                    doFirstAppt: fDoFirstAppt.value || '',
+                    dojPresentSchool: fDojPresent.value || '',
+                    actualPosting: fActualPosting.value.trim() || 'N.A.',
+                    contact: contact || 'N/A',
+                    photo: currentPhotoData || '',
+                    remarks: fRemarks.value.trim() || ''
+                };
+
+                submitBtn.disabled = true;
+
+                try {
+                    if (docId) {
+                        await updateStaffRecord(docId, payload);
+                        showToast('✅ Staff record updated in Firebase.', 'success');
+                    } else {
+                        await addStaffRecord(payload);
+                        showToast('✅ Staff record added to Firebase.', 'success');
+                    }
+
+                    closeModal();
+                    await renderStaff();
+                } catch (error) {
+                    console.error('Firestore save/update error:', error);
+                    showToast('❌ Firebase error: ' + (error.message || 'Missing or insufficient permissions.'), 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = docId ? '🔄 Update Staff' : '💾 Save Staff';
+                }
+            }
+
+            // ---- PDF Download ----
+            function downloadPDF() {
+                const element = document.getElementById('statementContainer');
+                document.body.classList.add('pdf-generation');
+
+                const opt = {
+                    margin: [0.3, 0.3, 0.3, 0.3],
+                    filename: 'Staff_Statement.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, letterRendering: true, useCORS: true, logging: false },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+                };
+
+                html2pdf().set(opt).from(element).save().then(function () {
+                    document.body.classList.remove('pdf-generation');
+                }).catch(function (err) {
+                    console.error('PDF generation error:', err);
+                    showToast('Failed to generate PDF.', 'error');
+                    document.body.classList.remove('pdf-generation');
+                });
+            }
+
+            function setDates() {
+                const today = getTodayStr();
+                if (dateEl) dateEl.innerText = today;
+                if (headerDate) headerDate.innerText = today;
+            }
+
+            // ---- Firebase Authentication ----
+            async function ensureFirebaseAuth() {
+                return new Promise(function (resolve, reject) {
+                    if (auth.currentUser) {
+                        firebaseReady = true;
+                        resolve(auth.currentUser);
+                        return;
+                    }
+
+                    const unsubscribe = onAuthStateChanged(auth, async function (user) {
+                        if (user) {
+                            unsubscribe();
+                            firebaseReady = true;
+                            resolve(user);
+                            return;
+                        }
+
+                        try {
+                            await signInAnonymously(auth);
+                        } catch (error) {
+                            unsubscribe();
+                            reject(error);
+                        }
+                    });
+                });
+            }
+
+            // ---- Init ----
+            async function init() {
+                setDates();
+                setLoading('Connecting to Firebase…');
+
+                addBtn.addEventListener('click', function () {
+                    if (!firebaseReady) {
+                        showToast('Firebase is still connecting. Please wait.', 'error');
+                        return;
+                    }
+                    openModal('add');
+                });
+
+                refreshBtn.addEventListener('click', async function () {
+                    await renderStaff();
+                    showToast('Firebase records refreshed.', 'success');
+                });
+
+                pdfBtn.addEventListener('click', downloadPDF);
+                cancelBtn.addEventListener('click', closeModal);
+                modal.addEventListener('click', function (e) {
+                    if (e.target === modal) closeModal();
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+                });
+                form.addEventListener('submit', handleFormSubmit);
+
+                try {
+                    await ensureFirebaseAuth();
+                    await renderStaff();
+                    showToast('☁️ Connected to Firebase staffRecords.', 'success');
+                } catch (error) {
+                    console.error('Firebase initialization/authentication error:', error);
+                    firebaseReady = false;
+                    setLoading('❌ Firebase connection failed: ' + (error.message || 'Enable Anonymous Authentication and check Firestore Rules.'));
+                    showToast('Firebase connection failed. Enable Anonymous Authentication and check Firestore Rules.', 'error');
+                }
+            }
+
+            init();
+        })();
+    </script>
+
+</body>
+</html>
+                         }
+                
