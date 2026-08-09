@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Staff Entry | GPS Pethgam Wagoora</title>
 
   <style>
@@ -62,8 +63,6 @@
       grid-column: span 2;
     }
 
-    /* Login Section */
-
     .login-section {
       background: #eef7ee;
       padding: 15px;
@@ -88,8 +87,6 @@
       line-height: 1.4;
     }
 
-    /* Photo */
-
     .photo-section {
       background: #f9f9f9;
       border: 2px dashed #1a5d1a;
@@ -109,8 +106,6 @@
       background: #eee;
       border-radius: 4px;
     }
-
-    /* Inputs */
 
     .input-group {
       display: flex;
@@ -142,8 +137,6 @@
       box-shadow: 0 0 5px rgba(26,93,26,0.2);
     }
 
-    /* Button */
-
     .submit-btn {
       background: #1a5d1a;
       color: white;
@@ -167,8 +160,6 @@
       cursor: not-allowed;
     }
 
-    /* Status */
-
     #statusMessage {
       display: none;
       margin-top: 15px;
@@ -177,6 +168,7 @@
       font-size: 14px;
       font-weight: 600;
       line-height: 1.4;
+      white-space: pre-line;
     }
 
     .success {
@@ -257,7 +249,9 @@
 
     <div class="form-grid">
 
-      <!-- LOGIN CREDENTIALS -->
+      <!-- =====================================================
+           LOGIN CREDENTIALS
+           ===================================================== -->
 
       <div class="full-width login-section">
 
@@ -305,13 +299,15 @@
 
         <div class="security-note">
           🔐 The password is NOT stored in the Staff Firestore record.
-          Firebase Authentication should be used for staff login credentials.
+          It is collected here for future Firebase Authentication integration.
         </div>
 
       </div>
 
 
-      <!-- STAFF PHOTO -->
+      <!-- =====================================================
+           STAFF PHOTO
+           ===================================================== -->
 
       <div class="photo-section full-width">
 
@@ -343,7 +339,9 @@
       </div>
 
 
-      <!-- NAME -->
+      <!-- =====================================================
+           NAME
+           ===================================================== -->
 
       <div class="input-group full-width">
 
@@ -361,7 +359,9 @@
       </div>
 
 
-      <!-- DESIGNATION -->
+      <!-- =====================================================
+           DESIGNATION
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -404,7 +404,9 @@
       </div>
 
 
-      <!-- QUALIFICATION -->
+      <!-- =====================================================
+           QUALIFICATION
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -421,7 +423,9 @@
       </div>
 
 
-      <!-- SUBJECT -->
+      <!-- =====================================================
+           SUBJECT
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -438,7 +442,9 @@
       </div>
 
 
-      <!-- CONTACT -->
+      <!-- =====================================================
+           CONTACT
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -457,7 +463,9 @@
       </div>
 
 
-      <!-- FIRST APPOINTMENT -->
+      <!-- =====================================================
+           FIRST APPOINTMENT
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -473,7 +481,9 @@
       </div>
 
 
-      <!-- DOJ -->
+      <!-- =====================================================
+           DATE OF JOINING
+           ===================================================== -->
 
       <div class="input-group">
 
@@ -489,7 +499,9 @@
       </div>
 
 
-      <!-- POSTING -->
+      <!-- =====================================================
+           ACTUAL POSTING
+           ===================================================== -->
 
       <div class="input-group full-width">
 
@@ -506,7 +518,9 @@
       </div>
 
 
-      <!-- REMARKS -->
+      <!-- =====================================================
+           REMARKS
+           ===================================================== -->
 
       <div class="input-group full-width">
 
@@ -525,7 +539,9 @@
     </div>
 
 
-    <!-- SAVE BUTTON -->
+    <!-- =====================================================
+         SAVE BUTTON
+         ===================================================== -->
 
     <button
       type="submit"
@@ -549,19 +565,22 @@
 <script type="module">
 
   /*
+   * =========================================================
+   * FIREBASE IMPORTS
+   * =========================================================
+   *
    * IMPORTANT:
    *
-   * staff-entry.html is inside:
+   * staff-entry.html:
+   * admin/staff-entry.html
    *
-   * admin/
+   * Firebase initialization:
+   * assets/js/init-firebase.js
    *
-   * Firebase initialization is inside:
-   *
-   * assets/js/
-   *
-   * Therefore the correct path is:
-   *
+   * Therefore:
    * ../assets/js/init-firebase.js
+   *
+   * Both init-firebase.js and this page use Firebase 12.16.0.
    */
 
   import { db } from "../assets/js/init-firebase.js";
@@ -570,12 +589,12 @@
     collection,
     addDoc,
     serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
-  /* ---------------------------------------------------------
+  /* =========================================================
      VARIABLES
-     --------------------------------------------------------- */
+     ========================================================= */
 
   let compressedPhotoBase64 = "";
 
@@ -595,9 +614,9 @@
     document.getElementById("staffPhotoPreview");
 
 
-  /* ---------------------------------------------------------
+  /* =========================================================
      STATUS MESSAGE
-     --------------------------------------------------------- */
+     ========================================================= */
 
   function showStatus(message, type) {
 
@@ -610,9 +629,9 @@
   }
 
 
-  /* ---------------------------------------------------------
+  /* =========================================================
      PHOTO PROCESSING
-     --------------------------------------------------------- */
+     ========================================================= */
 
   photoInput.addEventListener("change", function(event) {
 
@@ -761,22 +780,22 @@
   });
 
 
-  /* ---------------------------------------------------------
+  /* =========================================================
      SAVE STAFF RECORD
-     --------------------------------------------------------- */
+     ========================================================= */
 
   form.addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
 
-    /* Clear previous status */
-
     statusMessage.style.display =
       "none";
 
 
-    /* Get values */
+    /* =======================================================
+       GET FORM VALUES
+       ======================================================= */
 
     const email =
       document.getElementById("email")
@@ -831,9 +850,9 @@
         .trim();
 
 
-    /* -------------------------------------------------------
+    /* =======================================================
        VALIDATION
-       ------------------------------------------------------- */
+       ======================================================= */
 
     if (!name) {
 
@@ -903,9 +922,9 @@
     }
 
 
-    /* -------------------------------------------------------
-       DISABLE BUTTON
-       ------------------------------------------------------- */
+    /* =======================================================
+       DISABLE SAVE BUTTON
+       ======================================================= */
 
     saveButton.disabled = true;
 
@@ -919,19 +938,22 @@
     );
 
 
-    /* -------------------------------------------------------
-       FIRESTORE DATA
-       ------------------------------------------------------- */
+    /* =======================================================
+       STAFF DATA
+       ======================================================= */
+
+    /*
+     * IMPORTANT:
+     *
+     * The password is deliberately NOT included.
+     *
+     * Passwords should be handled by Firebase Authentication,
+     * not stored as plain text in Firestore.
+     */
 
     const staffData = {
 
       email: email,
-
-      /*
-       * IMPORTANT:
-       * Password is intentionally NOT stored here.
-       * Firebase Authentication should manage passwords.
-       */
 
       name: name,
 
@@ -976,9 +998,9 @@
     };
 
 
-    /* -------------------------------------------------------
+    /* =======================================================
        SAVE TO FIRESTORE
-       ------------------------------------------------------- */
+       ======================================================= */
 
     try {
 
@@ -988,21 +1010,39 @@
       );
 
 
+      /*
+       * IMPORTANT:
+       *
+       * Correct modular Firebase syntax:
+       *
+       * collection(db, "staffRecords")
+       *
+       * db comes from init-firebase.js.
+       */
+
+      const staffCollection =
+        collection(
+          db,
+          "staffRecords"
+        );
+
+
       const docRef =
         await addDoc(
-          collection(db, "staffRecords"),
+          staffCollection,
           staffData
         );
 
 
       console.log(
-        "Staff record saved:",
+        "Staff record saved successfully:",
         docRef.id
       );
 
 
       showStatus(
-        "✅ Staff record saved successfully to the cloud.",
+        "✅ Staff record saved successfully to the cloud.\n\nDocument ID: " +
+        docRef.id,
         "success"
       );
 
@@ -1012,99 +1052,69 @@
       );
 
 
-      /* -----------------------------------------------------
+      /* =====================================================
          RESET FORM
-         ----------------------------------------------------- */
+         ===================================================== */
 
       form.reset();
 
+      compressedPhotoBase64 = "";
 
-      compressedPhotoBase64 =
-        "";
+      photoPreview.src = "";
 
+   photoPreview.style.display = "none";
 
-      photoPreview.src =
-        "";
+} catch (error) {
 
-      photoPreview.style.display =
-        "none";
+console.error( "Firebase Error:", error );
 
+let errorMessage "Unable to save the staff
 
-    } catch (error) {
+record.";
 
-      console.error(
-        "Firebase Error:",
-        error
-      );
+if (error && error.code) {
 
+} errorMessage += "\n\nFirebase error code: error.code;
 
-      let message =
-        "Unable to save the staff record.";
+if (error && error.message) {
 
+} errorMessage += "\n\n" + error.message;
 
-      if (
-        error &&
-        error.code
-      ) {
+showStatus ( ); "X" + errorMessage, "error"
 
-        message +=
-          "\n\nFirebase error: " +
-          error.code;
-      }
+alert( "Error saving staff record.\n\n" + (error.message || "Unknown
 
+Firebase error.") );
 
-      if (
-        error &&
-        error.message
-      ) {
+} finally {
 
-        console.error(
-          "Firebase message:",
-          error.message
-        );
-      }
+}
 
+});
 
-      showStatus(
-        "❌ " + message,
-        "error"
-      );
+saveButton disabled = false;
 
+saveButton.textContent = "Save Staff Record to Cloud";
 
-      alert(
-        "Error saving staff record.\n\n" +
-        (error.message || "Unknown Firebase error.")
-      );
+/*
 
+FIREBASE MODULE TEST
 
-    } finally {
+console.log(
 
-      saveButton.disabled =
-        false;
+"Firebase Staff Entry module loaded successfully." );
 
-      saveButton.textContent =
-        "Save Staff Record to Cloud";
-
-    }
-
-  });
-
-
-  /* ---------------------------------------------------------
-     FIREBASE CONNECTION TEST
-     --------------------------------------------------------- */
-
-  console.log(
-    "Staff Entry Firebase module loaded successfully."
-  );
-
-  showStatus(
-    "Firebase connection module loaded. Ready to save staff records.",
-    "info"
-  );
+showStatus ( "Firebase connection module loaded. Ready to save staff records.", "info" );
 
 </script>
 
 </body>
+
 </html>
+
+
+
+              );
+
+
       
