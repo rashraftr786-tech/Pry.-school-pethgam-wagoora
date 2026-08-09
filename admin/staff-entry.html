@@ -1,642 +1,687 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Staff Entry | GPS Pethgam Wagoora</title>
+<title>Staff Entry | GPS Pethgam Wagoora</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f0f2f5;
-      margin: 0;
-      padding: 20px;
-    }
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  padding: 20px;
+}
 
-    .container {
-      max-width: 850px;
-      background: white;
-      margin: auto;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
+.container {
+  max-width: 850px;
+  background: #fff;
+  margin: auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.10);
+}
 
-    header {
-      border-bottom: 2px solid #1a5d1a;
-      margin-bottom: 25px;
-      padding-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
+header {
+  border-bottom: 2px solid #1a5d1a;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
 
-    header h2 {
-      color: #1a5d1a;
-      margin: 0;
-    }
+header h2 {
+  color: #1a5d1a;
+  margin: 0;
+}
 
-    .btn-view {
-      text-decoration: none;
-      background: #1a5d1a;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
-      white-space: nowrap;
-    }
+.btn-view {
+  text-decoration: none;
+  background: #1a5d1a;
+  color: #fff;
+  padding: 9px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+}
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
 
-    .full-width {
-      grid-column: span 2;
-    }
+.full-width {
+  grid-column: span 2;
+}
 
-    .login-section {
-      background: #eef7ee;
-      padding: 15px;
-      border-radius: 6px;
-      border: 1px solid #c8e6c9;
-      margin-top: 10px;
-    }
+.login-section {
+  background: #eef7ee;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #c8e6c9;
+}
 
-    .section-title {
-      font-size: 12px;
-      font-weight: 900;
-      color: #1a5d1a;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      display: block;
-    }
+.section-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #1a5d1a;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
 
-    .security-note {
-      font-size: 11px;
-      color: #555;
-      margin-top: 8px;
-      line-height: 1.4;
-    }
+.security-note {
+  font-size: 11px;
+  color: #555;
+  margin-top: 8px;
+  line-height: 1.4;
+}
 
-    .photo-section {
-      background: #f9f9f9;
-      border: 2px dashed #1a5d1a;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      border-radius: 6px;
-    }
+.photo-section {
+  background: #f9f9f9;
+  border: 2px dashed #1a5d1a;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-radius: 6px;
+}
 
-    #staffPhotoPreview {
-      width: 100px;
-      height: 120px;
-      border: 2px solid #1a5d1a;
-      object-fit: cover;
-      display: none;
-      background: #eee;
-      border-radius: 4px;
-    }
+#staffPhotoPreview {
+  width: 100px;
+  height: 120px;
+  border: 2px solid #1a5d1a;
+  object-fit: cover;
+  display: none;
+  background: #eee;
+  border-radius: 4px;
+}
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-    label {
-      font-weight: bold;
-      color: #333;
-      font-size: 13px;
-    }
+label {
+  font-weight: bold;
+  color: #333;
+  font-size: 13px;
+}
 
-    input,
-    select,
-    textarea {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      width: 100%;
-    }
+input,
+select,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+}
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #1a5d1a;
-      outline: none;
-      box-shadow: 0 0 5px rgba(26,93,26,0.2);
-    }
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #1a5d1a;
+  outline: none;
+  box-shadow: 0 0 5px rgba(26,93,26,.2);
+}
 
-    .submit-btn {
-      background: #1a5d1a;
-      color: white;
-      border: none;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 20px;
-      width: 100%;
-      transition: 0.3s;
-    }
+.submit-btn {
+  background: #1a5d1a;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
 
-    .submit-btn:hover {
-      background: #144614;
-    }
+.submit-btn:hover {
+  background: #144614;
+}
 
-    .submit-btn:disabled {
-      background: #777;
-      cursor: not-allowed;
-    }
+.submit-btn:disabled {
+  background: #777;
+  cursor: not-allowed;
+}
 
-    #statusMessage {
-      display: none;
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.4;
-      white-space: pre-line;
-    }
+#statusMessage {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: pre-line;
+}
 
-    .success {
-      background: #e8f5e9;
-      color: #1b5e20;
-      border: 1px solid #81c784;
-    }
+.success {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #81c784;
+}
 
-    .error {
-      background: #ffebee;
-      color: #b71c1c;
-      border: 1px solid #ef9a9a;
-    }
+.error {
+  background: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #ef9a9a;
+}
 
-    .info {
-      background: #e3f2fd;
-      color: #0d47a1;
-      border: 1px solid #90caf9;
-    }
+.info {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #90caf9;
+}
 
-    @media (max-width: 600px) {
+@media (max-width: 600px) {
 
-      body {
-        padding: 10px;
-      }
+  body {
+    padding: 10px;
+  }
 
-      .container {
-        padding: 18px;
-      }
+  .container {
+    padding: 18px;
+  }
 
-      header {
-        flex-direction: column;
-        align-items: stretch;
-      }
+  header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-      header h2 {
-        font-size: 20px;
-      }
+  header h2 {
+    font-size: 20px;
+  }
 
-      .btn-view {
-        text-align: center;
-      }
+  .btn-view {
+    text-align: center;
+  }
 
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 
-      .full-width {
-        grid-column: span 1;
-      }
+  .full-width {
+    grid-column: span 1;
+  }
 
-      .photo-section {
-        flex-direction: column;
-        align-items: stretch;
-      }
+  .photo-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-      #staffPhotoPreview {
-        margin: auto;
-      }
-    }
-  </style>
+  #staffPhotoPreview {
+    margin: auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <header>
-    <h2>Staff Registration</h2>
+<header>
+  <h2>Staff Registration</h2>
 
-    <a href="staff-statement.html" class="btn-view">
-      📄 View Staff Statement
-    </a>
-  </header>
+  <a href="staff-statement.html" class="btn-view">
+    📄 View Staff Statement
+  </a>
+</header>
 
+<form id="staffForm">
 
-  <form id="staffForm">
+<div class="form-grid">
 
-    <div class="form-grid">
+<!-- LOGIN -->
 
-      <!-- =====================================================
-           LOGIN CREDENTIALS
-           ===================================================== -->
+<div class="full-width login-section">
 
-      <div class="full-width login-section">
+<span class="section-title">
+Login Credentials (ERP Access)
+</span>
 
-        <span class="section-title">
-          Login Credentials (ERP Access)
-        </span>
+<div class="form-grid">
 
-        <div class="form-grid">
+<div class="input-group">
 
-          <div class="input-group">
+<label for="email">
+Official Email ID
+</label>
 
-            <label for="email">
-              Official Email ID
-            </label>
+<input
+  type="email"
+  id="email"
+  placeholder="staff@example.com"
+  autocomplete="email"
+  required
+>
 
-            <input
-              type="email"
-              id="email"
-              placeholder="staff@example.com"
-              autocomplete="email"
-              required
-            >
+</div>
 
-          </div>
+<div class="input-group">
 
+<label for="password">
+Login Password
+</label>
 
-          <div class="input-group">
+<input
+  type="password"
+  id="password"
+  placeholder="Create Password"
+  autocomplete="new-password"
+  minlength="6"
+  required
+>
 
-            <label for="password">
-              Login Password
-            </label>
+</div>
 
-            <input
-              type="password"
-              id="password"
-              placeholder="Create Password"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            >
+</div>
 
-          </div>
-
-        </div>
-
-        <div class="security-note">
-          🔐 The password is NOT stored in the Staff Firestore record.
-          It is collected here for future Firebase Authentication integration.
-        </div>
-
-      </div>
-
-
-      <!-- =====================================================
-           STAFF PHOTO
-           ===================================================== -->
-
-      <div class="photo-section full-width">
-
-        <div style="flex:1;">
-
-          <label for="staffPhoto">
-            Staff Photograph
-          </label>
-
-          <br>
-
-          <input
-            type="file"
-            id="staffPhoto"
-            accept="image/*"
-          >
-
-          <p style="font-size:11px;color:#666;margin-top:5px;">
-            Photo is automatically compressed before saving.
-          </p>
-
-        </div>
-
-        <img
-          id="staffPhotoPreview"
-          alt="Staff Photograph Preview"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           NAME
-           ===================================================== -->
-
-      <div class="input-group full-width">
-
-        <label for="name">
-          Full Name (as per Service Book)
-        </label>
-
-        <input
-          type="text"
-          id="name"
-          placeholder="Enter Full Name"
-          required
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           DESIGNATION
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="designation">
-          Designation
-        </label>
-
-        <select id="designation" required>
-
-          <option value="">
-            --Select--
-          </option>
-
-          <option value="Headmaster">
-            Headmaster
-          </option>
-
-          <option value="Teacher">
-            Teacher
-          </option>
-
-          <option value="Grade-II Teacher">
-            Grade-II Teacher
-          </option>
-
-          <option value="Grade-III Teacher">
-            Grade-III Teacher
-          </option>
-
-          <option value="RReT">
-            RReT
-          </option>
-
-          <option value="MTW">
-            MTW
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <!-- =====================================================
-           QUALIFICATION
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="qualification">
-          Educational Qualification
-        </label>
-
-        <input
-          type="text"
-          id="qualification"
-          placeholder="e.g., M.A, B.Ed"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           SUBJECT
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="subjectPG">
-          Subject in P.G
-        </label>
-
-        <input
-          type="text"
-          id="subjectPG"
-          placeholder="e.g., Urdu, History, N/A"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           CONTACT
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="contact">
-          Contact Number
-        </label>
-
-        <input
-          type="tel"
-          id="contact"
-          placeholder="10-digit Number"
-          inputmode="numeric"
-          maxlength="10"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           FIRST APPOINTMENT
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="doFirstAppt">
-          Date of 1st Appointment
-        </label>
-
-        <input
-          type="date"
-          id="doFirstAppt"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           DATE OF JOINING
-           ===================================================== -->
-
-      <div class="input-group">
-
-        <label for="dojPresentSchool">
-          D.O.J (Present School)
-        </label>
-
-        <input
-          type="date"
-          id="dojPresentSchool"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           ACTUAL POSTING
-           ===================================================== -->
-
-      <div class="input-group full-width">
-
-        <label for="actualPosting">
-          Actual Place of Posting (If deployed/detached)
-        </label>
-
-        <input
-          type="text"
-          id="actualPosting"
-          placeholder="Enter School Name or 'N/A'"
-        >
-
-      </div>
-
-
-      <!-- =====================================================
-           REMARKS
-           ===================================================== -->
-
-      <div class="input-group full-width">
-
-        <label for="remarks">
-          Remarks
-        </label>
-
-        <textarea
-          id="remarks"
-          rows="2"
-          placeholder="Any additional details..."
-        ></textarea>
-
-      </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         SAVE BUTTON
-         ===================================================== -->
-
-    <button
-      type="submit"
-      id="saveStaffBtn"
-      class="submit-btn"
-    >
-      Save Staff Record to Cloud
-    </button>
-
-    <div id="statusMessage"></div>
-
-  </form>
+<div class="security-note">
+🔐 Password is NOT stored in Firestore. Firebase Authentication
+should be used for actual staff login accounts.
+</div>
 
 </div>
 
 
-<!-- =========================================================
-     FIREBASE / STAFF SCRIPT
-     ========================================================= -->
+<!-- PHOTO -->
+
+<div class="photo-section full-width">
+
+<div style="flex:1;">
+
+<label for="staffPhoto">
+Staff Photograph
+</label>
+
+<br>
+
+<input
+  type="file"
+  id="staffPhoto"
+  accept="image/*"
+>
+
+<p style="font-size:11px;color:#666;">
+Photo is automatically compressed before saving.
+</p>
+
+</div>
+
+<img
+  id="staffPhotoPreview"
+  alt="Staff Photograph Preview"
+>
+
+</div>
+
+
+<!-- NAME -->
+
+<div class="input-group full-width">
+
+<label for="name">
+Full Name (as per Service Book)
+</label>
+
+<input
+  type="text"
+  id="name"
+  placeholder="Enter Full Name"
+  required
+>
+
+</div>
+
+
+<!-- DESIGNATION -->
+
+<div class="input-group">
+
+<label for="designation">
+Designation
+</label>
+
+<select id="designation" required>
+
+<option value="">
+--Select--
+</option>
+
+<option value="Headmaster">
+Headmaster
+</option>
+
+<option value="Teacher">
+Teacher
+</option>
+
+<option value="Grade-II Teacher">
+Grade-II Teacher
+</option>
+
+<option value="Grade-III Teacher">
+Grade-III Teacher
+</option>
+
+<option value="RReT">
+RReT
+</option>
+
+<option value="MTW">
+MTW
+</option>
+
+</select>
+
+</div>
+
+
+<!-- QUALIFICATION -->
+
+<div class="input-group">
+
+<label for="qualification">
+Educational Qualification
+</label>
+
+<input
+  type="text"
+  id="qualification"
+  placeholder="e.g., M.A, B.Ed"
+>
+
+</div>
+
+
+<!-- SUBJECT -->
+
+<div class="input-group">
+
+<label for="subjectPG">
+Subject in P.G
+</label>
+
+<input
+  type="text"
+  id="subjectPG"
+  placeholder="e.g., Urdu, History, N/A"
+>
+
+</div>
+
+
+<!-- CONTACT -->
+
+<div class="input-group">
+
+<label for="contact">
+Contact Number
+</label>
+
+<input
+  type="tel"
+  id="contact"
+  placeholder="10-digit Number"
+  inputmode="numeric"
+  maxlength="10"
+>
+
+</div>
+
+
+<!-- FIRST APPOINTMENT -->
+
+<div class="input-group">
+
+<label for="doFirstAppt">
+Date of 1st Appointment
+</label>
+
+<input
+  type="date"
+  id="doFirstAppt"
+>
+
+</div>
+
+
+<!-- DOJ -->
+
+<div class="input-group">
+
+<label for="dojPresentSchool">
+D.O.J (Present School)
+</label>
+
+<input
+  type="date"
+  id="dojPresentSchool"
+>
+
+</div>
+
+
+<!-- POSTING -->
+
+<div class="input-group full-width">
+
+<label for="actualPosting">
+Actual Place of Posting (If deployed/detached)
+</label>
+
+<input
+  type="text"
+  id="actualPosting"
+  placeholder="Enter School Name or 'N/A'"
+>
+
+</div>
+
+
+<!-- REMARKS -->
+
+<div class="input-group full-width">
+
+<label for="remarks">
+Remarks
+</label>
+
+<textarea
+  id="remarks"
+  rows="2"
+  placeholder="Any additional details..."
+></textarea>
+
+</div>
+
+</div>
+
+
+<button
+  type="submit"
+  id="saveStaffBtn"
+  class="submit-btn"
+>
+Save Staff Record to Cloud
+</button>
+
+<div id="statusMessage"></div>
+
+</form>
+
+</div>
+
+
+<!-- =====================================================
+     FIREBASE
+     ===================================================== -->
 
 <script type="module">
 
-  /*
-   * =========================================================
-   * FIREBASE IMPORTS
-   * =========================================================
-   *
-   * IMPORTANT:
-   *
-   * staff-entry.html:
-   * admin/staff-entry.html
-   *
-   * Firebase initialization:
-   * assets/js/init-firebase.js
-   *
-   * Therefore:
-   * ../assets/js/init-firebase.js
-   *
-   * Both init-firebase.js and this page use Firebase 12.16.0.
-   */
+/*
+===========================================================
+IMPORTANT
+===========================================================
 
-  import { db } from "../assets/js/init-firebase.js";
+Firebase App and Firestore are initialized HERE.
 
-  import {
-    collection,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+We deliberately do NOT import db from init-firebase.js.
+
+This prevents the previous:
+
+"Expected first argument to collection()..."
+
+error caused by incompatible Firebase Firestore instances.
+===========================================================
+*/
 
 
-  /* =========================================================
-     VARIABLES
-     ========================================================= */
-
-  let compressedPhotoBase64 = "";
-
-  const form =
-    document.getElementById("staffForm");
-
-  const saveButton =
-    document.getElementById("saveStaffBtn");
-
-  const statusMessage =
-    document.getElementById("statusMessage");
-
-  const photoInput =
-    document.getElementById("staffPhoto");
-
-  const photoPreview =
-    document.getElementById("staffPhotoPreview");
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 
-  /* =========================================================
-     STATUS MESSAGE
-     ========================================================= */
-
-  function showStatus(message, type) {
-
-    statusMessage.textContent = message;
-
-    statusMessage.className = type;
-
-    statusMessage.style.display = "block";
-
-  }
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
-  /* =========================================================
-     PHOTO PROCESSING
-     ========================================================= */
+/* =====================================================
+   FIREBASE CONFIGURATION
+   ===================================================== */
 
-  photoInput.addEventListener("change", function(event) {
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyDgVFdfKpCrLkoRsMI2gS7ajlJUzVdYLZU",
+
+  authDomain:
+    "pry-school-pethgam-wagoora.firebaseapp.com",
+
+  projectId:
+    "pry-school-pethgam-wagoora",
+
+  storageBucket:
+    "pry-school-pethgam-wagoora.firebasestorage.app",
+
+  messagingSenderId:
+    "255417366612",
+
+  appId:
+    "1:255417366612:web:81cec46aa75cb7d4ba95c1",
+
+  measurementId:
+    "G-JE9WY9T6FJ"
+
+};
+
+
+/* =====================================================
+   INITIALIZE FIREBASE
+   ===================================================== */
+
+const app =
+  initializeApp(firebaseConfig);
+
+
+/* =====================================================
+   INITIALIZE FIRESTORE
+   ===================================================== */
+
+const db =
+  getFirestore(app);
+
+
+/* =====================================================
+   VARIABLES
+   ===================================================== */
+
+let compressedPhotoBase64 = "";
+
+
+const form =
+  document.getElementById("staffForm");
+
+
+const saveButton =
+  document.getElementById("saveStaffBtn");
+
+
+const statusMessage =
+  document.getElementById("statusMessage");
+
+
+const photoInput =
+  document.getElementById("staffPhoto");
+
+
+const photoPreview =
+  document.getElementById("staffPhotoPreview");
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+function showStatus(message, type) {
+
+  statusMessage.textContent = message;
+
+  statusMessage.className = type;
+
+  statusMessage.style.display = "block";
+
+}
+
+
+/* =====================================================
+   FIREBASE READY MESSAGE
+   ===================================================== */
+
+console.log(
+  "Firebase initialized successfully."
+);
+
+console.log(
+  "Firestore initialized successfully."
+);
+
+showStatus(
+  "✅ Firebase connected. Staff entry is ready.",
+  "info"
+);
+
+
+/* =====================================================
+   PHOTO PROCESSING
+   ===================================================== */
+
+photoInput.addEventListener(
+  "change",
+  function(event) {
 
     const file =
       event.target.files[0];
+
 
     if (!file) {
 
@@ -667,182 +712,204 @@
       new FileReader();
 
 
-    reader.onload = function(e) {
+    reader.onload =
+      function(e) {
 
-      const img =
-        new Image();
-
-
-      img.onload = function() {
-
-        const MAX_WIDTH = 400;
-
-        const MAX_HEIGHT = 500;
+        const img =
+          new Image();
 
 
-        let width =
-          img.width;
+        img.onload =
+          function() {
 
-        let height =
-          img.height;
+            const MAX_WIDTH = 400;
 
-
-        const scale =
-          Math.min(
-            MAX_WIDTH / width,
-            MAX_HEIGHT / height,
-            1
-          );
+            const MAX_HEIGHT = 500;
 
 
-        width =
-          Math.round(width * scale);
+            let width =
+              img.width;
 
-        height =
-          Math.round(height * scale);
-
-
-        const canvas =
-          document.createElement("canvas");
+            let height =
+              img.height;
 
 
-        canvas.width =
-          width;
-
-        canvas.height =
-          height;
-
-
-        const ctx =
-          canvas.getContext("2d");
+            const scale =
+              Math.min(
+                MAX_WIDTH / width,
+                MAX_HEIGHT / height,
+                1
+              );
 
 
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          width,
-          height
-        );
+            width =
+              Math.round(
+                width * scale
+              );
 
 
-        compressedPhotoBase64 =
-          canvas.toDataURL(
-            "image/jpeg",
-            0.65
-          );
+            height =
+              Math.round(
+                height * scale
+              );
 
 
-        photoPreview.src =
-          compressedPhotoBase64;
+            const canvas =
+              document.createElement(
+                "canvas"
+              );
 
 
-        photoPreview.style.display =
-          "block";
+            canvas.width =
+              width;
+
+            canvas.height =
+              height;
 
 
-        showStatus(
-          "Photograph processed successfully.",
-          "info"
-        );
+            const ctx =
+              canvas.getContext(
+                "2d"
+              );
+
+
+            ctx.drawImage(
+              img,
+              0,
+              0,
+              width,
+              height
+            );
+
+
+            compressedPhotoBase64 =
+              canvas.toDataURL(
+                "image/jpeg",
+                0.65
+              );
+
+
+            photoPreview.src =
+              compressedPhotoBase64;
+
+
+            photoPreview.style.display =
+              "block";
+
+
+            showStatus(
+              "Photograph processed successfully.",
+              "info"
+            );
+
+          };
+
+
+        img.onerror =
+          function() {
+
+            showStatus(
+              "Unable to process the photograph.",
+              "error"
+            );
+
+          };
+
+
+        img.src =
+          e.target.result;
 
       };
 
 
-      img.onerror = function() {
+    reader.onerror =
+      function() {
 
         showStatus(
-          "Unable to process the photograph.",
+          "Unable to read the photograph.",
           "error"
         );
 
       };
 
 
-      img.src =
-        e.target.result;
-
-    };
-
-
-    reader.onerror = function() {
-
-      showStatus(
-        "Unable to read the selected photograph.",
-        "error"
-      );
-
-    };
-
-
     reader.readAsDataURL(file);
 
-  });
+  }
+);
 
 
-  /* =========================================================
-     SAVE STAFF RECORD
-     ========================================================= */
+/* =====================================================
+   SAVE STAFF RECORD
+   ===================================================== */
 
-  form.addEventListener("submit", async function(event) {
+form.addEventListener(
+  "submit",
+  async function(event) {
 
     event.preventDefault();
 
 
-    statusMessage.style.display =
-      "none";
-
-
-    /* =======================================================
-       GET FORM VALUES
-       ======================================================= */
+    /* -----------------------------------------------
+       GET VALUES
+       ----------------------------------------------- */
 
     const email =
       document.getElementById("email")
         .value
         .trim();
 
+
     const password =
       document.getElementById("password")
         .value
         .trim();
+
 
     const name =
       document.getElementById("name")
         .value
         .trim();
 
+
     const designation =
       document.getElementById("designation")
         .value;
+
 
     const qualification =
       document.getElementById("qualification")
         .value
         .trim();
 
+
     const subjectPG =
       document.getElementById("subjectPG")
         .value
         .trim();
+
 
     const contact =
       document.getElementById("contact")
         .value
         .trim();
 
+
     const doFirstAppt =
       document.getElementById("doFirstAppt")
         .value;
+
 
     const dojPresentSchool =
       document.getElementById("dojPresentSchool")
         .value;
 
+
     const actualPosting =
       document.getElementById("actualPosting")
         .value
         .trim();
+
 
     const remarks =
       document.getElementById("remarks")
@@ -850,22 +917,9 @@
         .trim();
 
 
-    /* =======================================================
+    /* -----------------------------------------------
        VALIDATION
-       ======================================================= */
-
-    if (!name) {
-
-      showStatus(
-        "Please enter the staff member's full name.",
-        "error"
-      );
-
-      document.getElementById("name").focus();
-
-      return;
-    }
-
+       ----------------------------------------------- */
 
     if (!email) {
 
@@ -873,8 +927,6 @@
         "Please enter the official email ID.",
         "error"
       );
-
-      document.getElementById("email").focus();
 
       return;
     }
@@ -887,7 +939,16 @@
         "error"
       );
 
-      document.getElementById("password").focus();
+      return;
+    }
+
+
+    if (!name) {
+
+      showStatus(
+        "Please enter the staff member's full name.",
+        "error"
+      );
 
       return;
     }
@@ -899,8 +960,6 @@
         "Please select the staff designation.",
         "error"
       );
-
-      document.getElementById("designation").focus();
 
       return;
     }
@@ -916,15 +975,13 @@
         "error"
       );
 
-      document.getElementById("contact").focus();
-
       return;
     }
 
 
-    /* =======================================================
-       DISABLE SAVE BUTTON
-       ======================================================= */
+    /* -----------------------------------------------
+       DISABLE BUTTON
+       ----------------------------------------------- */
 
     saveButton.disabled = true;
 
@@ -933,23 +990,14 @@
 
 
     showStatus(
-      "Connecting to Firebase...",
+      "Saving staff record to Firestore...",
       "info"
     );
 
 
-    /* =======================================================
-       STAFF DATA
-       ======================================================= */
-
-    /*
-     * IMPORTANT:
-     *
-     * The password is deliberately NOT included.
-     *
-     * Passwords should be handled by Firebase Authentication,
-     * not stored as plain text in Firestore.
-     */
+    /* -----------------------------------------------
+       DATA
+       ----------------------------------------------- */
 
     const staffData = {
 
@@ -998,26 +1046,15 @@
     };
 
 
-    /* =======================================================
-       SAVE TO FIRESTORE
-       ======================================================= */
+    /* -----------------------------------------------
+       FIRESTORE SAVE
+       ----------------------------------------------- */
 
     try {
 
-      showStatus(
-        "Saving staff record to Firestore...",
-        "info"
-      );
-
-
       /*
-       * IMPORTANT:
-       *
-       * Correct modular Firebase syntax:
-       *
-       * collection(db, "staffRecords")
-       *
-       * db comes from init-firebase.js.
+       * db and collection() are now created
+       * from the SAME Firebase SDK version.
        */
 
       const staffCollection =
@@ -1035,13 +1072,13 @@
 
 
       console.log(
-        "Staff record saved successfully:",
+        "Staff record saved:",
         docRef.id
       );
 
 
       showStatus(
-        "✅ Staff record saved successfully to the cloud.\n\nDocument ID: " +
+        "✅ Staff record saved successfully!\n\nDocument ID: " +
         docRef.id,
         "success"
       );
@@ -1052,9 +1089,7 @@
       );
 
 
-      /* =====================================================
-         RESET FORM
-         ===================================================== */
+      /* Reset */
 
       form.reset();
 
@@ -1062,59 +1097,47 @@
 
       photoPreview.src = "";
 
-   photoPreview.style.display = "none";
+      photoPreview.style.display =
+        "none";
 
-} catch (error) {
 
-console.error( "Firebase Error:", error );
+    } catch (error) {
 
-let errorMessage "Unable to save the staff
+      console.error(
+        "Firestore Error:",
+        error
+      );
 
-record.";
 
-if (error && error.code) {
+      showStatus(
+        "❌ Error saving staff record.\n\n" +
+        (error.code || "") +
+        "\n\n" +
+        (error.message || "Unknown error."),
+        "error"
+      );
 
-} errorMessage += "\n\nFirebase error code: error.code;
 
-if (error && error.message) {
+      alert(
+        "Error saving staff record.\n\n" +
+        (error.message || "Unknown Firebase error.")
+      );
 
-} errorMessage += "\n\n" + error.message;
+    } finally {
 
-showStatus ( ); "X" + errorMessage, "error"
+      saveButton.disabled =
+        false;
 
-alert( "Error saving staff record.\n\n" + (error.message || "Unknown
+      saveButton.textContent =
+        "Save Staff Record to Cloud";
 
-Firebase error.") );
+    }
 
-} finally {
-
-}
-
-});
-
-saveButton disabled = false;
-
-saveButton.textContent = "Save Staff Record to Cloud";
-
-/*
-
-FIREBASE MODULE TEST
-
-console.log(
-
-"Firebase Staff Entry module loaded successfully." );
-
-showStatus ( "Firebase connection module loaded. Ready to save staff records.", "info" );
+  }
+);
 
 </script>
 
 </body>
-
-</html>
-
-
-
-              );
-
-
+</html>      
       
