@@ -1,820 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Teacher Dashboard | GPS Pethgam Wagoora</title>
+<meta charset="UTF-8">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
+<title>Teacher Dashboard | GPS Pethgam</title>
 
-    <link
-        rel="stylesheet"
-        href="../assets/css/style.css"
-    >
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 
-<body class="bg-emerald-50/30 pb-28">
 
-<!-- =====================================================
-     LOADING SCREEN
-===================================================== -->
+<body class="bg-emerald-50 min-h-screen">
 
-<div
-    id="loadingScreen"
-    class="fixed inset-0 bg-emerald-700 text-white z-50 flex flex-col items-center justify-center"
->
+<header class="bg-emerald-700 text-white p-6 shadow-lg">
 
-    <div class="text-5xl mb-5">
-        <i class="fa-solid fa-chalkboard-user"></i>
-    </div>
+    <div class="max-w-6xl mx-auto
+                flex justify-between items-center">
 
-    <h2 class="text-xl font-black">
-        Loading Teacher Portal...
-    </h2>
+        <div>
 
-    <p
-        id="loadingMessage"
-        class="text-sm opacity-80 mt-2"
-    >
-        Checking your account...
-    </p>
+            <p class="text-xs uppercase opacity-80">
+                Government Primary School
+            </p>
 
-</div>
+            <h1 class="text-2xl font-black">
+                Teacher Dashboard
+            </h1>
 
+            <p id="teacherName"
+               class="text-emerald-100 mt-1">
+                Teacher
+            </p>
 
-<!-- =====================================================
-     ACCESS DENIED
-===================================================== -->
-
-<div
-    id="accessDenied"
-    class="hidden fixed inset-0 bg-slate-100 z-40 flex items-center justify-center p-6"
->
-
-    <div class="bg-white rounded-[2rem] shadow-xl p-8 max-w-md w-full text-center">
-
-        <div class="text-red-500 text-5xl mb-4">
-            <i class="fa-solid fa-circle-exclamation"></i>
         </div>
 
-        <h2 class="text-xl font-black text-slate-800">
-            Teacher Access Required
-        </h2>
 
-        <p
-            id="accessDeniedMessage"
-            class="text-sm text-slate-500 mt-3"
-        >
-            You are not authorized to access the Teacher Portal.
-        </p>
+        <button id="logoutBtn"
+                class="bg-white/20 px-4 py-3 rounded-xl">
 
-        <button
-            id="deniedLoginBtn"
-            class="mt-6 bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold"
-        >
-            Go to Login
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Sign Out
+
         </button>
 
     </div>
 
-</div>
+</header>
 
 
-<!-- =====================================================
-     MAIN TEACHER DASHBOARD
-===================================================== -->
-
-<div id="teacherPortal" class="hidden">
+<main class="max-w-6xl mx-auto p-6">
 
 
-    <!-- =================================================
-         HEADER
-    ================================================== -->
+    <!-- TEACHER INFORMATION -->
 
-    <header
-        class="bg-emerald-600 text-white p-8 md:p-10 rounded-b-[4rem] shadow-xl relative overflow-hidden"
-    >
+    <section class="bg-white rounded-3xl p-6 shadow mb-6">
 
-        <div
-            class="relative z-10 flex justify-between items-center gap-4"
-        >
+        <h2 class="text-xl font-black text-slate-800">
 
-            <div>
+            Welcome, Teacher 👋
 
-                <p
-                    class="text-[10px] font-black uppercase opacity-70 tracking-widest"
-                >
-                    Wagoora Zone Staff
+        </h2>
+
+        <p class="text-slate-500 mt-2">
+
+            You are logged in to the
+            <strong>Teacher Portal</strong>.
+
+        </p>
+
+
+        <div class="mt-5 grid md:grid-cols-2 gap-4">
+
+            <div class="bg-emerald-50 p-4 rounded-2xl">
+
+                <p class="text-xs text-slate-500">
+                    Teacher Name
                 </p>
 
-                <h1 class="text-2xl md:text-3xl font-black tracking-tight">
-                    Teacher Dashboard
-                </h1>
+                <p id="displayName"
+                   class="font-bold text-emerald-700">
 
-                <p
-                    id="teacherName"
-                    class="text-sm font-bold mt-2 text-emerald-100"
-                >
-                    Loading...
                 </p>
 
             </div>
 
 
-            <button
-                id="logoutBtn"
-                class="bg-white/10 p-3 rounded-2xl border border-white/20 hover:bg-white hover:text-red-600 transition-all"
-                title="Logout"
-            >
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
+            <div class="bg-blue-50 p-4 rounded-2xl">
 
-        </div>
+                <p class="text-xs text-slate-500">
+                    Email
+                </p>
 
+                <p id="displayEmail"
+                   class="font-bold text-blue-700 break-all">
 
-        <i
-            class="fa-solid fa-chalkboard-user absolute -right-6 -bottom-6 text-9xl opacity-10"
-        ></i>
-
-    </header>
-
-
-
-    <!-- =================================================
-         MAIN
-    ================================================== -->
-
-    <main
-        class="p-6 max-w-6xl mx-auto -mt-8 space-y-6"
-    >
-
-
-        <!-- =============================================
-             STAFF PROFILE
-        ============================================== -->
-
-        <section
-            class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-emerald-100"
-        >
-
-            <div class="flex items-center gap-5">
-
-                <div
-                    class="w-20 h-20 rounded-3xl bg-emerald-50 flex items-center justify-center overflow-hidden"
-                >
-
-                    <img
-                        id="teacherPhoto"
-                        src=""
-                        alt="Staff Photo"
-                        class="hidden w-full h-full object-cover"
-                    >
-
-                    <i
-                        id="defaultTeacherIcon"
-                        class="fa-solid fa-user-tie text-3xl text-emerald-600"
-                    ></i>
-
-                </div>
-
-
-                <div class="flex-1">
-
-                    <p
-                        class="text-[10px] uppercase font-black tracking-widest text-slate-400"
-                    >
-                        Logged-in Staff
-                    </p>
-
-                    <h2
-                        id="profileName"
-                        class="text-xl font-black text-slate-800"
-                    >
-                        Loading...
-                    </h2>
-
-                    <p
-                        id="profileDesignation"
-                        class="text-sm font-bold text-emerald-600"
-                    >
-                        Staff
-                    </p>
-
-                    <p
-                        id="profileEmail"
-                        class="text-xs text-slate-400 mt-1 break-all"
-                    >
-                    </p>
-
-                </div>
+                </p>
 
             </div>
 
-        </section>
-
-
-
-        <!-- =============================================
-             STAFF SELF SERVICE
-        ============================================== -->
-
-        <h3
-            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4"
-        >
-            Staff Self-Service
-        </h3>
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
-            <!-- FACE CHECK-IN -->
-
-            <a
-                href="modules/staff-checkin.html"
-                class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-emerald-100 flex items-center gap-6 group hover:bg-emerald-600 transition-all"
-            >
-
-                <div
-                    class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-2xl group-hover:bg-white transition-colors"
-                >
-
-                    <i class="fa-solid fa-face-viewfinder"></i>
-
-                </div>
-
-                <div>
-
-                    <h4
-                        class="font-black text-slate-800 uppercase text-xs group-hover:text-white"
-                    >
-                        Face Check-In
-                    </h4>
-
-                    <p
-                        class="text-[10px] text-slate-400 group-hover:text-emerald-100"
-                    >
-                        Biometric Attendance
-                    </p>
-
-                </div>
-
-            </a>
-
-
-
-            <!-- LEAVE -->
-
-            <a
-                href="modules/leave-app.html"
-                class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-blue-100 flex items-center gap-6 group hover:bg-blue-600 transition-all"
-            >
-
-                <div
-                    class="w-16 h-16 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center text-2xl group-hover:bg-white transition-colors"
-                >
-
-                    <i class="fa-solid fa-calendar-plus"></i>
-
-                </div>
-
-                <div>
-
-                    <h4
-                        class="font-black text-slate-800 uppercase text-xs group-hover:text-white"
-                    >
-                        Apply Leave
-                    </h4>
-
-                    <p
-                        class="text-[10px] text-slate-400 group-hover:text-blue-100"
-                    >
-                        CL, ML & Station Leave
-                    </p>
-
-                </div>
-
-            </a>
-
         </div>
 
-
-
-        <!-- =============================================
-             DAILY REPORTING
-        ============================================== -->
-
-        <h3
-            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mt-8"
-        >
-            Daily Reporting
-        </h3>
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-
-            <!-- STUDENT ATTENDANCE -->
-
-            <a
-                href="modules/roll-call.html"
-                class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-slate-100 flex items-center gap-6 group hover:border-emerald-500 transition-all"
-            >
-
-                <div
-                    class="w-16 h-16 bg-slate-50 text-slate-600 rounded-3xl flex items-center justify-center text-2xl group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors"
-                >
-
-                    <i class="fa-solid fa-clipboard-user"></i>
-
-                </div>
-
-                <div>
-
-                    <h4
-                        class="font-black text-slate-800 uppercase text-xs"
-                    >
-                        Student Roll Call
-                    </h4>
-
-                    <p
-                        class="text-[10px] text-slate-400"
-                    >
-                        Mark Daily Attendance
-                    </p>
-
-                </div>
-
-            </a>
+    </section>
 
 
 
-            <!-- MDM -->
+    <!-- TEACHER SERVICES -->
 
-            <a
-                href="../admin/modules/mdm-entry.html"
-                class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-slate-100 flex items-center gap-6 group hover:border-orange-500 transition-all"
-            >
+    <h2 class="text-xs font-black
+               uppercase tracking-widest
+               text-slate-500 mb-4">
 
-                <div
-                    class="w-16 h-16 bg-slate-50 text-slate-600 rounded-3xl flex items-center justify-center text-2xl group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors"
-                >
+        Teacher Services
 
-                    <i class="fa-solid fa-utensils"></i>
-
-                </div>
-
-                <div>
-
-                    <h4
-                        class="font-black text-slate-800 uppercase text-xs"
-                    >
-                        Daily MDM Entry
-                    </h4>
-
-                    <p
-                        class="text-[10px] text-slate-400"
-                    >
-                        Update Lunch Records
-                    </p>
-
-                </div>
-
-            </a>
-
-        </div>
+    </h2>
 
 
+    <div class="grid md:grid-cols-2 gap-5">
 
-        <!-- =============================================
-             OFFICIAL NOTICES
-        ============================================== -->
 
-        <section
-            class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm mt-4"
-        >
+        <!-- ATTENDANCE -->
 
-            <h3
-                class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4"
-            >
-                Official Notices
+        <a href="modules/staff-checkin.html"
+           class="bg-white p-6 rounded-3xl shadow
+                  hover:bg-emerald-600
+                  hover:text-white transition">
+
+            <div class="text-emerald-600
+                        text-3xl mb-4">
+
+                <i class="fa-solid fa-user-check"></i>
+
+            </div>
+
+            <h3 class="font-black">
+                Staff Attendance
             </h3>
 
-            <div class="space-y-4">
+            <p class="text-sm opacity-70 mt-1">
+                Mark your daily attendance.
+            </p>
 
-                <div class="flex items-start gap-4">
+        </a>
 
-                    <div
-                        class="w-2 h-2 rounded-full bg-red-500 mt-1.5"
-                    ></div>
 
-                    <p
-                        class="text-sm font-bold text-slate-600"
-                    >
-                        Submit Monthly MDM Statement via Admin Portal.
-                    </p>
 
-                </div>
+        <!-- LEAVE -->
+
+        <a href="modules/leave-app.html"
+           class="bg-white p-6 rounded-3xl shadow
+                  hover:bg-blue-600
+                  hover:text-white transition">
+
+            <div class="text-blue-600
+                        text-3xl mb-4">
+
+                <i class="fa-solid fa-calendar-plus"></i>
 
             </div>
 
-        </section>
+            <h3 class="font-black">
+                Apply Leave
+            </h3>
 
-    </main>
+            <p class="text-sm opacity-70 mt-1">
+                Apply for CL, ML and other leave.
+            </p>
 
-</div>
+        </a>
 
 
 
-<!-- =====================================================
-     FIREBASE
-===================================================== -->
+        <!-- ROLL CALL -->
+
+        <a href="modules/roll-call.html"
+           class="bg-white p-6 rounded-3xl shadow
+                  hover:bg-purple-600
+                  hover:text-white transition">
+
+            <div class="text-purple-600
+                        text-3xl mb-4">
+
+                <i class="fa-solid fa-clipboard-user"></i>
+
+            </div>
+
+            <h3 class="font-black">
+                Student Roll Call
+            </h3>
+
+            <p class="text-sm opacity-70 mt-1">
+                Mark daily student attendance.
+            </p>
+
+        </a>
+
+
+
+        <!-- MDM -->
+
+        <a href="modules/mdm-entry.html"
+           class="bg-white p-6 rounded-3xl shadow
+                  hover:bg-orange-600
+                  hover:text-white transition">
+
+            <div class="text-orange-600
+                        text-3xl mb-4">
+
+                <i class="fa-solid fa-utensils"></i>
+
+            </div>
+
+            <h3 class="font-black">
+                Daily MDM Entry
+            </h3>
+
+            <p class="text-sm opacity-70 mt-1">
+                Update daily Mid-Day Meal records.
+            </p>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- NOTICE -->
+
+    <section class="bg-white rounded-3xl
+                    p-6 shadow mt-6">
+
+        <h2 class="font-black text-slate-800">
+
+            Official Notice
+
+        </h2>
+
+        <p class="text-slate-500 mt-2">
+
+            Use this portal for teacher
+            self-service and daily reporting.
+
+        </p>
+
+    </section>
+
+</main>
+
 
 <script type="module">
 
-    /*
-     * IMPORTANT
-     *
-     * This file is:
-     *
-     * teacher/dashboard.html
-     *
-     * Firebase initialization:
-     *
-     * assets/js/init-firebase.js
-     *
-     * Therefore:
-     *
-     * ../assets/js/init-firebase.js
-     */
+import { auth }
+from "../assets/js/init-firebase.js";
 
-    import {
-        db
-    } from "../assets/js/init-firebase.js";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 
-    import {
-        getAuth,
-        onAuthStateChanged,
-        signOut
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+/* =========================================
+   CHECK TEACHER SESSION
+========================================= */
+
+const role =
+    localStorage.getItem("userRole");
 
 
-    import {
-        collection,
-        query,
-        where,
-        getDocs
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const staffId =
+    localStorage.getItem("staffId");
 
 
-
-    /* =====================================================
-       VARIABLES
-    ===================================================== */
-
-    const auth = getAuth();
+const staffName =
+    localStorage.getItem("staffName");
 
 
-    const loadingScreen =
-        document.getElementById("loadingScreen");
-
-    const loadingMessage =
-        document.getElementById("loadingMessage");
-
-    const teacherPortal =
-        document.getElementById("teacherPortal");
-
-    const accessDenied =
-        document.getElementById("accessDenied");
-
-    const accessDeniedMessage =
-        document.getElementById("accessDeniedMessage");
-
-    const teacherName =
-        document.getElementById("teacherName");
-
-    const profileName =
-        document.getElementById("profileName");
-
-    const profileDesignation =
-        document.getElementById("profileDesignation");
-
-    const profileEmail =
-        document.getElementById("profileEmail");
-
-    const teacherPhoto =
-        document.getElementById("teacherPhoto");
-
-    const defaultTeacherIcon =
-        document.getElementById("defaultTeacherIcon");
-
-    const logoutBtn =
-        document.getElementById("logoutBtn");
-
-    const deniedLoginBtn =
-        document.getElementById("deniedLoginBtn");
+const staffEmail =
+    localStorage.getItem("staffEmail");
 
 
+/*
+ * Teacher dashboard MUST only accept
+ * userRole = staff
+ */
 
-    /* =====================================================
-       SHOW ACCESS DENIED
-    ===================================================== */
+if (role !== "staff" || !staffId) {
 
-    function denyAccess(message) {
+    alert(
+        "Unauthorized access. Please login as a teacher."
+    );
 
-        loadingScreen.classList.add("hidden");
+    window.location.replace(
+        "../index.html"
+    );
+}
 
-        teacherPortal.classList.add("hidden");
 
-        accessDenied.classList.remove("hidden");
+/* =========================================
+   DISPLAY TEACHER DETAILS
+========================================= */
 
-        accessDeniedMessage.textContent =
-            message;
+document.getElementById(
+    "teacherName"
+).textContent =
+    staffName || "Teacher";
+
+
+document.getElementById(
+    "displayName"
+).textContent =
+    staffName || "Teacher";
+
+
+document.getElementById(
+    "displayEmail"
+).textContent =
+    staffEmail || "";
+
+
+/* =========================================
+   FIREBASE AUTH CHECK
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    user => {
+
+        if (!user) {
+
+            localStorage.clear();
+
+            window.location.replace(
+                "../index.html"
+            );
+
+        }
 
     }
+);
 
 
+/* =========================================
+   LOGOUT
+========================================= */
 
-    /* =====================================================
-       LOAD STAFF RECORD
-    ===================================================== */
-
-    async function loadTeacherRecord(user) {
+document.getElementById(
+    "logoutBtn"
+).addEventListener(
+    "click",
+    async () => {
 
         try {
 
-            loadingMessage.textContent =
-                "Loading your staff record...";
-
-
-            /*
-             * Search staffRecords using the
-             * authenticated Firebase email.
-             */
-
-            const staffCollection =
-                collection(
-                    db,
-                    "staffRecords"
-                );
-
-
-            const staffQuery =
-                query(
-                    staffCollection,
-                    where(
-                        "email",
-                        "==",
-                        user.email.toLowerCase()
-                    )
-                );
-
-
-            const snapshot =
-                await getDocs(staffQuery);
-
-
-            if (snapshot.empty) {
-
-                denyAccess(
-                    "Your Firebase account exists, but no matching staff record was found in the staffRecords collection."
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Use the first matching record.
-             */
-
-            let staffData = null;
-
-
-            snapshot.forEach(doc => {
-
-                if (!staffData) {
-
-                    staffData = {
-                        id: doc.id,
-                        ...doc.data()
-                    };
-
-                }
-
-            });
-
-
-            /* ---------------------------------------------
-               CHECK ROLE
-            --------------------------------------------- */
-
-            if (
-                staffData.role &&
-                staffData.role !== "staff"
-            ) {
-
-                denyAccess(
-                    "This account is not registered as a staff/teacher account."
-                );
-
-                return;
-
-            }
-
-
-            /* ---------------------------------------------
-               DISPLAY NAME
-            --------------------------------------------- */
-
-            const name =
-                staffData.name ||
-                user.displayName ||
-                "Teacher";
-
-
-            const designation =
-                staffData.designation ||
-                "Teacher";
-
-
-            teacherName.textContent =
-                name;
-
-
-            profileName.textContent =
-                name;
-
-
-            profileDesignation.textContent =
-                designation;
-
-
-            profileEmail.textContent =
-                user.email || "";
-
-
-
-            /* ---------------------------------------------
-               PHOTO
-            --------------------------------------------- */
-
-            if (
-                staffData.photo &&
-                staffData.photo.startsWith("data:image")
-            ) {
-
-                teacherPhoto.src =
-                    staffData.photo;
-
-                teacherPhoto.classList.remove("hidden");
-
-                defaultTeacherIcon.classList.add("hidden");
-
-            }
-
-
-
-            /* ---------------------------------------------
-               SHOW DASHBOARD
-            --------------------------------------------- */
-
-            loadingScreen.classList.add("hidden");
-
-            accessDenied.classList.add("hidden");
-
-            teacherPortal.classList.remove("hidden");
-
-
-            console.log(
-                "Teacher dashboard loaded:",
-                staffData
-            );
+            await signOut(auth);
 
         }
 
-        catch (error) {
+        catch(error) {
 
-            console.error(
-                "Teacher dashboard error:",
-                error
-            );
+            console.error(error);
 
+        }
 
-            denyAccess(
-                "Unable to load your staff record. Firebase error: " +
-                (error.message || error)
+        finally {
+
+            localStorage.clear();
+
+            window.location.replace(
+                "../index.html"
             );
 
         }
 
     }
-
-
-
-    /* =====================================================
-       FIREBASE AUTH STATE
-    ===================================================== */
-
-    onAuthStateChanged(
-        auth,
-        async function(user) {
-
-            console.log(
-                "Current Firebase user:",
-                user
-            );
-
-
-            /* ---------------------------------------------
-               NOT LOGGED IN
-            --------------------------------------------- */
-
-            if (!user) {
-
-                denyAccess(
-                    "No Firebase account is currently signed in. Please sign in using the Teacher Login."
-                );
-
-                return;
-
-            }
-
-
-            /* ---------------------------------------------
-               LOGGED IN
-            --------------------------------------------- */
-
-            await loadTeacherRecord(user);
-
-        }
-    );
-
-
-
-    /* =====================================================
-       LOGOUT
-    ===================================================== */
-
-    logoutBtn.addEventListener(
-        "click",
-        async function() {
-
-            try {
-
-                await signOut(auth);
-
-                window.location.href =
-                    "../index.html";
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Logout error:",
-                    error
-                );
-
-                alert(
-                    "Unable to logout. Please try again."
-                );
-
-            }
-
-        }
-    );
-
-
-
-    /* =====================================================
-       DENIED LOGIN BUTTON
-    ===================================================== */
-
-    deniedLoginBtn.addEventListener(
-        "click",
-        function() {
-
-            /*
-             * Change this ONLY if your teacher login
-             * file has a different name.
-             */
-
-            window.location.href =
-                "login.html";
-
-        }
-    );
+);
 
 </script>
 
 </body>
-</html>
+</html> 
