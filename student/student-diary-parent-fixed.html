@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Digital Diary | GPS Pethgam Wagoora</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body{background:#f8fafc}.card{background:#fff;border-radius:18px;box-shadow:0 8px 24px #0f172a12}
+.status{display:none;padding:12px;border-radius:10px;margin-top:12px}.status.show{display:block}.error{background:#fff1f2;color:#9f1239}.info{background:#eff6ff;color:#1d4ed8}.success{background:#ecfdf5;color:#065f46}
+@media print{.no-print{display:none!important}body{background:white}.card{box-shadow:none;border:1px solid #ddd}}
+</style></head><body class="pb-10">
+<header class="bg-indigo-950 text-white p-5 no-print"><div class="max-w-6xl mx-auto"><p class="text-xs uppercase tracking-widest">Government Primary School</p><h1 class="text-2xl font-bold">Pethgam Wagoora · Digital Diary</h1></div></header>
+<main class="max-w-6xl mx-auto p-4">
+<section class="card p-5 mb-5 no-print"><div class="grid md:grid-cols-3 gap-4 items-end">
+<div><label for="admSearch" class="block text-sm font-bold mb-1">Admission Number</label><input id="admSearch" maxlength="40" autocomplete="off" class="w-full border rounded-xl p-3" placeholder="Enter admission number"></div>
+<div><label for="datePicker" class="block text-sm font-bold mb-1">Diary Date</label><input id="datePicker" type="date" class="w-full border rounded-xl p-3"></div>
+<button id="viewBtn" class="bg-indigo-600 text-white rounded-xl p-3 font-bold">View Diary</button></div>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<p class="text-xs text-slate-500 mt-3">Privacy note: an admission number alone does not verify a parent’s identity. Firebase security rules must restrict access to student records.</p></section>
+<section id="diaryContent" class="hidden"><div class="grid lg:grid-cols-3 gap-5">
+<aside class="card p-6 text-center"><img id="p_photo" alt="Student photograph" class="hidden w-28 h-28 object-cover rounded-full mx-auto mb-3"><div id="photoPlaceholder" class="w-28 h-28 rounded-full bg-indigo-50 mx-auto mb-3 flex items-center justify-center text-4xl">👧</div><h2 id="p_name" class="font-black text-xl break-words">Student Name</h2><p id="p_meta" class="text-slate-500 mt-1">Class: —</p><p class="mt-3 font-bold text-indigo-700">Roll No: <span id="p_roll">—</span></p></aside>
+<div class="lg:col-span-2 space-y-5">
+<div id="importantNoteBox" class="hidden rounded-xl bg-rose-50 border-l-8 border-rose-500 p-4"><b>IMPORTANT ANNOUNCEMENT</b><p id="p_note" class="whitespace-pre-wrap break-words"></p></div>
+<article class="card overflow-hidden"><div class="bg-indigo-50 p-4 flex justify-between gap-3"><b>Learning Record</b><b id="p_date_display"></b></div><div class="p-5 space-y-4">
+<div class="grid sm:grid-cols-2 gap-3">
+<div class="rounded-lg border-l-4 border-emerald-500 bg-slate-50 p-3"><b>English</b><p id="p_hw_English" class="whitespace-pre-wrap break-words">—</p></div>
+<div class="rounded-lg border-l-4 border-blue-500 bg-slate-50 p-3"><b>Mathematics</b><p id="p_hw_Maths" class="whitespace-pre-wrap break-words">—</p></div>
+<div class="rounded-lg border-l-4 border-amber-500 bg-slate-50 p-3"><b>EVS</b><p id="p_hw_EVS" class="whitespace-pre-wrap break-words">—</p></div>
+<div class="rounded-lg border-l-4 border-violet-500 bg-slate-50 p-3"><b>Urdu</b><p id="p_hw_Urdu" class="whitespace-pre-wrap break-words">—</p><b>Kashmiri</b><p id="p_hw_Kashmiri" class="whitespace-pre-wrap break-words">—</p></div></div>
+<div class="bg-slate-50 rounded-xl p-4"><b>Classwork & Activities</b><p id="p_classwork" class="whitespace-pre-wrap break-words">—</p></div>
+<div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4"><b>Conduct & Individual Remark</b><p id="p_remark" class="whitespace-pre-wrap break-words">—</p><p id="p_rating" class="font-bold text-emerald-700"></p></div></div></article>
+<div class="card p-5 no-print"><b>Parent acknowledgement</b><p class="text-sm text-slate-500 my-2">This button only changes the current screen; it does not save a signature or acknowledgement to the school database.</p><button id="ackBtn" class="bg-indigo-100 text-indigo-700 rounded-full px-5 py-2 font-bold">I have seen this diary</button></div>
+</div></div></section>
+</main>
+<script type="module">
+import {db} from '../assets/js/init-firebase.js';
+import {collection,query,where,getDocs,doc,getDoc,limit} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+const $=id=>document.getElementById(id);
+const status=$('status'); let currentStudent=null;
+const val=x=>x===null||x===undefined||String(x).trim()===''?'No entry recorded.':String(x);
+function message(text,type='info'){status.textContent=text;status.className='status show '+type}
+function hide(){ $('diaryContent').classList.add('hidden') }
+async function findStudent(adm){
+ let snap=await getDoc(doc(db,'admissions',adm));
+ if(snap.exists())return {id:snap.id,...snap.data()};
+ const q=query(collection(db,'admissions'),where('admNo','==',adm),limit(1));
+ snap=await getDocs(q);return snap.empty?null:{id:snap.docs[0].id,...snap.docs[0].data()};
+}
+function put(id,text){$(id).textContent=val(text)}
+function remarkFor(data,adm){
+ const r=data.individualRemark??data.individualRemarks??data.remarks;
+ if(typeof r==='string')return r;
+ if(r&&typeof r==='object'){const item=r[adm]??r[currentStudent?.id];if(typeof item==='string')return item;if(item&&typeof item==='object')return item.remark??item.comment??item.grade;return r.remark??r.comment??r.grade}
+ return data.remark??data.teacherRemark;
+}
+async function loadDiary(){
+ hide();status.className='status';currentStudent=null;
+ const adm=$('admSearch').value.trim(),date=$('datePicker').value;
+ if(!adm){message('Please enter the admission number.','error');$('admSearch').focus();return}
+ if(!date){message('Please select a date.','error');return}
+ $('viewBtn').disabled=true;$('viewBtn').textContent='Loading…';
+ try{
+  const student=await findStudent(adm);
+  if(!student){message('No student was found for that admission number.','error');return}
+  currentStudent=student;
+  const cls=String(student.studentClass??student.class??student.className??'').trim();
+  if(!cls){message('The student record has no class value. Ask the school administrator to correct it.','error');return}
+  put('p_name',student.studentName??student.name);$('p_meta').textContent='Class: '+cls+' | Section: '+(student.section||'A');put('p_roll',student.rollNo??student.rollNumber);
+  const photo=student.photo??student.photoURL??student.photoUrl;
+  if(typeof photo==='string'&&/^https:\/\//i.test(photo)){$('p_photo').src=photo;$('p_photo').classList.remove('hidden');$('photoPlaceholder').classList.add('hidden')}else{$('p_photo').classList.add('hidden');$('photoPlaceholder').classList.remove('hidden')}
+  const ds=await getDoc(doc(db,'studentDiaries',cls+'_'+date));
+  if(!ds.exists()){message('No diary entry was found for this class and date.','info');return}
+  const d=ds.data()||{};
+  if(d.isPublished===false||d.published===false){message('The teacher has not published this diary entry yet.','info');return}
+  const h=d.homework&&typeof d.homework==='object'?d.homework:{};
+  put('p_hw_English',h.English??h.english);put('p_hw_Maths',h.Maths??h.Math??h.Mathematics??h.mathematics);put('p_hw_EVS',h.EVS??h.Evs??h['Environmental Studies']);put('p_hw_Urdu',h.Urdu??h.urdu);put('p_hw_Kashmiri',h.Kashmiri??h.kashmiri);
+  put('p_classwork',d.classwork??d.classWork??d.activities);
+  const note=d.importantNote??d.announcement;const important=Boolean(d.isImportant&&note);$('importantNoteBox').classList.toggle('hidden',!important);$('p_note').textContent=important?String(note):'';
+  put('p_remark',remarkFor(d,adm));const ir=d.individualRemark;const specific=ir&&typeof ir==='object'?(ir[adm]??ir[currentStudent.id]):null;
+  $('p_rating').textContent=(specific&&typeof specific==='object'&&specific.grade)?'Rating: '+specific.grade:(ir&&typeof ir==='object'&&ir.grade?'Rating: '+ir.grade:'');
+  $('p_date_display').textContent=new Date(date+'T12:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  $('diaryContent').classList.remove('hidden');message('Diary loaded. Verify the student and date before printing.','success');
+ }catch(e){console.error(e);message('Could not load the diary. Check internet connectivity and Firebase permissions.','error')}
+ finally{$('viewBtn').disabled=false;$('viewBtn').textContent='View Diary'}
+}
+$('viewBtn').addEventListener('click',loadDiary);$('admSearch').addEventListener('keydown',e=>{if(e.key==='Enter')loadDiary()});
+$('datePicker').value=new Date().toLocaleDateString('en-CA');
+$('ackBtn').addEventListener('click',()=>{$('ackBtn').textContent='✓ Acknowledged on this device';$('ackBtn').disabled=true});
+</script></body></html>
