@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><title>APAAR ID Consent Form | GPS Pethgam Wagoora</title>
+<style>
+@page{size:A4;margin:0}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:#eef2f7;color:#111;margin:0;line-height:1.45}
+.toolbar{background:#14532d;border-bottom:4px solid #facc15;padding:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.toolbar a,.toolbar button{font-size:14px;font-weight:bold;text-decoration:none;padding:9px 14px;border:0;border-radius:6px;cursor:pointer}.toolbar a{color:#fff;background:#ffffff18}.toolbar button{background:#facc15;color:#14532d}
+.page{width:210mm;min-height:297mm;margin:14px auto;background:#fff;padding:10mm 13mm;border:3px double #166534;display:flex;flex-direction:column}
+.notice{font-size:10px;background:#fefce8;border:1px solid #fde68a;padding:7px;margin:0 0 8px}.ref{text-align:right;font-size:10px;font-weight:bold;padding-bottom:5px;border-bottom:1px dashed #aaa;margin-bottom:8px}
+.header{display:flex;align-items:center;gap:14px;border-bottom:2px solid #166534;padding-bottom:8px;margin-bottom:8px}.logo{width:68px;height:68px;object-fit:contain;flex-shrink:0}.school h1{font-size:18px;color:#14532d;margin:0 0 4px;text-transform:uppercase}.school p{font-size:10px;font-weight:bold;margin:2px 0}
+.title{text-align:center;font-size:13px;font-weight:bold;text-transform:uppercase;margin:6px 0 2px}.subtitle{text-align:center;font-size:13px;font-weight:bold;margin:0 0 10px}
+.body-copy{font-size:12px;text-align:justify;display:flex;flex-direction:column;gap:8px;flex:1}.line{font:inherit;border:0;border-bottom:1px solid #111;background:transparent;border-radius:0;padding:1px 3px;min-width:70px;max-width:100%}.wide{width:190px}.medium{width:135px}
+.signature-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:end;margin-top:12px;font-size:11px}.signature{border-top:1px solid #111;text-align:center;padding-top:5px;margin-top:26px;font-weight:bold}.hoi{border-top:2px dashed #555;padding-top:10px;margin-top:14px}.hoi-title{text-align:center;font-weight:bold;margin-bottom:6px;font-size:12px}
+@media(max-width:760px){.page{width:100%;min-height:0;margin:0;padding:18px;border:2px double #166534}.header{align-items:flex-start}.school h1{font-size:15px}.logo{width:52px;height:52px}.body-copy{font-size:12px}.wide{width:145px}.medium{width:105px}.signature-grid{gap:16px}}
+@media print{body{background:#fff}.toolbar,.no-print{display:none!important}.page{width:210mm;height:297mm;min-height:297mm;margin:0;padding:10mm 13mm;border:2px solid #166534;overflow:hidden;page-break-after:avoid}.body-copy{font-size:11.5px;gap:7px}.school h1{font-size:17px}}
+</style></head><body>
+<nav class="toolbar no-print"><a href="../index.html">🏠 Home</a><a href="../admission.html">📝 Admission Form</a><button id="printBtn" type="button">🖨️ Print / Save as PDF</button><button id="clearBtn" type="button">Clear student details</button></nav>
+<main class="page">
+<p class="notice no-print">Privacy reminder: this form does not save consent details to Firebase. Do not enter or store Aadhaar numbers in this web form. Carry out identity verification only through the school’s approved official process.</p>
+<div class="ref">Form Reference (Admission No.): <span id="displayAdmNo">________________</span></div>
+<header class="header"><img src="logo.png" alt="School logo" class="logo" onerror="this.style.display='none'"><div class="school">
+<h1>Government Primary School Pethgam Wagoora</h1><p>Wagoora Babareshi Road, Near Zonal Education Office Wagoora, District Baramulla, Jammu &amp; Kashmir – 193109</p>
+<p><strong>UDISE Code:</strong> 01022202207 &nbsp; <strong>Email:</strong> pspethgam@gmail.com</p><p><strong>Contact:</strong> 9596449881</p></div></header>
+<div class="title">Consent by Father / Mother / Legal Guardian of Student for APAAR ID Generation</div><div class="subtitle">Consent Form</div>
+<section class="body-copy">
+<p>I <input id="parentNameInput" class="line wide" aria-label="Parent or guardian name"> as the <select id="guardianType" class="line medium" aria-label="Guardian relationship"><option>Father</option><option>Mother</option><option>Legal Guardian</option></select> of <input id="studentNameDisplay" class="line wide" aria-label="Student name"> hereby give my informed consent for processing my child’s relevant demographic details for the stated purpose of APAAR ID creation, subject to the applicable official process and safeguards.</p>
+<p>I understand that APAAR is an educational identifier and that the school should explain the purpose, information required, applicable data handling, and any available consent-withdrawal process before collecting or submitting personal information.</p>
+<p>I understand that any Aadhaar-based authentication, if applicable, must be carried out through the authorised official mechanism and in accordance with applicable law and current Ministry / UIDAI instructions. This paper form itself does not perform authentication.</p>
+<p>I understand that my child’s personal information must be handled confidentially, used only for authorised purposes, and shared only as permitted by applicable law and the relevant official process.</p>
+<p>I confirm that I have had an opportunity to ask questions and that the information and purpose have been explained to me. I may contact the school for clarification about this consent and the handling of the information.</p>
+<div class="signature-grid"><div>Place of consent: <input class="line medium" id="consentPlace" value="Pethgam"><br><br>Date of consent: <input class="line medium" id="consentDate"></div><div class="signature">Signature / Thumb Impression of Parent or Guardian</div></div>
+<div class="hoi"><div class="hoi-title">For Head of Institution / School Use</div>
+<p>I, <strong>Mohammad Ashraf Rather</strong>, Head of Institution, confirm that the parent / legal guardian named above has provided consent as recorded by the school, subject to verification of the signed original and applicable official instructions.</p>
+<p>Student name: <input id="studentNameHOI" class="line wide" aria-label="Student name for school use"></p>
+<div class="signature-grid"><div>Date: <input id="todayDate" class="line medium"></div><div class="signature">Signature and Seal of HOI</div></div></div>
+</section></main>
+<script>
+(()=>{const $=id=>document.getElementById(id);const today=new Date().toLocaleDateString('en-GB');$('todayDate').value=today;$('consentDate').value=today;
+const p=new URLSearchParams(location.search);const name=p.get('studentName'),adm=p.get('admNo');
+if(name){$('studentNameDisplay').value=name.slice(0,120);$('studentNameHOI').value=name.slice(0,120)}
+if(adm)$('displayAdmNo').textContent=adm.slice(0,40);
+$('printBtn').addEventListener('click',()=>window.print());
+$('clearBtn').addEventListener('click',()=>{['parentNameInput','studentNameDisplay','studentNameHOI'].forEach(id=>$(id).value='');$('guardianType').selectedIndex=0;$('displayAdmNo').textContent='________________'});
+// No Firebase access and no Aadhaar/identity number is fetched or stored by this page.
+})();
+</script></body></html>
