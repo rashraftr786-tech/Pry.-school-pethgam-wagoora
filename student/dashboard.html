@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b70">
+<title>Student Portal | Government Primary School Pethgam Wagoora</title>
+<style>
+:root{--navy:#123b70;--blue:#1769aa;--saffron:#f28c28;--green:#18794e;--ink:#172b4d;--muted:#607086;--line:#dce5ef;--paper:#fff;--bg:#f3f7fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.hero{background:linear-gradient(125deg,#102d55,#1769aa 70%,#f28c28);color:#fff;padding:28px 18px 58px;border-radius:0 0 30px 30px}
+.wrap{max-width:980px;margin:auto}.brand{display:flex;align-items:center;gap:14px}.crest{width:58px;height:58px;border:2px solid #ffffffa6;border-radius:50%;display:grid;place-items:center;font-size:28px;background:#ffffff1a}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.9}.hero h1{font-size:clamp(24px,5vw,36px);line-height:1.12;margin:4px 0}.hero p{margin:7px 0 0;color:#eaf3ff;font-size:14px}.main{padding:0 14px 40px;margin-top:-32px}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;margin:0 0 18px;box-shadow:0 10px 30px #163d6810}.card h2{font-size:18px;margin:0 0 5px}.hint{color:var(--muted);font-size:13px;margin:0 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:13px;font-weight:750;margin:0 0 6px}.field input,.field select{width:100%;min-height:46px;border:1px solid #c8d5e4;border-radius:11px;padding:10px 12px;font:inherit;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #1769aa25;border-color:var(--blue)}button{border:0;border-radius:12px;background:var(--navy);color:white;font-weight:800;font-size:15px;padding:13px 18px;min-height:46px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.secondary{background:#eaf1f8;color:var(--navy)}.status{padding:12px 14px;border-radius:12px;margin-top:14px;font-size:14px;display:none;overflow-wrap:anywhere}.status.show{display:block}.status.error{background:#fff0f0;color:#9f2424;border:1px solid #ffd2d2}.status.ok{background:#edf9f1;color:#17643c;border:1px solid #bce8ca}.result-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:start;padding-bottom:14px;border-bottom:1px solid var(--line)}.badge{background:#eaf1f8;color:var(--navy);font-size:12px;font-weight:800;padding:5px 10px;border-radius:99px}.student-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.student-grid div{background:#f7f9fc;border-radius:12px;padding:10px 12px;min-width:0}.student-grid small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.04em}.student-grid strong{overflow-wrap:anywhere}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:550px;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center}th{background:#eef4fb;color:#173e6d}td:first-child,th:first-child{text-align:left}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.metric{border-radius:14px;background:#f7f9fc;padding:12px;text-align:center}.metric small{display:block;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}.metric strong{font-size:22px;color:var(--navy)}.footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 25px}.hidden{display:none!important}
+@media(max-width:560px){.grid,.student-grid{grid-template-columns:1fr}.card{padding:17px}.hero{padding-top:22px}.summary{grid-template-columns:1fr 1fr}.summary .metric:last-child{grid-column:1/-1}}
+@media print{body{background:white}.hero{padding:12px;background:#fff!important;color:#111;border-radius:0}.hero p{color:#333}.main{margin:0;padding:0}.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}.lookup-card,.footer,.actions,.status{display:none!important}#resultCard{display:block!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap brand"><div class="crest" aria-hidden="true">🎓</div><div><div class="eyebrow">Student & Parent Portal</div><h1>Government Primary School<br>Pethgam Wagoora</h1><p>Zone Wagoora · District Baramulla · Jammu & Kashmir – 193109</p></div></div></header>
+<main class="wrap main">
+<section class="card lookup-card">
+<h2>🔎 Find a Student Result</h2>
+<p class="hint">Enter the student's admission number and date of birth exactly as recorded by the school.</p>
+<form id="lookupForm">
+<div class="grid">
+<div class="field"><label for="admNo">Admission Number</label><input id="admNo" name="admNo" autocomplete="off" required maxlength="40" placeholder="Enter admission number"></div>
+<div class="field"><label for="dob">Date of Birth</label><input id="dob" name="dob" type="date" required></div>
+</div>
+<div class="actions"><button id="searchBtn" type="submit">Search Result</button><button class="secondary" id="clearBtn" type="button">Clear</button></div>
+</form>
+<div id="lookupStatus" class="status" role="status" aria-live="polite"></div>
+</section>
+<section id="resultCard" class="card hidden" aria-live="polite">
+<div class="result-head"><div><div class="eyebrow" style="color:#1769aa">Official Student Record</div><h2 id="studentTitle">Student Marksheet</h2><p class="hint" id="sessionText" style="margin:4px 0 0"></p></div><span class="badge" id="classBadge"></span></div>
+<div class="student-grid" id="studentDetails"></div>
+<div class="table-wrap"><table><thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>CCA</th><th>SA</th><th>Total</th></tr></thead><tbody id="marksBody"></tbody></table></div>
+<div class="summary" id="summary"></div>
+<div id="remarksBox" class="hint"></div>
+<div class="actions"><button type="button" id="printBtn">Print / Save PDF</button><button type="button" class="secondary" id="newSearchBtn">New Search</button></div>
+</section>
+</main>
+<footer class="footer">Government Primary School Pethgam Wagoora · UDISE: 01022202207<br>For corrections, contact the school office.</footer>
+<script type="module">
+import { db } from '../assets/js/init-firebase.js';
+import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+const $ = id => document.getElementById(id);
+const form = $('lookupForm');
+const statusBox = $('lookupStatus');
+const resultCard = $('resultCard');
+const safeText = value => String(value ?? '').trim();
+function showStatus(message, type='error') {
+  statusBox.textContent = message;
+  statusBox.className = 'status show ' + type;
+}
+function normaliseDate(value) {
+  if (!value) return '';
+  if (typeof value === 'object' && typeof value.toDate === 'function') value = value.toDate();
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString().slice(0,10);
+  const s = safeText(value);
+  const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (iso) return iso[1];
+  const d = new Date(s);
+  return s && !Number.isNaN(d.getTime()) ? d.toISOString().slice(0,10) : s;
+}
+function findDOB(data) { return data.dob || data.dateOfBirth || data.DOB || data.date_of_birth || ''; }
+function findName(data) { return data.studentName || data.name || data.student_name || ''; }
+function findClass(data) { return data.className || data.class || data.class_name || ''; }
+function numberOrBlank(v) {
+  if (v === '' || v === null || v === undefined || String(v).trim() === '') return null;
+  const n = Number(v); return Number.isFinite(n) ? n : null;
+}
+function subjectEntries(marks) {
+  if (!marks || typeof marks !== 'object') return [];
+  const order = ['English','Math','Mathematics','EVS','Environment Science','Urdu','Kashmiri'];
+  return Object.entries(marks).sort((a,b) => {
+    const ai=order.findIndex(x=>x.toLowerCase()===a[0].toLowerCase());
+    const bi=order.findIndex(x=>x.toLowerCase()===b[0].toLowerCase());
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
+}
+function renderResult(result, master, admissionNo) {
+  const data = {...master, ...result};
+  const name = findName(data) || 'Student';
+  const className = findClass(data) || '—';
+  $('studentTitle').textContent = name;
+  $('sessionText').textContent = 'Session: ' + safeText(data.session || data.academicSession || 'Not specified');
+  $('classBadge').textContent = 'Class ' + className;
+  const details = [
+    ['Admission No.', data.admNo || data.admissionNo || data.admissionNumber || admissionNo],
+    ['Roll No.', data.rollNo || data.rollNumber || '—'],
+    ['Father’s Name', data.fatherName || data.father_name || '—'],
+    ['Mother’s Name', data.motherName || data.mother_name || '—']
+  ];
+  $('studentDetails').replaceChildren();
+  for (const [label,value] of details) {
+    const box=document.createElement('div'), small=document.createElement('small'), strong=document.createElement('strong');
+    small.textContent=label; strong.textContent=safeText(value)||'—'; box.append(small,strong); $('studentDetails').append(box);
+  }
+  const body=$('marksBody'); body.replaceChildren();
+  let grandTotal=0, totalMax=0, gradedSubjects=0;
+  const subjects=subjectEntries(data.marks);
+  for (const [subject, raw] of subjects) {
+    const m = raw && typeof raw==='object' ? raw : {};
+    const fa = Array.isArray(m.fa) ? m.fa : [m.fa1,m.fa2,m.fa3,m.fa4,m.fa5,m.fa6];
+    const cca=numberOrBlank(m.cca), sa=numberOrBlank(m.sa);
+    const cells=[...Array.from({length:6},(_,i)=>numberOrBlank(fa[i])),cca,sa];
+    const available=cells.filter(v=>v!==null);
+    const total=available.reduce((a,b)=>a+b,0);
+    const max= (fa.some(v=>numberOrBlank(v)!==null)?30:0) + (cca!==null?20:0) + (sa!==null?50:0);
+    if (available.length) {grandTotal+=total;totalMax+=max;gradedSubjects++;}
+    const tr=document.createElement('tr');
+    const values=[subject,...cells.map(v=>v===null?'—':v),available.length?total:'—'];
+    values.forEach((value,index)=>{const td=document.createElement('td');td.textContent=value; if(index===0)td.style.fontWeight='750';tr.append(td);});
+    body.append(tr);
+  }
+  if (!subjects.length) {
+    const tr=document.createElement('tr'), td=document.createElement('td');
+    td.colSpan=10;td.textContent='No subject marks were found in this result record.';tr.append(td);body.append(tr);
+  }
+  const percent=totalMax ? (grandTotal/totalMax*100) : null;
+  const metrics=[['Subjects with marks',gradedSubjects],['Marks recorded',totalMax?`${grandTotal} / ${totalMax}`:'—'],['Percentage',percent===null?'—':percent.toFixed(2)+'%']];
+  $('summary').replaceChildren();
+  metrics.forEach(([label,value])=>{const box=document.createElement('div'),small=document.createElement('small'),strong=document.createElement('strong');box.className='metric';small.textContent=label;strong.textContent=value;box.append(small,strong);$('summary').append(box);});
+  const remarks=[data.remarks ? 'Remarks: '+data.remarks : '', data.attendance!==undefined && data.attendance!=='' ? 'Attendance: '+data.attendance+(String(data.attendance).includes('%')?'':'%') : ''].filter(Boolean);
+  $('remarksBox').textContent=remarks.join(' · ');
+  resultCard.classList.remove('hidden');
+}
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  resultCard.classList.add('hidden');
+  const adm = safeText($('admNo').value);
+  const dob = $('dob').value;
+  if (!adm || !dob) {showStatus('Enter both admission number and date of birth.');return;}
+  $('searchBtn').disabled=true; $('searchBtn').textContent='Searching…';
+  statusBox.className='status'; statusBox.textContent='';
+  try {
+    const [resultSnap, studentSnap] = await Promise.all([
+      getDoc(doc(db,'results',adm)),
+      getDoc(doc(db,'students',adm))
+    ]);
+    if (!resultSnap.exists() && !studentSnap.exists()) {
+      showStatus('No record found. Check the admission number or contact the school office.'); return;
+    }
+    const result=resultSnap.exists()?resultSnap.data():{};
+    const master=studentSnap.exists()?studentSnap.data():{};
+    const storedDOB=normaliseDate(findDOB({...master,...result}));
+    if (!storedDOB || storedDOB !== dob) {
+      showStatus('The details could not be verified. Check the admission number and date of birth, or contact the school office.'); return;
+    }
+    if (!resultSnap.exists()) {
+      showStatus('Student identity matched, but a result has not been uploaded yet.', 'ok'); return;
+    }
+    renderResult(result,master,adm);
+    showStatus('Result loaded. Please check the student details carefully.', 'ok');
+  } catch (error) {
+    console.error('Result lookup failed:',error);
+    showStatus(error?.code==='permission-denied'
+      ? 'Access was denied by Firebase security rules. The school administrator must configure secure result lookup permissions.'
+      : 'Unable to load the result right now. Check your connection and try again.');
+  } finally {$('searchBtn').disabled=false;$('searchBtn').textContent='Search Result';}
+});
+$('clearBtn').addEventListener('click',()=>{form.reset();resultCard.classList.add('hidden');statusBox.className='status';statusBox.textContent='';});
+$('newSearchBtn').addEventListener('click',()=>{$('clearBtn').click();$('admNo').focus();});
+$('printBtn').addEventListener('click',()=>window.print());
+</script>
+</body>
+</html>
