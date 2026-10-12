@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14532d">
+<title>Upload Results | Government Primary School Pethgam Wagoora</title>
+<style>
+:root{--green:#14532d;--green2:#198754;--blue:#1d4ed8;--ink:#182b25;--muted:#5d6d65;--line:#d5e1d9;--bg:#f3f7f4;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}.top{background:linear-gradient(120deg,#10452b,#198754);color:white;padding:22px 16px}.wrap{max-width:1150px;margin:auto}.top h1{margin:0;font-size:clamp(23px,4vw,32px)}.top p{margin:5px 0 0;color:#e0f4e8;font-size:13px}.main{padding:18px 12px 40px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 6px 22px #123d2510}.card h2{font-size:19px;margin:0 0 5px}.muted{color:var(--muted);font-size:13px}.notice{background:#fff8e6;border:1px solid #f4d58b;color:#76500b;padding:12px 14px;border-radius:12px;font-size:13px;margin:14px 0}.danger{background:#fff0ef;border-color:#ffcfcb;color:#8f1b13}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:13px;font-weight:750;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;min-height:42px;border:1px solid #bdcec3;border-radius:9px;padding:9px 10px;font:inherit;background:white}.field textarea{min-height:80px}.btn{border:0;border-radius:10px;background:var(--green);color:white;font-weight:800;padding:12px 16px;min-height:42px;cursor:pointer}.btn.blue{background:var(--blue)}.btn.light{background:#e7f1ea;color:var(--green)}.btn.red{background:var(--red)}.btn:disabled{opacity:.55;cursor:wait}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:13px}.status{display:none;margin-top:12px;padding:11px 13px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}.status.show{display:block}.status.ok{background:#e9f8ee;color:#17613a}.status.error{background:#fff0ef;color:#99251c}.status.info{background:#eaf2ff;color:#174b8a}.progress{height:10px;background:#e3e9e5;border-radius:99px;overflow:hidden;margin-top:12px}.progress div{height:100%;width:0;background:var(--green2);transition:width .2s}.log{background:#f7faf8;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:180px;overflow:auto;font:12px/1.5 ui-monospace,monospace;margin-top:12px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:880px;margin-top:12px;font-size:12px}th,td{border:1px solid #d4dfd7;padding:6px;text-align:center}th{background:#e9f4ec;color:#174d2e}td:first-child,th:first-child{text-align:left}.marks-input{width:58px;min-height:35px!important;padding:4px!important;text-align:center}.hidden{display:none!important}.userbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.tiny{font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:4px 9px;border-radius:99px;background:#e9f4ec;color:#14532d;font-size:11px;font-weight:800}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}.card{padding:15px}}@media(max-width:440px){.grid{grid-template-columns:1fr}.top{padding:18px 13px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><h1>📚 Result Upload & Assessment Entry</h1><p>Government Primary School Pethgam Wagoora · Zone Wagoora · District Baramulla · UDISE 01022202207</p></div></header>
+<main class="wrap main">
+<section class="card">
+<h2>🔐 Authorized staff sign-in</h2><p class="muted">This page uses the school's shared Firebase configuration. Only staff permitted by Firebase Authentication and Firestore Security Rules should be able to upload or edit student records.</p>
+<div id="signedOut">
+<form id="loginForm"><div class="grid"><div class="field"><label for="email">Staff email</label><input id="email" type="email" autocomplete="username" required></div><div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div></div><div class="row"><button class="btn" id="loginBtn">Sign in</button></div></form>
+</div>
+<div id="signedIn" class="hidden"><div class="userbar"><div>Signed in as <strong id="userEmail"></strong><div class="tiny">Firebase Authentication session active</div></div><button class="btn red" id="logoutBtn" type="button">Sign out</button></div></div>
+<div id="authStatus" class="status" role="status" aria-live="polite"></div>
+<div class="notice danger"><strong>Security note:</strong> Hiding this page behind sign-in is not enough by itself. Firestore rules must enforce which authenticated accounts can write to <code>results</code> and <code>students</code>. Never make student collections publicly writable.</div>
+</section>
+<div id="tools" class="hidden">
+<section class="card">
+<h2>1. Import results from Excel</h2><p class="muted">Accepts .xlsx, .xls or .csv. Expected student columns: Admission No, Roll No, Class, Name, Father, Mother, Contact, DOB; then each subject's FA1–FA6, CCA, SA in the same sequence as your workbook. APAAR and PEN columns are detected by their headers.</p>
+<div class="field"><label for="excelFile">Select results workbook</label><input id="excelFile" type="file" accept=".xlsx,.xls,.csv"></div>
+<div class="row"><button class="btn blue" id="previewBtn" type="button">Preview & Validate</button><button class="btn" id="uploadBtn" type="button" disabled>Save Valid Rows to Firebase</button><button class="btn light" id="clearPreviewBtn" type="button">Clear Preview</button></div>
+<div class="notice">The importer does not convert blank marks to zero. Blank stays blank; “Ab” is preserved as text. Check the preview before saving. The import merges the result record instead of intentionally replacing unrelated fields.</div>
+<div id="importStatus" class="status" role="status" aria-live="polite"></div><div class="progress"><div id="progressFill"></div></div><div id="uploadLog" class="log" aria-live="polite">Choose a workbook, then select Preview & Validate.</div>
+<div class="table-wrap"><table id="previewTable" class="hidden"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div>
+</section>
+<section class="card">
+<h2>2. Manual assessment entry</h2><p class="muted">For Classes 1–2, the school curriculum uses Urdu, English, Mathematics and Kashmiri. EVS is added in Classes 3–5. FA marks are out of 5 each; CCA is out of 20 and SA is out of 50.</p>
+<div class="grid">
+<div class="field"><label for="admNo">Admission No</label><input id="admNo" maxlength="40" autocomplete="off"></div>
+<div class="field"><label for="rollNo">Roll No</label><input id="rollNo" maxlength="30"></div>
+<div class="field"><label for="className">Class</label><select id="className"><option value="">Select class</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>KG</option><option>Nursery</option><option>LKG</option><option>UKG</option></select></div>
+<div class="field"><label for="studentName">Student name</label><input id="studentName" maxlength="120"></div>
+<div class="field"><label for="fatherName">Father's name</label><input id="fatherName" maxlength="120"></div>
+<div class="field"><label for="attendance">Attendance (%)</label><input id="attendance" type="number" min="0" max="100" step="0.01"></div>
+</div>
+<div class="table-wrap"><table><thead><tr><th>Subject</th><th>FA1 / 5</th><th>FA2 / 5</th><th>FA3 / 5</th><th>FA4 / 5</th><th>FA5 / 5</th><th>FA6 / 5</th><th>CCA / 20</th><th>SA / 50</th></tr></thead><tbody id="manualMarksBody"></tbody></table></div>
+<div class="grid" style="margin-top:14px">
+<div class="field"><label for="discipline">Discipline</label><select id="discipline"><option value="">Not assessed</option><option>A</option><option>B</option><option>C</option></select></div>
+<div class="field"><label for="sports">Sports</label><select id="sports"><option value="">Not assessed</option><option>A</option><option>B</option><option>C</option></select></div>
+<div class="field"><label for="artCraft">Art & Craft</label><select id="artCraft"><option value="">Not assessed</option><option>A</option><option>B</option><option>C</option></select></div>
+<div class="field"><label for="session">Academic session</label><input id="session" value="October 2026" maxlength="50"></div>
+<div class="field" style="grid-column:1/-1"><label for="remarks">General remarks</label><textarea id="remarks" maxlength="2000"></textarea></div>
+</div>
+<div class="row"><button class="btn blue" id="lookupBtn" type="button">Load Existing Record</button><button class="btn" id="saveManualBtn" type="button">Save Assessment</button><button class="btn light" id="resetManualBtn" type="button">Clear Form</button></div>
+<div id="manualStatus" class="status" role="status" aria-live="polite"></div>
+</section>
+</div>
+</main>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script type="module">
+import { db, auth } from '../assets/js/init-firebase.js';
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+const $=id=>document.getElementById(id);
+const BASE_SUBJECTS=['English','Mathematics','EVS','Urdu','Kashmiri'];
+let parsedRows=[], activeUser=null;
+function status(id,msg,type='info'){const el=$(id);el.textContent=msg;el.className='status show '+type;}
+function log(msg){const el=$('uploadLog');const line=document.createElement('div');line.textContent=msg;el.append(line);el.scrollTop=el.scrollHeight;}
+function clean(v){return String(v??'').trim();}
+function normaliseClass(v){const s=clean(v).toLowerCase().replace(/(?:class|grade|standard|std\.?)/g,'').trim();if(['1st','first'].includes(s))return '1';if(['2nd','second'].includes(s))return '2';if(['3rd','third'].includes(s))return '3';if(['4th','fourth'].includes(s))return '4';if(['5th','fifth'].includes(s))return '5';return s.toUpperCase();}
+function subjectSet(cls){const c=normaliseClass(cls);return ['3','4','5'].includes(c)?BASE_SUBJECTS:['English','Mathematics','Urdu','Kashmiri'];}
+function parseDate(v){if(v===undefined||v===null||v==='')return '';if(typeof v==='number'&&v>20000&&v<80000){const d=new Date(Date.UTC(1899,11,30)+v*86400000);return d.toISOString().slice(0,10);}const s=clean(v);const m=s.match(/^(\d{4}-\d{2}-\d{2})/);if(m)return m[1];const d=new Date(s);return !Number.isNaN(d.getTime())?d.toISOString().slice(0,10):s;}
+function headerKey(v){return clean(v).toLowerCase().replace(/[^a-z0-9]/g,'');}
+function findHeaderRow(rows){for(let i=0;i<Math.min(rows.length,12);i++){const row=(rows[i]||[]).map(headerKey);const hasAdm=row.some(x=>['admno','admissionno','admissionnumber','admission'].includes(x));const hasName=row.some(x=>['name','studentname','nameofstudent'].includes(x));if(hasAdm&&hasName)return i;}return -1;}
+function columnIndex(headers, aliases){return headers.findIndex(h=>aliases.includes(headerKey(h)));}
+function parseMark(v){if(v===undefined||v===null||clean(v)==='')return '';const s=clean(v);if(/^ab$/i.test(s))return 'Ab';const n=Number(s);return Number.isFinite(n)?n:s;}
+function parseWorkbookRow(row, headers, rowNumber, headerRow){
+ const idx=(...aliases)=>columnIndex(headers,aliases);
+ const get=(...aliases)=>{const i=idx(...aliases);return i<0?'':row[i];};
+ const admNo=clean(get('admno','admissionno','admissionnumber','admission'));
+ const name=clean(get('name','studentname','nameofstudent'));
+ if(!admNo&&!name)return null;
+ if(!admNo||!name)return {invalid:true,rowNumber,reason:!admNo?'Missing admission number':'Missing student name'};
+ const cls=normaliseClass(get('class','classname','grade','standard','std'));
+ const subjects=subjectSet(cls),marks={};
+ const apaarIndex=idx('apaar','apaarid','apaarno','apaarnumber');
+ const penIndex=idx('pen','penno','pennumber','pennumberid');
+ // Prefer explicitly named mark columns; if this workbook uses an unlabeled mark grid,
+ // use the established eight-column-per-subject layout starting after the first 8 profile columns.
+ const profileAliases={
+   admNo:['admno','admissionno','admissionnumber','admission'],rollNo:['rollno','rollnumber'],className:['class','classname','grade','standard','std'],
+   studentName:['name','studentname','nameofstudent'],fatherName:['father','fathername','nameof father'],motherName:['mother','mothername'],
+   contact:['contact','mobileno','phone','contactnumber'],dob:['dob','dateofbirth','birthdate']
+ };
+ const profile={};
+ for(const [key,aliases] of Object.entries(profileAliases)){const i=columnIndex(headers,aliases.map(headerKey));profile[key]=i<0?'':row[i];}
+ profile.admNo=admNo;profile.studentName=name;profile.className=cls;
+ let start=8;
+ // If headers clearly name FA/CCA/SA columns, use header matching.
+ const labelled=headers.some(h=>/fa\s*[1-6]|fa[1-6]|cca|summative|(^|[^a-z])sa([^a-z]|$)/i.test(clean(h)));
+ subjects.forEach((sub,si)=>{
+   const fa=[];
+   for(let f=1;f<=6;f++){
+     let i=-1;
+     if(labelled){const s=headerKey(sub);i=headers.findIndex(h=>{const k=headerKey(h);return (k.includes(s)|| (s==='mathematics'&&k.includes('math')) || (s==='evs'&&k.includes('environment')))&&new RegExp('fa'+f+'($|marks|score)').test(k);});}
+     const value=i>=0?row[i]:row[start+si*8+(f-1)];
+     fa.push(parseMark(value));
+   }
+   const findComponent=(component,offset)=>{let i=-1;if(labelled){const s=headerKey(sub);i=headers.findIndex(h=>{const k=headerKey(h);const subjectMatch=k.includes(s)||(s==='mathematics'&&k.includes('math'))||(s==='evs'&&k.includes('environment'));return subjectMatch&&k.includes(component);});}return parseMark(i>=0?row[i]:row[start+si*8+offset]);};
+   marks[sub]={fa,cca:findComponent('cca',6),sa:findComponent('sa',7)};
+ });
+ const valueAt=(index,fallback)=>index>=0?row[index]:(fallback===undefined?'':fallback);
+ const apaar=clean(valueAt(apaarIndex,'')),pen=clean(valueAt(penIndex,''));
+ return {rowNumber,profile:{...profile,rollNo:clean(profile.rollNo),fatherName:clean(profile.fatherName),motherName:clean(profile.motherName),contact:clean(profile.contact),dob:parseDate(profile.dob)},apaarId:apaar,penNo:pen,marks};
+}
+function validateMark(v,max,label){if(v===''||v===null||v===undefined||String(v).toLowerCase()==='ab')return null;const n=Number(v);if(!Number.isFinite(n)||n<0||n>max)return `${label} must be blank, Ab, or a number from 0 to ${max}.`;return null;}
+function validateParsed(item){if(item.invalid)return item.reason;for(const [subject,m] of Object.entries(item.marks)){for(let i=0;i<6;i++){const e=validateMark(m.fa[i],5,`${subject} FA${i+1} (row ${item.rowNumber})`);if(e)return e;}let e=validateMark(m.cca,20,`${subject} CCA (row ${item.rowNumber})`);if(e)return e;e=validateMark(m.sa,50,`${subject} SA (row ${item.rowNumber})`);if(e)return e;}return '';}
+function setProgress(n){$('progressFill').style.width=Math.max(0,Math.min(100,n))+'%';}
+function renderManualSubjects(){const body=$('manualMarksBody');body.replaceChildren();BASE_SUBJECTS.forEach(sub=>{const tr=document.createElement('tr');const td=document.createElement('td');td.textContent=sub;tr.append(td);for(let i=1;i<=8;i++){const cell=document.createElement('td'),input=document.createElement('input');input.type='number';input.className='marks-input';input.dataset.subject=sub;input.dataset.part=i<=6?'fa':'part';input.dataset.index=i<=6?i-1:(i===7?'cca':'sa');input.min='0';input.max=i<=6?'5':(i===7?'20':'50');input.step='any';input.setAttribute('aria-label',`${sub} ${i<=6?'FA'+i:i===7?'CCA':'SA'}`);cell.append(input);tr.append(cell);}body.append(tr);});updateSubjectRows();}
+function updateSubjectRows(){const allowed=subjectSet($('className').value);document.querySelectorAll('#manualMarksBody tr').forEach(tr=>{const sub=tr.cells[0].textContent;tr.classList.toggle('hidden',!allowed.includes(sub));});}
+function clearManual(){['admNo','rollNo','className','studentName','fatherName','attendance','discipline','sports','artCraft','remarks'].forEach(id=>$(id).value='');$('session').value='October 2026';document.querySelectorAll('#manualMarksBody input').forEach(i=>i.value='');$('manualStatus').className='status';}
+function manualMarks(){const marks={};subjectSet($('className').value).forEach(sub=>{const get=(part,index)=>{const input=document.querySelector(`#manualMarksBody input[data-subject="${CSS.escape(sub)}"][data-part="${part}"][data-index="${index}"]`);return input&&input.value!==''?Number(input.value):'';};marks[sub]={fa:Array.from({length:6},(_,i)=>get('fa',i)),cca:get('part','cca'),sa:get('part','sa')};});return marks;}
+async function lookupExisting(){const adm=clean($('admNo').value);if(!adm){status('manualStatus','Enter an admission number first.','error');return;}try{const [r,s]=await Promise.all([getDoc(doc(db,'results',adm)),getDoc(doc(db,'students',adm))]);if(!r.exists()&&!s.exists()){status('manualStatus','No matching result or student record was found.','error');return;}const d={...(s.exists()?s.data():{}),...(r.exists()?r.data():{})};$('rollNo').value=d.rollNo||d.rollNumber||'';$('className').value=normaliseClass(d.className||d.class||'');$('studentName').value=d.studentName||d.name||'';$('fatherName').value=d.fatherName||'';$('attendance').value=d.attendance??'';$('discipline').value=d.discipline||'';$('sports').value=d.sports||'';$('artCraft').value=d.artCraft||'';$('remarks').value=d.remarks||'';$('session').value=d.session||'October 2026';updateSubjectRows();document.querySelectorAll('#manualMarksBody input').forEach(i=>{const m=d.marks?.[i.dataset.subject];let v='';if(m){if(i.dataset.part==='fa')v=Array.isArray(m.fa)?m.fa[Number(i.dataset.index)]:m['fa'+(Number(i.dataset.index)+1)];else v=m[i.dataset.index];}i.value=(v===null||v===undefined||v==='Ab')?'':v;});status('manualStatus','Existing record loaded. Review all fields before saving.','ok');}catch(e){console.error(e);status('manualStatus','Could not load record: '+(e.message||'unknown error'),'error');}}
+async function saveManual(){const adm=clean($('admNo').value),cls=clean($('className').value),name=clean($('studentName').value);if(!adm||!cls||!name){status('manualStatus','Admission number, class and student name are required.','error');return;}const marks=manualMarks();for(const [sub,m] of Object.entries(marks)){for(let i=0;i<6;i++){const e=validateMark(m.fa[i],5,`${sub} FA${i+1}`);if(e){status('manualStatus',e,'error');return;}}let e=validateMark(m.cca,20,`${sub} CCA`);if(e){status('manualStatus',e,'error');return;}e=validateMark(m.sa,50,`${sub} SA`);if(e){status('manualStatus',e,'error');return;}}const att=$('attendance').value;if(att!==''&&(Number(att)<0||Number(att)>100)){status('manualStatus','Attendance must be between 0 and 100%.','error');return;}const now=new Date().toISOString();const data={admNo:adm,rollNo:clean($('rollNo').value),className:normaliseClass(cls),studentName:name,fatherName:clean($('fatherName').value),attendance:att===''?'':Number(att),remarks:clean($('remarks').value),discipline:$('discipline').value,sports:$('sports').value,artCraft:$('artCraft').value,marks,session:clean($('session').value)||'October 2026',updatedAt:now};$('saveManualBtn').disabled=true;try{await setDoc(doc(db,'results',adm),data,{merge:true});status('manualStatus','Assessment saved successfully.','ok');}catch(e){console.error(e);status('manualStatus','Save failed. Firebase may have denied this operation under its security rules. '+(e.message||''),'error');}finally{$('saveManualBtn').disabled=false;}}
+$('className').addEventListener('change',updateSubjectRows);
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;try{await signInWithEmailAndPassword(auth,clean($('email').value),$('password').value);status('authStatus','Sign-in successful.','ok');}catch(err){console.error(err);status('authStatus','Sign-in failed. Check the email/password and ensure this account exists in Firebase Authentication.','error');}finally{$('loginBtn').disabled=false;}});
+$('logoutBtn').addEventListener('click',()=>signOut(auth).catch(e=>status('authStatus',e.message,'error')));
+onAuthStateChanged(auth,user=>{activeUser=user;$('signedOut').classList.toggle('hidden',!!user);$('signedIn').classList.toggle('hidden',!user);$('tools').classList.toggle('hidden',!user);if(user){$('userEmail').textContent=user.email||'Authenticated staff';status('authStatus','You are signed in. Firebase rules will determine whether this account may read or write records.','ok');}else{$('userEmail').textContent='';status('authStatus','Sign in with an authorized staff account to continue.','info');}});
+$('className').value='1';renderManualSubjects();
+$('lookupBtn').addEventListener('click',lookupExisting);$('saveManualBtn').addEventListener('click',saveManual);$('resetManualBtn').addEventListener('click',clearManual);
+
+$('previewBtn').addEventListener('click',async()=>{
+ $('uploadLog').textContent='';$('previewTable').classList.add('hidden');$('uploadBtn').disabled=true;parsedRows=[];
+ const file=$('excelFile').files[0];if(!file){status('importStatus','Choose an Excel or CSV file first.','error');return;}
+ try{const buf=await file.arrayBuffer();const wb=XLSX.read(buf,{type:'array',cellDates:false});const ws=wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true});if(!rows.length)throw new Error('The selected workbook is empty.');
+ const headerRow=findHeaderRow(rows);if(headerRow<0)throw new Error('Could not find a header row containing both Admission No and Student Name. Please check the first worksheet.');
+ const headers=rows[headerRow];log(`Header row detected: ${headerRow+1}. Reading ${rows.length-headerRow-1} following rows.`);
+ const seen=new Set();for(let i=headerRow+1;i<rows.length;i++){const item=parseWorkbookRow(rows[i],headers,i+1,headerRow);if(!item)continue;const issue=validateParsed(item);if(issue)item.error=issue;if(item.profile?.admNo){const key=item.profile.admNo.toLowerCase();if(seen.has(key))item.error='Duplicate admission number in this workbook.';seen.add(key);}parsedRows.push(item);}
+ if(!parsedRows.length)throw new Error('No student data rows found below the header.');
+ const head=$('previewHead');head.replaceChildren();const hr=document.createElement('tr');['Excel row','Admission No','Student Name','Class','Subject count','Validation'].forEach(t=>{const th=document.createElement('th');th.textContent=t;hr.append(th);});head.append(hr);
+ const body=$('previewBody');body.replaceChildren();let bad=0;parsedRows.slice(0,200).forEach(item=>{const tr=document.createElement('tr');const values=[item.rowNumber,item.profile?.admNo||'—',item.profile?.studentName||'—',item.profile?.className||'—',Object.keys(item.marks||{}).length,item.error||'Ready'];values.forEach(v=>{const td=document.createElement('td');td.textContent=String(v);tr.append(td);});if(item.error){bad++;tr.style.background='#fff0ef';}body.append(tr);});
+ $('previewTable').classList.remove('hidden');$('uploadBtn').disabled=!parsedRows.some(x=>!x.error);status('importStatus',`Preview complete: ${parsedRows.length} rows found; ${bad} row(s) need correction. Preview shows up to 200 rows. Nothing has been saved yet.`,bad?'info':'ok');log('Preview only. Click “Save Valid Rows to Firebase” when the preview is correct.');
+ }catch(err){console.error(err);status('importStatus',err.message||'Could not read this workbook.','error');log('ERROR: '+(err.message||err));}
+});
+$('clearPreviewBtn').addEventListener('click',()=>{parsedRows=[];$('previewTable').classList.add('hidden');$('previewHead').replaceChildren();$('previewBody').replaceChildren();$('uploadBtn').disabled=true;$('progressFill').style.width='0%';$('uploadLog').textContent='Preview cleared.';$('importStatus').className='status';});
+$('uploadBtn').addEventListener('click',async()=>{
+ if(!activeUser){status('importStatus','Sign in first.','error');return;}const rows=parsedRows.filter(x=>!x.error);if(!rows.length){status('importStatus','There are no valid rows to save.','error');return;}
+ if(!confirm(`Save ${rows.length} valid student result row(s) to Firebase? Review the preview first.`))return;
+ $('uploadBtn').disabled=true;$('previewBtn').disabled=true;let ok=0,fail=0;const failures=[]; $('uploadLog').textContent='';
+ for(let i=0;i<rows.length;i++){const item=rows[i],p=item.profile,adm=p.admNo;try{
+  const ref=doc(db,'results',adm);const oldSnap=await getDoc(ref);const old=oldSnap.exists()?oldSnap.data():{};const now=new Date().toISOString();
+  const result={...old,admNo:adm,rollNo:p.rollNo||old.rollNo||'',className:p.className||old.className||'',studentName:p.studentName||old.studentName||'',fatherName:p.fatherName||old.fatherName||'',motherName:p.motherName||old.motherName||'',contact:p.contact||old.contact||'',dob:p.dob||old.dob||'',marks:item.marks,session:old.session||'October 2026',updatedAt:now,uploadedAt:old.uploadedAt||now};
+  if(item.apaarId)result.apaarId=item.apaarId;if(item.penNo)result.penNo=item.penNo;
+  await setDoc(ref,result,{merge:true});
+  const studentRef=doc(db,'students',adm);const studentSnap=await getDoc(studentRef);const prior=studentSnap.exists()?studentSnap.data():{};
+  const student={...prior,admNo:adm,name:p.studentName||prior.name||'',class:p.className||prior.class||'',rollNo:p.rollNo||prior.rollNo||'',fatherName:p.fatherName||prior.fatherName||'',motherName:p.motherName||prior.motherName||'',contact:p.contact||prior.contact||'',dob:p.dob||prior.dob||'',lastUpdated:now};
+  if(item.apaarId){student.apaarId=item.apaarId;student.apaarID=item.apaarId;}if(item.penNo){student.penNo=item.penNo;student.penNumber=item.penNo;}
+  await setDoc(studentRef,student,{merge:true});ok++;
+  log(`Saved ${adm} — ${p.studentName}`);setProgress(Math.round((i+1)/rows.length*100));
+ }catch(err){fail++;failures.push(`${adm}: ${err.message||err}`);log(`FAILED ${adm}: ${err.message||err}`);}
+ }
+ status('importStatus',`Import finished. Saved ${ok}; failed ${fail}.`+(failures.length?'\n'+failures.slice(0,8).join('\n'):''),fail?'error':'ok');
+ $('uploadBtn').disabled=false;$('previewBtn').disabled=false;
+});
+</script>
+</body>
+</html>
