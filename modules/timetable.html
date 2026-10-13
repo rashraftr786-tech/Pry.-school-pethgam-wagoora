@@ -1,367 +1,870 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Timetable Manager | GPS Pethgam</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Timetable Manager | GPS Pethgam</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<style>
+    .break-col,
+    .break-head {
+        background: repeating-linear-gradient(45deg, #fef3c7 0 6px, #fde68a 6px 12px) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    @media print {
+        .no-print { display: none !important; }
+        body { background: #fff !important; }
+        @page { size: A4 landscape; margin: 10mm; }
+        table { font-size: 10px; }
+    }
+</style>
 </head>
 <body class="bg-slate-50 min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-clock text-2xl text-indigo-300"></i>
-                <h1 class="font-black uppercase tracking-tighter">School Timetable</h1>
-            </div>
-            <a href="index.html" class="text-xs bg-indigo-700 px-4 py-2 rounded-full font-bold hover:bg-indigo-600 transition">ADMIN DASHBOARD</a>
+<!-- Navbar -->
+<nav class="bg-indigo-900 text-white p-4 shadow-lg no-print">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-clock text-2xl text-indigo-300"></i>
+            <h1 class="font-black uppercase tracking-tighter">School Timetable</h1>
         </div>
-    </nav>
+        <a href="index.html" class="text-xs bg-indigo-700 px-4 py-2 rounded-full font-bold hover:bg-indigo-600 transition">ADMIN DASHBOARD</a>
+    </div>
+</nav>
 
-    <main class="p-4 max-w-7xl mx-auto">
-        <!-- Warning banner (shown only when falling back to localStorage) -->
-        <div id="fallbackBanner" class="hidden bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-4 rounded-xl mb-4 no-print">
-            <p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i> Using local storage</p>
-            <p class="text-sm">Firestore permissions are missing. Data is saved in your browser only. <br>
-            To enable cloud sync, update your Firestore security rules to allow reads/writes.</p>
+<main class="p-4 max-w-7xl mx-auto">
+
+    <!-- Warning banner (shown when Firestore unavailable) -->
+    <div id="fallbackBanner" class="hidden bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-4 rounded-xl mb-4 no-print">
+        <p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i> Using local storage</p>
+        <p class="text-sm">Cloud sync is unavailable. Data is saved in this browser only.<br>
+        To enable cloud sync, check <code>init-firebase.js</code> and your Firestore security rules.</p>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SETTINGS PANEL (Admin)        -->
+    <!-- ============================= -->
+    <div id="settingsPanel" class="hidden bg-white p-6 rounded-3xl shadow-sm mb-6 border-2 border-indigo-200 no-print">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="font-black text-lg text-indigo-900 uppercase tracking-tight">
+                <i class="fas fa-sliders-h mr-2 text-indigo-500"></i> Timetable Settings
+            </h2>
+            <button onclick="toggleSettings()" class="text-slate-400 hover:text-slate-700"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Controls -->
-        <div class="bg-white p-6 rounded-3xl shadow-sm mb-6 border border-slate-200 no-print">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                <div>
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Filter by Teacher</label>
-                    <input type="text" id="teacherFilter" onkeyup="filterTeachers()" placeholder="Enter teacher name..." class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Periods -->
+            <div>
+                <label class="block text-[10px] font-black text-slate-500 uppercase mb-2">Number of Periods</label>
+                <div class="flex gap-2 mb-4">
+                    <input type="number" id="numPeriods" min="1" max="15" value="10"
+                           class="w-24 p-3 rounded-xl border border-slate-200 font-black text-center outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <button onclick="applyPeriodCount()"
+                            class="bg-indigo-100 text-indigo-700 font-black px-4 rounded-xl hover:bg-indigo-200 transition text-xs uppercase">
+                        Apply
+                    </button>
                 </div>
-                <div class="flex gap-2 col-span-2 justify-end">
-                    <button onclick="openAddModal()" class="flex-1 bg-indigo-600 text-white font-black py-3 rounded-xl shadow-md hover:bg-indigo-700 transition">
-                        <i class="fas fa-plus mr-2"></i> ADD PERIOD
-                    </button>
-                    <button onclick="exportData()" class="bg-emerald-600 text-white p-3 rounded-xl" title="Export to JSON">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    <button onclick="importData()" class="bg-blue-600 text-white p-3 rounded-xl" title="Import from JSON">
-                        <i class="fas fa-upload"></i>
-                    </button>
-                    <button onclick="window.print()" class="bg-slate-800 text-white p-3 rounded-xl">
-                        <i class="fas fa-print"></i>
+                <p class="text-[10px] font-black text-slate-500 uppercase mb-2">Period Timings</p>
+                <div id="periodRows" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Breaks -->
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase">General Breaks (Assembly / Lunch / etc.)</label>
+                    <button onclick="addBreakRow()"
+                            class="bg-amber-100 text-amber-700 font-black px-3 py-1.5 rounded-lg hover:bg-amber-200 transition text-[10px] uppercase">
+                        <i class="fas fa-plus mr-1"></i> Add Break
                     </button>
                 </div>
+                <div id="breakRows" class="space-y-3 max-h-72 overflow-y-auto pr-1"></div>
             </div>
         </div>
 
-        <!-- Timetable Table -->
-        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-center border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-100">
-                            <th class="p-3 text-[11px] font-black uppercase border-r">S. No.</th>
-                            <th class="p-3 text-[11px] font-black uppercase border-r">Name of the Teacher</th>
-                            <th class="p-3 text-[10px] font-bold">9:30–10:05</th>
-                            <th class="p-3 text-[10px] font-bold">10:05–10:40</th>
-                            <th class="p-3 text-[10px] font-bold">10:40–11:15</th>
-                            <th class="p-3 text-[10px] font-bold">11:15–11:50</th>
-                            <th class="p-3 text-[10px] font-bold">11:50–12:25</th>
-                            <th class="p-3 text-[10px] font-bold">12:25–1:00</th>
-                            <th class="p-3 text-[10px] font-bold">1:00–2:00</th>
-                            <th class="p-3 text-[10px] font-bold">2:00–2:40</th>
-                            <th class="p-3 text-[10px] font-bold">2:40–3:20</th>
-                            <th class="p-3 text-[10px] font-bold">3:20–3:30</th>
-                        </tr>
-                    </thead>
-                    <tbody id="timetableBody" class="font-semibold text-slate-700">
-                        <!-- dynamically generated -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Official Footer (only shown in print) -->
-        <div id="printFooter" class="hidden print:block mt-10 text-center text-sm border-t pt-6">
-            <p class="font-bold text-lg">Office of the Headmaster</p>
-            <p class="font-bold">Government Primary School Pethgam Wagoora – 193109</p>
-            <p class="italic">Time Table With Effect From April 2026</p>
-            <div class="grid grid-cols-4 gap-4 mt-6 text-xs">
-                <div>Absentism</div>
-                <div>Morning Assembly</div>
-                <div>Absentism</div>
-                <div>Absentism</div>
-                <div>Absentism</div>
-                <div>Absentism</div>
-                <div>Absentistion</div>
-                <div>Absentistion</div>
-                <div>Absentistion</div>
-                <div>Absentistion</div>
-            </div>
-            <p class="mt-8 text-right font-bold">Signature of Headmaster</p>
-        </div>
-    </main>
-
-    <!-- Add / Edit Modal -->
-    <div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
-            <h2 class="text-xl font-black mb-4">Assign / Edit Period</h2>
-            <div class="space-y-3">
-                <input type="text" id="teacherInp" placeholder="Teacher Name" class="w-full p-3 border rounded-xl font-bold" />
-                <select id="periodInp" class="w-full p-3 border rounded-xl font-bold">
-                    <option value="P1">9:30–10:05</option>
-                    <option value="P2">10:05–10:40</option>
-                    <option value="P3">10:40–11:15</option>
-                    <option value="P4">11:15–11:50</option>
-                    <option value="P5">11:50–12:25</option>
-                    <option value="P6">12:25–1:00</option>
-                    <option value="P7">1:00–2:00</option>
-                    <option value="P8">2:00–2:40</option>
-                    <option value="P9">2:40–3:20</option>
-                    <option value="P10">3:20–3:30</option>
-                </select>
-                <input type="text" id="subjectInp" placeholder="Subject (e.g., 4th Mathematics)" class="w-full p-3 border rounded-xl font-bold" />
-                <div class="flex gap-2 mt-4">
-                    <button onclick="closeAddModal()" class="flex-1 bg-slate-200 py-3 rounded-xl font-bold">Cancel</button>
-                    <button onclick="savePeriod()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">Save</button>
-                </div>
-            </div>
+        <div class="flex flex-wrap gap-2 mt-6 pt-4 border-t border-slate-100">
+            <button onclick="saveSettings()" class="bg-indigo-600 text-white font-black px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition text-xs uppercase">
+                <i class="fas fa-save mr-2"></i> Save Settings
+            </button>
+            <button onclick="resetSettings()" class="bg-slate-200 text-slate-700 font-black px-6 py-3 rounded-xl hover:bg-slate-300 transition text-xs uppercase">
+                <i class="fas fa-rotate-left mr-2"></i> Reset Default
+            </button>
         </div>
     </div>
 
-    <script type="module">
-        // -----------------------------
-        // CONFIG
-        // -----------------------------
-        const STORAGE_KEY = 'timetable_data';
-        const PERIODS = ['P1','P2','P3','P4','P5','P6','P7','P8','P9','P10'];
+    <!-- ============================= -->
+    <!-- CONTROLS                      -->
+    <!-- ============================= -->
+    <div class="bg-white p-6 rounded-3xl shadow-sm mb-6 border border-slate-200 no-print">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-end">
+            <div>
+                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Filter by Teacher</label>
+                <input type="text" id="teacherFilter" onkeyup="filterTeachers()" placeholder="Enter teacher name..."
+                       class="w-full p-3 rounded-xl border border-slate-200 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div class="flex flex-wrap gap-2 justify-end">
+                <button onclick="toggleSettings()" class="bg-slate-700 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-slate-800 transition text-[10px] uppercase">
+                    <i class="fas fa-sliders-h mr-1"></i> Settings
+                </button>
+                <button onclick="openAddModal()" class="bg-indigo-600 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition text-[10px] uppercase">
+                    <i class="fas fa-plus mr-1"></i> Add Period
+                </button>
+                <button onclick="document.getElementById('excelInput').click()" class="bg-emerald-600 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-emerald-700 transition text-[10px] uppercase">
+                    <i class="fas fa-file-excel mr-1"></i> Upload Excel
+                </button>
+                <button onclick="exportExcel()" class="bg-teal-600 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-teal-700 transition text-[10px] uppercase">
+                    <i class="fas fa-download mr-1"></i> Export Excel
+                </button>
+                <button onclick="downloadTemplate()" class="bg-sky-600 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-sky-700 transition text-[10px] uppercase">
+                    <i class="fas fa-file-lines mr-1"></i> Template
+                </button>
+                <button onclick="window.print()" class="bg-slate-800 text-white font-black px-4 py-3 rounded-xl shadow-md hover:bg-slate-900 transition text-[10px] uppercase">
+                    <i class="fas fa-print mr-1"></i> Print
+                </button>
+            </div>
+        </div>
+        <input type="file" id="excelInput" accept=".xlsx,.xls,.csv" class="hidden" />
+    </div>
 
-        // -----------------------------
-        // IMPORTS
-        // -----------------------------
-        import { db } from './init-firebase.js';
-        import { collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <!-- ============================= -->
+    <!-- TIMETABLE TABLE               -->
+    <!-- ============================= -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse text-sm">
+                <thead id="timetableHead"></thead>
+                <tbody id="timetableBody" class="font-semibold text-slate-700"></tbody>
+            </table>
+        </div>
+    </div>
 
-        // -----------------------------
-        // STATE
-        // -----------------------------
-        let useFirestore = true;      // will be set to false if Firestore fails
-        let allEntries = {};          // { teacher: { P1: 'subject', ... } }
+    <!-- Official Footer (print only) -->
+    <div id="printFooter" class="hidden print:block mt-10 text-center text-sm border-t pt-6">
+        <p class="font-bold text-lg">Office of the Headmaster</p>
+        <p class="font-bold">Government Primary School Pethgam Wagoora – 193109</p>
+        <p class="italic">Time Table With Effect From April 2026</p>
+        <p class="mt-8 text-right font-bold">Signature of Headmaster</p>
+    </div>
+</main>
 
-        // -----------------------------
-        // DOM REFS
-        // -----------------------------
-        const body = document.getElementById('timetableBody');
-        const banner = document.getElementById('fallbackBanner');
+<!-- ============================= -->
+<!-- ADD / EDIT PERIOD MODAL       -->
+<!-- ============================= -->
+<div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+        <h2 class="text-xl font-black mb-4">Assign / Edit Period</h2>
+        <div class="space-y-3">
+            <input type="text" id="teacherInp" placeholder="Teacher Name" class="w-full p-3 border rounded-xl font-bold" />
+            <select id="periodInp" class="w-full p-3 border rounded-xl font-bold"></select>
+            <input type="text" id="subjectInp" placeholder="Subject (e.g., 4th Mathematics)" class="w-full p-3 border rounded-xl font-bold" />
+            <div class="flex gap-2 mt-4">
+                <button onclick="closeAddModal()" class="flex-1 bg-slate-200 py-3 rounded-xl font-bold">Cancel</button>
+                <button onclick="savePeriod()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        // -----------------------------
-        // HELPERS – LocalStorage
-        // -----------------------------
-        function saveToLocal(entries) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+<script type="module">
+/* =====================================================================
+   CONFIG & CONSTANTS
+   ===================================================================== */
+const STORAGE_KEY = 'timetable_data';
+const CONFIG_KEY  = 'timetable_config';
+
+const DEFAULT_PERIODS = [
+    ['09:30','10:05'], ['10:05','10:40'], ['10:40','11:15'], ['11:15','11:50'],
+    ['11:50','12:25'], ['12:25','13:00'], ['13:00','14:00'], ['14:00','14:40'],
+    ['14:40','15:20'], ['15:20','15:30']
+];
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let db = null;
+let fs = null;              // firebase-firestore module
+let useFirestore = false;
+
+let config = defaultConfig();
+let allEntries = {};        // { teacher: { P1: 'subject', ... } }
+
+/* =====================================================================
+   DOM REFS
+   ===================================================================== */
+const body   = document.getElementById('timetableBody');
+const head   = document.getElementById('timetableHead');
+const banner = document.getElementById('fallbackBanner');
+
+/* =====================================================================
+   SMALL HELPERS
+   ===================================================================== */
+const escapeHtml = (s = '') => String(s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+));
+
+function fmt12(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    const hr = h % 12 === 0 ? 12 : h % 12;
+    return `${hr}:${String(m).padStart(2, '0')}`;
+}
+
+function timeLabel(p) {
+    if (!p || !p.start || !p.end) return '';
+    return `${fmt12(p.start)}–${fmt12(p.end)}`;
+}
+
+function addMinutes(hhmm, mins) {
+    const [h, m] = hhmm.split(':').map(Number);
+    let total = (h * 60 + m + mins) % 1440;
+    if (total < 0) total += 1440;
+    return String(Math.floor(total / 60)).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
+}
+
+function timeKey(t) {                       // "09:30" -> "930"
+    if (!t) return '';
+    const [h, m] = t.split(':');
+    return String(parseInt(h, 10)) + m;
+}
+
+/* =====================================================================
+   CONFIG MODEL
+   ===================================================================== */
+function defaultPeriod(i, prev) {
+    if (i < DEFAULT_PERIODS.length) return { start: DEFAULT_PERIODS[i][0], end: DEFAULT_PERIODS[i][1] };
+    const base = prev?.end || '15:30';
+    return { start: base, end: addMinutes(base, 35) };
+}
+
+function defaultConfig() {
+    const periods = [];
+    for (let i = 0; i < 10; i++) {
+        periods.push({ id: 'P' + (i + 1), ...defaultPeriod(i, periods[i - 1]) });
+    }
+    return { periods, breaks: [] };
+}
+
+function normalizeConfig(raw) {
+    const cfg = { periods: [], breaks: [] };
+    if (raw && Array.isArray(raw.periods)) {
+        cfg.periods = raw.periods.map((p, i) => ({
+            id: p.id || 'P' + (i + 1),
+            start: p.start || '',
+            end: p.end || ''
+        }));
+    }
+    if (!cfg.periods.length) cfg.periods = defaultConfig().periods;
+
+    if (raw && Array.isArray(raw.breaks)) {
+        cfg.breaks = raw.breaks.map((b, i) => ({
+            id: b.id || 'B' + (i + 1),
+            name: b.name || '',
+            position: Number(b.position) || 0,
+            start: b.start || '',
+            end: b.end || ''
+        }));
+    }
+    return cfg;
+}
+
+/* =====================================================================
+   SLOTS  (ordered sequence of periods + breaks)
+   ===================================================================== */
+function getSlots() {
+    const slots = [];
+    const n = config.periods.length;
+    for (let i = 0; i <= n; i++) {
+        config.breaks
+            .filter(b => Number(b.position) === i)
+            .forEach(b => slots.push({
+                type: 'break',
+                id: b.id,
+                name: b.name || 'Break',
+                label: (b.start && b.end) ? timeLabel(b) : ''
+            }));
+        if (i < n) {
+            const p = config.periods[i];
+            slots.push({ type: 'period', id: p.id, index: i, label: timeLabel(p) });
         }
+    }
+    return slots;
+}
 
-        function loadFromLocal() {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : {};
-        }
+/* =====================================================================
+   FIREBASE (optional, fault tolerant)
+   ===================================================================== */
+async function initFirebase() {
+    try {
+        const mod = await import('./init-firebase.js');
+        db = mod.db;
+        fs = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+        useFirestore = true;
+        banner.classList.add('hidden');
+    } catch (e) {
+        console.warn('Firebase unavailable — local storage only.', e);
+        useFirestore = false;
+        banner.classList.remove('hidden');
+    }
+}
 
-        // -----------------------------
-        // LOAD DATA (Firestore first, fallback to local)
-        // -----------------------------
-        async function loadTimetable() {
-            body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">Loading timetable...</td></tr>';
+/* =====================================================================
+   LOCAL STORAGE
+   ===================================================================== */
+function saveToLocal(entries) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+function loadFromLocal() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+}
 
-            try {
-                // Try Firestore
-                const snap = await getDocs(collection(db, 'timetables'));
-                const entries = {};
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.teacher && data.period && data.subject) {
-                        if (!entries[data.teacher]) entries[data.teacher] = {};
-                        entries[data.teacher][data.period] = data.subject;
-                    }
-                });
-                // Success – save to local as backup and render
-                allEntries = entries;
-                saveToLocal(entries);
-                useFirestore = true;
-                banner.classList.add('hidden');
-                renderTimetable(entries);
-            } catch (err) {
-                console.warn('Firestore read failed, using localStorage:', err);
-                // Fallback to localStorage
-                useFirestore = false;
-                banner.classList.remove('hidden');
-                const localData = loadFromLocal();
-                allEntries = localData;
-                renderTimetable(localData);
+/* =====================================================================
+   LOAD CONFIG
+   ===================================================================== */
+async function loadConfigFromStore() {
+    const raw = localStorage.getItem(CONFIG_KEY);
+    if (raw) {
+        try { config = normalizeConfig(JSON.parse(raw)); } catch (e) { console.warn(e); }
+    }
+    if (useFirestore && db && fs) {
+        try {
+            const snap = await fs.getDoc(fs.doc(db, 'settings', 'timetable_config'));
+            if (snap.exists()) {
+                config = normalizeConfig(snap.data());
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
             }
-        }
+        } catch (e) { console.warn('Config load failed:', e); }
+    }
+}
 
-        // -----------------------------
-        // RENDER TABLE
-        // -----------------------------
-        function renderTimetable(entries) {
-            const teachers = Object.keys(entries).sort();
-            if (teachers.length === 0) {
-                body.innerHTML = '<tr><td colspan="12" class="p-8 text-slate-400">No timetable entries yet. Add a period!</td></tr>';
-                return;
-            }
+async function persistConfig() {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+    if (useFirestore && db && fs) {
+        try {
+            await fs.setDoc(fs.doc(db, 'settings', 'timetable_config'), config);
+        } catch (e) { console.warn('Config cloud save failed:', e); }
+    }
+}
 
-            let html = '';
-            teachers.forEach((teacher, idx) => {
-                const row = entries[teacher];
-                html += `<tr class="border-b border-slate-100 teacher-row" data-teacher="${teacher}">
-                    <td class="p-3 bg-slate-50 font-black text-indigo-900 border-r">${idx+1}</td>
-                    <td class="p-3 font-bold text-left border-r">${teacher}</td>`;
-                PERIODS.forEach(p => {
-                    const subject = row[p] || '';
-                    html += `<td class="p-3 period-cell" data-period="${p}">${subject}</td>`;
-                });
-                html += '</tr>';
-            });
-            body.innerHTML = html;
-        }
-
-        // -----------------------------
-        // SAVE PERIOD (Firestore or localStorage)
-        // -----------------------------
-        window.savePeriod = async () => {
-            const teacher = document.getElementById('teacherInp').value.trim();
-            const period = document.getElementById('periodInp').value;
-            const subject = document.getElementById('subjectInp').value.trim();
-
-            if (!teacher) return alert('Please enter a teacher name.');
-            if (!subject) return alert('Please enter a subject.');
-
-            // Update local state
-            if (!allEntries[teacher]) allEntries[teacher] = {};
-            allEntries[teacher][period] = subject;
-            saveToLocal(allEntries);
-            renderTimetable(allEntries);
-
-            // Try to save to Firestore if available
-            if (useFirestore) {
-                const docId = `${teacher.replace(/\s+/g,'_')}_${period}`;
-                try {
-                    await setDoc(doc(db, 'timetables', docId), {
-                        teacher,
-                        period,
-                        subject,
-                        updatedAt: new Date().toISOString()
-                    });
-                } catch (e) {
-                    console.warn('Firestore save failed, but data is saved locally:', e);
-                    // Switch to local-only mode
-                    useFirestore = false;
-                    banner.classList.remove('hidden');
+/* =====================================================================
+   LOAD TIMETABLE ENTRIES
+   ===================================================================== */
+async function loadTimetable() {
+    body.innerHTML = '<tr><td colspan="20" class="p-8 text-slate-400">Loading timetable...</td></tr>';
+    if (useFirestore && db && fs) {
+        try {
+            const snap = await fs.getDocs(fs.collection(db, 'timetables'));
+            const entries = {};
+            snap.forEach(d => {
+                const data = d.data();
+                if (data.teacher && data.period && data.subject) {
+                    if (!entries[data.teacher]) entries[data.teacher] = {};
+                    entries[data.teacher][data.period] = data.subject;
                 }
-            }
-
-            closeAddModal();
-        };
-
-        // -----------------------------
-        // FILTER
-        // -----------------------------
-        window.filterTeachers = () => {
-            const term = document.getElementById('teacherFilter').value.toLowerCase().trim();
-            const rows = document.querySelectorAll('.teacher-row');
-            rows.forEach(row => {
-                const teacher = row.dataset.teacher.toLowerCase();
-                if (term && !teacher.includes(term)) {
-                    row.style.opacity = '0.15';
-                } else {
-                    row.style.opacity = '1';
-                }
             });
-        };
+            allEntries = entries;
+            saveToLocal(entries);
+            banner.classList.add('hidden');
+            renderTimetable();
+            return;
+        } catch (e) {
+            console.warn('Firestore read failed, using localStorage:', e);
+            useFirestore = false;
+            banner.classList.remove('hidden');
+        }
+    }
+    allEntries = loadFromLocal();
+    renderTimetable();
+}
 
-        // -----------------------------
-        // MODAL
-        // -----------------------------
-        window.openAddModal = (teacher = '', period = '', subject = '') => {
-            document.getElementById('teacherInp').value = teacher;
-            document.getElementById('periodInp').value = period || 'P1';
-            document.getElementById('subjectInp').value = subject;
-            document.getElementById('addModal').style.display = 'flex';
-        };
-        window.closeAddModal = () => {
-            document.getElementById('addModal').style.display = 'none';
-        };
+/* =====================================================================
+   RENDER — TABLE HEAD
+   ===================================================================== */
+function renderTableHead() {
+    const slots = getSlots();
+    let html = `<tr class="bg-indigo-50 text-indigo-900 border-b border-indigo-100">
+        <th class="p-3 text-[11px] font-black uppercase border-r">S. No.</th>
+        <th class="p-3 text-[11px] font-black uppercase border-r min-w-[160px]">Name of the Teacher</th>`;
 
-        // Click on any cell to edit
-        document.addEventListener('click', (e) => {
-            const cell = e.target.closest('.period-cell');
-            if (!cell) return;
-            const row = cell.closest('.teacher-row');
-            if (!row) return;
-            const teacher = row.dataset.teacher;
-            const period = cell.dataset.period;
-            const subject = cell.textContent.trim();
-            openAddModal(teacher, period, subject);
+    slots.forEach(s => {
+        if (s.type === 'period') {
+            html += `<th class="p-3 text-[10px] font-bold border-r whitespace-nowrap">${escapeHtml(s.label || s.id)}</th>`;
+        } else {
+            html += `<th class="p-3 text-[10px] font-black uppercase border-r bg-amber-100 text-amber-900 whitespace-nowrap break-head">
+                        ${escapeHtml(s.name)}
+                        ${s.label ? `<div class="font-normal normal-case text-[9px]">${escapeHtml(s.label)}</div>` : ''}
+                     </th>`;
+        }
+    });
+    html += '</tr>';
+    head.innerHTML = html;
+}
+
+/* =====================================================================
+   RENDER — TABLE BODY
+   ===================================================================== */
+function renderTimetable() {
+    const slots = getSlots();
+    const teachers = Object.keys(allEntries).sort((a, b) => a.localeCompare(b));
+
+    if (!teachers.length) {
+        body.innerHTML = `<tr><td colspan="${slots.length + 2}" class="p-8 text-slate-400">
+            No timetable entries yet. Add a period manually or upload an Excel file.</td></tr>`;
+        return;
+    }
+
+    let html = '';
+    teachers.forEach((teacher, idx) => {
+        const row = allEntries[teacher] || {};
+        html += `<tr class="border-b border-slate-100 teacher-row" data-teacher="${escapeHtml(teacher)}">
+            <td class="p-3 bg-slate-50 font-black text-indigo-900 border-r">${idx + 1}</td>
+            <td class="p-3 font-bold text-left border-r whitespace-nowrap">${escapeHtml(teacher)}</td>`;
+
+        slots.forEach(s => {
+            if (s.type === 'break') {
+                html += `<td class="p-3 border-r break-col"></td>`;
+            } else {
+                const subject = row[s.id] || '';
+                html += `<td class="p-3 period-cell border-r cursor-pointer hover:bg-indigo-50 transition"
+                             data-period="${escapeHtml(s.id)}">${escapeHtml(subject)}</td>`;
+            }
         });
+        html += '</tr>';
+    });
+    body.innerHTML = html;
+}
 
-        // -----------------------------
-        // EXPORT / IMPORT (JSON)
-        // -----------------------------
-        window.exportData = () => {
-            const data = allEntries;
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `timetable_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+/* =====================================================================
+   SETTINGS PANEL — RENDER
+   ===================================================================== */
+function toggleSettings() {
+    document.getElementById('settingsPanel').classList.toggle('hidden');
+}
+
+function positionOptions(selected) {
+    const n = config.periods.length;
+    let html = `<option value="0" ${Number(selected) === 0 ? 'selected' : ''}>Before Period 1</option>`;
+    for (let i = 1; i <= n; i++) {
+        html += `<option value="${i}" ${Number(selected) === i ? 'selected' : ''}>After Period ${i}</option>`;
+    }
+    return html;
+}
+
+function renderSettings() {
+    document.getElementById('numPeriods').value = config.periods.length;
+    renderPeriodRows();
+    renderBreakRows();
+}
+
+function renderPeriodRows() {
+    const wrap = document.getElementById('periodRows');
+    wrap.innerHTML = config.periods.map((p, i) => `
+        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl">
+            <span class="w-16 text-[10px] font-black uppercase text-slate-500">Period ${i + 1}</span>
+            <input type="time" data-pstart="${i}" value="${escapeHtml(p.start)}"
+                   class="flex-1 p-2 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400" />
+            <span class="text-slate-400">–</span>
+            <input type="time" data-pend="${i}" value="${escapeHtml(p.end)}"
+                   class="flex-1 p-2 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400" />
+        </div>`).join('');
+}
+
+function renderBreakRows() {
+    const wrap = document.getElementById('breakRows');
+    if (!config.breaks.length) {
+        wrap.innerHTML = '<p class="text-xs text-slate-400 italic py-3">No breaks added yet. Click “Add Break” to insert Morning Assembly, Lunch Break, etc.</p>';
+        return;
+    }
+    wrap.innerHTML = config.breaks.map((b, i) => `
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl space-y-2">
+            <div class="flex gap-2">
+                <input type="text" data-bname="${i}" value="${escapeHtml(b.name)}" placeholder="Break name (e.g. Lunch Break)"
+                       class="flex-1 p-2 rounded-lg border border-amber-200 text-sm font-bold outline-none focus:ring-2 focus:ring-amber-400" />
+                <button onclick="removeBreak(${i})" class="px-3 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition">
+                    <i class="fas fa-trash text-xs"></i>
+                </button>
+            </div>
+            <div class="flex items-center gap-2">
+                <select data-bpos="${i}" class="flex-1 p-2 rounded-lg border border-amber-200 text-[11px] font-bold outline-none focus:ring-2 focus:ring-amber-400">
+                    ${positionOptions(b.position)}
+                </select>
+                <input type="time" data-bstart="${i}" value="${escapeHtml(b.start)}"
+                       class="p-2 rounded-lg border border-amber-200 text-sm font-bold outline-none focus:ring-2 focus:ring-amber-400" />
+                <span class="text-slate-400">–</span>
+                <input type="time" data-bend="${i}" value="${escapeHtml(b.end)}"
+                       class="p-2 rounded-lg border border-amber-200 text-sm font-bold outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+        </div>`).join('');
+}
+
+/* ---------- read settings from DOM ---------- */
+function readPeriodsFromDOM() {
+    const rows = [];
+    document.querySelectorAll('[data-pstart]').forEach(inp => {
+        const i = +inp.dataset.pstart;
+        rows[i] = rows[i] || {};
+        rows[i].start = inp.value;
+    });
+    document.querySelectorAll('[data-pend]').forEach(inp => {
+        const i = +inp.dataset.pend;
+        rows[i] = rows[i] || {};
+        rows[i].end = inp.value;
+    });
+    return rows;
+}
+
+function readBreaksFromDOM() {
+    return [...document.querySelectorAll('[data-bname]')].map(inp => {
+        const i = +inp.dataset.bname;
+        return {
+            name: inp.value.trim(),
+            position: Number(document.querySelector(`[data-bpos="${i}"]`)?.value ?? 0),
+            start: document.querySelector(`[data-bstart="${i}"]`)?.value || '',
+            end: document.querySelector(`[data-bend="${i}"]`)?.value || ''
         };
+    });
+}
 
-        window.importData = () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'application/json';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    try {
-                        const data = JSON.parse(ev.target.result);
-                        allEntries = data;
-                        saveToLocal(data);
-                        renderTimetable(data);
-                        // Optionally sync to Firestore if online
-                        if (useFirestore) {
-                            // We could batch sync, but for simplicity we just note it's local-only now
-                            // Force local mode to avoid partial sync issues.
-                            useFirestore = false;
-                            banner.classList.remove('hidden');
-                            alert('Data imported locally. To sync to cloud, fix Firestore permissions.');
-                        }
-                    } catch (err) {
-                        alert('Invalid JSON file.');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        };
+/* ---------- settings actions ---------- */
+window.applyPeriodCount = () => {
+    const n = Math.max(1, Math.min(15, parseInt(document.getElementById('numPeriods').value) || 1));
+    const existingPeriods = readPeriodsFromDOM();
+    const existingBreaks = readBreaksFromDOM();
 
-        // -----------------------------
-        // PRINT handling
-        // -----------------------------
-        window.addEventListener('beforeprint', () => {
-            document.getElementById('printFooter').classList.remove('hidden');
+    const periods = [];
+    for (let i = 0; i < n; i++) {
+        const ex = existingPeriods[i];
+        periods.push({
+            id: 'P' + (i + 1),
+            ...(ex && (ex.start || ex.end) ? ex : defaultPeriod(i, periods[i - 1]))
         });
-        window.addEventListener('afterprint', () => {
-            document.getElementById('printFooter').classList.add('hidden');
-        });
+    }
+    config.periods = periods;
+    config.breaks = existingBreaks.map(b => ({ ...b, position: Math.min(b.position, n) }));
+    renderSettings();
+};
 
-        // -----------------------------
-        // INIT
-        // -----------------------------
-        document.addEventListener('DOMContentLoaded', loadTimetable);
-    </script>
+window.addBreakRow = () => {
+    const breaks = readBreaksFromDOM();
+    breaks.push({ name: '', position: 0, start: '', end: '' });
+    config.breaks = breaks;
+    renderBreakRows();
+};
+
+window.removeBreak = (i) => {
+    const breaks = readBreaksFromDOM();
+    breaks.splice(i, 1);
+    config.breaks = breaks;
+    renderBreakRows();
+};
+
+window.saveSettings = async () => {
+    const periods = readPeriodsFromDOM();
+    const breaks = readBreaksFromDOM().filter(b => b.name);
+
+    config.periods = periods.map((p, i) => ({
+        id: 'P' + (i + 1),
+        start: p?.start || '',
+        end: p?.end || ''
+    }));
+    config.breaks = breaks.map((b, i) => ({ id: 'B' + (i + 1), ...b }));
+
+    await persistConfig();
+    renderSettings();
+    renderTableHead();
+    renderTimetable();
+    refreshPeriodSelect();
+    alert('Settings saved successfully.');
+};
+
+window.resetSettings = async () => {
+    if (!confirm('Reset period timings and breaks to default?')) return;
+    config = defaultConfig();
+    await persistConfig();
+    renderSettings();
+    renderTableHead();
+    renderTimetable();
+    refreshPeriodSelect();
+};
+
+/* =====================================================================
+   ADD / EDIT PERIOD MODAL
+   ===================================================================== */
+function refreshPeriodSelect() {
+    const sel = document.getElementById('periodInp');
+    sel.innerHTML = config.periods.map(p =>
+        `<option value="${escapeHtml(p.id)}">${escapeHtml(p.id)} · ${escapeHtml(timeLabel(p))}</option>`
+    ).join('');
+}
+
+window.openAddModal = (teacher = '', period = '', subject = '') => {
+    refreshPeriodSelect();
+    document.getElementById('teacherInp').value = teacher;
+    if (period) document.getElementById('periodInp').value = period;
+    document.getElementById('subjectInp').value = subject;
+    document.getElementById('addModal').style.display = 'flex';
+};
+
+window.closeAddModal = () => {
+    document.getElementById('addModal').style.display = 'none';
+};
+
+window.savePeriod = async () => {
+    const teacher = document.getElementById('teacherInp').value.trim();
+    const period  = document.getElementById('periodInp').value;
+    const subject = document.getElementById('subjectInp').value.trim();
+
+    if (!teacher) return alert('Please enter a teacher name.');
+    if (!subject) return alert('Please enter a subject.');
+
+    if (!allEntries[teacher]) allEntries[teacher] = {};
+    allEntries[teacher][period] = subject;
+
+    saveToLocal(allEntries);
+    renderTimetable();
+
+    if (useFirestore && db && fs) {
+        const docId = `${teacher.replace(/\s+/g, '_')}_${period}`;
+        try {
+            await fs.setDoc(fs.doc(db, 'timetables', docId), {
+                teacher, period, subject,
+                updatedAt: new Date().toISOString()
+            });
+        } catch (e) {
+            console.warn('Firestore save failed, saved locally:', e);
+            useFirestore = false;
+            banner.classList.remove('hidden');
+        }
+    }
+    closeAddModal();
+};
+
+/* Click a cell to edit it */
+document.addEventListener('click', (e) => {
+    const cell = e.target.closest('.period-cell');
+    if (!cell) return;
+    const row = cell.closest('.teacher-row');
+    if (!row) return;
+    openAddModal(row.dataset.teacher, cell.dataset.period, cell.textContent.trim());
+});
+
+/* =====================================================================
+   FILTER
+   ===================================================================== */
+window.filterTeachers = () => {
+    const term = document.getElementById('teacherFilter').value.toLowerCase().trim();
+    document.querySelectorAll('.teacher-row').forEach(row => {
+        const teacher = (row.dataset.teacher || '').toLowerCase();
+        row.style.opacity = (!term || teacher.includes(term)) ? '1' : '0.15';
+    });
+};
+
+/* =====================================================================
+   EXCEL — EXPORT
+   ===================================================================== */
+function buildExportRows(includeData) {
+    const slots = getSlots();
+    const header = [
+        'S. No.',
+        'Name of the Teacher',
+        ...slots.map(s => s.type === 'period' ? `${s.id} (${s.label})` : s.name)
+    ];
+    const rows = [header];
+
+    if (includeData) {
+        Object.keys(allEntries).sort((a, b) => a.localeCompare(b)).forEach((t, i) => {
+            const row = [i + 1, t];
+            slots.forEach(s => row.push(s.type === 'period' ? (allEntries[t]?.[s.id] || '') : ''));
+            rows.push(row);
+        });
+    }
+    return rows;
+}
+
+window.exportExcel = () => {
+    if (typeof XLSX === 'undefined') return alert('Excel library not loaded. Check your internet connection.');
+    const ws = XLSX.utils.aoa_to_sheet(buildExportRows(true));
+    ws['!cols'] = [{ wch: 6 }, { wch: 28 }, ...getSlots().map(() => ({ wch: 16 }))];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Timetable');
+    XLSX.writeFile(wb, `Timetable_${new Date().toISOString().slice(0, 10)}.xlsx`);
+};
+
+window.downloadTemplate = () => {
+    if (typeof XLSX === 'undefined') return alert('Excel library not loaded. Check your internet connection.');
+    const ws = XLSX.utils.aoa_to_sheet(buildExportRows(false));
+    ws['!cols'] = [{ wch: 6 }, { wch: 28 }, ...getSlots().map(() => ({ wch: 18 }))];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Timetable');
+    XLSX.writeFile(wb, 'Timetable_Template.xlsx');
+};
+
+/* =====================================================================
+   EXCEL — IMPORT
+   ===================================================================== */
+document.getElementById('excelInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) importExcelFile(file);
+    e.target.value = '';
+});
+
+function importExcelFile(file) {
+    if (typeof XLSX === 'undefined') return alert('Excel library not loaded. Check your internet connection.');
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            if (!ws) throw new Error('No sheet found in the workbook.');
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', blankrows: false });
+            applyExcelRows(rows);
+        } catch (err) {
+            console.error(err);
+            alert('Could not read the Excel file: ' + err.message);
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function applyExcelRows(rows) {
+    if (!rows || !rows.length) return alert('The sheet appears to be empty.');
+
+    const norm = s => String(s ?? '')
+        .toLowerCase()
+        .replace(/[–—−]/g, '-')
+        .replace(/\s+/g, '')
+        .replace(/[.:]/g, '');
+
+    /* --- locate header row --- */
+    let hIdx = 0;
+    for (let i = 0; i < Math.min(rows.length, 8); i++) {
+        if ((rows[i] || []).some(c => {
+            const n = norm(c);
+            return n.includes('teacher') || n.includes('nameof');
+        })) { hIdx = i; break; }
+    }
+    const header = rows[hIdx] || [];
+
+    /* --- locate teacher column --- */
+    let teacherCol = header.findIndex(h => {
+        const n = norm(h);
+        return n.includes('teacher') || n.includes('nameof') || n === 'name';
+    });
+    if (teacherCol === -1) teacherCol = 0;
+
+    /* --- build period aliases --- */
+    const aliases = config.periods.map((p, i) => {
+        const k = timeKey(p.start) + '-' + timeKey(p.end);
+        return [
+            norm(p.id),                       // p1
+            k,                                // 930-1005
+            p.start.replace(':', '') + '-' + p.end.replace(':', ''), // 0930-1005
+            'period' + (i + 1)
+        ];
+    });
+    const breakNames = config.breaks.map(b => norm(b.name)).filter(Boolean);
+
+    /* --- map columns --- */
+    const colMap = [];
+    let pIdx = 0;
+    for (let c = 0; c < header.length; c++) {
+        if (c === teacherCol) continue;
+        const h = norm(header[c]);
+        if (!h) continue;
+        if (/^s\.?no/.test(h) || h === '#' || h === 'srno' || h === 'sr' || h === 'serial' || h === 'sno') continue;
+        if (breakNames.includes(h)) continue;
+
+        let matched = -1;
+        for (let k = 0; k < aliases.length; k++) {
+            if (aliases[k].some(a => a && a === h)) { matched = k; break; }
+        }
+        if (matched !== -1) {
+            colMap.push({ col: c, period: config.periods[matched].id });
+            pIdx = matched + 1;
+        } else if (pIdx < config.periods.length) {
+            colMap.push({ col: c, period: config.periods[pIdx].id });
+            pIdx++;
+        }
+    }
+
+    if (!colMap.length) {
+        return alert('No period columns were detected.\n\nMake sure the first row has "Name of the Teacher" and period columns (e.g. "P1", "9:30-10:05" …).');
+    }
+
+    if (!confirm('This will REPLACE the current timetable entries with the data from the Excel file.\n\nContinue?')) return;
+
+    /* --- read data rows --- */
+    const entries = {};
+    for (let r = hIdx + 1; r < rows.length; r++) {
+        const row = rows[r] || [];
+        const teacher = String(row[teacherCol] ?? '').trim();
+        if (!teacher) continue;
+        if (/^\d+$/.test(teacher)) continue;   // skip serial-number rows
+
+        colMap.forEach(m => {
+            const val = String(row[m.col] ?? '').trim();
+            if (!val) return;
+            if (!entries[teacher]) entries[teacher] = {};
+            entries[teacher][m.period] = val;
+        });
+    }
+
+    const count = Object.keys(entries).length;
+    if (!count) return alert('No teacher rows could be read from the file.');
+
+    allEntries = entries;
+    saveToLocal(entries);
+    renderTimetable();
+    syncAllToFirestore();
+
+    alert(`Successfully imported ${count} teacher(s) from the Excel file.`);
+}
+
+async function syncAllToFirestore() {
+    if (!useFirestore || !db || !fs) return;
+    try {
+        for (const teacher of Object.keys(allEntries)) {
+            for (const period of Object.keys(allEntries[teacher])) {
+                const docId = `${teacher.replace(/\s+/g, '_')}_${period}`;
+                await fs.setDoc(fs.doc(db, 'timetables', docId), {
+                    teacher, period,
+                    subject: allEntries[teacher][period],
+                    updatedAt: new Date().toISOString()
+                });
+            }
+        }
+    } catch (e) {
+        console.warn('Cloud sync failed after import:', e);
+        useFirestore = false;
+        banner.classList.remove('hidden');
+    }
+}
+
+/* =====================================================================
+   PRINT
+   ===================================================================== */
+window.addEventListener('beforeprint', () => {
+    document.getElementById('printFooter').classList.remove('hidden');
+});
+window.addEventListener('afterprint', () => {
+    document.getElementById('printFooter').classList.add('hidden');
+});
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', async () => {
+    await initFirebase();
+    await loadConfigFromStore();
+    renderSettings();
+    refreshPeriodSelect();
+    renderTableHead();
+    await loadTimetable();
+});
+</script>
 </body>
-</html>                    
-        
+</html>
+
