@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Staff Entry | GPS Pethgam Wagoora</title>
+<style>
+*{box-sizing:border-box}body{font-family:Segoe UI,Arial,sans-serif;background:#f0f2f5;margin:0;padding:20px}
+.container{max-width:850px;background:#fff;margin:auto;padding:30px;border-radius:8px;box-shadow:0 4px 15px #0002}
+header{border-bottom:2px solid #1a5d1a;margin-bottom:25px;padding-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+h2{color:#1a5d1a;margin:0}.btn-view{background:#1a5d1a;color:#fff;padding:8px 15px;border-radius:4px;text-decoration:none;font-size:14px;font-weight:bold}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.full{grid-column:span 2}
+.login{background:#eef7ee;padding:15px;border-radius:6px;border:1px solid #c8e6c9}.title{font-size:12px;font-weight:900;color:#1a5d1a;text-transform:uppercase;margin-bottom:10px;display:block}
+.note{font-size:11px;color:#555;margin-top:8px;line-height:1.4}.photo{background:#f9f9f9;border:2px dashed #1a5d1a;padding:15px;display:flex;align-items:center;gap:20px;border-radius:6px}
+#preview{width:100px;height:120px;border:2px solid #1a5d1a;object-fit:cover;display:none;background:#eee;border-radius:4px}
+.group{display:flex;flex-direction:column;gap:5px}label{font-weight:bold;color:#333;font-size:13px}
+input,select,textarea{padding:10px;border:1px solid #ccc;border-radius:4px;font-size:14px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:#1a5d1a;outline:none}
+button{background:#1a5d1a;color:#fff;border:0;padding:15px;font-size:16px;font-weight:bold;border-radius:4px;cursor:pointer;margin-top:20px;width:100%}
+button:disabled{background:#777;cursor:not-allowed}
+#status{display:none;margin-top:15px;padding:12px;border-radius:5px;font-size:14px;font-weight:600;white-space:pre-line}
+.success{background:#e8f5e9;color:#1b5e20;border:1px solid #81c784}.error{background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a}.info{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}.warning{background:#fff8e1;color:#8a5a00;border:1px solid #ffcc80}
+@media(max-width:600px){body{padding:10px}.container{padding:18px}header{flex-direction:column;align-items:stretch}.form-grid{grid-template-columns:1fr}.full{grid-column:span 1}.photo{flex-direction:column;align-items:stretch}#preview{margin:auto}}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h2>Staff Registration</h2><a href="staff-statement.html" class="btn-view">📄 View Staff Statement</a></header>
+
+<form id="staffForm">
+<div class="form-grid">
+
+<div class="full login">
+<span class="title">Login Credentials (Teacher ERP Access)</span>
+<div class="form-grid">
+<div class="group"><label for="email">Official Email ID</label><input type="email" id="email" placeholder="staff@example.com" autocomplete="email" required></div>
+<div class="group"><label for="password">Login Password</label><input type="password" id="password" placeholder="Create Password" autocomplete="new-password" minlength="6" required></div>
+</div>
+<div class="note">🔐 Password is used only for Firebase Authentication and is NEVER stored in Firestore.</div>
+</div>
+
+<div class="photo full"><div style="flex:1"><label for="photo">Staff Photograph</label><br><input type="file" id="photo" accept="image/*"><p style="font-size:11px;color:#666">Photo is automatically compressed before saving.</p></div><img id="preview" alt="Staff photograph"></div>
+
+<div class="group full"><label for="name">Full Name (as per Service Book)</label><input id="name" placeholder="Enter Full Name" required></div>
+
+<div class="group"><label for="designation">Designation</label><select id="designation" required><option value="">--Select--</option><option>Headmaster</option><option>Teacher</option><option>Grade-II Teacher</option><option>Grade-III Teacher</option><option>RReT</option><option>MTW</option></select></div>
+
+<div class="group"><label for="qualification">Educational Qualification</label><input id="qualification" placeholder="e.g., M.A, B.Ed"></div>
+<div class="group"><label for="subjectPG">Subject in P.G</label><input id="subjectPG" placeholder="e.g., Urdu, History, N/A"></div>
+<div class="group"><label for="contact">Contact Number</label><input id="contact" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit Number"></div>
+<div class="group"><label for="firstAppt">Date of 1st Appointment</label><input id="firstAppt" type="date"></div>
+<div class="group"><label for="doj">D.O.J (Present School)</label><input id="doj" type="date"></div>
+<div class="group full"><label for="posting">Actual Place of Posting (If deployed/detached)</label><input id="posting" placeholder="Enter School Name or N/A"></div>
+<div class="group full"><label for="remarks">Remarks</label><textarea id="remarks" rows="2" placeholder="Any additional details..."></textarea></div>
+
+</div>
+<button id="saveBtn" type="submit">Create Teacher Account & Save Staff Record</button>
+<div id="status"></div>
+</form>
+</div>
+
+<script type="module">
+import {db,auth} from "../assets/js/init-firebase.js";
+import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {doc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const form=document.getElementById("staffForm");
+const saveBtn=document.getElementById("saveBtn");
+const status=document.getElementById("status");
+const photoInput=document.getElementById("photo");
+const preview=document.getElementById("preview");
+let photoData="";
+let teacherAuth=null;
+
+function show(msg,type){status.textContent=msg;status.className=type;status.style.display="block"}
+
+photoInput.addEventListener("change",e=>{
+ const file=e.target.files[0];
+ if(!file){photoData="";preview.style.display="none";return}
+ if(!file.type.startsWith("image/")){show("Please select a valid image file.","error");photoInput.value="";return}
+ const reader=new FileReader();
+ reader.onload=ev=>{
+  const img=new Image();
+  img.onload=()=>{
+   const maxW=400,maxH=500;
+   const scale=Math.min(maxW/img.width,maxH/img.height,1);
+   const w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+   const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+   canvas.getContext("2d").drawImage(img,0,0,w,h);
+   photoData=canvas.toDataURL("image/jpeg",.65);
+   preview.src=photoData;preview.style.display="block";show("Photograph processed successfully.","info");
+  };
+  img.onerror=()=>show("Unable to process the photograph.","error");
+  img.src=ev.target.result;
+ };
+ reader.readAsDataURL(file);
+});
+
+function getTeacherAuth(){
+ if(teacherAuth)return teacherAuth;
+ const mainApp=auth.app;
+ let app=getApps().find(a=>a.name==="teacherCreationApp");
+ if(!app)app=initializeApp(mainApp.options,"teacherCreationApp");
+ teacherAuth=getAuth(app);
+ return teacherAuth;
+}
+
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const email=document.getElementById("email").value.trim().toLowerCase();
+ const password=document.getElementById("password").value;
+ const name=document.getElementById("name").value.trim();
+ const designation=document.getElementById("designation").value;
+ const qualification=document.getElementById("qualification").value.trim()||"N/A";
+ const subjectPG=document.getElementById("subjectPG").value.trim()||"N/A";
+ const contact=document.getElementById("contact").value.trim();
+ const firstAppt=document.getElementById("firstAppt").value;
+ const doj=document.getElementById("doj").value;
+ const posting=document.getElementById("posting").value.trim()||"N.A.";
+ const remarks=document.getElementById("remarks").value.trim();
+
+ if(!email)return show("Please enter the official email ID.","error");
+ if(password.length<6)return show("Password must contain at least 6 characters.","error");
+ if(!name)return show("Please enter the staff member's full name.","error");
+ if(!designation)return show("Please select the staff designation.","error");
+ if(contact&&!/^\d{10}$/.test(contact))return show("Contact number must contain exactly 10 digits.","error");
+
+ if(!auth.currentUser){
+  return show("❌ No authenticated admin session found. Please log in to the school/admin account first.","error");
+ }
+
+ saveBtn.disabled=true;saveBtn.textContent="Creating Teacher Account...";
+ let createdUser=null;
+
+ try{
+  show("Creating Firebase Authentication account for "+email+"...","info");
+  const ta=getTeacherAuth();
+  const credential=await createUserWithEmailAndPassword(ta,email,password);
+  createdUser=credential.user;
+  const uid=createdUser.uid;
+
+  show("Teacher account created. Saving staff record to staffRecords...","info");
+
+  const staffData={
+   uid,email,name,designation,qualification,subjectPG,
+   contact:contact||"N/A",
+   doFirstAppt:firstAppt||"",
+   dojPresentSchool:doj||"",
+   actualPosting:posting,
+   remarks,
+   photo:photoData||"",
+   role:"teacher",
+   school:"Government Primary School Pethgam Wagoora",
+   status:"active",
+   createdAt:serverTimestamp(),
+   createdBy:auth.currentUser.uid
+  };
+
+  await setDoc(doc(db,"staffRecords",uid),staffData);
+  await signOut(ta);
+
+  show("✅ Teacher account and staff record created successfully.\n\nName: "+name+"\nEmail: "+email+"\nFirebase UID: "+uid,"success");
+  alert("Teacher account created successfully!\n\nName: "+name+"\nEmail: "+email+"\n\nThe teacher can now log in using the credentials entered here.");
+  form.reset();photoData="";preview.src="";preview.style.display="none";
+
+ }catch(error){
+  console.error("Teacher creation error:",error);
+  if(createdUser){
+   try{await createdUser.delete()}catch(rollback){console.error("Rollback failed:",rollback)}
+  }
+  let msg=error.message||"Unable to create teacher account.";
+  if(error.code==="auth/email-already-in-use")msg="This email address is already registered in Firebase Authentication.";
+  else if(error.code==="auth/invalid-email")msg="The official email address is invalid.";
+  else if(error.code==="auth/weak-password")msg="The password is too weak. Please use at least 6 characters.";
+  else if(error.code==="permission-denied")msg="Authentication succeeded, but Firestore permission was denied.";
+  show("❌ "+msg,"error");
+  alert("Unable to create teacher account.\n\n"+msg);
+ }finally{
+  saveBtn.disabled=false;saveBtn.textContent="Create Teacher Account & Save Staff Record";
+ }
+});
+
+console.log("Staff Entry Firebase module loaded successfully.");
+show(auth.currentUser?"Firebase loaded. Ready to create teacher accounts and staffRecords.":"Firebase loaded, but no authenticated admin session was found.","info");
+</script>
+</body>
+</html>
