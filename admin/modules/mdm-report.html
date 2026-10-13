@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDM Expenditure Statement | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            #reportContainer { border: none !important; box-shadow: none !important; width: 100%; margin: 0; }
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        th, td { border: 1px solid black; padding: 4px; text-align: center; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: bold; }
+    </style>
+</head>
+<body class="bg-slate-100 p-4">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-3xl shadow-sm mb-8 no-print border-2 border-emerald-100">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-black text-emerald-700 uppercase tracking-tighter">Monthly Expenditure Statement</h2>
+                <p class="text-[10px] text-slate-400 font-bold uppercase italic">Fetching live data from MDM Entry Logs</p>
+            </div>
+            <div class="flex gap-4">
+                <input type="month" id="reportMonth" class="p-3 bg-slate-50 rounded-xl outline-none border text-sm font-bold" onchange="fetchMonthlyData()">
+                <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-2 rounded-xl font-bold uppercase text-xs hover:bg-emerald-600 transition-all">
+                    <i class="fa-solid fa-print mr-2"></i> Print Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportContainer" class="max-w-[1100px] mx-auto bg-white p-10 shadow-2xl border border-slate-300">
+        <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
+            <img src="../../assets/logo.png" class="w-16 h-16 object-contain" alt="Logo">
+            <div class="text-center flex-1">
+                <p class="italic text-sm font-serif">Office of the Headmaster</p>
+                <h1 class="text-2xl font-bold tracking-tight uppercase">Government Primary School Pethgam Wagoora</h1>
+                <h3 class="text-md font-bold uppercase tracking-widest mt-1">Expenditure Statement under MDM Scheme</h3>
+            </div>
+            <div class="w-16"></div>
+        </div>
+
+        <table>
+            <thead class="bg-slate-50">
+                <tr class="text-[9px]">
+                    <th>Month</th>
+                    <th>Scheme</th>
+                    <th>Total Roll</th>
+                    <th>No. of Working Days</th>
+                    <th>No. of days MDM Served</th>
+                    <th>No of Students Covered</th>
+                    <th>No. of Meals Served</th>
+                    <th>Opening Balance of Rice</th>
+                    <th>Food Grains Lifted</th>
+                    <th>Food Grains Utilized</th>
+                    <th>Closing Balance of Food Grains</th>
+                    <th>Opening Balance of Funds</th>
+                    <th>Funds Utilized</th>
+                    <th>Funds Received</th>
+                    <th>Closing Balance of Funds</th>
+                    <th>No. of Cooks</th>
+                </tr>
+            </thead>
+            <tbody id="reportDataBody">
+                <tr>
+                    <td rowspan="3" class="vertical-text font-black" id="displayMonth">SELECT MONTH</td>
+                    <td class="font-bold">Pre-Primary</td>
+                    <td id="pp_roll">-</td>
+                    <td class="wDays">-</td>
+                    <td class="sDays">-</td>
+                    <td id="pp_covered">-</td>
+                    <td id="pp_meals">-</td>
+                    <td id="pp_open_rice">-</td>
+                    <td id="pp_lifted">-</td>
+                    <td id="pp_util_rice">-</td>
+                    <td id="pp_close_rice">-</td>
+                    <td id="pp_open_funds">-</td>
+                    <td id="pp_util_funds">-</td>
+                    <td>-</td>
+                    <td id="pp_close_funds">-</td>
+                    <td rowspan="3" class="font-bold">1</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Primary</td>
+                    <td id="p_roll">-</td>
+                    <td class="wDays">-</td>
+                    <td class="sDays">-</td>
+                    <td id="p_covered">-</td>
+                    <td id="p_meals">-</td>
+                    <td id="p_open_rice">-</td>
+                    <td id="p_lifted">-</td>
+                    <td id="p_util_rice">-</td>
+                    <td id="p_close_rice">-</td>
+                    <td id="p_open_funds">-</td>
+                    <td id="p_util_funds">-</td>
+                    <td>-</td>
+                    <td id="p_close_funds">-</td>
+                </tr>
+                <tr class="bg-slate-100 font-black">
+                    <td>Total</td>
+                    <td id="t_roll">-</td>
+                    <td class="wDays">-</td>
+                    <td class="sDays">-</td>
+                    <td id="t_covered">-</td>
+                    <td id="t_meals">-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td id="t_util_rice">-</td>
+                    <td id="t_close_rice">-</td>
+                    <td>-</td>
+                    <td id="t_util_funds">-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-6 grid grid-cols-2 gap-8 text-xs">
+            <div class="space-y-2">
+                <p><strong>MDM A/C of School:</strong> 0486040500000273</p>
+                <table class="w-full text-center">
+                    <tr><th colspan="3">Account Number of Cooks</th></tr>
+                    <tr><td>S No</td><td>Name</td><td>A/C No</td></tr>
+                    <tr><td>1</td><td>SHAHEENA BANO</td><td>0486040100006054</td></tr>
+                </table>
+            </div>
+            <div class="flex flex-col justify-between items-end pt-10">
+                <div class="text-left w-48 space-y-4">
+                    <p><strong>MDM I/C Signature</strong></p>
+                    <div class="border-b border-black w-full h-4"></div>
+                </div>
+                <p class="font-black mt-10">Headmaster Seal/Sign</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from '../../assets/js/firebase.js';
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        window.fetchMonthlyData = async function() {
+            const monthInput = document.getElementById('reportMonth').value;
+            if(!monthInput) return;
+
+            // UI Label Update
+            const date = new Date(monthInput);
+            document.getElementById('displayMonth').innerText = date.toLocaleString('default', { month: 'long' }).toUpperCase() + " " + date.getFullYear();
+
+            try {
+                // Fetch data from mdm-entry.html collection
+                const q = query(collection(db, "mdm_entries"), 
+                    where("monthYear", "==", monthInput));
+                
+                const snapshot = await getDocs(q);
+                let stats = {
+                    pp_covered: 0, p_covered: 0,
+                    pp_rice: 0, p_rice: 0,
+                    daysServed: 0, workingDays: 24 // Default
+                };
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    stats.pp_covered += parseInt(data.pp_present || 0);
+                    stats.p_covered += parseInt(data.p_present || 0);
+                    stats.pp_rice += parseFloat(data.pp_rice_util || 0);
+                    stats.p_rice += parseFloat(data.p_rice_util || 0);
+                    stats.daysServed++;
+                });
+
+                updateTableUI(stats);
+            } catch (e) {
+                console.error("Fetch error:", e);
+                alert("Could not fetch data from mdm-entry records.");
+            }
+        };
+
+        function updateTableUI(s) {
+            // Update Days
+            document.querySelectorAll('.wDays').forEach(el => el.innerText = s.workingDays);
+            document.querySelectorAll('.sDays').forEach(el => el.innerText = s.daysServed);
+
+            // Update Primary/Pre-Primary Counts
+            document.getElementById('pp_covered').innerText = s.pp_covered;
+            document.getElementById('pp_meals').innerText = s.pp_covered;
+            document.getElementById('pp_util_rice').innerText = s.pp_rice.toFixed(3);
+
+            document.getElementById('p_covered').innerText = s.p_covered;
+            document.getElementById('p_meals').innerText = s.p_covered;
+            document.getElementById('p_util_rice').innerText = s.p_rice.toFixed(3);
+
+            // Update Totals
+            document.getElementById('t_covered').innerText = s.pp_covered + s.p_covered;
+            document.getElementById('t_meals').innerText = s.pp_covered + s.p_covered;
+            document.getElementById('t_util_rice').innerText = (s.pp_rice + s.p_rice).toFixed(3);
+            
+            // Auto-calculate Funds (Approx 6.78 per meal example)
+            const totalFunds = ((s.pp_covered + s.p_covered) * 6.78).toFixed(2);
+            document.getElementById('t_util_funds').innerText = totalFunds;
+        }
+    </script>
+</body>
+</html>
+
