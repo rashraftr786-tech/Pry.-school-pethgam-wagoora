@@ -17,7 +17,7 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 #resultCard{background:#fff;border:2px solid #175b91;border-radius:12px;overflow:hidden;position:relative}
 #resultCard::before{content:"";position:absolute;inset:0;background-image:url("new-logo.png");background-repeat:no-repeat;background-position:center 56%;background-size:42% auto;opacity:.075;pointer-events:none;z-index:0}
 #resultCard>.card-head,#resultCard>.card-body{position:relative;z-index:1}
-.attendance-mini-chart{flex:1;min-width:0;max-width:560px;padding:2px 5px;font-size:8px;line-height:1.1}.attendance-mini-chart h4{margin:0 0 3px;text-align:center;font-size:9px;color:#174f80}.attendance-mini-chart .attendance-mini-plot{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;align-items:end;height:62px}.attendance-mini-row{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;min-width:0;height:100%}.attendance-mini-row .attendance-mini-track{height:38px;width:100%;background:#edf1f5;border-radius:3px 3px 0 0;display:flex;align-items:flex-end;overflow:hidden}.attendance-mini-bar{width:100%;background:#1674c8;border-radius:3px 3px 0 0;min-height:2px}.attendance-mini-row>span{font-size:7px;line-height:1}.attendance-mini-row>b{font-size:7px;line-height:1}.verify-left{flex:0 0 30%;min-width:120px}.verify-left svg{width:100%;max-width:220px}.verify-right{flex:0 0 74px}
+.attendance-mini-chart{flex:1;min-width:0;max-width:560px;padding:2px 5px;font-size:8px;line-height:1.1}.attendance-mini-chart h4{margin:0 0 3px;text-align:center;font-size:9px;color:#174f80}.attendance-mini-chart .attendance-mini-plot{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;align-items:end;height:62px}.attendance-mini-row{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;min-width:0;height:100%}.attendance-mini-row .attendance-mini-track{height:38px;width:100%;background:#edf1f5;border-radius:3px 3px 0 0;display:flex;align-items:flex-end;overflow:hidden}.attendance-mini-bar{width:100%;background:#1674c8;border-radius:3px 3px 0 0;min-height:2px}.attendance-mini-row>span{font-size:6.5px;line-height:1}.attendance-mini-row>b{font-size:6.5px;line-height:1}.verify-left{flex:0 0 30%;min-width:120px}.verify-left svg{width:100%;max-width:220px}.verify-right{flex:0 0 74px}
 .card-head{display:grid;grid-template-columns:90px 1fr 90px;gap:10px;align-items:center;background:linear-gradient(100deg,#e7f5ff,#fff9dc);padding:12px;border-bottom:3px solid var(--gold);text-align:center}
 .logo{width:152px;height:152px;border:1px dashed #8ca8c0;border-radius:50%;object-fit:contain;background:white;margin:auto}.school-title{font-weight:900;color:#0b477a;font-size:clamp(15px,2.5vw,23px);line-height:1.2}.school-sub{font-size:11px;margin-top:4px}
 .card-body{padding:12px}.identity{display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:start}.details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.detail{border-bottom:1px solid #d7e1ec;padding:4px 2px;min-height:32px}.detail b{color:#527087;font-size:10px;display:block;text-transform:uppercase}.detail span{font-weight:700;overflow-wrap:anywhere}.student-photo{width:100px;height:102px;object-fit:cover;border:2px solid #b7cbdc;border-radius:5px;background:#f5f8fb}.section-title{background:#164f80;color:white;padding:6px 9px;font-weight:700;margin:12px 0 0}
@@ -153,24 +153,20 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
  #outGradeKey{gap:2px!important;padding:3px!important;border-radius:5px!important;break-inside:avoid!important}
  #outGradeKey>div{min-height:17px!important;padding:1px 3px!important;gap:5px!important;font-size:8px!important}
  #outGradeKey .pill{flex-basis:64px!important;min-width:64px!important;padding:2px 4px!important;font-size:7.5px!important}
- /* Signature boxes remain in normal flow after barcode/QR; reduce excess height without moving them over content. */
  .signatures{margin-top:5px!important;gap:6px!important;position:static!important;transform:none!important;break-inside:avoid!important}
  .signatures div{min-height:12mm!important;padding:6mm 2px 2mm!important;position:static!important;box-sizing:border-box!important}
 }
 
 
-/* Final requested refinement: emphasize overall grade/grade point and use the space above signature boxes without overlap. */
 #outGrade{font-size:1.35em!important;font-weight:900!important;line-height:1.05!important;display:inline-block!important}
 #outGP{font-size:1.35em!important;font-weight:900!important;line-height:1.05!important;display:inline-block!important}
 @media print{
  #outGrade,#outGP{font-size:13pt!important;font-weight:900!important}
- /* Keep signatures in normal flow immediately after barcode/QR; no negative positioning or transforms. */
  .signatures{margin-top:1mm!important;gap:5px!important;break-inside:avoid!important;page-break-inside:avoid!important;position:static!important;transform:none!important}
  .signatures div{min-height:11mm!important;padding:5mm 2px 1.5mm!important;box-sizing:border-box!important;position:static!important}
  #resultCard{min-height:0!important;overflow:visible!important}
 }
 
-/* Final print-pagination correction: pull signature boxes into the unused space on page 1. */
 @media print {
   @page { size: A4 portrait; margin: 5mm; }
   html, body { height:auto!important; }
@@ -189,7 +185,6 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 body.single-printing #batchPrint{display:none!important}
 @media print{
  body.single-printing #batchPrint{display:none!important}
- /* The result card is nested inside a panel, not a direct child of .wrap. Keep its ancestor panel visible. */
  body.single-printing .wrap>*{display:none!important}
  body.single-printing .wrap>.panel:has(#resultCard){display:block!important;visibility:visible!important;position:static!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}
  body.single-printing .wrap>.panel:has(#resultCard)>*:not(#resultCard){display:none!important}
@@ -201,7 +196,6 @@ body.single-printing #batchPrint{display:none!important}
 <body>
 <header><h1>Student Result Generator</h1><p>Government Primary School Pethgam Wagoora • Offline-ready single HTML file</p></header>
 <div class="wrap">
-<!-- Fixed school identity and internal compatibility fields; not editable in the interface. -->
 <div id="fixedFields" hidden>
 <input id="schoolName" value="GOVERNMENT PRIMARY SCHOOL">
 <input id="schoolPlace" value="PETHGAM WAGOORA 193103">
@@ -318,7 +312,14 @@ body.single-printing #batchPrint{display:none!important}
 <div class="section-title">CO-SCHOLASTIC / LIFE SKILLS</div>
 <div class="skill-grid" id="skills"></div>
 
-<div class="verify"><div class="verify-left"><svg id="barcode" viewBox="0 0 260 48" role="img" aria-label="Student identity barcode"></svg><small><b>STUDENT IDENTITY BARCODE</b> • <span id="outBarcodeText">132</span></small><small>SCAN FOR VERIFICATION</small></div><div class="attendance-mini-chart" id="outAttendanceChart" aria-label="Monthly attendance bar graph"><h4>MONTHLY ATTENDANCE</h4><div class="attendance-mini-plot"><div class="attendance-mini-row"><span>Nov</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:68%"></div></div><b>34</b></div><div class="attendance-mini-row"><span>Mar</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:48%"></div></div><b>24</b></div><div class="attendance-mini-row"><span>Apr</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:100%"></div></div><b>50</b></div><div class="attendance-mini-row"><span>May</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:60%"></div></div><b>30</b></div><div class="attendance-mini-row"><span>Jun</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:92%"></div></div><b>46</b></div><div class="attendance-mini-row"><span>Jul</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:36%"></div></div><b>18</b></div><div class="attendance-mini-row"><span>Aug</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:84%"></div></div><b>42</b></div><div class="attendance-mini-row"><span>Sep</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:60%"></div></div><b>30</b></div><div class="attendance-mini-row"><span>Oct</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:0%"></div></div><b>—</b></div></div></div><div id="qrBox" class="verify-right" style="width:74px;height:74px;display:flex;align-items:center;justify-content:center;border:1px dashed #9bb2c7;font-size:9px;text-align:center">QR CODE</div></div>
+<div class="verify">
+ <div class="verify-left"><svg id="barcode" viewBox="0 0 260 48" role="img" aria-label="Student identity barcode"></svg><small><b>STUDENT IDENTITY BARCODE</b> • <span id="outBarcodeText">132</span></small><small>SCAN FOR VERIFICATION</small></div>
+ <div class="attendance-mini-chart" id="outAttendanceChart" aria-label="Monthly attendance bar graph">
+  <h4>MONTHLY ATTENDANCE</h4>
+  <div class="attendance-mini-plot" id="outAttendanceMiniPlot"></div>
+ </div>
+ <div id="qrBox" class="verify-right" style="width:74px;height:74px;display:flex;align-items:center;justify-content:center;border:1px dashed #9bb2c7;font-size:9px;text-align:center">QR CODE</div>
+</div>
 <div class="signatures"><div>Sign. Form Teacher</div><div>Sign. Exam I/C</div><div>Parents Signature</div><div>Seal & Sign. Headmaster</div></div>
 
 </div></div>
@@ -502,6 +503,7 @@ async function printAllMarkSheets(){
 
 
 const schoolMonths=['November 2025','December 2025','January 2026','February 2026','March 2026','April 2026','May 2026','June 2026','July 2026','August 2026','September 2026','October 2026'];
+const schoolMonthShorts=['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'];
 let attendanceRecords={};
 let attendanceWorkingDays={};
 try{attendanceRecords=JSON.parse(localStorage.getItem('gpsClasswiseAttendance')||'{}');attendanceWorkingDays=JSON.parse(localStorage.getItem('gpsClasswiseWorkingDays')||'{}')}catch(e){attendanceRecords={};attendanceWorkingDays={}}
@@ -618,8 +620,6 @@ async function importAttendanceExcel(){
     throw new Error('The attendance workbook does not contain enough rows.');
   }
   
-  // Mapping of 12 months starting from col index 4 (Nov 2025 to Oct 2026)
-  // Each month has 4 columns: [Days Attended, B/F Days, Cumulative Days, No. of Working Days]
   const monthIndices = [
     {month:'November 2025', colIdx:4},
     {month:'December 2025', colIdx:8},
@@ -636,7 +636,6 @@ async function importAttendanceExcel(){
   ];
 
   let imported=0,unmatched=0,monthsImported=new Set();
-  // Student rows start around row index 4 in Automatic_FIXED.xlsx
   for(let ri=4;ri<data.length;ri++){
    const r=data[ri];
    if(!r||r.length<4)continue;
@@ -707,11 +706,22 @@ function saveAttendanceClass(){
  $('attendanceStatus').textContent=`Saved ${saved} attendance record(s) and ${workingText===''?'no working-day total':workingText+' working days'} for ${cls} — ${month}.`;
  renderAll();
 }
-function renderMonthlyAttendance(row){
- const box=$('outMonthlyAttendance');if(!box)return;
- const cls=row?.className||$('className').value,adm=row?.admNo||$('admNo').value,roll=row?.rollNo||$('rollNo').value,name=row?.studentName||$('studentName').value;
- const items=schoolMonths.map(month=>{const key=attendanceKey(cls,month,adm,roll,name),wd=attendanceWorkingDays[attendanceMonthKey(cls,month)];return {month,value:attendanceRecords[key],workingDays:wd}}).filter(x=>(x.value!==undefined&&x.value!=='')||x.workingDays!==undefined);
- box.innerHTML=items.length?items.map(x=>`<div><b>${escapeHTML(x.month)}</b><span>${x.value===undefined?'—':escapeHTML(x.value)} present / ${x.workingDays===undefined?'—':escapeHTML(x.workingDays)} working days</span></div>`).join(''):'No monthly attendance entered.';
+
+function renderAttendanceMiniChart(){
+ const plot=$('outAttendanceMiniPlot');
+ if(!plot) return;
+ const cls=$('className')?.value||'', adm=$('admNo')?.value||'', roll=$('rollNo')?.value||'', name=$('studentName')?.value||'';
+ plot.innerHTML = schoolMonths.map((m, idx)=>{
+  const shortName = schoolMonthShorts[idx];
+  const key = attendanceKey(cls, m, adm, roll, name);
+  const val = attendanceRecords[key];
+  const hasVal = (val !== undefined && val !== '' && !isNaN(Number(val)));
+  const numVal = hasVal ? Number(val) : 0;
+  const wd = attendanceWorkingDays[attendanceMonthKey(cls, m)] || 31;
+  const pct = Math.min(100, Math.max(0, (numVal / wd) * 100));
+  const displayVal = hasVal ? numVal : '—';
+  return `<div class="attendance-mini-row"><span>${shortName}</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:${pct}%"></div></div><b>${displayVal}</b></div>`;
+ }).join('');
 }
 
 function renderEditors(){
@@ -768,6 +778,7 @@ function renderAll(){
  drawBarcode(($('admNo').value||'STUDENT')+($('rollNo').value||''));
  $('primaryColor').value && document.documentElement.style.setProperty('--navy',$('primaryColor').value);document.documentElement.style.setProperty('--accent',$('accentColor').value);
  $('resultCard').style.borderColor=$('primaryColor').value;$('resultCard').querySelector('.section-title').style.background=$('primaryColor').value;
+ renderAttendanceMiniChart();
  makeQR();
 }
 function drawBarcode(text){
