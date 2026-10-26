@@ -14,7 +14,10 @@ header h1{margin:0;font-size:clamp(20px,4vw,30px);letter-spacing:.3px}header p{m
 label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4px}input,select,textarea{width:100%;padding:9px;border:1px solid #bdcddd;border-radius:7px;background:#fff;color:#172b40;font:inherit;min-width:0}input[type=file]{padding:6px;font-size:12px}input[type=color]{height:38px;padding:3px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--blue);color:white}button.secondary{background:#e7eef6;color:#153d63}button.green{background:var(--green)}button.gold{background:#f4b400;color:#222}button.danger{background:#b83232}
 .small{font-size:12px;color:#60758a}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:850px}th,td{border:1px solid #cbd8e5;padding:6px;text-align:center}th{background:#e8f3ff;color:#153e67}td:first-child{text-align:left;font-weight:700}table input,table select{padding:6px;min-width:50px}.notice{background:#fff8df;border-left:4px solid #efb400;padding:10px;border-radius:6px;margin:8px 0}
-#resultCard{background:#fff;border:2px solid #175b91;border-radius:12px;overflow:hidden}
+#resultCard{background:#fff;border:2px solid #175b91;border-radius:12px;overflow:hidden;position:relative}
+#resultCard::before{content:"";position:absolute;inset:0;background-image:url("new-logo.png");background-repeat:no-repeat;background-position:center 56%;background-size:42% auto;opacity:.075;pointer-events:none;z-index:0}
+#resultCard>.card-head,#resultCard>.card-body{position:relative;z-index:1}
+.attendance-mini-chart{flex:1;min-width:0;max-width:560px;padding:2px 5px;font-size:8px;line-height:1.1}.attendance-mini-chart h4{margin:0 0 3px;text-align:center;font-size:9px;color:#174f80}.attendance-mini-chart .attendance-mini-plot{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;align-items:end;height:62px}.attendance-mini-row{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;min-width:0;height:100%}.attendance-mini-row .attendance-mini-track{height:38px;width:100%;background:#edf1f5;border-radius:3px 3px 0 0;display:flex;align-items:flex-end;overflow:hidden}.attendance-mini-bar{width:100%;background:#1674c8;border-radius:3px 3px 0 0;min-height:2px}.attendance-mini-row>span{font-size:7px;line-height:1}.attendance-mini-row>b{font-size:7px;line-height:1}.verify-left{flex:0 0 30%;min-width:120px}.verify-left svg{width:100%;max-width:220px}.verify-right{flex:0 0 74px}
 .card-head{display:grid;grid-template-columns:90px 1fr 90px;gap:10px;align-items:center;background:linear-gradient(100deg,#e7f5ff,#fff9dc);padding:12px;border-bottom:3px solid var(--gold);text-align:center}
 .logo{width:152px;height:152px;border:1px dashed #8ca8c0;border-radius:50%;object-fit:contain;background:white;margin:auto}.school-title{font-weight:900;color:#0b477a;font-size:clamp(15px,2.5vw,23px);line-height:1.2}.school-sub{font-size:11px;margin-top:4px}
 .card-body{padding:12px}.identity{display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:start}.details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.detail{border-bottom:1px solid #d7e1ec;padding:4px 2px;min-height:32px}.detail b{color:#527087;font-size:10px;display:block;text-transform:uppercase}.detail span{font-weight:700;overflow-wrap:anywhere}.student-photo{width:100px;height:102px;object-fit:cover;border:2px solid #b7cbdc;border-radius:5px;background:#f5f8fb}.section-title{background:#164f80;color:white;padding:6px 9px;font-weight:700;margin:12px 0 0}
@@ -24,13 +27,14 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 .signatures{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px;text-align:center;font-size:10px}.signatures div{border-top:1px solid #4c6071;padding-top:6px;min-height:30px}.verify{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:8px;border-top:1px dashed #a9bdce}.verify svg{max-width:220px;height:48px}.verify small{display:block}.footer{text-align:center;font-size:9px;color:#61768b;margin-top:10px}
 .grade-Aplus{background:#0b8043;color:white}.grade-A{background:#55a630;color:white}.grade-B{background:#f4c542;color:#352900}.grade-C{background:#f08b36;color:white}.grade-D{background:#e45a5a;color:white}.grade-E{background:#7a8794;color:white}
 @media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.graph-area{grid-template-columns:1fr}.details{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.wrap{padding:0 7px}.panel{padding:11px}.card-head{grid-template-columns:54px 1fr 54px;gap:5px;padding:7px}.logo{width:96px;height:96px}.student-photo{width:75px;height:76.5px}.identity{grid-template-columns:1fr 80px;gap:6px}.details{gap:3px}.detail{font-size:11px}.signatures{gap:5px;font-size:8px}.result-table{font-size:9px}.result-table th,.result-table td{padding:3px 1px}.card-body{padding:7px}}
+@media(max-width:520px){.attendance-mini-chart{font-size:6px;padding:0 2px}.attendance-mini-chart h4{font-size:7px}.attendance-mini-chart .attendance-mini-plot{height:54px;gap:2px}.attendance-mini-row .attendance-mini-track{height:32px}.attendance-mini-row>span,.attendance-mini-row>b{font-size:6px}.verify-left{flex-basis:28%;min-width:82px}.verify-right{flex-basis:52px;width:52px!important;height:52px!important}.wrap{padding:0 7px}.panel{padding:11px}.card-head{grid-template-columns:54px 1fr 54px;gap:5px;padding:7px}.logo{width:96px;height:96px}.student-photo{width:75px;height:76.5px}.identity{grid-template-columns:1fr 80px;gap:6px}.details{gap:3px}.detail{font-size:11px}.signatures{gap:5px;font-size:8px}.result-table{font-size:9px}.result-table th,.result-table td{padding:3px 1px}.card-body{padding:7px}}
 @media print{body{background:white}.no-print,header,.editor{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0;margin:0}#resultCard{border:1px solid #174d78;border-radius:0;break-inside:avoid}.card-head{padding:8px}.card-body{padding:8px}.section-title{print-color-adjust:exact;-webkit-print-color-adjust:exact}.bar,.pill,.metric,.grade-Aplus,.grade-A,.grade-B,.grade-C,.grade-D,.grade-E,th{print-color-adjust:exact;-webkit-print-color-adjust:exact}@page{size:A4 portrait;margin:8mm}}
 
 @media print{
  @page{size:A4 portrait;margin:5mm}
  html,body{width:100%;height:auto;background:#fff!important;font-size:10px!important;line-height:1.2!important}
  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ #resultCard::before{background-image:url("new-logo.png")!important;opacity:.075!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
  .no-print,header,.editor{display:none!important}
  .wrap{max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
  .panel{padding:0!important;margin:0!important;border:0!important;box-shadow:none!important}
@@ -125,6 +129,9 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 .remark{background:linear-gradient(110deg,#fff8df 0%,#fff 55%,#eaf6ff 100%);border:1.8px solid #e2b93f;border-left:6px solid #e8b923;border-radius:9px;box-shadow:0 2px 7px rgba(30,67,90,.09);padding:9px 11px}
 .remark>b{display:block;color:#174f7b;font-size:10px;letter-spacing:.4px;border-bottom:1px solid #eadcae;padding-bottom:4px;margin-bottom:4px}
 .remark #outRemark{color:#263b4c;font-weight:600;line-height:1.35}
+.remark-under-grade{padding:6px 7px!important;margin-top:5px!important;font-size:8px!important;border-radius:5px!important;box-shadow:none!important}
+.remark-under-grade>b{font-size:8px!important;padding-bottom:2px!important;margin-bottom:3px!important}
+.remark-under-grade #outRemark{font-size:8px!important;line-height:1.25!important}
 #resultCard .graph-area>div:last-child .details .detail{border:1px solid #d4e3ef;border-left:4px solid #4d9bd1;border-radius:5px;background:linear-gradient(100deg,#edf7ff,#fff);padding:5px 7px!important;margin:2px 0;min-height:30px!important}
 #resultCard .graph-area>div:last-child .details .detail:nth-child(2){border-left-color:#51a66b;background:linear-gradient(100deg,#effaf0,#fff)}
 #resultCard .graph-area>div:last-child .details .detail:nth-child(3){border-left-color:#e4b83c;background:linear-gradient(100deg,#fff8e4,#fff)}
@@ -137,7 +144,7 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 
 
 /* Refined grade key: keep the original grade colours, but present them as neat aligned rows. */
-#outGradeKey{display:grid;grid-template-columns:1fr;gap:4px;padding:7px!important;margin-top:2px;border:1px solid #d5e3ef;border-radius:7px;background:linear-gradient(135deg,#f7fbff,#fffdf4)}
+#outGradeKey{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:7px!important;margin-top:2px;border:1px solid #d5e3ef;border-radius:7px;background:linear-gradient(135deg,#f7fbff,#fffdf4)}
 #outGradeKey>div{display:flex;align-items:center;gap:8px;margin:0!important;min-height:22px;padding:2px 5px;border-radius:5px;background:rgba(255,255,255,.88);border:1px solid #e4ebf2;line-height:1.15}
 #outGradeKey>div:nth-child(odd){background:#f0f7ff}
 #outGradeKey .pill{flex:0 0 72px;min-width:72px;text-align:center;padding:3px 5px!important;border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 2px rgba(0,0,0,.08);font-size:8px;white-space:nowrap}
@@ -179,53 +186,83 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
   #resultCard .signatures div { min-height:10mm!important; padding:4mm 2px 1mm!important; box-sizing:border-box!important; }
 }
 
+body.single-printing #batchPrint{display:none!important}
+@media print{
+ body.single-printing #batchPrint{display:none!important}
+ /* The result card is nested inside a panel, not a direct child of .wrap. Keep its ancestor panel visible. */
+ body.single-printing .wrap>*{display:none!important}
+ body.single-printing .wrap>.panel:has(#resultCard){display:block!important;visibility:visible!important;position:static!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}
+ body.single-printing .wrap>.panel:has(#resultCard)>*:not(#resultCard){display:none!important}
+ body.single-printing #resultCard{display:block!important;visibility:visible!important;position:static!important;width:100%!important;break-after:auto!important;page-break-after:auto!important}
+ body.single-printing #resultCard *{visibility:visible!important}
+}
 </style>
 </head>
 <body>
 <header><h1>Student Result Generator</h1><p>Government Primary School Pethgam Wagoora • Offline-ready single HTML file</p></header>
 <div class="wrap">
-<div class="panel editor">
-<h2>1. School & Result Settings</h2>
-<div class="grid">
-<div><label>School Name</label><input id="schoolName" value="GOVERNMENT PRIMARY SCHOOL"></div>
-<div><label>School / Campus Name</label><input id="schoolPlace" value="PETHGAM WAGOORA 193109"></div>
-<div style="grid-column:span 2"><label>Address</label><input id="schoolAddress" value="WAGOORA BABARESHI ROAD NEAR ZONAL EDUCATION OFFICE WAGOORA"></div>
-<div><label>School UDISE Code</label><input id="udise" value="01022202207"></div>
-<div><label>Academic Session</label><input id="session" value="2025–26"></div>
-<div><label>Assessment / Result Month</label><input id="assessment" value="November 2025"></div>
-<div><label>Class</label><select id="className"><option>Nursery</option><option>KG</option><option>1st</option><option>2nd</option><option selected>3rd</option><option>4th</option><option>5th</option></select></div>
-<div><label>Maximum Marks per Subject</label><input id="maxSubject" type="number" min="1" value="100"></div>
-<div><label>Overall Passing Percentage</label><input id="passPercent" type="number" min="0" max="100" value="33"></div>
-<div><label>School Logo (image)</label><input id="logoUpload" type="file" accept="image/*"></div>
-<div><label>Student Photograph (single student)</label><input id="photoUpload" type="file" accept="image/*"></div>
-<div style="grid-column:span 2"><label>Bulk Student Photos (select multiple)</label><input id="bulkPhotoUpload" type="file" accept="image/*" multiple><div class="small">Name each photo using the student's Admission No., Roll No., or student name (for example, 132.jpg or Aayat Reyaz.jpg) to match it automatically.</div></div>
-<div><label>Primary Colour</label><input id="primaryColor" type="color" value="#164f80"></div>
-<div><label>Accent Colour</label><input id="accentColor" type="color" value="#ffca28"></div>
-</div>
-<div class="actions"><button onclick="renderAll()">Update Result</button><button class="secondary" onclick="window.print()">Print / Save as PDF</button><button class="secondary" onclick="downloadCSV()">Export Marks CSV</button><button class="secondary" onclick="saveData()">Save in this browser</button><button class="secondary" onclick="loadData()">Load saved data</button><button class="gold" onclick="resetSample()">Restore sample</button></div>
-<div class="small">Tip: choose the school logo and student photo from your phone. Printing uses A4; select “Save as PDF” in the print dialog. Data is processed locally in this browser. Saving is device/browser-specific.</div>
+<!-- Fixed school identity and internal compatibility fields; not editable in the interface. -->
+<div id="fixedFields" hidden>
+<input id="schoolName" value="GOVERNMENT PRIMARY SCHOOL">
+<input id="schoolPlace" value="PETHGAM WAGOORA 193103">
+<input id="schoolAddress" value="WAGOORA BABARESHI ROAD NEAR ZONAL EDUCATION OFFICE WAGOORA">
+<input id="udise" value="01022202207">
+<input id="session" value="2026–27">
+<input id="assessment" value="Summative Assessment 2026">
+<select id="className"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select>
+<input id="maxSubject" type="number" value="100"><input id="passPercent" type="number" value="33">
+<input id="logoUpload" type="file" accept="image/*"><input id="photoUpload" type="file" accept="image/*">
+<input id="studentName" value=""><input id="admNo" value=""><input id="father" value=""><input id="mother" value=""><input id="dob" value=""><input id="rollNo" value=""><input id="apaar" value="N/A"><input id="pen" value=""><input id="classRank" value=""><input id="schoolRank" value=""><input id="resultStatus" value="PROMOTED"><input id="attendance" value="—">
+<input id="primaryColor" type="color" value="#164f80"><input id="accentColor" type="color" value="#ffca28">
 </div>
 
-<div class="panel editor">
-<h2>2. Student Details</h2>
+<div class="panel editor" id="classwiseTools">
+<h2>1. Class-wise Marks Entry & Student Photographs</h2>
+<p class="small">Upload the school Excel workbook first. Select a class, assessment and subject, load the class roster, and enter marks against each student. Student photographs are assigned manually to each student in the Photograph Upload section. The school logo is loaded automatically from <b>new-logo.png</b>.</p>
 <div class="grid">
-<div><label>Student Name</label><input id="studentName" value="MOMIN GULZAR MALLA"></div>
-<div><label>Admission No.</label><input id="admNo" value="132"></div>
-<div><label>Father's Name</label><input id="father" value="GULZAR AHMAD MALLA"></div>
-<div><label>Mother's Name</label><input id="mother" value="MEHNAZA BEGUM"></div>
-<div><label>Date of Birth</label><input id="dob" placeholder="DD/MM/YYYY"></div>
-<div><label>Roll No.</label><input id="rollNo" value="302"></div>
-<div><label>APAAR ID</label><input id="apaar" value="N/A"></div>
-<div><label>PEN No.</label><input id="pen" value="21857115065"></div>
-<div><label>Class Position</label><input id="classRank" type="number" min="1" value="3"></div>
-<div><label>School Rank</label><input id="schoolRank" type="number" min="1" value="13"></div>
-<div><label>Result</label><select id="resultStatus"><option>PROMOTED</option><option>PASS</option><option>NEEDS SUPPORT</option><option>DETAINED</option></select></div>
-<div><label>Attendance (days / %)</label><input id="attendance" value="—"></div>
+ <div><label>Upload Excel workbook (.xlsx/.xls)</label><input id="excelUpload" type="file" accept=".xlsx,.xls"></div>
+ <div><label>Imported student</label><select id="excelStudentSelect"><option value="">No workbook loaded</option></select></div>
+ <div><label>Select Class</label><select id="entryClass"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select></div>
+ <div><label>Select Assessment</label><select id="entryAssessment"><option value="FA1">FA1</option><option value="FA2">FA2</option><option value="FA3">FA3</option><option value="FA4">FA4</option><option value="FA5">FA5</option><option value="FA6">FA6</option><option value="CCA">CCA</option><option value="SA">SA</option></select></div>
+ <div><label>Select Subject</label><select id="entrySubject"><option>English</option><option>Mathematics</option><option>Environmental Science</option><option>Urdu</option><option>Kashmiri</option></select></div>
+ <div><label>Maximum Marks</label><input id="entryMaxMarks" type="number" min="1" value="5"></div>
 </div>
+<div class="actions"><button class="green" onclick="loadClassMarks()">Load Students of Class</button><button onclick="saveClassMarks()">Save Marks</button><button class="secondary" onclick="loadExcelStudent()">Load Selected Student Marksheet</button><button class="secondary" onclick="downloadSelectedMarksheet()">Download Selected Marksheet (PDF)</button><button class="green" onclick="printAllMarkSheets()">Generate / Print All Marksheets</button><button class="secondary" onclick="downloadExcelTemplate()">Download Excel Template</button><button class="secondary" onclick="downloadCSV()">Export Current Marks CSV</button></div>
+<div id="excelStatus" class="small">Upload the class-wise student workbook to begin.</div>
+<div id="classMarksTableWrap" class="table-wrap" style="margin-top:10px"></div>
 </div>
 
+<div class="panel editor" id="photoTools">
+<h2>2. Student Photograph Upload</h2>
+<p class="small">Select a class and choose one or more JPG, PNG, or WebP images. Assign every photograph to the correct student manually using the student selector beside each image. Image filenames are not used to identify or auto-select students. The school logo is separate and loads from <b>new-logo.png</b>.</p>
+<div class="grid">
+ <div><label>Select Class</label><select id="photoClass"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select></div>
+ <div><label>Upload Student Photographs (multiple)</label><input id="photoFilesUpload" type="file" accept="image/*" multiple><div class="small">Choose one or more JPG, PNG, or WebP images.</div></div>
+</div>
+<div class="actions"><button class="green" onclick="prepareStudentPhotos()">Load Photos for Assignment</button><button class="green" onclick="saveStudentPhotoAssignments()">Save Photo Assignments</button><button class="secondary" onclick="showClassPhotos()">View Class Photos</button></div>
+<div id="photoStatus" class="small">Upload the student workbook first, then select photos for a class.</div>
+<div id="photoTableWrap" class="table-wrap" style="margin-top:10px"></div>
+</div>
+
+<div class="panel editor" id="attendanceTools">
+<h2>3. Class-wise Monthly Attendance</h2>
+<p class="small">Select a class and month, load its students, and enter the number of days present for each student. Attendance is saved in this browser and appears on the student's printed marksheet.</p>
+<div class="grid">
+ <div><label>Select Class</label><select id="attendanceClass"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select></div>
+ <div><label>Select Month</label><select id="attendanceMonth"><option>November</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option></select></div>
+ <div><label>No. of Working Days</label><input id="attendanceMaxDays" type="number" min="0" max="31" placeholder="e.g. 22"><div class="small">Enter the total working days for the selected class and month.</div></div>
+ <div style="grid-column:span 2"><label>Upload Attendance Excel (.xlsx / .xls)</label><input id="attendanceExcelUpload" type="file" accept=".xlsx,.xls"><div class="small">Supports the “Attendance Updated.xlsx” layout. Monthly meeting counts are divided by 2 to convert them into days attended (two meetings per day).</div></div>
+</div>
+<div class="actions"><button class="green" onclick="loadAttendanceClass()">Load Attendance Register</button><button onclick="saveAttendanceClass()">Save Attendance</button><button class="green" onclick="importAttendanceExcel()">Import Attendance Excel</button></div>
+<div id="attendanceStatus" class="small">Upload the workbook and load a class to enter monthly attendance.</div>
+<div id="attendanceTableWrap" class="table-wrap" style="margin-top:10px"></div>
+</div>
+
+<div class="panel editor" id="excelActions" style="display:none">
+ <button class="secondary" onclick="saveData()">Save in this browser</button><button class="secondary" onclick="loadData()">Load saved data</button>
+</div>
 <div class="panel editor">
-<h2>3. Co-Scholastic / Life Skills Entry</h2>
+<h2>4. Co-Scholastic / Life Skills Entry</h2>
 <p class="small">Enter a grade, level, or short assessment for each skill. These values will appear in the student's printed progress report.</p>
 <div class="grid">
 <div><label>Sports</label><input id="skillSports" type="text" placeholder="e.g. A / Excellent / Participates well"></div>
@@ -236,7 +273,7 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 </div>
 </div>
 
-<div class="panel editor">
+<div class="panel editor" id="legacyMarksSettings" style="display:none" aria-hidden="true">
 <h2>4. Marks Entry & Grade-Point Settings</h2>
 <div class="notice">Enter marks in the FA, T(30), CC(20), or Sum(50) columns. The app calculates totals, percentages, grades, grade points, proficiency and overall result automatically. The sample data below is editable.</div>
 <div class="table-wrap"><table id="editTable"><thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>T (30)</th><th>CC (20)</th><th>Sum (50)</th><th>Total</th><th>Grade</th><th>Grade Point</th><th>Proficiency</th></tr></thead><tbody></tbody></table></div>
@@ -248,20 +285,10 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 </div>
 <h2 style="margin-top:16px">Editable Grade Scale & Grade Points</h2>
 <div class="table-wrap"><table id="gradeTable"><thead><tr><th>Grade</th><th>Minimum % (inclusive)</th><th>Grade Point</th><th>Bar Colour</th></tr></thead><tbody></tbody></table></div>
-<p class="small">Default grade points are editable examples: A+=10, A=9, B=8, C=7, D=6, E=5. Adjust these to match your official school/JKBOSE/SCERT grading rules before issuing results.</p>
+<p class="small">Grade-point scale: E = 0, D = 4, C = 5.5, B = 7, A = 8.5, A+ = 10. Percentage cut-offs remain editable.</p>
 <div class="actions"><button onclick="addSubject()">+ Add Subject</button><button class="secondary" onclick="renderAll()">Recalculate</button></div>
 </div>
 
-<div class="panel editor">
-<h2>4. Excel Results Import (Multiple Students)</h2>
-<p class="small">Upload the provided template or the school-wide results workbook. Each student row can be selected to preview and print an individual marksheet. Excel import requires an internet connection to load the spreadsheet reader.</p>
-<div class="grid">
-<div><label>Upload Excel workbook (.xlsx/.xls)</label><input id="excelUpload" type="file" accept=".xlsx,.xls"></div>
-<div><label>Imported student</label><select id="excelStudentSelect"><option value="">No workbook loaded</option></select></div>
-</div>
-<div class="actions"><button class="green" onclick="downloadExcelTemplate()">Download Excel Template</button><button class="secondary" onclick="loadExcelStudent()">Load Selected Student</button><button class="green" onclick="printAllMarkSheets()">Generate / Print All Marksheets</button><button class="secondary" onclick="downloadCSV()">Export Current Marks CSV</button></div>
-<div id="excelStatus" class="small">Supports the school workbook layout and the downloadable template, with subject-wise formative, co-curricular and summative marks.</div>
-</div>
 
 <div id="batchPrint" aria-label="Batch student marksheets"></div>
 <div class="panel">
@@ -287,11 +314,11 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
   <div class="proficiency-card stream" data-level="Stream"><svg viewBox="0 0 100 54" aria-hidden="true"><path d="M0 12 Q20 2 38 15 T76 13 T100 14" fill="none" stroke="#8ed7ff" stroke-width="8"/><path d="M0 30 Q20 20 38 33 T76 31 T100 32" fill="none" stroke="#36a8e8" stroke-width="9"/><path d="M0 46 Q20 36 38 49 T76 47 T100 48" fill="none" stroke="#087db9" stroke-width="8"/><path d="M10 30 l8 -4 M49 32 l8 -4 M78 47 l8 -4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><b>Stream</b><small>55% and below</small></div>
  </div>
 </div>
-</div><div><div class="section-title" style="margin-top:0">POSITION & RESULT</div><div class="details" style="grid-template-columns:1fr 1fr"><div class="detail"><b>Class Position</b><span id="outClassRank">3rd</span></div><div class="detail"><b>School Rank</b><span id="outSchoolRank">13</span></div><div class="detail"><b>Result</b><span id="outStatus">PROMOTED</span></div><div class="detail"><b>Attendance</b><span id="outAttendance">—</span></div></div><div class="section-title">GRADE KEY</div><div id="outGradeKey" style="font-size:9px;padding:5px"></div></div></div>
+</div><div><div class="section-title" style="margin-top:0">POSITION & RESULT</div><div class="details" style="grid-template-columns:1fr 1fr"><div class="detail"><b>Class Position</b><span id="outClassRank">3rd</span></div><div class="detail"><b>School Rank</b><span id="outSchoolRank">13</span></div><div class="detail"><b>Result</b><span id="outStatus">PROMOTED</span></div><div class="detail"><b>Attendance</b><span id="outAttendance">—</span></div></div><div class="section-title">GRADE KEY</div><div id="outGradeKey" style="font-size:9px;padding:5px"></div><div class="remark remark-under-grade"><b>GENERAL REMARKS</b><div id="outRemark" style="margin-top:4px">MOMIN GULZAR MALLA has shown Mountain level performance. Keep working consistently.</div></div></div></div>
 <div class="section-title">CO-SCHOLASTIC / LIFE SKILLS</div>
 <div class="skill-grid" id="skills"></div>
-<div class="remark"><b>GENERAL REMARKS</b><div id="outRemark" style="margin-top:4px">MOMIN GULZAR MALLA has shown Mountain level performance. Keep working consistently.</div></div>
-<div class="verify"><div><svg id="barcode" viewBox="0 0 260 48" role="img" aria-label="Student identity barcode"></svg><small><b>STUDENT IDENTITY BARCODE</b> • <span id="outBarcodeText">132</span></small><small>SCAN FOR VERIFICATION (QR code)</small></div><div id="qrBox" style="width:74px;height:74px;display:flex;align-items:center;justify-content:center;border:1px dashed #9bb2c7;font-size:9px;text-align:center">QR CODE</div></div>
+
+<div class="verify"><div class="verify-left"><svg id="barcode" viewBox="0 0 260 48" role="img" aria-label="Student identity barcode"></svg><small><b>STUDENT IDENTITY BARCODE</b> • <span id="outBarcodeText">132</span></small><small>SCAN FOR VERIFICATION</small></div><div class="attendance-mini-chart" id="outAttendanceChart" aria-label="Monthly attendance bar graph"><h4>MONTHLY ATTENDANCE</h4><div class="attendance-mini-plot"><div class="attendance-mini-row"><span>Nov</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:68%"></div></div><b>34</b></div><div class="attendance-mini-row"><span>Mar</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:48%"></div></div><b>24</b></div><div class="attendance-mini-row"><span>Apr</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:100%"></div></div><b>50</b></div><div class="attendance-mini-row"><span>May</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:60%"></div></div><b>30</b></div><div class="attendance-mini-row"><span>Jun</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:92%"></div></div><b>46</b></div><div class="attendance-mini-row"><span>Jul</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:36%"></div></div><b>18</b></div><div class="attendance-mini-row"><span>Aug</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:84%"></div></div><b>42</b></div><div class="attendance-mini-row"><span>Sep</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:60%"></div></div><b>30</b></div><div class="attendance-mini-row"><span>Oct</span><div class="attendance-mini-track"><div class="attendance-mini-bar" style="height:0%"></div></div><b>—</b></div></div></div><div id="qrBox" class="verify-right" style="width:74px;height:74px;display:flex;align-items:center;justify-content:center;border:1px dashed #9bb2c7;font-size:9px;text-align:center">QR CODE</div></div>
 <div class="signatures"><div>Sign. Form Teacher</div><div>Sign. Exam I/C</div><div>Parents Signature</div><div>Seal & Sign. Headmaster</div></div>
 
 </div></div>
@@ -301,8 +328,8 @@ label{display:block;font-weight:700;font-size:12px;color:#42566b;margin-bottom:4
 <script>
 const sample = [
  {name:'English',fa:[3,3,3,4,4,4],t:21,cc:14,sum:33},
- {name:'Math',fa:[2,2,3,3,4,4],t:18,cc:12,sum:29},
- {name:'EVS',fa:[3,3,3,4,4,4],t:21,cc:15,sum:35},
+ {name:'Mathematics',fa:[2,2,3,3,4,4],t:18,cc:12,sum:29},
+ {name:'Environmental Science',fa:[3,3,3,4,4,4],t:21,cc:15,sum:35},
  {name:'Urdu',fa:[3,3,4,4,5,5],t:24,cc:16,sum:39},
  {name:'Kashmiri',fa:[2,2,2,3,3,3],t:15,cc:10,sum:25}
 ];
@@ -310,13 +337,15 @@ let subjects = JSON.parse(JSON.stringify(sample));
 let importedExcelRows=[];
 let logoData='',photoData='';
 let bulkPhotos=[];
+let pendingStudentPhotos=[];
+try{bulkPhotos=JSON.parse(localStorage.getItem('gpsClasswisePhotos')||'[]')}catch(e){bulkPhotos=[]}
 let gradeRules = [
  {grade:'A+',min:85.01,point:10,color:'#0b8043'},
- {grade:'A',min:70.01,point:9,color:'#55a630'},
- {grade:'B',min:55.01,point:8,color:'#f4c542'},
- {grade:'C',min:40.01,point:7,color:'#f08b36'},
- {grade:'D',min:33.01,point:6,color:'#e45a5a'},
- {grade:'E',min:0,point:5,color:'#7a8794'}
+ {grade:'A',min:70.01,point:8.5,color:'#55a630'},
+ {grade:'B',min:55.01,point:7,color:'#f4c542'},
+ {grade:'C',min:40.01,point:5.5,color:'#f08b36'},
+ {grade:'D',min:33.01,point:4,color:'#e45a5a'},
+ {grade:'E',min:0,point:0,color:'#7a8794'}
 ];
 const skillsData=['Sports','Teamwork','Discipline','Art & Craft','Social Skills'];
 function $(id){return document.getElementById(id)}
@@ -344,7 +373,6 @@ function normKey(v){return String(v??'').trim().toLowerCase().replace(/[^a-z0-9]
 function getVal(row,aliases){const keys=Object.keys(row);const found=keys.find(k=>aliases.map(normKey).includes(normKey(k)));return found===undefined?'':row[found]}
 function normalizeWorkbook(wb){
  const candidateSheets=wb.SheetNames.map(name=>({name,ws:wb.Sheets[name],raw:XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:'',raw:false})}));
- // Prefer a sheet that contains the school result layout; the supplied workbook has title/header rows above student data.
  const chosen=candidateSheets.find(x=>x.raw.some(r=>normKey(r[0])==='admissionno'&&r.some(v=>normKey(v)==='name'))) ||
               candidateSheets.find(x=>x.raw.some(r=>String(r[3]??'').trim()!==''&&/^\d+(\.0)?$/.test(String(r[0]??'').trim()))) ||
               candidateSheets[0];
@@ -360,8 +388,6 @@ function normalizeWorkbook(wb){
   const objects=raw.slice(headerIndex+1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>Object.fromEntries(hdr.map((h,i)=>[h,r[i]??''])));
   return objects.map(row=>normalizeFlatRow(row));
  }
- // Actual school workbook layout: rows 1-3 contain multi-row headers; student records begin on row 4.
- // Student identity: A:H. Five subject blocks start at I, S, AC, AM, AW (10 columns apart).
  const students=raw.filter(r=>String(r[0]??'').trim()!==''&&/^\d+(\.0)?$/.test(String(r[0]).trim())&&String(r[3]??'').trim()!=='');
  return students.map(r=>{
   const out={
@@ -373,19 +399,33 @@ function normalizeWorkbook(wb){
   subjects.forEach((sub,i)=>{
    const base=8+i*10;
    for(let j=0;j<6;j++) out[sub.name+'_FA'+(j+1)]=r[base+j]??'';
-   out[sub.name+'_T']=r[base+6]??'';        // Formative assessment total (30)
-   out[sub.name+'_CC']=r[base+7]??'';      // Co-curricular (20)
-   out[sub.name+'_Sum']=r[base+8]??'';     // Summative assessment (50)
+   out[sub.name+'_T']=r[base+6]??'';        
+   out[sub.name+'_CC']=r[base+7]??'';      
+   out[sub.name+'_Sum']=r[base+8]??'';     
   });
   return out;
  });
+}
+function deduplicateStudentRows(rows){
+ const seen=new Set(), unique=[];
+ for(const row of rows){
+  const cls=normKey(row.className);
+  const adm=normKey(row.admNo);
+  const roll=normKey(row.rollNo);
+  const name=normKey(row.studentName);
+  const key=cls+'|'+(adm?'adm:'+adm:(roll?'roll:'+roll:'name:'+name));
+  if(!name || seen.has(key)) continue;
+  seen.add(key); unique.push(row);
+ }
+ return unique;
 }
 function normalizeFlatRow(row){
  const out={};
  out.studentName=getVal(row,['Student Name','Name','Student']);out.admNo=getVal(row,['Admission No','Admission Number','Admission']);out.rollNo=getVal(row,['Roll No','Roll Number','Roll']);out.className=getVal(row,['Class']);out.father=getVal(row,["Father's Name",'Father Name','Father']);out.mother=getVal(row,["Mother's Name",'Mother Name','Mother']);out.dob=getVal(row,['Date of Birth','DOB','D.O.B']);out.contact=getVal(row,['Contact No','Phone','Mobile']);out.apaar=getVal(row,['APAAR ID','Apaar ID','APAAR']);out.pen=getVal(row,['PEN Number','PEN No','PEN']);out.classRank=getVal(row,['Class Rank','Class Position']);out.schoolRank=getVal(row,['School Rank']);out.resultStatus=getVal(row,['Remarks','Result','Result Status']);out.attendance=getVal(row,['Attendance']);
  subjects.forEach(sub=>{
-  ['FA1','FA2','FA3','FA4','FA5','FA6'].forEach((k,i)=>out[sub.name+'_'+k]=getVal(row,[sub.name+'_'+k,sub.name+'_F'+(i+1),sub.name+' '+k]));
-  out[sub.name+'_T']=getVal(row,[sub.name+'_FA Total',sub.name+'_T',sub.name+'_Total FA',sub.name+' Total']);out[sub.name+'_CC']=getVal(row,[sub.name+'_Co-Curricular',sub.name+'_CC',sub.name+' CC']);out[sub.name+'_Sum']=getVal(row,[sub.name+'_Summative Assessment',sub.name+'_Sum',sub.name+'_SA',sub.name+' SA']);
+  const aliases=sub.name==='Mathematics'?['Mathematics','Math']:sub.name==='Environmental Science'?['Environmental Science','EVS']:[sub.name];
+  ['FA1','FA2','FA3','FA4','FA5','FA6'].forEach((k,i)=>out[sub.name+'_'+k]=getVal(row,aliases.flatMap(n=>[n+'_'+k,n+'_F'+(i+1),n+' '+k])));
+  out[sub.name+'_T']=getVal(row,aliases.flatMap(n=>[n+'_FA Total',n+'_T',n+'_Total FA',n+' Total']));out[sub.name+'_CC']=getVal(row,aliases.flatMap(n=>[n+'_Co-Curricular',n+'_CC',n+' CC']));out[sub.name+'_Sum']=getVal(row,aliases.flatMap(n=>[n+'_Summative Assessment',n+'_Sum',n+'_SA',n+' SA']));
  });return out;
 }
 $('excelUpload').addEventListener('change',async e=>{
@@ -393,10 +433,12 @@ $('excelUpload').addEventListener('change',async e=>{
  if(!window.XLSX){$('excelStatus').textContent='Excel reader unavailable. Connect to the internet and reopen this HTML file.';return}
  try{
   const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false});
-  importedExcelRows=normalizeWorkbook(wb).filter(r=>String(r.studentName??'').trim()!=='');
+  const normalizedRows=normalizeWorkbook(wb).filter(r=>String(r.studentName??'').trim()!=='');
+  importedExcelRows=deduplicateStudentRows(normalizedRows);
   if(!importedExcelRows.length)throw new Error('No student rows found. Use the template or the school workbook layout (Admission No, Roll No, Class, Name, followed by subject marks).');
+  const removed=normalizedRows.length-importedExcelRows.length;
   const sel=$('excelStudentSelect');sel.innerHTML=importedExcelRows.map((r,i)=>`<option value="${i}">${i+1}. ${escapeHTML(r.studentName||'Unnamed student')} — ${escapeHTML(r.admNo||'')}</option>`).join('');
-  $('excelStatus').textContent=`Imported ${importedExcelRows.length} student(s) from "${wb.SheetNames[0]}". Select a student to preview and print their marksheet.`;loadExcelStudent();
+  $('excelStatus').textContent=`Imported ${importedExcelRows.length} unique student(s) from "${wb.SheetNames[0]}"${removed?`; removed ${removed} duplicate student row(s)`:''}. Select a student to preview and print their marksheet.`;loadExcelStudent();
  }catch(err){$('excelStatus').textContent='Could not read workbook: '+err.message}
 });
 function loadExcelStudent(){
@@ -404,14 +446,34 @@ function loadExcelStudent(){
  loadStudentRow(row);$('excelStatus').textContent='Loaded '+($('studentName').value||'student')+'. Review the marksheet, then use Print / Save as PDF.';
 }
 function loadStudentRow(row){
- ['studentName','admNo','father','mother','dob','rollNo','apaar','pen','classRank','schoolRank','resultStatus','attendance'].forEach(id=>{if(row[id]!==undefined&&row[id]!==''&&$(id))$(id).value=String(row[id])});
+ ['studentName','admNo','father','mother','dob','rollNo','apaar','pen','classRank','schoolRank','resultStatus','attendance'].forEach(id=>{if($(id))$(id).value=(row[id]!==undefined&&row[id]!==null)?String(row[id]):''});
  if(row.className){let option=[...$('className').options].find(o=>normKey(o.value)===normKey(row.className));if(!option){option=document.createElement('option');option.textContent=row.className;option.value=row.className;$('className').appendChild(option)}$('className').value=option.value;}
- subjects=subjects.map(sub=>{const copy={...sub,fa:[...sub.fa]};['FA1','FA2','FA3','FA4','FA5','FA6'].forEach((k,i)=>{const v=row[sub.name+'_'+k];if(v!==undefined&&v!=='')copy.fa[i]=Number(v)||0});[['T','_T'],['CC','_CC'],['Sum','_Sum']].forEach(([field,suffix])=>{const v=row[sub.name+suffix];if(v!==undefined&&v!=='')copy[field.toLowerCase()]=Number(v)||0});return copy;});
- const tokens=[row.admNo,row.rollNo,row.studentName].filter(Boolean).map(v=>normKey(String(v)));
- const matched=bulkPhotos.find(ph=>{const f=normKey(ph.name.replace(/\.[^.]+$/,''));return tokens.some(t=>t&& (f===t||f.includes(t)||t.includes(f)))});
+ subjects=subjects.map(sub=>{const copy={...sub,fa:[...sub.fa]};['FA1','FA2','FA3','FA4','FA5','FA6'].forEach((k,i)=>{const v=row[sub.name+'_'+k];copy.fa[i]=(v!==undefined&&v!=='')?(Number(v)||0):0});[['T','_T'],['CC','_CC'],['Sum','_Sum']].forEach(([field,suffix])=>{const v=row[sub.name+suffix];copy[field.toLowerCase()]=(v!==undefined&&v!=='')?(Number(v)||0):0});return copy;});
+ const matched=bulkPhotos.find(ph=>ph.studentKey===studentPhotoKey(row)) || bulkPhotos.find(ph=>canonicalClass(ph.className)===canonicalClass(row.className) && ((normKey(ph.admNo)&&normKey(ph.admNo)===normKey(row.admNo)) || (normKey(ph.rollNo)&&normKey(ph.rollNo)===normKey(row.rollNo))));
  photoData=matched?matched.data:'';
+ if(row.className){const opt=[...$('entryClass').options].find(o=>canonicalClass(o.value)===canonicalClass(row.className));if(opt)$('entryClass').value=opt.value;const aopt=[...$('attendanceClass').options].find(o=>canonicalClass(o.value)===canonicalClass(row.className));if(aopt)$('attendanceClass').value=aopt.value;}
  renderEditors();renderAll();
 }
+function waitForImage(img, timeout=9000){
+ return new Promise(resolve=>{
+  if(!img || (img.complete && img.naturalWidth>0)){resolve(true);return;}
+  let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timer);img.removeEventListener('load',onload);img.removeEventListener('error',onerror);resolve(ok)};
+  const onload=()=>finish(img.naturalWidth>0);const onerror=()=>finish(false);const timer=setTimeout(()=>finish(false),timeout);
+  img.addEventListener('load',onload,{once:true});img.addEventListener('error',onerror,{once:true});
+ });
+}
+async function downloadSelectedMarksheet(){
+ if(!importedExcelRows.length){alert('Please upload the student Excel workbook first.');return;}
+ const row=importedExcelRows[Number($('excelStudentSelect').value)];
+ if(!row){alert('Please select a student from the Imported student list first.');return;}
+ loadStudentRow(row);
+ const qr=$('qrBox')?.querySelector('img'); if(qr) await waitForImage(qr,9000);
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ document.body.classList.add('single-printing');
+ try{window.print();}finally{setTimeout(()=>document.body.classList.remove('single-printing'),1200);}
+}
+
+// --- UPDATED & CORRECTED BATCH PRINT FUNCTION ---
 async function printAllMarkSheets(){
  if(!importedExcelRows.length){alert('Please upload the Excel workbook containing the students first.');return}
  const btns=document.querySelectorAll('button');btns.forEach(b=>b.disabled=true);
@@ -422,13 +484,207 @@ async function printAllMarkSheets(){
  try{
   for(let i=0;i<importedExcelRows.length;i++){
    loadStudentRow(importedExcelRows[i]);
-   const clone=$('resultCard').cloneNode(true);clone.removeAttribute('id');clone.classList.add('batch-card');clone.style.margin='0';holder.appendChild(clone);
+   const qr=$('qrBox')?.querySelector('img');
+   if(qr) await waitForImage(qr, 800); // Optimized short timeout for instant batch rendering
+   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+   const clone=$('resultCard').cloneNode(true);
+   clone.removeAttribute('id');
+   clone.style.margin='0';
+   // Remove duplicate IDs from descendant elements to ensure clean valid DOM structure without altering layout/style
+   clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+   clone.querySelectorAll('img').forEach(img=>{img.loading='eager';img.removeAttribute('crossorigin');});
+   holder.appendChild(clone);
   }
-  // Keep the current preview/form as it was before batch generation.
   Object.keys(saved).forEach(id=>{if($(id))$(id).value=saved[id]});subjects=savedSubjects;gradeRules=savedGrades;photoData=savedPhoto;skillIds.forEach(id=>{if($(id))$(id).value=savedSkills[id]});renderEditors();renderAll();
+  await Promise.all([...holder.querySelectorAll('img')].map(img=>waitForImage(img, 800)));
   document.body.classList.add('batch-printing');window.print();
  }catch(err){alert('Could not prepare all marksheets: '+err.message)}
  finally{document.body.classList.remove('batch-printing');holder.innerHTML='';btns.forEach(b=>b.disabled=false)}
+}
+
+
+const schoolMonths=['November','March','April','May','June','July','August','September','October'];
+let attendanceRecords={};
+let attendanceWorkingDays={};
+try{attendanceRecords=JSON.parse(localStorage.getItem('gpsClasswiseAttendance')||'{}');attendanceWorkingDays=JSON.parse(localStorage.getItem('gpsClasswiseWorkingDays')||'{}')}catch(e){attendanceRecords={};attendanceWorkingDays={}}
+function attendanceMonthKey(cls,month){return [canonicalClass(cls),normKey(month)].join('|')}
+function canonicalClass(v){const k=normKey(v);const map={'5':'5th','class5':'5th','4':'4th','class4':'4th','3':'3rd','class3':'3rd','2':'2nd','class2':'2nd','1':'1st','class1':'1st','balvatika':'balvatika','pp2':'pp2','pp3':'pp3'};return map[k]||k}
+function selectedClassRows(classValue){
+ const wanted=canonicalClass(classValue);
+ return importedExcelRows.map((row,index)=>({row,index})).filter(x=>canonicalClass(x.row.className)===wanted);
+}
+function studentPhotoKey(row){
+ const cls=canonicalClass(row?.className||'');
+ const adm=normKey(row?.admNo||'');
+ const roll=normKey(row?.rollNo||'');
+ const name=normKey(row?.studentName||'');
+ return cls+'|'+(adm?'adm:'+adm:roll?'roll:'+roll:'name:'+name);
+}
+function studentPhotoFor(row){
+ const key=studentPhotoKey(row);
+ const matched=bulkPhotos.find(ph=>ph.studentKey===key) || bulkPhotos.find(ph=>canonicalClass(ph.className)===canonicalClass(row.className) && ((normKey(ph.admNo)&&normKey(ph.admNo)===normKey(row.admNo)) || (normKey(ph.rollNo)&&normKey(ph.rollNo)===normKey(row.rollNo))));
+ return matched?matched.data:'';
+}
+function markField(row,assessment,subject){
+ const key=subject+'_'+(assessment==='CCA'?'CC':assessment==='SA'?'Sum':assessment);
+ return row[key]??'';
+}
+function setMarkField(row,assessment,subject,value){
+ const key=subject+'_'+(assessment==='CCA'?'CC':assessment==='SA'?'Sum':assessment);
+ row[key]=value;
+ if(assessment==='FA1'||assessment==='FA2'||assessment==='FA3'||assessment==='FA4'||assessment==='FA5'||assessment==='FA6')row[subject+'_F'+assessment.slice(2)]=value;
+ if(assessment==='CCA')row[subject+'_Co-Curricular']=value;
+ if(assessment==='SA')row[subject+'_Summative Assessment']=value;
+}
+
+async function prepareStudentPhotos(){
+ const files=[...($('photoFilesUpload').files||[])];
+ if(!files.length){$('photoStatus').textContent='Please choose one or more JPG, PNG, or WebP images first.';return}
+ if(!importedExcelRows.length){$('photoStatus').textContent='Please upload the main student workbook first so the student list can be shown.';return}
+ const cls=$('photoClass').value, students=selectedClassRows(cls);
+ if(!students.length){$('photoStatus').textContent='No students found for '+cls+'. Check the Class column in the workbook.';return}
+ pendingStudentPhotos=[];
+ for(const file of files){
+  if(!/^image\/(jpeg|png|webp)$/i.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name))continue;
+  const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});
+  pendingStudentPhotos.push({name:file.name,data,studentKey:''});
+ }
+ if(!pendingStudentPhotos.length){$('photoStatus').textContent='No valid JPG, PNG, or WebP images were selected.';return}
+ const options=students.map(({row,index})=>`<option value="${index}">${escapeHTML(row.studentName||'Unnamed student')} — Adm. ${escapeHTML(row.admNo||'—')} — Roll ${escapeHTML(row.rollNo||'—')}</option>`).join('');
+ $('photoTableWrap').innerHTML=`<table><thead><tr><th>#</th><th>Selected Photograph</th><th>File Name (reference only)</th><th>Assign to Student</th></tr></thead><tbody>${pendingStudentPhotos.map((ph,i)=>`<tr><td>${i+1}</td><td><img src="${ph.data}" alt="Selected photograph" style="width:52px;height:60px;object-fit:cover;border-radius:4px"></td><td>${escapeHTML(ph.name)}</td><td><select class="photo-student-assignment" data-photo-index="${i}"><option value="">— Select the correct student —</option>${options}</select></td></tr>`).join('')}</tbody></table>`;
+ $('photoStatus').textContent=`Prepared ${pendingStudentPhotos.length} photograph(s). Manually choose the correct student for each photo, then tap “Save Photo Assignments”. Filenames will not be used for matching.`;
+}
+function saveStudentPhotoAssignments(){
+ if(!pendingStudentPhotos.length){$('photoStatus').textContent='First choose photos and tap “Load Photos for Assignment”.';return}
+ const selects=[...document.querySelectorAll('.photo-student-assignment')];
+ const chosen=selects.map(el=>({photoIndex:Number(el.dataset.photoIndex),row:importedExcelRows[Number(el.value)]}));
+ const missing=chosen.filter(x=>!x.row);
+ if(missing.length){$('photoStatus').textContent=`Please select a student for every photograph. ${missing.length} photo(s) still need assignment.`;return}
+ const keys=chosen.map(x=>studentPhotoKey(x.row));
+ if(new Set(keys).size!==keys.length){$('photoStatus').textContent='A student has been selected for more than one photo in this upload. Please assign each photo to a different student.';return}
+ let saved=0;
+ chosen.forEach(({photoIndex,row})=>{
+  const ph=pendingStudentPhotos[photoIndex],key=studentPhotoKey(row);
+  bulkPhotos=bulkPhotos.filter(old=>old.studentKey!==key);
+  bulkPhotos.push({studentKey:key,className:row.className,studentName:row.studentName,admNo:row.admNo,rollNo:row.rollNo,name:ph.name,data:ph.data});saved++;
+ });
+ try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
+ catch(e){$('photoStatus').textContent='Photos assigned for this session, but browser storage is full. Try smaller images or fewer photos.';}
+ $('photoStatus').textContent=`Saved ${saved} manually assigned photograph(s). No filename-based auto-matching was used.`;
+ pendingStudentPhotos=[];$('photoFilesUpload').value='';
+ showClassPhotos();
+ if(importedExcelRows.length){const current=importedExcelRows.find(r=>studentPhotoKey(r)===studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value}));if(current)loadStudentRow(current);}
+}
+
+async function uploadPhotoForStudent(rowIndex,input){
+ const file=input?.files?.[0];
+ if(!file)return;
+ if(!/^image\/(jpeg|png|webp)$/i.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)){
+  $('photoStatus').textContent='Please choose a JPG, PNG, or WebP image.';input.value='';return;
+ }
+ const row=importedExcelRows[Number(rowIndex)];
+ if(!row){$('photoStatus').textContent='Could not identify this student row. Please reload the class photo list.';return;}
+ try{
+  const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+  const key=studentPhotoKey(row);
+  bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);
+  bulkPhotos.push({studentKey:key,className:row.className,studentName:row.studentName,admNo:row.admNo,rollNo:row.rollNo,name:file.name,data});
+  try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
+  catch(storageError){bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);$('photoStatus').textContent='Could not save the photograph because browser storage is full. Try a smaller image.';return;}
+  $('photoStatus').textContent=`Photograph saved for ${row.studentName||'student'} — Roll No. ${row.rollNo||'—'}.`;
+  showClassPhotos();
+  const current=importedExcelRows.find(r=>studentPhotoKey(r)===studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value}));
+  if(current)loadStudentRow(current);
+ }catch(e){$('photoStatus').textContent='Unable to read this image. Please try another JPG, PNG, or WebP file.';}
+}
+
+function showClassPhotos(){
+ const cls=$('photoClass').value,wrap=$('photoTableWrap'),list=selectedClassRows(cls);
+ if(!importedExcelRows.length){$('photoStatus').textContent='Please upload the school student workbook first.';wrap.innerHTML='';return}
+ if(!list.length){$('photoStatus').textContent='No students found for '+cls+'. Check the Class column in the workbook.';wrap.innerHTML='';return}
+ wrap.innerHTML=`<table><thead><tr><th>#</th><th>Student</th><th>Admission No.</th><th>Roll No.</th><th>Photograph</th><th>Upload / Change Photograph</th><th>Status</th></tr></thead><tbody>${list.map(({row,index},i)=>{const src=studentPhotoFor(row);return `<tr><td>${i+1}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td><b>${escapeHTML(row.rollNo||'—')}</b></td><td>${src?`<img src="${src}" alt="Student photo" style="width:48px;height:56px;object-fit:cover;border-radius:4px">`:'—'}</td><td><input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-label="Upload photograph for ${escapeHTML(row.studentName||'student')} roll ${escapeHTML(row.rollNo||'')}" onchange="uploadPhotoForStudent(${index},this)" style="max-width:210px;width:100%"><div class="small">Choose this student's photo</div></td><td>${src?'Photo saved':'No photo yet'}</td></tr>`}).join('')}</tbody></table>`;
+ $('photoStatus').textContent=`Showing ${list.length} student(s) in ${cls}. Use the upload field in each student's own row (against their Roll No.) to select that student's photograph. Photos are saved individually and filenames are not used for matching.`;
+}
+async function importAttendanceExcel(){
+ const file=$('attendanceExcelUpload').files[0];
+ if(!file){$('attendanceStatus').textContent='Please select the Attendance Excel workbook first.';return}
+ if(!window.XLSX){$('attendanceStatus').textContent='Excel reader unavailable. Connect to the internet and reopen this HTML file.';return}
+ if(!importedExcelRows.length){$('attendanceStatus').textContent='Please upload the main student results workbook first. It is used to match attendance rows to students.';return}
+ try{
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
+  const ws=wb.Sheets[wb.SheetNames[0]];
+  const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+  if(data.length<6||normKey(data[3]?.[1])!=='admissionno'||normKey(data[3]?.[2])!=='name'||normKey(data[3]?.[3])!=='class') {
+    throw new Error('The workbook layout does not match the supplied Attendance Updated.xlsx format (S. NO., Admission No, Name, Class).');
+  }
+  const monthCols=[4,7,10,13,16,19,22,25,28];
+  let imported=0,unmatched=0,monthsImported=new Set();
+  for(let ri=5;ri<data.length;ri++){
+   const r=data[ri],name=String(r[2]??'').trim(),cls=String(r[3]??'').trim(),adm=String(r[1]??'').trim();
+   if(!name||!cls)continue;
+   const found=importedExcelRows.find(st=>{
+    const sameClass=canonicalClass(st.className)===canonicalClass(cls);
+    const sameAdm=adm&&st.admNo&&normKey(adm)===normKey(st.admNo);
+    const sameName=normKey(st.studentName)===normKey(name);
+    return sameClass&&(sameAdm||sameName);
+   });
+   if(!found){unmatched++;continue}
+   for(let mi=0;mi<schoolMonths.length;mi++){
+    const raw=r[monthCols[mi]];
+    if(raw===undefined||raw===null||String(raw).trim()==='')continue;
+    const meetings=Number(String(raw).replace(/,/g,''));
+    if(!Number.isFinite(meetings)||meetings<0)continue;
+    const val=meetings/2;
+    const key=attendanceKey(found.className,schoolMonths[mi],found.admNo,found.rollNo,found.studentName);
+    attendanceRecords[key]=val;monthsImported.add(schoolMonths[mi]);imported++;
+   }
+  }
+  localStorage.setItem('gpsClasswiseAttendance',JSON.stringify(attendanceRecords));
+  localStorage.setItem('gpsClasswiseWorkingDays',JSON.stringify(attendanceWorkingDays));
+  localStorage.setItem('gpsClasswiseRows',JSON.stringify(importedExcelRows));
+  $('attendanceStatus').textContent=`Attendance import complete: ${imported} monthly attendance values imported for ${monthsImported.size} month(s); ${unmatched} student row(s) could not be matched. Monthly meeting counts were converted to days (meetings ÷ 2). The workbook’s Total Days and Percentage columns were not treated as monthly working days.`;
+  loadAttendanceClass();renderAll();
+ }catch(err){$('attendanceStatus').textContent='Could not import attendance workbook: '+err.message}
+}
+function loadClassMarks(){
+ const cls=$('entryClass').value,ass=$('entryAssessment').value,sub=$('entrySubject').value;
+ $('className').value=cls;$('assessment').value=ass+' — '+sub;
+ $('entryMaxMarks').value=ass==='CCA'?20:ass==='SA'?50:5;
+ const list=selectedClassRows(cls);const wrap=$('classMarksTableWrap');
+ if(!importedExcelRows.length){$('excelStatus').textContent='Please upload the school Excel workbook first.';wrap.innerHTML='';return}
+ if(!list.length){$('excelStatus').textContent='No students found for '+cls+'. Check the Class column in the workbook.';wrap.innerHTML='';return}
+ wrap.innerHTML=`<table><thead><tr><th>#</th><th>Photograph</th><th>Student Name</th><th>Admission No.</th><th>Roll No.</th><th>${escapeHTML(ass)} / ${escapeHTML(sub)} (max ${escapeHTML($('entryMaxMarks').value)})</th></tr></thead><tbody>${list.map(({row,index},i)=>`<tr><td>${i+1}</td><td>${studentPhotoFor(row)?`<img src="${studentPhotoFor(row)}" style="width:42px;height:48px;object-fit:cover;border-radius:4px">`:'—'}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td>${escapeHTML(row.rollNo||'')}</td><td><input class="class-mark-input" data-row-index="${index}" type="number" min="0" max="${Number($('entryMaxMarks').value)||100}" value="${escapeHTML(markField(row,ass,sub))}" aria-label="Marks for ${escapeHTML(row.studentName||'student')}"></td></tr>`).join('')}</tbody></table>`;
+ $('excelStatus').textContent=`Loaded ${list.length} student(s) in ${cls} for ${ass} — ${sub}. Enter marks and tap Save Marks.`;
+}
+function saveClassMarks(){
+ const ass=$('entryAssessment').value,sub=$('entrySubject').value,max=Number($('entryMaxMarks').value)||100;let saved=0;
+ document.querySelectorAll('.class-mark-input').forEach(el=>{const val=el.value.trim();if(val==='')return;const n=Number(val);if(n<0||n>max){el.setCustomValidity(`Enter a mark between 0 and ${max}`);el.reportValidity();return}el.setCustomValidity('');const row=importedExcelRows[Number(el.dataset.rowIndex)];if(row){setMarkField(row,ass,sub,n);saved++}});
+ try{localStorage.setItem('gpsClasswiseRows',JSON.stringify(importedExcelRows));localStorage.setItem('gpsClasswiseAttendance',JSON.stringify(attendanceRecords))}catch(e){}
+ $('excelStatus').textContent=`Saved ${saved} mark(s) for ${$('entryClass').value} — ${ass} — ${sub}.`;
+ if(importedExcelRows.length){const row=importedExcelRows.find(r=>normKey(r.className)===normKey($('entryClass').value));if(row){loadStudentRow(row)}}
+}
+function attendanceKey(cls,month,adm,roll,name){return [canonicalClass(cls),normKey(month),normKey(adm||roll||name)].join('|')}
+function loadAttendanceClass(){
+ const cls=$('attendanceClass').value,month=$('attendanceMonth').value,list=selectedClassRows(cls),wrap=$('attendanceTableWrap');
+ const savedWorkingDays=attendanceWorkingDays[attendanceMonthKey(cls,month)];$('attendanceMaxDays').value=savedWorkingDays===undefined?'':savedWorkingDays;
+ if(!importedExcelRows.length){$('attendanceStatus').textContent='Please upload the school Excel workbook first.';return}
+ if(!list.length){$('attendanceStatus').textContent='No students found for '+cls+'. Check the Class column in the workbook.';wrap.innerHTML='';return}
+ wrap.innerHTML=`<table><thead><tr><th>#</th><th>Photograph</th><th>Student Name</th><th>Admission No.</th><th>Roll No.</th><th>Days Present in ${escapeHTML(month)}</th></tr></thead><tbody>${list.map(({row,index},i)=>{const key=attendanceKey(cls,month,row.admNo,row.rollNo,row.studentName);return `<tr><td>${i+1}</td><td>${studentPhotoFor(row)?`<img src="${studentPhotoFor(row)}" style="width:42px;height:48px;object-fit:cover;border-radius:4px">`:'—'}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td>${escapeHTML(row.rollNo||'')}</td><td><input class="attendance-input" data-row-index="${index}" data-attendance-key="${escapeHTML(key)}" type="number" min="0" max="${Number($('attendanceMaxDays').value)||31}" value="${escapeHTML(attendanceRecords[key]??'')}" aria-label="Attendance for ${escapeHTML(row.studentName||'student')}"></td></tr>`}).join('')}</tbody></table>`;
+ $('attendanceStatus').textContent=`Loaded ${list.length} student(s) for ${month} attendance. Enter days present and save.`;
+}
+function saveAttendanceClass(){
+ const cls=$('attendanceClass').value,month=$('attendanceMonth').value,workingText=$('attendanceMaxDays').value.trim();
+ if(workingText!=='' ){const wd=Number(workingText);if(!Number.isFinite(wd)||wd<0||wd>31){$('attendanceMaxDays').setCustomValidity('Enter working days between 0 and 31');$('attendanceMaxDays').reportValidity();return}$('attendanceMaxDays').setCustomValidity('');attendanceWorkingDays[attendanceMonthKey(cls,month)]=wd;}
+ let saved=0;document.querySelectorAll('.attendance-input').forEach(el=>{if(el.value.trim()==='')return;const n=Number(el.value),max=workingText!==''?Number(workingText):31;if(n<0||n>max){el.setCustomValidity(`Enter attendance between 0 and ${max} days`);el.reportValidity();return}el.setCustomValidity('');attendanceRecords[el.dataset.attendanceKey]=n;saved++});
+ try{localStorage.setItem('gpsClasswiseAttendance',JSON.stringify(attendanceRecords));localStorage.setItem('gpsClasswiseWorkingDays',JSON.stringify(attendanceWorkingDays));localStorage.setItem('gpsClasswiseRows',JSON.stringify(importedExcelRows))}catch(e){}
+ $('attendanceStatus').textContent=`Saved ${saved} attendance record(s) and ${workingText===''?'no working-day total':workingText+' working days'} for ${cls} — ${month}.`;
+ renderAll();
+}
+function renderMonthlyAttendance(row){
+ const box=$('outMonthlyAttendance');if(!box)return;
+ const cls=row?.className||$('className').value,adm=row?.admNo||$('admNo').value,roll=row?.rollNo||$('rollNo').value,name=row?.studentName||$('studentName').value;
+ const items=schoolMonths.map(month=>{const key=attendanceKey(cls,month,adm,roll,name),wd=attendanceWorkingDays[attendanceMonthKey(cls,month)];return {month,value:attendanceRecords[key],workingDays:wd}}).filter(x=>(x.value!==undefined&&x.value!=='')||x.workingDays!==undefined);
+ box.innerHTML=items.length?items.map(x=>`<div><b>${escapeHTML(x.month)}</b><span>${x.value===undefined?'—':escapeHTML(x.value)} present / ${x.workingDays===undefined?'—':escapeHTML(x.workingDays)} working days</span></div>`).join(''):'No monthly attendance entered.';
 }
 
 function renderEditors(){
@@ -441,14 +697,16 @@ function readEditors(){
 }
 function field(label,id){return `<div class="detail"><b>${label}</b><span>${escapeHTML($(id).value||'—')}</span></div>`}
 function ordinal(n){n=Number(n);if(!n)return '—';return n+(n%100>=11&&n%100<=13?'th':({1:'st',2:'nd',3:'rd'}[n%10]||'th'))}
+function totalDaysPresentForCurrentStudent(){
+ const cls=$('className')?.value||'',adm=$('admNo')?.value||'',roll=$('rollNo')?.value||'',name=$('studentName')?.value||'';
+ let total=0; for(const month of schoolMonths){const key=attendanceKey(cls,month,adm,roll,name);const v=attendanceRecords[key];if(v!==undefined&&v!=='')total+=Number(v)||0;} return total;
+}
 function renderAll(){
  readEditors();
  let faMax=num('faMax',5),tMax=num('tMax',30),ccMax=num('ccMax',20),sumMax=num('sumMax',50),maxSubject=num('maxSubject',100);
  let maxTotal=subjects.length*maxSubject,obtained=0,weightedPoints=0,remarkBits=[],rows=[];
  subjects.forEach((s,i)=>{
    let fa=s.fa.reduce((a,b)=>a+b,0),total=fa+s.t+s.cc+s.sum;
-   // Sample result structure treats T/CC/Sum as the official components and FA columns as formative evidence, not extra marks.
-   // If the entered total component sum exceeds the subject maximum, it is capped for percentage and totals.
    let score=Math.min(maxSubject,Math.max(0,s.t+s.cc+s.sum));
    let pct=maxSubject?score/maxSubject*100:0,gr=gradeFor(pct);
    obtained+=score;weightedPoints+=gr.point;
@@ -456,16 +714,15 @@ function renderAll(){
    if(pct>=70)remarkBits.push(`${s.name} (${Math.round(pct)}%)`);
    let tr=$('editTable').tBodies[0].rows[i];if(tr){tr.querySelector('.calcTotal').textContent=score;tr.querySelector('.calcGrade').innerHTML=`<span class="pill ${gradeClass(gr.grade)}">${escapeHTML(gr.grade)}</span>`;tr.querySelector('.calcGP').textContent=Number(gr.point).toFixed(1);tr.querySelector('.calcProf').textContent=proficiency(pct)}
  });
- // Use sum of subject maxima for consistent percentage.
  let max=subjects.length*maxSubject,percent=max?obtained/max*100:0,overall=gradeFor(percent);
  $('outSchool').innerHTML=escapeHTML($('schoolName').value)+'<br>'+escapeHTML($('schoolPlace').value);
  $('outAddress').textContent=$('schoolAddress').value;$('outAssessment').textContent=$('assessment').value;$('outSession').textContent=$('session').value;
- $('outLogo').src=logoData||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="46" fill="#fff" stroke="#9bb2c7" stroke-width="2"/><text x="50" y="44" text-anchor="middle" font-size="12" fill="#164f80">SCHOOL</text><text x="50" y="60" text-anchor="middle" font-size="9" fill="#164f80">LOGO</text></svg>');
+ $('outLogo').src='new-logo.png';
  $('outPhoto').src=photoData||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="102"><rect width="100%" height="100%" fill="#eef3f8"/><circle cx="50" cy="40" r="20" fill="#b9c9d7"/><path d="M12 115 Q15 70 50 70 Q85 70 88 115" fill="#b9c9d7"/><text x="50" y="108" text-anchor="middle" font-size="8" fill="#345">PHOTO</text></svg>');
  $('outDetails').innerHTML=field('Student Name','studentName')+field('Admission No.','admNo')+field("Father's Name",'father')+field("Mother's Name",'mother')+field('Date of Birth','dob')+field('Class','className')+field('Academic Session','session')+field('Roll No.','rollNo')+field('APAAR ID','apaar')+field('PEN No.','pen')+field('Assessment','assessment')+field('School UDISE','udise');
  $('outMarks').innerHTML=rows.map(({s,fa,total,pct,gr,prof})=>`<tr><td>${escapeHTML(s.name)}</td>${s.fa.map(v=>`<td>${v}</td>`).join('')}<td>${s.t}</td><td>${s.cc}</td><td>${s.sum}</td><td><b>${total}</b></td><td>${pct.toFixed(1)}%</td><td><span class="pill ${gradeClass(gr.grade)}">${escapeHTML(gr.grade)}</span></td><td>${Number(gr.point).toFixed(1)}</td><td>${prof}</td></tr>`).join('')+`<tr style="font-weight:800;background:#fff6d7"><td>Grand Total</td>${Array.from({length:6},(_,j)=>rows.reduce((a,r)=>a+r.s.fa[j],0)).map(v=>`<td>${v}</td>`).join('')}<td>${rows.reduce((a,r)=>a+r.s.t,0)}</td><td>${rows.reduce((a,r)=>a+r.s.cc,0)}</td><td>${rows.reduce((a,r)=>a+r.s.sum,0)}</td><td>${obtained}</td><td>${percent.toFixed(1)}%</td><td><span class="pill ${gradeClass(overall.grade)}">${escapeHTML(overall.grade)}</span></td><td>${(weightedPoints/Math.max(1,subjects.length)).toFixed(2)}</td><td>${proficiency(percent)}</td></tr>`;
  $('outObtained').textContent=obtained;$('outMax').textContent=max;$('outPercent').textContent=percent.toFixed(1)+'%';$('outGrade').textContent=overall.grade;$('outGP').textContent=(weightedPoints/Math.max(1,subjects.length)).toFixed(2);
- $('outClassRank').textContent=ordinal($('classRank').value);$('outSchoolRank').textContent=$('schoolRank').value||'—';$('outStatus').textContent=$('resultStatus').value;$('outAttendance').textContent=$('attendance').value||'—';
+ $('outClassRank').textContent=ordinal($('classRank').value);$('outSchoolRank').textContent=$('schoolRank').value||'—';$('outStatus').textContent=$('resultStatus').value;const attendanceTotal=totalDaysPresentForCurrentStudent();$('outAttendance').textContent=($('attendance').value!==''&&$('attendance').value!==null)?$('attendance').value:(attendanceTotal>0?String(attendanceTotal):'—');
  $('outBars').innerHTML=rows.map(({s,total,pct,gr})=>`<div class="bar-row"><span>${escapeHTML(s.name)}</span><div class="bar-track"><div class="bar" style="width:${Math.min(100,pct)}%;background:${gr.color}"></div></div><b>${Math.round(pct)}</b></div>`).join('');
  const overallProficiency=proficiency(percent);
  const proficiencyLabel=$('outOverallProficiency');
@@ -491,15 +748,31 @@ function drawBarcode(text){
  let x=4;for(let i=0;i<95;i++){seed=(seed*1664525+1013904223)>>>0;let w=(seed%3)+1;if(seed%2===0){let r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',x);r.setAttribute('y',3);r.setAttribute('width',w);r.setAttribute('height',39);r.setAttribute('fill','#111');svg.appendChild(r)}x+=w+1;if(x>255)break}
 }
 function makeQR(){
- const box=$('qrBox');box.innerHTML='';
- const data=encodeURIComponent(JSON.stringify({school:$('schoolName').value,student:$('studentName').value,admNo:$('admNo').value,roll:$('rollNo').value,session:$('session').value,marks:$('outObtained').textContent}));
- const img=document.createElement('img');img.alt='QR verification code';img.width=70;img.height=70;img.src='https://api.qrserver.com/v1/create-qr-code/?size=140x140&data='+data;img.onerror=()=>{box.textContent='QR unavailable offline';$('qrFallback').textContent='QR requires internet access; barcode remains available offline.'};box.appendChild(img);
+ const box=$('qrBox'); if(!box) return;
+ box.innerHTML='';
+ const payload=JSON.stringify({school:$('schoolName').value,student:$('studentName').value,admNo:$('admNo').value,roll:$('rollNo').value,session:$('session').value,marks:$('outObtained').textContent});
+ const data=encodeURIComponent(payload);
+ const img=document.createElement('img');
+ img.alt='Student result verification QR code';
+ img.width=70; img.height=70;
+ img.style.cssText='display:block;width:74px;height:74px;max-width:74px;max-height:74px;min-width:74px;min-height:74px;object-fit:contain;border:0;print-color-adjust:exact;-webkit-print-color-adjust:exact';img.loading='eager';
+ let triedFallback=false;
+ img.onerror=()=>{
+   if(!triedFallback){
+     triedFallback=true;
+     img.src='https://quickchart.io/qr?size=180&margin=1&text='+data;
+   } else {
+     box.innerHTML='<span style="font-size:7px;line-height:1.1;text-align:center;padding:2px">QR unavailable<br>Connect to internet</span>';
+   }
+ };
+ img.onload=()=>{box.style.border='0';box.style.padding='0';};
+ img.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&format=png&margin=1&data='+data;
+ box.appendChild(img);
 }
 function addSubject(){subjects.push({name:'New Subject',fa:[0,0,0,0,0,0],t:0,cc:0,sum:0});renderEditors();renderAll()}
 function fileToData(file,cb){if(!file)return;let r=new FileReader();r.onload=()=>{cb(r.result);renderAll()};r.readAsDataURL(file)}
 $('logoUpload').addEventListener('change',e=>fileToData(e.target.files[0],v=>logoData=v));
 $('photoUpload').addEventListener('change',e=>fileToData(e.target.files[0],v=>photoData=v));
-$('bulkPhotoUpload').addEventListener('change',async e=>{bulkPhotos=[];const files=[...e.target.files];for(const file of files){const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});bulkPhotos.push({name:file.name,data})}$('excelStatus').textContent=`Loaded ${bulkPhotos.length} photo(s). Photos will match students by admission number, roll number, or name when generating all marksheets.`;});
 $('editTable').addEventListener('input',()=>renderAll());
 $('gradeTable').addEventListener('input',()=>renderAll());
 document.querySelectorAll('.editor input:not([type=file]),.editor select').forEach(el=>el.addEventListener('input',()=>renderAll()));
@@ -513,12 +786,16 @@ function loadData(){
  Object.keys(d).forEach(k=>{let el=$(k);if(el&&typeof d[k]==='string')el.value=d[k]});
  renderEditors();renderAll();alert('Saved data loaded.')}catch(e){alert('Saved data could not be loaded.')}
 }
-function resetSample(){if(!confirm('Restore the sample student and default grade scale?'))return;subjects=JSON.parse(JSON.stringify(sample));gradeRules=[{grade:'A+',min:85.01,point:10,color:'#0b8043'},{grade:'A',min:70.01,point:9,color:'#55a630'},{grade:'B',min:55.01,point:8,color:'#f4c542'},{grade:'C',min:40.01,point:7,color:'#f08b36'},{grade:'D',min:33.01,point:6,color:'#e45a5a'},{grade:'E',min:0,point:5,color:'#7a8794'}];logoData='';photoData='';renderEditors();renderAll()}
+function resetSample(){if(!confirm('Restore the sample student and default grade scale?'))return;subjects=JSON.parse(JSON.stringify(sample));gradeRules=[{grade:'A+',min:85.01,point:10,color:'#0b8043'},{grade:'A',min:70.01,point:8.5,color:'#55a630'},{grade:'B',min:55.01,point:7,color:'#f4c542'},{grade:'C',min:40.01,point:5.5,color:'#f08b36'},{grade:'D',min:33.01,point:4,color:'#e45a5a'},{grade:'E',min:0,point:0,color:'#7a8794'}];logoData='';photoData='';renderEditors();renderAll()}
 function downloadCSV(){
  readEditors();let max=num('maxSubject',100);let lines=[['Student', $('studentName').value],['Admission No',$('admNo').value],['Session',$('session').value],[],['Subject','FA1','FA2','FA3','FA4','FA5','FA6','T','CC','Sum','Total','Percentage','Grade','Grade Point','Proficiency']];
  subjects.forEach(s=>{let score=Math.min(max,s.t+s.cc+s.sum),p=max?score/max*100:0,g=gradeFor(p);lines.push([s.name,...s.fa,s.t,s.cc,s.sum,score,p.toFixed(1)+'%',g.grade,g.point,proficiency(p)])});
  let blob=new Blob(['\ufeff'+lines.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='GPS_Pethgam_Student_Result.csv';a.click();URL.revokeObjectURL(a.href)
 }
+try{attendanceRecords=JSON.parse(localStorage.getItem('gpsClasswiseAttendance')||'{}')}catch(e){attendanceRecords={}}
+try{attendanceWorkingDays=JSON.parse(localStorage.getItem('gpsClasswiseWorkingDays')||'{}')}catch(e){attendanceWorkingDays={}}
+try{const savedRows=JSON.parse(localStorage.getItem('gpsClasswiseRows')||'null');if(savedRows&&Array.isArray(savedRows)&&!importedExcelRows.length)importedExcelRows=savedRows}catch(e){}
+$('entryAssessment').addEventListener('change',()=>{$('entryMaxMarks').value=$('entryAssessment').value==='CCA'?20:$('entryAssessment').value==='SA'?50:5});
 renderEditors();renderAll();
 </script>
 </body></html>
