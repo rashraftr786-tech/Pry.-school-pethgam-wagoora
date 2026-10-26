@@ -249,9 +249,9 @@ body.single-printing #batchPrint{display:none!important}
 <p class="small">Select a class and month, load its students, and enter the number of days present for each student. Attendance is saved in this browser and appears on the student's printed marksheet.</p>
 <div class="grid">
  <div><label>Select Class</label><select id="attendanceClass"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select></div>
- <div><label>Select Month</label><select id="attendanceMonth"><option>November</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option></select></div>
+ <div><label>Select Month</label><select id="attendanceMonth"><option>November 2025</option><option>December 2025</option><option>January 2026</option><option>February 2026</option><option>March 2026</option><option>April 2026</option><option>May 2026</option><option>June 2026</option><option>July 2026</option><option>August 2026</option><option>September 2026</option><option>October 2026</option></select></div>
  <div><label>No. of Working Days</label><input id="attendanceMaxDays" type="number" min="0" max="31" placeholder="e.g. 22"><div class="small">Enter the total working days for the selected class and month.</div></div>
- <div style="grid-column:span 2"><label>Upload Attendance Excel (.xlsx / .xls)</label><input id="attendanceExcelUpload" type="file" accept=".xlsx,.xls"><div class="small">Supports the “Attendance Updated.xlsx” layout. Monthly meeting counts are divided by 2 to convert them into days attended (two meetings per day).</div></div>
+ <div style="grid-column:span 2"><label>Upload Attendance Excel (.xlsx / .xls)</label><input id="attendanceExcelUpload" type="file" accept=".xlsx,.xls"><div class="small">Supports the “Automatic_FIXED.xlsx” layout (Admission No., Student Name, Class, and monthly columns for Days Attended, B/F Days, Cumulative Days, No. of Working Days).</div></div>
 </div>
 <div class="actions"><button class="green" onclick="loadAttendanceClass()">Load Attendance Register</button><button onclick="saveAttendanceClass()">Save Attendance</button><button class="green" onclick="importAttendanceExcel()">Import Attendance Excel</button></div>
 <div id="attendanceStatus" class="small">Upload the workbook and load a class to enter monthly attendance.</div>
@@ -473,7 +473,6 @@ async function downloadSelectedMarksheet(){
  try{window.print();}finally{setTimeout(()=>document.body.classList.remove('single-printing'),1200);}
 }
 
-// --- UPDATED & CORRECTED BATCH PRINT FUNCTION ---
 async function printAllMarkSheets(){
  if(!importedExcelRows.length){alert('Please upload the Excel workbook containing the students first.');return}
  const btns=document.querySelectorAll('button');btns.forEach(b=>b.disabled=true);
@@ -485,12 +484,11 @@ async function printAllMarkSheets(){
   for(let i=0;i<importedExcelRows.length;i++){
    loadStudentRow(importedExcelRows[i]);
    const qr=$('qrBox')?.querySelector('img');
-   if(qr) await waitForImage(qr, 800); // Optimized short timeout for instant batch rendering
+   if(qr) await waitForImage(qr, 800);
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
    const clone=$('resultCard').cloneNode(true);
    clone.removeAttribute('id');
    clone.style.margin='0';
-   // Remove duplicate IDs from descendant elements to ensure clean valid DOM structure without altering layout/style
    clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
    clone.querySelectorAll('img').forEach(img=>{img.loading='eager';img.removeAttribute('crossorigin');});
    holder.appendChild(clone);
@@ -503,7 +501,7 @@ async function printAllMarkSheets(){
 }
 
 
-const schoolMonths=['November','March','April','May','June','July','August','September','October'];
+const schoolMonths=['November 2025','December 2025','January 2026','February 2026','March 2026','April 2026','May 2026','June 2026','July 2026','August 2026','September 2026','October 2026'];
 let attendanceRecords={};
 let attendanceWorkingDays={};
 try{attendanceRecords=JSON.parse(localStorage.getItem('gpsClasswiseAttendance')||'{}');attendanceWorkingDays=JSON.parse(localStorage.getItem('gpsClasswiseWorkingDays')||'{}')}catch(e){attendanceRecords={};attendanceWorkingDays={}}
@@ -605,6 +603,7 @@ function showClassPhotos(){
  wrap.innerHTML=`<table><thead><tr><th>#</th><th>Student</th><th>Admission No.</th><th>Roll No.</th><th>Photograph</th><th>Upload / Change Photograph</th><th>Status</th></tr></thead><tbody>${list.map(({row,index},i)=>{const src=studentPhotoFor(row);return `<tr><td>${i+1}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td><b>${escapeHTML(row.rollNo||'—')}</b></td><td>${src?`<img src="${src}" alt="Student photo" style="width:48px;height:56px;object-fit:cover;border-radius:4px">`:'—'}</td><td><input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-label="Upload photograph for ${escapeHTML(row.studentName||'student')} roll ${escapeHTML(row.rollNo||'')}" onchange="uploadPhotoForStudent(${index},this)" style="max-width:210px;width:100%"><div class="small">Choose this student's photo</div></td><td>${src?'Photo saved':'No photo yet'}</td></tr>`}).join('')}</tbody></table>`;
  $('photoStatus').textContent=`Showing ${list.length} student(s) in ${cls}. Use the upload field in each student's own row (against their Roll No.) to select that student's photograph. Photos are saved individually and filenames are not used for matching.`;
 }
+
 async function importAttendanceExcel(){
  const file=$('attendanceExcelUpload').files[0];
  if(!file){$('attendanceStatus').textContent='Please select the Attendance Excel workbook first.';return}
@@ -612,40 +611,68 @@ async function importAttendanceExcel(){
  if(!importedExcelRows.length){$('attendanceStatus').textContent='Please upload the main student results workbook first. It is used to match attendance rows to students.';return}
  try{
   const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:true});
-  const ws=wb.Sheets[wb.SheetNames[0]];
+  const sheetName=wb.SheetNames.includes('Attendance') ? 'Attendance' : wb.SheetNames[0];
+  const ws=wb.Sheets[sheetName];
   const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
-  if(data.length<6||normKey(data[3]?.[1])!=='admissionno'||normKey(data[3]?.[2])!=='name'||normKey(data[3]?.[3])!=='class') {
-    throw new Error('The workbook layout does not match the supplied Attendance Updated.xlsx format (S. NO., Admission No, Name, Class).');
+  if(data.length<4){
+    throw new Error('The attendance workbook does not contain enough rows.');
   }
-  const monthCols=[4,7,10,13,16,19,22,25,28];
+  
+  // Mapping of 12 months starting from col index 4 (Nov 2025 to Oct 2026)
+  // Each month has 4 columns: [Days Attended, B/F Days, Cumulative Days, No. of Working Days]
+  const monthIndices = [
+    {month:'November 2025', colIdx:4},
+    {month:'December 2025', colIdx:8},
+    {month:'January 2026', colIdx:12},
+    {month:'February 2026', colIdx:16},
+    {month:'March 2026', colIdx:20},
+    {month:'April 2026', colIdx:24},
+    {month:'May 2026', colIdx:28},
+    {month:'June 2026', colIdx:32},
+    {month:'July 2026', colIdx:36},
+    {month:'August 2026', colIdx:40},
+    {month:'September 2026', colIdx:44},
+    {month:'October 2026', colIdx:48}
+  ];
+
   let imported=0,unmatched=0,monthsImported=new Set();
-  for(let ri=5;ri<data.length;ri++){
-   const r=data[ri],name=String(r[2]??'').trim(),cls=String(r[3]??'').trim(),adm=String(r[1]??'').trim();
-   if(!name||!cls)continue;
+  // Student rows start around row index 4 in Automatic_FIXED.xlsx
+  for(let ri=4;ri<data.length;ri++){
+   const r=data[ri];
+   if(!r||r.length<4)continue;
+   const adm=String(r[1]??'').trim();
+   const name=String(r[2]??'').trim();
+   const cls=String(r[3]??'').trim();
+   if(!name&&!adm)continue;
+
    const found=importedExcelRows.find(st=>{
     const sameClass=canonicalClass(st.className)===canonicalClass(cls);
     const sameAdm=adm&&st.admNo&&normKey(adm)===normKey(st.admNo);
-    const sameName=normKey(st.studentName)===normKey(name);
+    const sameName=name&&normKey(st.studentName)===normKey(name);
     return sameClass&&(sameAdm||sameName);
    });
    if(!found){unmatched++;continue}
-   for(let mi=0;mi<schoolMonths.length;mi++){
-    const raw=r[monthCols[mi]];
-    if(raw===undefined||raw===null||String(raw).trim()==='')continue;
-    const meetings=Number(String(raw).replace(/,/g,''));
-    if(!Number.isFinite(meetings)||meetings<0)continue;
-    const val=meetings/2;
-    const key=attendanceKey(found.className,schoolMonths[mi],found.admNo,found.rollNo,found.studentName);
-    attendanceRecords[key]=val;monthsImported.add(schoolMonths[mi]);imported++;
+
+   for(const mInfo of monthIndices){
+    const rawVal=r[mInfo.colIdx];
+    if(rawVal===undefined||rawVal===null||String(rawVal).trim()==='')continue;
+    const days=Number(String(rawVal).replace(/,/g,''));
+    if(!Number.isFinite(days)||days<0)continue;
+    const key=attendanceKey(found.className,mInfo.month,found.admNo,found.rollNo,found.studentName);
+    attendanceRecords[key]=days;
+    monthsImported.add(mInfo.month);
+    imported++;
    }
   }
+
   localStorage.setItem('gpsClasswiseAttendance',JSON.stringify(attendanceRecords));
   localStorage.setItem('gpsClasswiseWorkingDays',JSON.stringify(attendanceWorkingDays));
   localStorage.setItem('gpsClasswiseRows',JSON.stringify(importedExcelRows));
-  $('attendanceStatus').textContent=`Attendance import complete: ${imported} monthly attendance values imported for ${monthsImported.size} month(s); ${unmatched} student row(s) could not be matched. Monthly meeting counts were converted to days (meetings ÷ 2). The workbook’s Total Days and Percentage columns were not treated as monthly working days.`;
+  $('attendanceStatus').textContent=`Attendance import complete: ${imported} monthly attendance values imported for ${monthsImported.size} month(s); ${unmatched} student row(s) could not be matched.`;
   loadAttendanceClass();renderAll();
  }catch(err){$('attendanceStatus').textContent='Could not import attendance workbook: '+err.message}
 }
+
 function loadClassMarks(){
  const cls=$('entryClass').value,ass=$('entryAssessment').value,sub=$('entrySubject').value;
  $('className').value=cls;$('assessment').value=ass+' — '+sub;
