@@ -11,6 +11,7 @@
     .btn-3d { transition: all 0.1s; border-bottom: 4px solid rgba(0,0,0,0.2); }
     .btn-3d:active { transform: translateY(2px); border-bottom-width: 2px; }
   </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-slate-100 min-h-screen pb-20">
 
@@ -218,5 +219,11 @@
 
     window.onload = fetchDiaries;
   </script>
+
+<script type="module">
+import { db } from "../assets/js/init-firebase.js";
+import { mountExcelImporter } from "../assets/js/excel-importer.js";
+mountExcelImporter({db, collectionName:"diaryNotices", label:"Student Diary / Notices", mirrorStudents:false});
+</script>
 </body>
 </html>

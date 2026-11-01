@@ -22,6 +22,7 @@ button:disabled{background:#777;cursor:not-allowed}
 .success{background:#e8f5e9;color:#1b5e20;border:1px solid #81c784}.error{background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a}.info{background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9}.warning{background:#fff8e1;color:#8a5a00;border:1px solid #ffcc80}
 @media(max-width:600px){body{padding:10px}.container{padding:18px}header{flex-direction:column;align-items:stretch}.form-grid{grid-template-columns:1fr}.full{grid-column:span 1}.photo{flex-direction:column;align-items:stretch}#preview{margin:auto}}
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -183,6 +184,12 @@ form.addEventListener("submit",async e=>{
 
 console.log("Staff Entry Firebase module loaded successfully.");
 show(auth.currentUser?"Firebase loaded. Ready to create teacher accounts and staffRecords.":"Firebase loaded, but no authenticated admin session was found.","info");
+</script>
+
+<script type="module">
+import { db } from "../assets/js/init-firebase.js";
+import { mountExcelImporter } from "../assets/js/excel-importer.js";
+mountExcelImporter({db, collectionName:"staffRecords", label:"Staff Records", mirrorStudents:false});
 </script>
 </body>
 </html>
