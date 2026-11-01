@@ -985,7 +985,13 @@ document.querySelectorAll('.editor input:not([type=file]),.editor select').forEa
 function saveData(){
  readEditors();const data={subjects,gradeRules,logoData,photoData};
  document.querySelectorAll('.editor input,.editor select').forEach(el=>{if(el.id)data[el.id]=el.value});
- try{localStorage.setItem('gpsResultGenerator',JSON.stringify(data));alert('Saved in this browser on this device.')}
+ try{
+   localStorage.setItem('gpsResultGenerator',JSON.stringify(data));
+   if(window.gpsSaveResultToCloud){
+     window.gpsSaveResultToCloud(data).then(()=>alert('Saved on this device and synchronized to the school Results database.'))
+       .catch(e=>alert('Saved on this device, but cloud synchronization failed: '+e.message));
+   } else alert('Saved in this browser. Cloud connection is still initializing; save again in a moment.');
+  }
  catch(e){alert('Could not save all data (photos may be too large).')}
 }
 function loadData(){
@@ -1025,5 +1031,28 @@ try{
 
 renderEditors();
 renderAll();
+</script>
+<script type="module">
+import {db} from "./assets/js/init-firebase.js";
+import {mountExcelImporter} from "./assets/js/excel-importer.js";
+mountExcelImporter({db,collectionName:"results",label:"Examination Results / Marksheets"});
+</script><script type="module">
+import {db} from "./assets/js/init-firebase.js";
+import {doc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+window.gpsSaveResultToCloud=async function(data){
+  const adm=String(data.admNo||data.admissionNo||"").trim();
+  if(!adm) throw new Error("Enter the student's Admission No before saving to the shared Results database.");
+  const name=data.studentName||data.name||"";
+  const cls=data.studentClass||data.class||data.className||"";
+  const marks={...(data.marks||{})};
+  (data.subjects||[]).forEach(subject=>{
+    const subjectName=subject.name||subject.n;
+    if(subjectName) marks[subjectName]={fa:subject.fa||[subject.fa1,subject.fa2,subject.fa3,subject.fa4,subject.fa5,subject.fa6],cca:subject.cc??subject.cca??subject.t,sa:subject.sum??subject.s};
+  });
+  await setDoc(doc(db,"results",adm),{
+    ...data,marks,admNo:adm,admissionNo:adm,name,fullName:name,studentName:name,
+    studentClass:cls,class:cls,className:cls,updatedAt:serverTimestamp(),source:"result-generator"
+  },{merge:true});
+};
 </script>
 </body></html>
