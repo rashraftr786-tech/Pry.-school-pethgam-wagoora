@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library & Textbook Manager | GPS Pethgam</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <nav class="bg-emerald-800 text-white p-4 shadow-md no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-book-reader text-2xl text-emerald-300"></i>
+                <h1 class="font-black uppercase tracking-tighter">Library & Textbooks</h1>
+            </div>
+            <a href="index.html" class="text-xs bg-emerald-700 px-4 py-2 rounded-full font-bold hover:bg-emerald-600 transition">BACK TO DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main class="p-4 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-1">
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-white sticky top-24">
+                <h2 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-plus-circle text-emerald-600"></i> New Issue
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Select Student</label>
+                        <select id="studentSelect" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                            <option value="">-- Choose Student --</option>
+                        </select>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <input id="studentSearch" type="search" placeholder="Search name / admission no." class="w-full p-2 rounded-lg border border-slate-200 text-xs">
+                            <select id="classFilter" class="w-full p-2 rounded-lg border border-slate-200 text-xs"><option value="">All Classes</option></select>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 mt-2">
+                            <span id="studentCount" class="text-[11px] text-slate-500">Loading students…</span>
+                            <button id="refreshStudentsBtn" type="button" class="text-[11px] font-bold text-emerald-700">↻ Refresh</button>
+                        </div>
+                        <p id="studentStatus" class="text-xs mt-2 text-slate-500" role="status">Connecting to Master Profile…</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Category</label>
+                        <select id="itemType" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                            <option value="General Library Book">General Library Book</option>
+                            <option value="Government Textbook">Government Textbook</option>
+                            <option value="Digital Resource">Digital Resource (PDF)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Book Title / ID</label>
+                        <input type="text" id="itemTitle" placeholder="Enter Book Name" class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-sm">
+                    </div>
+
+                    <button onclick="issueItem()" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]">
+                        CONFIRM ISSUE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-white">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-black text-slate-800">Recent Issues & Distributions</h2>
+                    <button onclick="window.print()" class="text-[10px] font-black bg-slate-800 text-white px-3 py-1 rounded">PRINT LOG</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b-2 border-slate-100">
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Student</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Book/Item</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Date</th>
+                                <th class="py-3 text-[10px] font-black text-slate-400 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issueList" class="text-sm font-bold text-slate-700">
+                    </tbody>
+                    </table>
+                </div>
+                <p id="issueStatus" class="text-xs mt-3 text-slate-500" role="status"></p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        // Use the same Firebase app/configuration as the Master Student Registry.
+        // The Library page is in /modules/, so the shared initializer is one level up.
+        import { db } from '../assets/js/init-firebase.js';
+        import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const studentSelect = document.getElementById('studentSelect');
+        const issueList = document.getElementById('issueList');
+        const studentStatus = document.getElementById('studentStatus');
+        const issueStatus = document.getElementById('issueStatus');
+        const countLabel = document.getElementById('studentCount');
+        const searchInput = document.getElementById('studentSearch');
+        const classFilter = document.getElementById('classFilter');
+        let masterStudents = [];
+
+        const clean = value => String(value ?? '').trim();
+        const getAdm = s => clean(s.admNo || s.admissionNo || s.admissionNumber || s.studentAdmNo || s.id);
+        const getName = s => clean(s.name || s.studentName || s.fullName || s.student_name);
+        const getClass = s => clean(s.class || s.className || s.studentClass || s.grade || s.standard);
+        const eligible = s => {
+            const state = clean(s.status).toLowerCase();
+            return !['pending', 'rejected', 'withdrawn', 'inactive', 'deleted'].includes(state);
+        };
+        function showStatus(el, message, type='info') {
+            el.textContent = message;
+            el.className = 'text-xs mt-2 ' + (type === 'error' ? 'text-red-700' : type === 'ok' ? 'text-emerald-700' : 'text-slate-500');
+        }
+        function populateStudents() {
+            const search = clean(searchInput.value).toLowerCase();
+            const chosenClass = clean(classFilter.value);
+            const filtered = masterStudents.filter(s => {
+                const label = `${getName(s)} ${getAdm(s)} ${getClass(s)} ${clean(s.fatherName)}`.toLowerCase();
+                return (!search || label.includes(search)) && (!chosenClass || getClass(s) === chosenClass);
+            });
+            studentSelect.replaceChildren();
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = filtered.length ? '-- Choose Student --' : '-- No matching students --';
+            studentSelect.appendChild(placeholder);
+            filtered.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `${getName(s) || 'Unnamed Student'} — Class ${getClass(s) || '-'} — Adm. ${getAdm(s) || '-'}`;
+                opt.dataset.admNo = getAdm(s);
+                studentSelect.appendChild(opt);
+            });
+            countLabel.textContent = `${filtered.length} of ${masterStudents.length} active students`;
+        }
+        async function loadStudents() {
+            showStatus(studentStatus, 'Loading students from Master Profile…');
+            studentSelect.disabled = true;
+            try {
+                // Master Profile writes to Firestore collection: students/{documentId}.
+                const snap = await getDocs(collection(db, 'students'));
+                masterStudents = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+                    .filter(s => eligible(s) && getName(s))
+                    .sort((a,b) => getClass(a).localeCompare(getClass(b), undefined, {numeric:true}) || getName(a).localeCompare(getName(b)));
+                const classes = [...new Set(masterStudents.map(getClass).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+                const oldClass = classFilter.value;
+                classFilter.replaceChildren();
+                const all = document.createElement('option'); all.value=''; all.textContent='All Classes'; classFilter.appendChild(all);
+                classes.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=`Class ${c}`; classFilter.appendChild(o); });
+                if (classes.includes(oldClass)) classFilter.value = oldClass;
+                populateStudents();
+                showStatus(studentStatus, masterStudents.length ? `Loaded ${masterStudents.length} student(s) from Master Profile.` : 'No eligible students were found in the students collection.', masterStudents.length ? 'ok' : 'info');
+            } catch (e) {
+                console.error('Master Profile student load failed:', e);
+                showStatus(studentStatus, `Could not load Master Profile students: ${e.message || e}. Check that this page is served from the school site and Firestore rules allow the signed-in user to read students.`, 'error');
+            } finally { studentSelect.disabled = false; }
+        }
+        window.issueItem = async () => {
+            const btn = document.getElementById('saveBtn');
+            const selected = masterStudents.find(s => s.id === studentSelect.value);
+            const title = clean(document.getElementById('itemTitle').value);
+            if (!selected || !title) { alert('Please select a student and enter the book title.'); return; }
+            const now = new Date();
+            const data = {
+                studentId: selected.id,
+                admNo: getAdm(selected),
+                student: getName(selected),
+                studentName: getName(selected),
+                className: getClass(selected),
+                fatherName: clean(selected.fatherName),
+                type: document.getElementById('itemType').value,
+                title,
+                date: now.toLocaleDateString('en-GB'),
+                timestamp: now.toISOString(),
+                status: 'Issued'
+            };
+            btn.disabled = true; btn.innerText = 'SAVING…';
+            try {
+                await addDoc(collection(db, 'library_issues'), data);
+                document.getElementById('itemTitle').value = '';
+                showStatus(issueStatus, `Issued “${title}” to ${data.student}.`, 'ok');
+                await loadHistory();
+            } catch (e) {
+                console.error('Library issue save failed:', e);
+                showStatus(issueStatus, `Could not save issue: ${e.message || e}`, 'error');
+            } finally { btn.disabled = false; btn.innerText = 'CONFIRM ISSUE'; }
+        };
+        async function loadHistory() {
+            try {
+                const snap = await getDocs(collection(db, 'library_issues'));
+                const items = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+                items.sort((a,b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+                issueList.replaceChildren();
+                if (!items.length) {
+                    const tr=document.createElement('tr'), td=document.createElement('td');
+                    td.colSpan=4; td.className='py-6 text-center text-slate-400'; td.textContent='No library issues recorded yet.'; tr.appendChild(td); issueList.appendChild(tr); return;
+                }
+                items.forEach(item => {
+                    const tr=document.createElement('tr'); tr.className='border-b border-slate-50 hover:bg-slate-50 transition';
+                    const values=[item.studentName || item.student || item.admNo || '—', `${item.type || 'Library item'} — ${item.title || ''}`, item.date || '', item.status || 'Issued'];
+                    values.forEach((value,index)=>{ const td=document.createElement('td'); td.className='py-4'; td.textContent=value; if(index===1) td.classList.add('text-blue-700'); tr.appendChild(td); });
+                    issueList.appendChild(tr);
+                });
+                showStatus(issueStatus, `Showing ${items.length} issue record(s).`, 'ok');
+            } catch (e) {
+                console.error('Library history load failed:', e);
+                showStatus(issueStatus, `Could not load issue history: ${e.message || e}`, 'error');
+            }
+        }
+        document.getElementById('refreshStudentsBtn').addEventListener('click', loadStudents);
+        searchInput.addEventListener('input', populateStudents);
+        classFilter.addEventListener('change', populateStudents);
+        loadStudents();
+        loadHistory();
+    </script>
+</body>
+</html>
