@@ -35,11 +35,12 @@
             font-weight: 900; white-space: nowrap; z-index: 0;
         }
     </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-slate-100 pb-20">
 
     <nav class="bg-white p-4 shadow-md flex justify-between items-center no-print sticky top-0 z-50">
-        <a href="../dashboard.html" class="text-blue-600 font-bold flex items-center gap-2">
+        <a href="../admin-dashboard.html" class="text-blue-600 font-bold flex items-center gap-2">
             <i class="fa-solid fa-arrow-left"></i> Admin Dashboard
         </a>
         <h1 class="font-black text-sm uppercase tracking-tighter text-slate-800">GPS Pethgam Document Studio</h1>
@@ -87,7 +88,7 @@
             <div class="watermark" id="watermarkText">GPS PETHGAM</div>
             
             <div class="flex items-center gap-6 border-b-4 border-slate-900 pb-6 mb-2">
-                <img src="../../assets/logo.png" alt="School Logo" class="w-28 h-28 object-contain">
+                <img src="../../assets/images/logo.png" alt="School Logo" class="w-28 h-28 object-contain">
                 <div class="text-center flex-1">
                     <h2 class="text-4xl font-black text-slate-900 tracking-tight">GOVT. PRIMARY SCHOOL PETHGAM</h2>
                     <p class="text-[13px] font-bold text-slate-700 uppercase tracking-[0.2em] mt-1">Zone: Wagoora | District: Baramulla | PIN: 193109</p>
@@ -158,6 +159,8 @@
         }
         updatePreview();
     </script>
+
+<script type="module">import {db} from "../../assets/js/init-firebase.js";import {mountExcelImporter} from "../../assets/js/excel-importer.js";mountExcelImporter({db,collectionName:"students",label:"Student Master Data for Certificates"});</script>
 </body>
 </html>
                 

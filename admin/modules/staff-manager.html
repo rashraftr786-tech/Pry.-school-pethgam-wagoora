@@ -6,11 +6,12 @@
     <title>Staff Management | GPS Pethgam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-slate-50 pb-20">
 
     <nav class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-50">
-        <a href="../dashboard.html" class="text-slate-600 font-bold"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+        <a href="../admin-dashboard.html" class="text-slate-600 font-bold"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
         <h1 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Staff Control Center</h1>
         <div class="w-10"></div>
     </nav>
@@ -73,5 +74,7 @@
         </section>
     </main>
 
+
+<script type="module">import {db} from "../../assets/js/init-firebase.js";import {mountExcelImporter} from "../../assets/js/excel-importer.js";mountExcelImporter({db,collectionName:"staffRecords",label:"Staff Master Records"});</script>
 </body>
 </html>

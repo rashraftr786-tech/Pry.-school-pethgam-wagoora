@@ -150,6 +150,7 @@
             .a4-page { margin: 0; box-shadow: none; width: 100%; height: auto; }
         }
     </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -423,6 +424,34 @@
 
         function resetData() { if(confirm("Reset EVERYTHING?")) { localStorage.clear(); location.reload(); } }
     </script>
+
+<script type="module">
+import { db } from "../../assets/js/init-firebase.js";
+import { mountExcelImporter } from "../../assets/js/excel-importer.js";
+mountExcelImporter({db, collectionName:"mdmDailyLogs", label:"Daily MDM Entry", mirrorStudents:false, mirrorCollections:["mdm_entries"]});
+</script>
+
+<script type="module">
+import {db} from "../../assets/js/init-firebase.js";
+import {doc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const originalSave=window.saveDailyEntry;
+if(typeof originalSave==="function"){
+  window.saveDailyEntry=async function(){
+    originalSave();
+    try{
+      const records=JSON.parse(localStorage.getItem('mdm_daily')||'[]');
+      const entry=records[records.length-1];
+      if(!entry) return;
+      const date=entry.date||document.getElementById('dailyDate')?.value;
+      const monthYear=entry.month||String(date||'').slice(0,7);
+      const data={...entry,date,monthYear,pp_present:entry.scheme?.toLowerCase().includes('pre')?Number(entry.covered||0):0,p_present:entry.scheme?.toLowerCase().includes('pre')?0:Number(entry.covered||0),pp_rice_util:0,p_rice_util:0,source:'admin-mdm-entry',updatedAt:serverTimestamp()};
+      await setDoc(doc(db,'mdm_entries',String(entry.id)),data,{merge:true});
+      await setDoc(doc(db,'mdmDailyLogs',String(date)),{...data,covered:Number(entry.covered||0),updatedAt:serverTimestamp()},{merge:true});
+      alert('Daily MDM entry saved locally and synchronized to the cloud reports.');
+    }catch(e){console.error(e);alert('Local MDM entry was saved, but cloud synchronization failed: '+e.message);}
+  };
+}
+</script>
 </body>
 </html>
             

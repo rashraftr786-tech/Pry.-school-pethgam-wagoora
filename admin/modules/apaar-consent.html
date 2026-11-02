@@ -24,6 +24,7 @@
             .form-page { margin: 0; border: none; } 
         }
     </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="pb-20">
 
@@ -59,7 +60,7 @@
         </div>
 
         <div class="flex items-start gap-4 mb-4 pr-36">
-            <img src="../../assets/logo.png" class="w-16 h-16" alt="Logo">
+            <img src="../../assets/images/logo.png" class="w-16 h-16" alt="Logo">
             <div class="flex-1 text-center">
                 <h1 class="text-[19px] header-title uppercase tracking-tighter">GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
                 <p class="text-[14px] font-bold">Wagoora Babareshi Road Near Zonal Education Office Wagoora</p>
@@ -138,6 +139,12 @@
             html2pdf().set(opt).from(element).save();
         }
     </script>
+
+<script type="module">
+import { db } from "../../assets/js/init-firebase.js";
+import { mountExcelImporter } from "../../assets/js/excel-importer.js";
+mountExcelImporter({db, collectionName:"apaarConsents", label:"APAAR Consent Records", mirrorStudents:false});
+</script>
 </body>
 </html>
 </html>

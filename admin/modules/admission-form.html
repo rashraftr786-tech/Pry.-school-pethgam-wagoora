@@ -21,6 +21,7 @@
         .slash-box { width: 12px; font-weight: bold; text-align: center; line-height: 24px; }
         @media print { .no-print { display: none; } .form-page { margin: 0; border: none; } }
     </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="pb-20">
 
@@ -81,7 +82,7 @@
         </div>
 
         <div class="flex items-center border-b-2 border-black pb-2 mb-3 pr-40">
-            <img src="../../assets/logo.png" class="w-16 h-16" alt="Logo">
+            <img src="../../assets/images/logo.png" class="w-16 h-16" alt="Logo">
             <div class="flex-1 text-center">
                 <h1 class="text-2xl font-black uppercase leading-tight">Government Primary School</h1>
                 <p class="text-lg font-bold tracking-tight">Pethgam Wagoora 193109</p>
@@ -276,6 +277,12 @@
 
         updateClassAndID();
     </script>
+
+<script type="module">
+import { db } from "../../assets/js/init-firebase.js";
+import { mountExcelImporter } from "../../assets/js/excel-importer.js";
+mountExcelImporter({db, collectionName:"pending_admissions", label:"Pending Admissions", mirrorStudents:false});
+</script>
 </body>
 </html>
 

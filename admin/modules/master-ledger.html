@@ -12,6 +12,7 @@
         .field-label { font-size: 9px; text-transform: uppercase; color: #94a3b8; font-weight: 800; display: block; margin-bottom: 2px; }
         .tab-active { border-bottom: 3px solid #3b82f6; color: #1e40af; }
     </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-white font-sans p-4">
 
@@ -177,6 +178,8 @@
 
         loadData();
     </script>
+
+<script type="module">import {db} from "../../assets/js/init-firebase.js";import {mountExcelImporter} from "../../assets/js/excel-importer.js";mountExcelImporter({db,collectionName:"students",label:"Master Student Register"});</script>
 </body>
 </html>
 
