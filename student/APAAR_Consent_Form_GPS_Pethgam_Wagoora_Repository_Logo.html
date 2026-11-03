@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>APAAR ID Consent Form | Government Primary School Pethgam Wagoora</title>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    background:#eef0f2; color:#111; font-family:Arial, Helvetica, sans-serif;
+    font-size:10.8pt; line-height:1.42;
+  }
+  .toolbar {
+    display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+    padding:12px; background:#14532d; border-bottom:3px solid #d6b44c;
+  }
+  .toolbar button, .toolbar a {
+    border:0; border-radius:5px; padding:9px 13px; font-size:13px;
+    font-weight:bold; text-decoration:none; cursor:pointer;
+  }
+  .toolbar button { background:#facc15; color:#14532d; }
+  .toolbar a { background:#ffffff20; color:#fff; }
+  .sheet {
+    width:210mm; height:297mm; margin:18px auto; padding:10mm 15mm 8mm;
+    background:#fff; border:1.4px solid #17652d; position:relative;
+    overflow:hidden;
+  }
+  .reference {
+    height:7mm; display:flex; justify-content:flex-end; align-items:flex-start;
+    font-size:7.2pt; font-weight:bold; padding-right:1mm;
+    border-bottom:1px dotted #ddd; margin-bottom:2mm;
+  }
+  .ref-value {
+    display:inline-block; min-width:11mm; border-bottom:1px dashed #a22;
+    color:#a22; text-align:center; outline:none;
+  }
+  .school-header {
+    display:flex; align-items:center; gap:4mm; min-height:18mm;
+    padding:1mm 1mm 2mm; border-bottom:2px solid #17652d; margin-bottom:3mm;
+  }
+  .emblem { width:18mm; height:18mm; object-fit:contain; flex:0 0 18mm; }
+  .school-details { flex:1; min-width:0; }
+  .school-details h1 {
+    color:#17652d; font-size:14.1pt; line-height:1.15; margin:0 0 1.4mm;
+    font-weight:800; white-space:nowrap;
+  }
+  .school-details p {
+    font-size:7.1pt; line-height:1.3; margin:.7mm 0; font-weight:600;
+    white-space:nowrap;
+  }
+  .form-title {
+    text-align:center; font-size:9.2pt; line-height:1.25; font-weight:bold;
+    text-transform:uppercase; margin:4mm 0 1.4mm;
+  }
+  .form-subtitle {
+    text-align:center; font-size:10pt; font-weight:bold; margin:0 0 3.5mm;
+  }
+  .content { font-size:12.2pt; line-height:1.40; text-align:justify; }
+  .content p { margin:0 0 4.4mm; }
+  .content p:first-child { margin-bottom:4.4mm; }
+  .entry {
+    display:inline-block; border:0; border-bottom:1px solid #222; border-radius:0;
+    background:transparent; padding:0 2px 1px; height:4.5mm; vertical-align:baseline;
+    font:inherit; color:#111; outline:none; min-width:24mm;
+  }
+  .entry:focus { background:#fff9d8; }
+  .parent { width:62mm; }
+  .student { width:54mm; }
+  .relation { width:34mm; }
+  .proof { width:27mm; }
+  .proofno { width:62mm; }
+  .place { width:39mm; }
+  .date { width:39mm; }
+  .consent-signatures {
+    display:grid; grid-template-columns:1fr 1fr; column-gap:13mm;
+    align-items:end; margin-top:0; font-size:9.3pt; text-align:left;
+  }
+  .signature-line {
+    border-top:1px solid #222; min-height:8mm; padding-top:1mm;
+    text-align:center; font-size:9.2pt; font-weight:bold;
+  }
+  .place-date { line-height:2.2; }
+  .hoi {
+    border-top:1.5px dashed #555; margin-top:5mm; padding-top:1.8mm;
+  }
+  .hoi-title {
+    text-align:center; font-size:9.3pt; font-weight:bold; margin:0 0 3mm;
+  }
+  .hoi p { margin-bottom:0; }
+  .hoi-declaration { line-height:1.55; }
+  .hoi-bottom {
+    display:grid; grid-template-columns:1fr 1fr; column-gap:13mm;
+    align-items:end; margin-top:4.5mm; font-size:9.3pt;
+  }
+  .hoi-date { padding-bottom:1mm; }
+  .small-entry { width:35mm; }
+  .muted-note {
+    display:none; font-size:9.2pt; color:#555; margin:0 0 3mm;
+  }
+  @media screen and (max-width:760px) {
+    .sheet { width:100%; height:auto; min-height:297mm; margin:0; padding:8mm 6mm; }
+    .school-details h1 { font-size:clamp(10pt, 3vw, 14pt); white-space:normal; }
+    .school-details p { white-space:normal; font-size:7pt; }
+    .content { font-size:10.3pt; }
+  }
+  @media print {
+    body { background:#fff; }
+    .toolbar { display:none !important; }
+    .sheet { width:210mm; height:297mm; min-height:297mm; margin:0; padding:10mm 15mm 8mm; border:1.4px solid #17652d; overflow:hidden; page-break-after:avoid; break-after:avoid-page; }
+    input, select { -webkit-appearance:none; appearance:none; }
+    .entry { background:transparent !important; }
+  }
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <a href="../index.html">⌂ Home</a>
+  <a href="../admission.html">Admission Form</a>
+  <button type="button" onclick="window.print()">Print / Save as PDF</button>
+  <button type="button" id="clearBtn">Clear entered details</button>
+</nav>
+
+<main class="sheet">
+  <div class="reference">Form Reference (Adm No):&nbsp; <span class="ref-value" id="displayAdmNo" contenteditable="true" aria-label="Admission number">--------</span></div>
+
+  <header class="school-header">
+    <img class="emblem" alt="Government Primary School Pethgam Wagoora logo" src="../new-logo.png" onerror="this.onerror=null;this.src='new-logo.png'">
+    <div class="school-details">
+      <h1>GOVERNMENT PRIMARY SCHOOL PETHGAM WAGOORA</h1>
+      <p>Wagoora Babareshi Road Near Zonal Education Office Wagoora, Baramulla 193109</p>
+      <p><b>UDISE Code:</b> 01022202207 &nbsp;&nbsp; <b>Email:</b> pspethgam@gmail.com &nbsp;&nbsp; <b>Contact:</b> 9596449881</p>
+    </div>
+  </header>
+
+  <div class="form-title">CONSENT BY FATHER/MOTHER/LEGAL GUARDIAN OF STUDENT FOR APAAR ID GENERATION.</div>
+  <div class="form-subtitle">***Consent Form***</div>
+
+  <section class="content">
+    <p>
+      I&nbsp; <input class="entry parent" id="parentName" aria-label="Parent or guardian name" value="MOHAMMAD SHAFI MALLA">
+      &nbsp; as the&nbsp; <input class="entry relation" id="guardianRelation" aria-label="Relationship" value="Father">
+      &nbsp; (Father / Mother / Legal Guardian) of&nbsp; <input class="entry student" id="studentName" aria-label="Student name" value="UZAIR SHAFI">
+      &nbsp; with my Identity Proof as&nbsp; <input class="entry proof" id="identityProof" aria-label="Identity proof type" value="Aadhar">
+      &nbsp; (Aadhar / PAN / EPIC Voter ID / Driving License / Passport) and Identity Proof Number&nbsp;
+      <input class="entry proofno" id="identityNumber" aria-label="Identity proof number" value="728859822102">
+      &nbsp; voluntarily give my consent to share his/her Aadhaar Number and demographic information issued by UIDAI with Ministry of Education for the sole purpose of creation of APAAR ID and opening of DIGILOCKER account of my child for the following intents and purposes.
+    </p>
+
+    <p>
+      I understand that my APAAR ID may be used and shared for limited purposes as may be notified by Ministry of Education from time-to-time for educational and related activities. Further I am also aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to entities engaged in various educational activities such as UDISE+ database, scholarships, maintenance academic records, other stakeholders like Educational Institutions and recruitment agencies.
+    </p>
+
+    <p>
+      I authorise the Ministry of Education to use my Aadhaar number for performing Aadhaar based authentication with UIDAI as per provision of the Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits, and Services) Act, 2016 for the aforesaid purpose. I understand that UIDAI will share my e-KYC details, or response of "Yes" with the Ministry of Education upon successful authentication.
+    </p>
+
+    <p>
+      I understand that the information shared by me shall be kept Confidential and shall not be divulged to any third party except as may be required by law.
+    </p>
+
+    <p>
+      I understand that I can withdraw my consent for all or any of the purposes at any time and on withdrawal of my consent, the processing of my shared information will stop, however, any personal data already processed shall remain unaffected on such withdrawal of consent.
+    </p>
+
+    <div class="consent-signatures">
+      <div class="place-date">
+        Place of Physical Consent:&nbsp; <input class="entry place" id="consentPlace" value="Pethgam" aria-label="Place of physical consent"><br>
+        Date of Physical Consent:&nbsp; <input class="entry date" id="consentDate" value="01/08/2026" aria-label="Date of physical consent">
+      </div>
+      <div class="signature-line">Signature of Parent Guardian</div>
+    </div>
+
+    <div class="hoi">
+      <div class="hoi-title">***Consent by the Head of the School***</div>
+      <p class="hoi-declaration">
+        I&nbsp; <b>Mohmad Ashraf Rather</b>&nbsp; as Head of the School or any authorized teacher/staff hereby declare that the Father/Mother /Legal Guardian of&nbsp;
+        <input class="entry student" id="hoiStudentName" value="UZAIR SHAFI" aria-label="Student name in school declaration">
+        &nbsp; as mentioned above has given the Consent for Providing AADHAAR to create APAAR ID, opening of DIGILOCKER Account and Identity Verification in UDISE Plus.
+      </p>
+      <div class="hoi-bottom">
+        <div class="hoi-date">Date:&nbsp; <input class="entry small-entry" id="hoiDate" value="/08/2026" aria-label="School consent date"></div>
+        <div class="signature-line">Signature of HOI</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const student = params.get('studentName');
+  const admNo = params.get('admNo');
+  if (student) {
+    document.getElementById('studentName').value = student.slice(0, 100);
+    document.getElementById('hoiStudentName').value = student.slice(0, 100);
+  }
+  if (admNo) document.getElementById('displayAdmNo').textContent = admNo.slice(0, 30);
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    ['parentName','studentName','identityProof','identityNumber','consentPlace','consentDate','hoiStudentName','hoiDate'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('guardianRelation').value = '';
+    document.getElementById('displayAdmNo').textContent = '--------';
+  });
+  // Form values are not saved, transmitted, or sent to Firebase by this page.
+})();
+</script>
+</body>
+</html>
