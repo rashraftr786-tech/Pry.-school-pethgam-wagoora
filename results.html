@@ -203,7 +203,7 @@ body.single-printing #batchPrint{display:none!important}
 <input id="schoolPlace" value="PETHGAM WAGOORA 193109">
 <input id="schoolAddress" value="WAGOORA BABARESHI ROAD NEAR ZONAL EDUCATION OFFICE WAGOORA">
 <input id="udise" value="01022202207">
-<input id="session" value="2026–27">
+<input id="session" value="2025-2026">
 <input id="assessment" value="Summative Assessment 2026">
 <select id="className"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>UKG</option><option>LKG</option><option>Nursery</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select>
 <input id="maxSubject" type="number" value="100"><input id="passPercent" type="number" value="33">
@@ -235,7 +235,7 @@ body.single-printing #batchPrint{display:none!important}
  <div><label>Select Class</label><select id="photoClass"><option>5th</option><option>4th</option><option>3rd</option><option>2nd</option><option>1st</option><option>UKG</option><option>LKG</option><option>Nursery</option><option>Balvatika</option><option>PP2</option><option>PP3</option></select></div>
  <div><label>Upload Student Photographs (multiple)</label><input id="photoFilesUpload" type="file" accept="image/*" multiple><div class="small">Choose one or more JPG, PNG, or WebP images.</div></div>
 </div>
-<div class="actions"><button class="green" onclick="prepareStudentPhotos()">Load Photos for Assignment</button><button class="green" onclick="saveStudentPhotoAssignments()">Save Photo Assignments</button><button class="secondary" onclick="showClassPhotos()">View Class Photos</button></div>
+<div class="actions"><button class="green" onclick="prepareStudentPhotos()">Load Photos for Assignment</button><button class="green" onclick="saveStudentPhotoAssignments()">Save Photo Assignments</button><button class="secondary" onclick="showClassPhotos()">View Class Photos</button><button class="danger" onclick="deleteClassPhotos()">Delete This Class's Photos</button><button class="danger" onclick="deleteAllPhotos()">Delete ALL Saved Photos</button></div>
 <div id="photoStatus" class="small">Upload the student workbook first, then select photos for a class.</div>
 <div id="photoTableWrap" class="table-wrap" style="margin-top:10px"></div>
 </div>
@@ -292,7 +292,7 @@ body.single-printing #batchPrint{display:none!important}
 <div id="resultCard">
 <div class="card-head">
 <img id="outLogo" class="logo" alt="School logo" src="">
-<div><div class="school-title" id="outSchool">GOVERNMENT PRIMARY SCHOOL<br>PETHGAM WAGOORA 193109</div><div class="school-sub" id="outAddress">WAGOORA BABARESHI ROAD NEAR ZONAL EDUCATION OFFICE WAGOORA</div><div style="font-weight:800;margin-top:5px">STUDENT PROGRESS REPORT</div><div class="school-sub"><span id="outAssessment">Summative Assessment 2026</span> • Session <span id="outSession">2026–27</span></div></div>
+<div><div class="school-title" id="outSchool">GOVERNMENT PRIMARY SCHOOL<br>PETHGAM WAGOORA 193109</div><div class="school-sub" id="outAddress">WAGOORA BABARESHI ROAD NEAR ZONAL EDUCATION OFFICE WAGOORA</div><div style="font-weight:800;margin-top:5px">STUDENT PROGRESS REPORT</div><div class="school-sub"><span id="outAssessment">Summative Assessment 2026</span> • Session <span id="outSession">2025-2026</span></div></div>
 </div>
 <div class="card-body">
 <div class="identity"><div class="details" id="outDetails"></div><div class="profile-photo-wrap" style="text-align:center;font-size:9px;color:#5d7184"><img id="outPhoto" class="student-photo" alt="Student photograph" src=""><div>STUDENT PHOTO</div></div></div>
@@ -540,6 +540,37 @@ function studentPhotoFor(row){
  const matched=bulkPhotos.find(ph=>ph.studentKey===key) || bulkPhotos.find(ph=>canonicalClass(ph.className)===canonicalClass(row.className) && ((normKey(ph.admNo)&&normKey(ph.admNo)===normKey(row.admNo)) || (normKey(ph.rollNo)&&normKey(ph.rollNo)===normKey(row.rollNo))));
  return matched?matched.data:'';
 }
+
+/* Shrink uploaded photographs so that many more students fit in browser
+   storage. The printed marksheet is unaffected because the photo box is a
+   fixed size, so the output PDF looks exactly the same. */
+function compressImage(dataUrl,maxDim=360,quality=0.8){
+ return new Promise(resolve=>{
+  const img=new Image();
+  img.onload=()=>{
+   try{
+    const w0=img.naturalWidth||img.width||maxDim;
+    const h0=img.naturalHeight||img.height||maxDim;
+    const scale=Math.min(1,maxDim/Math.max(w0,h0));
+    const w=Math.max(1,Math.round(w0*scale));
+    const h=Math.max(1,Math.round(h0*scale));
+    const canvas=document.createElement('canvas');
+    canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
+    ctx.drawImage(img,0,0,w,h);
+    const out=canvas.toDataURL('image/jpeg',quality);
+    resolve(out && out.length<dataUrl.length?out:dataUrl);
+   }catch(e){resolve(dataUrl)}
+  };
+  img.onerror=()=>resolve(dataUrl);
+  img.src=dataUrl;
+ });
+}
+function photoStoreSummary(){
+ const bytes=bulkPhotos.reduce((a,p)=>a+(p.data?p.data.length:0),0);
+ return `${bulkPhotos.length} photo(s) saved in this browser (~${Math.round(bytes/1024)} KB)`;
+}
 async function prepareStudentPhotos(){
  const files=[...($('photoFilesUpload').files||[])];
  if(!files.length){$('photoStatus').textContent='Please choose one or more JPG, PNG, or WebP images first.';return}
@@ -549,7 +580,8 @@ async function prepareStudentPhotos(){
  pendingStudentPhotos=[];
  for(const file of files){
   if(!/^image\/(jpeg|png|webp)$/i.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name))continue;
-  const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});
+  const raw=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});
+  const data=await compressImage(raw);
   pendingStudentPhotos.push({name:file.name,data,studentKey:''});
  }
  if(!pendingStudentPhotos.length){$('photoStatus').textContent='No valid JPG, PNG, or WebP images were selected.';return}
@@ -571,11 +603,12 @@ function saveStudentPhotoAssignments(){
   bulkPhotos=bulkPhotos.filter(old=>old.studentKey!==key);
   bulkPhotos.push({studentKey:key,className:row.className,studentName:row.studentName,admNo:row.admNo,rollNo:row.rollNo,name:ph.name,data:ph.data});saved++;
  });
+ let storageNote='';
  try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
- catch(e){$('photoStatus').textContent='Photos assigned for this session, but browser storage is full.';}
- $('photoStatus').textContent=`Saved ${saved} photograph(s).`;
+ catch(e){storageNote=' Browser storage is full — use the Delete buttons to free space, then save again.';}
  pendingStudentPhotos=[];$('photoFilesUpload').value='';
  showClassPhotos();
+ $('photoStatus').textContent=`Saved ${saved} photograph(s). ${photoStoreSummary()}.${storageNote}`;
  if(importedExcelRows.length){const current=importedExcelRows.find(r=>studentPhotoKey(r)===studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value}));if(current)loadStudentRow(current);}
 }
 async function uploadPhotoForStudent(rowIndex,input){
@@ -587,24 +620,71 @@ async function uploadPhotoForStudent(rowIndex,input){
  const row=importedExcelRows[Number(rowIndex)];
  if(!row){$('photoStatus').textContent='Could not identify this student row.';return;}
  try{
-  const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+  const raw=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+  const data=await compressImage(raw);
   const key=studentPhotoKey(row);
   bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);
   bulkPhotos.push({studentKey:key,className:row.className,studentName:row.studentName,admNo:row.admNo,rollNo:row.rollNo,name:file.name,data});
   try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
-  catch(storageError){bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);$('photoStatus').textContent='Could not save the photograph because browser storage is full.';return;}
-  $('photoStatus').textContent=`Photograph saved for ${row.studentName||'student'}.`;
+  catch(storageError){bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);$('photoStatus').textContent='Could not save the photograph because browser storage is full — delete some photographs first, then try again.';return;}
   showClassPhotos();
+  $('photoStatus').textContent=`Photograph saved for ${row.studentName||'student'}. ${photoStoreSummary()}.`;
   const current=importedExcelRows.find(r=>studentPhotoKey(r)===studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value}));
   if(current)loadStudentRow(current);
  }catch(e){$('photoStatus').textContent='Unable to read this image.';}
+}
+/* Delete a single student's saved photograph */
+function deleteStudentPhoto(rowIndex){
+ const row=importedExcelRows[Number(rowIndex)];
+ if(!row){$('photoStatus').textContent='Could not identify this student row.';return}
+ const key=studentPhotoKey(row);
+ if(!bulkPhotos.some(ph=>ph.studentKey===key)){$('photoStatus').textContent='No saved photograph found for this student.';return}
+ if(!confirm(`Delete the saved photograph of ${row.studentName||'this student'}?`))return;
+ bulkPhotos=bulkPhotos.filter(ph=>ph.studentKey!==key);
+ let storageNote='';
+ try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
+ catch(e){storageNote=' (Browser storage could not be updated.)';}
+ const currentKey=studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value});
+ if(key===currentKey){photoData='';}
+ showClassPhotos();
+ $('photoStatus').textContent=`Deleted the photograph of ${row.studentName||'student'}. ${photoStoreSummary()}.${storageNote}`;
+ if(key===currentKey)renderAll();
+}
+/* Delete all saved photographs of the class currently selected in the photo panel */
+function deleteClassPhotos(){
+ const cls=$('photoClass').value;
+ const keys=new Set(selectedClassRows(cls).map(({row})=>studentPhotoKey(row)));
+ const count=bulkPhotos.filter(ph=>keys.has(ph.studentKey)).length;
+ if(!count){$('photoStatus').textContent='No saved photographs found for '+cls+'.';return}
+ if(!confirm(`Delete all ${count} saved photograph(s) of ${cls}?`))return;
+ bulkPhotos=bulkPhotos.filter(ph=>!keys.has(ph.studentKey));
+ let storageNote='';
+ try{localStorage.setItem('gpsClasswisePhotos',JSON.stringify(bulkPhotos));}
+ catch(e){storageNote=' (Browser storage could not be updated.)';}
+ const currentKey=studentPhotoKey({className:$('className').value,admNo:$('admNo').value,rollNo:$('rollNo').value,studentName:$('studentName').value});
+ if(keys.has(currentKey)){photoData='';renderAll();}
+ showClassPhotos();
+ $('photoStatus').textContent=`Deleted ${count} photograph(s) of ${cls}. ${photoStoreSummary()}.${storageNote}`;
+}
+/* Delete every saved photograph for every class */
+function deleteAllPhotos(){
+ if(!bulkPhotos.length){$('photoStatus').textContent='No saved photographs to delete.';return}
+ if(!confirm(`Delete ALL ${bulkPhotos.length} saved photograph(s) for every class?`))return;
+ bulkPhotos=[];
+ let storageNote='';
+ try{localStorage.removeItem('gpsClasswisePhotos');}
+ catch(e){storageNote=' (Browser storage could not be updated.)';}
+ photoData='';
+ showClassPhotos();
+ $('photoStatus').textContent=`All saved photographs deleted.${storageNote}`;
+ renderAll();
 }
 function showClassPhotos(){
  const cls=$('photoClass').value,wrap=$('photoTableWrap'),list=selectedClassRows(cls);
  if(!importedExcelRows.length){$('photoStatus').textContent='Please upload the school student workbook first.';wrap.innerHTML='';return}
  if(!list.length){$('photoStatus').textContent='No students found for '+cls+'.';wrap.innerHTML='';return}
- wrap.innerHTML=`<table><thead><tr><th>#</th><th>Student</th><th>Admission No.</th><th>Roll No.</th><th>Photograph</th><th>Upload / Change Photograph</th><th>Status</th></tr></thead><tbody>${list.map(({row,index},i)=>{const src=studentPhotoFor(row);return `<tr><td>${i+1}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td><b>${escapeHTML(row.rollNo||'—')}</b></td><td>${src?`<img src="${src}" alt="Student photo" style="width:48px;height:56px;object-fit:cover;border-radius:4px">`:'—'}</td><td><input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onchange="uploadPhotoForStudent(${index},this)" style="max-width:210px;width:100%"><div class="small">Choose this student's photo</div></td><td>${src?'Photo saved':'No photo yet'}</td></tr>`}).join('')}</tbody></table>`;
- $('photoStatus').textContent=`Showing ${list.length} student(s) in ${cls}.`;
+ wrap.innerHTML=`<table><thead><tr><th>#</th><th>Student</th><th>Admission No.</th><th>Roll No.</th><th>Photograph</th><th>Upload / Change Photograph</th><th>Status</th><th>Delete Photograph</th></tr></thead><tbody>${list.map(({row,index},i)=>{const src=studentPhotoFor(row);return `<tr><td>${i+1}</td><td>${escapeHTML(row.studentName||'')}</td><td>${escapeHTML(row.admNo||'')}</td><td><b>${escapeHTML(row.rollNo||'—')}</b></td><td>${src?`<img src="${src}" alt="Student photo" style="width:48px;height:56px;object-fit:cover;border-radius:4px">`:'—'}</td><td><input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onchange="uploadPhotoForStudent(${index},this)" style="max-width:210px;width:100%"><div class="small">Choose this student's photo</div></td><td>${src?'Photo saved':'No photo yet'}</td><td>${src?`<button class="danger" style="padding:6px 10px" onclick="deleteStudentPhoto(${index})">Delete</button>`:'—'}</td></tr>`}).join('')}</tbody></table>`;
+ $('photoStatus').textContent=`Showing ${list.length} student(s) in ${cls}. ${photoStoreSummary()}.`;
 }
 
 /* ============================================================
