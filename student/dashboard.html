@@ -1,166 +1,239 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#123b70">
-<title>Student Portal | Government Primary School Pethgam Wagoora</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102c52">
+<meta name="description" content="Student and Parent Portal of Government Primary School Pethgam Wagoora.">
+<title>Student Central Portal | Government Primary School Pethgam Wagoora</title>
 <style>
-:root{--navy:#123b70;--blue:#1769aa;--saffron:#f28c28;--green:#18794e;--ink:#172b4d;--muted:#607086;--line:#dce5ef;--paper:#fff;--bg:#f3f7fc}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
-.hero{background:linear-gradient(125deg,#102d55,#1769aa 70%,#f28c28);color:#fff;padding:28px 18px 58px;border-radius:0 0 30px 30px}
-.wrap{max-width:980px;margin:auto}.brand{display:flex;align-items:center;gap:14px}.crest{width:58px;height:58px;border:2px solid #ffffffa6;border-radius:50%;display:grid;place-items:center;font-size:28px;background:#ffffff1a}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.9}.hero h1{font-size:clamp(24px,5vw,36px);line-height:1.12;margin:4px 0}.hero p{margin:7px 0 0;color:#eaf3ff;font-size:14px}.main{padding:0 14px 40px;margin-top:-32px}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;margin:0 0 18px;box-shadow:0 10px 30px #163d6810}.card h2{font-size:18px;margin:0 0 5px}.hint{color:var(--muted);font-size:13px;margin:0 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:13px;font-weight:750;margin:0 0 6px}.field input,.field select{width:100%;min-height:46px;border:1px solid #c8d5e4;border-radius:11px;padding:10px 12px;font:inherit;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #1769aa25;border-color:var(--blue)}button{border:0;border-radius:12px;background:var(--navy);color:white;font-weight:800;font-size:15px;padding:13px 18px;min-height:46px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.secondary{background:#eaf1f8;color:var(--navy)}.status{padding:12px 14px;border-radius:12px;margin-top:14px;font-size:14px;display:none;overflow-wrap:anywhere}.status.show{display:block}.status.error{background:#fff0f0;color:#9f2424;border:1px solid #ffd2d2}.status.ok{background:#edf9f1;color:#17643c;border:1px solid #bce8ca}.result-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:start;padding-bottom:14px;border-bottom:1px solid var(--line)}.badge{background:#eaf1f8;color:var(--navy);font-size:12px;font-weight:800;padding:5px 10px;border-radius:99px}.student-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.student-grid div{background:#f7f9fc;border-radius:12px;padding:10px 12px;min-width:0}.student-grid small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.04em}.student-grid strong{overflow-wrap:anywhere}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:550px;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center}th{background:#eef4fb;color:#173e6d}td:first-child,th:first-child{text-align:left}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.metric{border-radius:14px;background:#f7f9fc;padding:12px;text-align:center}.metric small{display:block;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}.metric strong{font-size:22px;color:var(--navy)}.footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 25px}.hidden{display:none!important}
-@media(max-width:560px){.grid,.student-grid{grid-template-columns:1fr}.card{padding:17px}.hero{padding-top:22px}.summary{grid-template-columns:1fr 1fr}.summary .metric:last-child{grid-column:1/-1}}
-@media print{body{background:white}.hero{padding:12px;background:#fff!important;color:#111;border-radius:0}.hero p{color:#333}.main{margin:0;padding:0}.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}.lookup-card,.footer,.actions,.status{display:none!important}#resultCard{display:block!important}}
+:root{--navy:#102c52;--blue:#1769aa;--sky:#48a9e8;--green:#17845b;--orange:#ef963d;--purple:#7256c9;--teal:#168b91;--ink:#172b46;--muted:#64748b;--line:#e2eaf3;--paper:#fff;--bg:#f3f7fc;--shadow:0 14px 35px rgba(20,53,91,.10)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 8% 8%,#e5f2ff 0,transparent 28%),radial-gradient(circle at 95% 30%,#fff0df 0,transparent 25%),var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:inherit}.shell{max-width:1160px;margin:auto;padding:0 18px}
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(120deg,#0d2547 0%,#155b9b 62%,#2786b2 100%);padding:26px 0 72px;border-radius:0 0 34px 34px}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#ffffff0d;pointer-events:none}.hero:before{width:340px;height:340px;right:-90px;top:-190px}.hero:after{width:210px;height:210px;right:180px;bottom:-165px}
+.brand{position:relative;z-index:1;display:flex;align-items:center;gap:15px}.logo-wrap{width:68px;height:68px;border-radius:20px;background:#fff;display:grid;place-items:center;padding:6px;box-shadow:0 9px 24px #061a3733;flex:0 0 auto}.logo-wrap img{width:100%;height:100%;object-fit:contain}.school-kicker{font-size:11px;font-weight:850;letter-spacing:.15em;text-transform:uppercase;color:#cde7ff}.brand h1{font-size:clamp(21px,4vw,34px);line-height:1.12;margin:3px 0 5px}.brand p{margin:0;color:#e3f2ff;font-size:13px}.portal-pill{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:6px 12px;border:1px solid #ffffff55;border-radius:999px;background:#ffffff16;font-size:12px;font-weight:800;backdrop-filter:blur(8px)}
+main{margin-top:-42px;position:relative;z-index:2;padding-bottom:34px}.welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#ffffffed;border:1px solid #fff;border-radius:24px;padding:22px 24px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}.welcome h2{margin:0 0 4px;font-size:clamp(20px,3vw,27px);color:var(--navy)}.welcome p{margin:0;color:var(--muted);max-width:690px}.welcome-mark{font-size:42px;filter:drop-shadow(0 8px 8px #1a4e7725)}
+.section{margin-top:25px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 2px 13px}.section-head h2{font-size:19px;margin:0;color:var(--navy)}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.quick-link{display:flex;align-items:center;gap:12px;padding:15px 17px;border:1px solid var(--line);border-radius:17px;background:#fff;text-decoration:none;box-shadow:0 8px 22px #173d6810;transition:transform .2s,box-shadow .2s}.quick-link:hover{transform:translateY(-3px);box-shadow:0 14px 25px #173d6818}.quick-link>span:first-child{width:45px;height:45px;border-radius:14px;background:#edf5ff;display:grid;place-items:center;font-size:23px}.quick-link strong,.quick-link small{display:block}.quick-link strong{color:var(--navy);font-size:14px}.quick-link small{color:var(--muted);font-size:11px}.quick-link b{margin-left:auto;color:var(--blue);font-size:20px}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow);margin-top:22px}.panel h2{margin:0 0 5px;font-size:19px;color:var(--navy)}.hint{color:var(--muted);font-size:13px;margin:0 0 16px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field label{display:block;font-size:13px;font-weight:800;margin:0 0 6px}.field input{width:100%;min-height:47px;border:1px solid #cbd8e7;border-radius:12px;padding:10px 13px;font:inherit;color:var(--ink);background:#fff}.field input:focus,.search-input:focus{outline:3px solid #48a9e833;border-color:var(--blue)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:11px 18px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--blue),#114c87);color:#fff;font:inherit;font-weight:800;font-size:14px;cursor:pointer;text-decoration:none;box-shadow:0 6px 15px #1769aa2b;transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px #1769aa35}.btn:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #f3a847;outline-offset:3px}.btn.secondary{background:#eaf1f8;color:var(--navy);box-shadow:none}.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.status{display:none;padding:12px 14px;border-radius:12px;margin-top:14px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}.status.show{display:block}.status.error{background:#fff0f0;color:#982b2b;border:1px solid #ffd0d0}.status.ok{background:#edf9f1;color:#17643c;border:1px solid #bce8ca}
+.result-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:start;padding-bottom:14px;border-bottom:1px solid var(--line)}.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;color:var(--blue)}.result-head h2{margin:3px 0;font-size:22px}.badge{background:#eaf1f8;color:var(--navy);font-size:12px;font-weight:850;padding:5px 11px;border-radius:99px}
+.student-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.student-grid div{background:#f6f9fd;border:1px solid #edf2f8;border-radius:13px;padding:10px 12px;min-width:0}.student-grid small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:.05em}.student-grid strong{display:block;overflow-wrap:anywhere;font-size:14px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}table{width:100%;border-collapse:collapse;min-width:760px;font-size:13px}th,td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:center}th{background:#edf4fb;color:#173e6d;font-size:11px;text-transform:uppercase;letter-spacing:.03em}td:first-child,th:first-child{text-align:left}tbody tr:last-child td{border-bottom:0}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}.metric{border-radius:14px;background:linear-gradient(145deg,#f5f9ff,#edf5fc);padding:13px;text-align:center;border:1px solid #e4edf7}.metric small{display:block;color:var(--muted);font-size:10px;font-weight:850;text-transform:uppercase}.metric strong{font-size:21px;color:var(--navy);overflow-wrap:anywhere}.remarks{padding:12px 14px;border-radius:12px;background:#fff8e9;color:#77521b;font-size:13px}
+.directory-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px}.search-input{flex:1 1 230px;min-height:44px;border:1px solid #cbd8e7;border-radius:12px;padding:10px 13px;font:inherit;background:white}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid #d8e3ef;background:#fff;color:#4b6078;padding:8px 13px;border-radius:999px;font:inherit;font-weight:750;font-size:12px;cursor:pointer}.filter[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.module-card{--accent:var(--blue);position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:190px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:17px;box-shadow:0 8px 22px #173d6810;transition:transform .22s,box-shadow .22s}.module-card:before{content:"";position:absolute;right:-26px;top:-36px;width:105px;height:105px;border-radius:50%;background:var(--accent);opacity:.09}.module-card:hover{transform:translateY(-5px);box-shadow:0 17px 28px #173d6820}.module-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.module-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,white);font-size:25px}.module-tag{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}.module-card h3{font-size:16px;margin:13px 0 5px;color:var(--navy)}.module-card p{font-size:12px;color:var(--muted);margin:0 0 15px;flex:1}.module-link{display:inline-flex;align-items:center;gap:7px;color:var(--accent);font-size:13px;font-weight:900;text-decoration:none}.module-link:hover{text-decoration:underline}.empty{display:none;text-align:center;padding:28px;color:var(--muted);background:#fff;border:1px dashed #cbd8e7;border-radius:16px}.empty.show{display:block}
+.footer{margin:26px 0 0;text-align:center;color:var(--muted);font-size:12px;padding:18px 12px 26px}.footer strong{color:var(--navy)}
+@media(max-width:800px){.module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.quick-grid{grid-template-columns:1fr}.shell{padding:0 12px}.hero{padding:20px 0 62px;border-radius:0 0 25px 25px}.logo-wrap{width:56px;height:56px;border-radius:16px}.brand{gap:11px}.brand p{font-size:11px}.welcome{padding:18px}.welcome-mark{font-size:32px}.panel{padding:16px}.form-grid,.student-grid{grid-template-columns:1fr}.module-grid{grid-template-columns:1fr}.module-card{min-height:165px}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.section-head{align-items:start;flex-direction:column}.actions .btn{flex:1}.filters{width:100%}.filter{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print{body{background:#fff}.hero{padding:10px 0;background:#fff!important;color:#111;border-radius:0}.hero p,.school-kicker{color:#333}.logo-wrap{box-shadow:none;border:1px solid #ddd}.welcome,.directory-section,.footer,.lookup-card,.actions,.status{display:none!important}main{margin:0;padding:0}.panel{box-shadow:none;border:1px solid #aaa;break-inside:avoid;padding:12px}#resultCard{display:block!important}.table-wrap{overflow:visible}table{min-width:0;font-size:9px}th,td{padding:5px 3px}.student-grid{grid-template-columns:repeat(3,1fr)}.summary{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<header class="hero"><div class="wrap brand"><div class="crest" aria-hidden="true">🎓</div><div><div class="eyebrow">Student & Parent Portal</div><h1>Government Primary School<br>Pethgam Wagoora</h1><p>Zone Wagoora · District Baramulla · Jammu & Kashmir – 193109</p></div></div></header>
-<main class="wrap main">
-<section class="card lookup-card">
-<h2>🔎 Find a Student Result</h2>
-<p class="hint">Enter the student's admission number and date of birth exactly as recorded by the school.</p>
-<form id="lookupForm">
-<div class="grid">
-<div class="field"><label for="admNo">Admission Number</label><input id="admNo" name="admNo" autocomplete="off" required maxlength="40" placeholder="Enter admission number"></div>
-<div class="field"><label for="dob">Date of Birth</label><input id="dob" name="dob" type="date" required></div>
-</div>
-<div class="actions"><button id="searchBtn" type="submit">Search Result</button><button class="secondary" id="clearBtn" type="button">Clear</button></div>
-</form>
-<div id="lookupStatus" class="status" role="status" aria-live="polite"></div>
-</section>
-<section id="resultCard" class="card hidden" aria-live="polite">
-<div class="result-head"><div><div class="eyebrow" style="color:#1769aa">Official Student Record</div><h2 id="studentTitle">Student Marksheet</h2><p class="hint" id="sessionText" style="margin:4px 0 0"></p></div><span class="badge" id="classBadge"></span></div>
-<div class="student-grid" id="studentDetails"></div>
-<div class="table-wrap"><table><thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>CCA</th><th>SA</th><th>Total</th></tr></thead><tbody id="marksBody"></tbody></table></div>
-<div class="summary" id="summary"></div>
-<div id="remarksBox" class="hint"></div>
-<div class="actions"><button type="button" id="printBtn">Print / Save PDF</button><button type="button" class="secondary" id="newSearchBtn">New Search</button></div>
-</section>
+<header class="hero">
+  <div class="shell brand">
+    <div class="logo-wrap"><img src="../assets/images/logo.png" alt="Government Primary School Pethgam Wagoora logo" onerror="this.parentElement.textContent='🎓'"></div>
+    <div>
+      <div class="school-kicker">Student &amp; Parent Portal</div>
+      <h1>Government Primary School<br>Pethgam Wagoora</h1>
+      <p>Zone Wagoora · District Baramulla · Jammu &amp; Kashmir – 193109</p>
+      <span class="portal-pill">✦ Your School, Your Learning Hub</span>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="welcome" aria-labelledby="welcomeTitle">
+    <div><h2 id="welcomeTitle">Welcome to Your School Portal</h2><p>Your central destination for examination results, school information, parent forms and verified student services.</p></div>
+    <div class="welcome-mark" aria-hidden="true">🎒</div>
+  </section>
+
+  <section class="section" aria-labelledby="quickTitle">
+    <div class="section-head"><div><h2 id="quickTitle">Quick Access</h2><p>Jump directly to the most-used verified services.</p></div></div>
+    <div class="quick-grid">
+      <a class="quick-link" href="#results"><span>📊</span><span><strong>Check Results</strong><small>Admission number + date of birth</small></span><b>→</b></a>
+      <a class="quick-link" href="./apaar-input.html"><span>📝</span><span><strong>APAAR Consent Form</strong><small>Printable parent / guardian form</small></span><b>→</b></a>
+    </div>
+  </section>
+
+  <section class="panel lookup-card" id="results" aria-labelledby="resultLookupTitle">
+    <h2 id="resultLookupTitle">🔎 Check Student Results</h2>
+    <p class="hint">Enter the student's admission number and date of birth exactly as recorded by the school. Both details are required for verification.</p>
+    <form id="lookupForm">
+      <div class="form-grid">
+        <div class="field"><label for="admNo">Admission Number</label><input id="admNo" name="admNo" autocomplete="off" required maxlength="40" placeholder="Enter admission number"></div>
+        <div class="field"><label for="dob">Date of Birth</label><input id="dob" name="dob" type="date" required></div>
+      </div>
+      <div class="actions"><button class="btn" id="searchBtn" type="submit">🔍 Search Result</button><button class="btn secondary" id="clearBtn" type="button">Clear</button></div>
+    </form>
+    <div id="lookupStatus" class="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section id="resultCard" class="panel" hidden aria-live="polite">
+    <div class="result-head"><div><div class="eyebrow">Verified Student Record</div><h2 id="studentTitle">Student Marksheet</h2><p class="hint" id="sessionText" style="margin:4px 0 0"></p></div><span class="badge" id="classBadge"></span></div>
+    <div class="student-grid" id="studentDetails"></div>
+    <div class="table-wrap"><table><thead><tr><th>Subject</th><th>FA1</th><th>FA2</th><th>FA3</th><th>FA4</th><th>FA5</th><th>FA6</th><th>CCA</th><th>SA</th><th>Total</th></tr></thead><tbody id="marksBody"></tbody></table></div>
+    <div class="summary" id="summary"></div>
+    <div class="remarks" id="remarksBox"></div>
+    <div class="actions"><button type="button" class="btn" id="printBtn">🖨️ Print / Save PDF</button><button type="button" class="btn secondary" id="newSearchBtn">New Search</button></div>
+  </section>
+
+  <section class="section directory-section" aria-labelledby="directoryTitle">
+    <div class="section-head"><div><h2 id="directoryTitle">Explore Student &amp; Parent Services</h2><p>Verified links to available public-facing pages in the student folder.</p></div></div>
+    <div class="directory-tools">
+      <label for="moduleSearch" class="visually-hidden">Search modules</label>
+      <input id="moduleSearch" class="search-input" type="search" placeholder="Search services by name or description…" autocomplete="off">
+      <div class="filters" id="categoryFilters" aria-label="Filter modules by category"></div>
+    </div>
+    <div id="moduleGrid" class="module-grid"></div>
+    <div id="moduleEmpty" class="empty" role="status">No matching services found. Try another search or category.</div>
+  </section>
 </main>
-<footer class="footer">Government Primary School Pethgam Wagoora · UDISE: 01022202207<br>For corrections, contact the school office.</footer>
+<footer class="footer"> <strong>Government Primary School Pethgam Wagoora</strong><br>UDISE Code: 01022202207 · Zone Wagoora · District Baramulla<br>For corrections or assistance, please contact the school office.</footer>
+
 <script type="module">
 import { db } from '../assets/js/init-firebase.js';
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const $ = id => document.getElementById(id);
-const form = $('lookupForm');
-const statusBox = $('lookupStatus');
-const resultCard = $('resultCard');
-const safeText = value => String(value ?? '').trim();
-function showStatus(message, type='error') {
-  statusBox.textContent = message;
-  statusBox.className = 'status show ' + type;
+
+/* Verified manifest: only student-folder pages suitable for student/parent navigation.
+   Staff/admin data-entry tools and pages with unverified student-record access are deliberately excluded. */
+const MODULES = [
+  {id:'results',name:'Check Student Results',description:'Search the official student result using admission number and date of birth. Results remain protected by the existing verification flow.',category:'Academics',icon:'📊',url:'#results',access:'Student & Parent',color:'#1769aa',quick:true},
+  {id:'apaar-consent',name:'APAAR ID Consent Form',description:'Open the printable parent or guardian consent form. The form does not transmit or save personal details to Firebase.',category:'Parent Services',icon:'📝',url:'./apaar-input.html',access:'Parent / Guardian',color:'#17845b',quick:true}
+];
+
+const grid = $('moduleGrid'), empty = $('moduleEmpty'), search = $('moduleSearch'), filters = $('categoryFilters');
+let activeCategory = 'All Modules';
+
+function renderFilters(){
+  const categories = ['All Modules', ...new Set(MODULES.map(m=>m.category))];
+  filters.replaceChildren();
+  categories.forEach(category=>{
+    const button=document.createElement('button');
+    button.type='button';button.className='filter';button.textContent=category;
+    button.setAttribute('aria-pressed',String(activeCategory===category));
+    button.addEventListener('click',()=>{activeCategory=category;renderFilters();renderModules();});
+    filters.append(button);
+  });
 }
-function normaliseDate(value) {
-  if (!value) return '';
-  if (typeof value === 'object' && typeof value.toDate === 'function') value = value.toDate();
-  if (value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString().slice(0,10);
-  const s = safeText(value);
-  const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
-  if (iso) return iso[1];
-  const d = new Date(s);
-  return s && !Number.isNaN(d.getTime()) ? d.toISOString().slice(0,10) : s;
+function renderModules(){
+  const term=search.value.trim().toLocaleLowerCase();
+  const matches=MODULES.filter(m=>(activeCategory==='All Modules'||m.category===activeCategory)&&
+    [m.name,m.description,m.category,m.access].some(v=>v.toLocaleLowerCase().includes(term)));
+  grid.replaceChildren();
+  matches.forEach(m=>{
+    const article=document.createElement('article');article.className='module-card';article.style.setProperty('--accent',m.color);
+    const top=document.createElement('div');top.className='module-top';
+    const icon=document.createElement('span');icon.className='module-icon';icon.setAttribute('aria-hidden','true');icon.textContent=m.icon;
+    const tag=document.createElement('span');tag.className='module-tag';tag.textContent=m.category;
+    top.append(icon,tag);
+    const title=document.createElement('h3');title.textContent=m.name;
+    const desc=document.createElement('p');desc.textContent=m.description;
+    const link=document.createElement('a');link.className='module-link';link.href=m.url;link.textContent='Open service →';link.setAttribute('aria-label','Open '+m.name);
+    article.append(top,title,desc,link);grid.append(article);
+  });
+  empty.classList.toggle('show',matches.length===0);
 }
-function findDOB(data) { return data.dob || data.dateOfBirth || data.DOB || data.date_of_birth || ''; }
-function findName(data) { return data.studentName || data.name || data.student_name || ''; }
-function findClass(data) { return data.className || data.class || data.class_name || ''; }
-function numberOrBlank(v) {
-  if (v === '' || v === null || v === undefined || String(v).trim() === '') return null;
-  const n = Number(v); return Number.isFinite(n) ? n : null;
+search.addEventListener('input',renderModules);
+renderFilters();renderModules();
+
+const form=$('lookupForm'),statusBox=$('lookupStatus'),resultCard=$('resultCard');
+const safeText=value=>String(value??'').trim();
+function showStatus(message,type='error'){statusBox.textContent=message;statusBox.className='status show '+type;}
+function normaliseDate(value){
+  if(!value)return '';
+  if(typeof value==='object'&&typeof value.toDate==='function')value=value.toDate();
+  if(value instanceof Date&&!Number.isNaN(value.getTime()))return value.toISOString().slice(0,10);
+  const s=safeText(value),iso=s.match(/^(\d{4}-\d{2}-\d{2})/);
+  if(iso)return iso[1];
+  const d=new Date(s);return s&&!Number.isNaN(d.getTime())?d.toISOString().slice(0,10):s;
 }
-function subjectEntries(marks) {
-  if (!marks || typeof marks !== 'object') return [];
-  const order = ['English','Math','Mathematics','EVS','Environment Science','Urdu','Kashmiri'];
-  return Object.entries(marks).sort((a,b) => {
-    const ai=order.findIndex(x=>x.toLowerCase()===a[0].toLowerCase());
-    const bi=order.findIndex(x=>x.toLowerCase()===b[0].toLowerCase());
+function findDOB(data){return data.dob||data.dateOfBirth||data.DOB||data.date_of_birth||'';}
+function findName(data){return data.studentName||data.name||data.student_name||'';}
+function findClass(data){return data.className||data.class||data.class_name||'';}
+function numberOrBlank(v){if(v===''||v===null||v===undefined||String(v).trim()==='')return null;const n=Number(v);return Number.isFinite(n)?n:null;}
+function subjectEntries(marks){
+  if(!marks||typeof marks!=='object'||Array.isArray(marks))return [];
+  const order=['English','Math','Mathematics','EVS','Environment Science','Urdu','Kashmiri'];
+  return Object.entries(marks).sort((a,b)=>{
+    const ai=order.findIndex(x=>x.toLowerCase()===a[0].toLowerCase()),bi=order.findIndex(x=>x.toLowerCase()===b[0].toLowerCase());
     return (ai<0?99:ai)-(bi<0?99:bi);
   });
 }
-function renderResult(result, master, admissionNo) {
-  const data = {...master, ...result};
-  const name = findName(data) || 'Student';
-  const className = findClass(data) || '—';
-  $('studentTitle').textContent = name;
-  $('sessionText').textContent = 'Session: ' + safeText(data.session || data.academicSession || 'Not specified');
-  $('classBadge').textContent = 'Class ' + className;
-  const details = [
-    ['Admission No.', data.admNo || data.admissionNo || data.admissionNumber || admissionNo],
-    ['Roll No.', data.rollNo || data.rollNumber || '—'],
-    ['Father’s Name', data.fatherName || data.father_name || '—'],
-    ['Mother’s Name', data.motherName || data.mother_name || '—']
+function detail(label,value){
+  const box=document.createElement('div'),small=document.createElement('small'),strong=document.createElement('strong');
+  small.textContent=label;strong.textContent=safeText(value)||'—';box.append(small,strong);return box;
+}
+function renderResult(result,master,admissionNo){
+  const data={...master,...result},name=findName(data)||'Student',className=findClass(data)||'—';
+  $('studentTitle').textContent=name;
+  $('sessionText').textContent='Academic Session: '+safeText(data.session||data.academicSession||'Not specified');
+  $('classBadge').textContent='Class '+className;
+  const details=[
+    ['Admission No.',data.admNo||data.admissionNo||data.admissionNumber||admissionNo],
+    ['Roll No.',data.rollNo||data.rollNumber],['Father’s Name',data.fatherName||data.father_name],
+    ['Mother’s Name',data.motherName||data.mother_name]
   ];
-  $('studentDetails').replaceChildren();
-  for (const [label,value] of details) {
-    const box=document.createElement('div'), small=document.createElement('small'), strong=document.createElement('strong');
-    small.textContent=label; strong.textContent=safeText(value)||'—'; box.append(small,strong); $('studentDetails').append(box);
-  }
-  const body=$('marksBody'); body.replaceChildren();
-  let grandTotal=0, totalMax=0, gradedSubjects=0;
+  $('studentDetails').replaceChildren(...details.map(([k,v])=>detail(k,v)));
+  const body=$('marksBody');body.replaceChildren();
+  let grandTotal=0,totalMax=0,gradedSubjects=0;
   const subjects=subjectEntries(data.marks);
-  for (const [subject, raw] of subjects) {
-    const m = raw && typeof raw==='object' ? raw : {};
-    const fa = Array.isArray(m.fa) ? m.fa : [m.fa1,m.fa2,m.fa3,m.fa4,m.fa5,m.fa6];
-    const cca=numberOrBlank(m.cca), sa=numberOrBlank(m.sa);
-    const cells=[...Array.from({length:6},(_,i)=>numberOrBlank(fa[i])),cca,sa];
-    const available=cells.filter(v=>v!==null);
+  for(const [subject,raw] of subjects){
+    const m=raw&&typeof raw==='object'?raw:{};
+    const fa=Array.isArray(m.fa)?m.fa:[m.fa1,m.fa2,m.fa3,m.fa4,m.fa5,m.fa6];
+    const cca=numberOrBlank(m.cca??m.CCA),sa=numberOrBlank(m.sa??m.SA);
+    const cells=[...Array.from({length:6},(_,i)=>numberOrBlank(fa[i])),cca,sa],available=cells.filter(v=>v!==null);
     const total=available.reduce((a,b)=>a+b,0);
-    const max= (fa.some(v=>numberOrBlank(v)!==null)?30:0) + (cca!==null?20:0) + (sa!==null?50:0);
-    if (available.length) {grandTotal+=total;totalMax+=max;gradedSubjects++;}
+    const max=(fa.some(v=>numberOrBlank(v)!==null)?30:0)+(cca!==null?20:0)+(sa!==null?50:0);
+    if(available.length){grandTotal+=total;totalMax+=max;gradedSubjects++;}
     const tr=document.createElement('tr');
-    const values=[subject,...cells.map(v=>v===null?'—':v),available.length?total:'—'];
-    values.forEach((value,index)=>{const td=document.createElement('td');td.textContent=value; if(index===0)td.style.fontWeight='750';tr.append(td);});
+    [subject,...cells.map(v=>v===null?'—':v),available.length?total:'—'].forEach((value,index)=>{
+      const td=document.createElement('td');td.textContent=String(value);if(index===0)td.style.fontWeight='800';tr.append(td);
+    });
     body.append(tr);
   }
-  if (!subjects.length) {
-    const tr=document.createElement('tr'), td=document.createElement('td');
-    td.colSpan=10;td.textContent='No subject marks were found in this result record.';tr.append(td);body.append(tr);
-  }
-  const percent=totalMax ? (grandTotal/totalMax*100) : null;
-  const metrics=[['Subjects with marks',gradedSubjects],['Marks recorded',totalMax?`${grandTotal} / ${totalMax}`:'—'],['Percentage',percent===null?'—':percent.toFixed(2)+'%']];
+  if(!subjects.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=10;td.textContent='No subject marks were found in this result record.';tr.append(td);body.append(tr);}
+  const percent=totalMax?(grandTotal/totalMax*100):null;
+  const metrics=[
+    ['Subjects with marks',gradedSubjects],['Grand Total',data.grandTotal??(totalMax?grandTotal:'—')],
+    ['Percentage',data.percentage!==undefined&&data.percentage!==''?String(data.percentage).replace(/%$/,'')+'%':(percent===null?'—':percent.toFixed(2)+'%')],
+    ['Remarks',data.remarks||data.remark||'—']
+  ];
   $('summary').replaceChildren();
-  metrics.forEach(([label,value])=>{const box=document.createElement('div'),small=document.createElement('small'),strong=document.createElement('strong');box.className='metric';small.textContent=label;strong.textContent=value;box.append(small,strong);$('summary').append(box);});
-  const remarks=[data.remarks ? 'Remarks: '+data.remarks : '', data.attendance!==undefined && data.attendance!=='' ? 'Attendance: '+data.attendance+(String(data.attendance).includes('%')?'':'%') : ''].filter(Boolean);
-  $('remarksBox').textContent=remarks.join(' · ');
-  resultCard.classList.remove('hidden');
+  metrics.forEach(([label,value])=>{const box=document.createElement('div'),small=document.createElement('small'),strong=document.createElement('strong');box.className='metric';small.textContent=label;strong.textContent=String(value);box.append(small,strong);$('summary').append(box);});
+  const extra=[];
+  if(data.schoolRank!==undefined&&data.schoolRank!=='')extra.push('School Rank: '+data.schoolRank);
+  if(data.classRank!==undefined&&data.classRank!=='')extra.push('Class Rank: '+data.classRank);
+  if(data.attendance!==undefined&&data.attendance!=='')extra.push('Attendance: '+data.attendance);
+  $('remarksBox').textContent=extra.join(' · ')||'Please contact the school office if any detail requires correction.';
+  resultCard.hidden=false;
 }
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-  resultCard.classList.add('hidden');
-  const adm = safeText($('admNo').value);
-  const dob = $('dob').value;
-  if (!adm || !dob) {showStatus('Enter both admission number and date of birth.');return;}
-  $('searchBtn').disabled=true; $('searchBtn').textContent='Searching…';
-  statusBox.className='status'; statusBox.textContent='';
-  try {
-    const [resultSnap, studentSnap] = await Promise.all([
-      getDoc(doc(db,'results',adm)),
-      getDoc(doc(db,'students',adm))
-    ]);
-    if (!resultSnap.exists() && !studentSnap.exists()) {
-      showStatus('No record found. Check the admission number or contact the school office.'); return;
-    }
-    const result=resultSnap.exists()?resultSnap.data():{};
-    const master=studentSnap.exists()?studentSnap.data():{};
+form.addEventListener('submit',async event=>{
+  event.preventDefault();resultCard.hidden=true;
+  const adm=safeText($('admNo').value),dob=$('dob').value;
+  if(!adm||!dob){showStatus('Enter both admission number and date of birth.');return;}
+  $('searchBtn').disabled=true;$('searchBtn').textContent='Searching…';statusBox.className='status';statusBox.textContent='';
+  try{
+    const [resultSnap,studentSnap]=await Promise.all([getDoc(doc(db,'results',adm)),getDoc(doc(db,'students',adm))]);
+    if(!resultSnap.exists()&&!studentSnap.exists()){showStatus('No record found. Check the admission number or contact the school office.');return;}
+    const result=resultSnap.exists()?resultSnap.data():{},master=studentSnap.exists()?studentSnap.data():{};
     const storedDOB=normaliseDate(findDOB({...master,...result}));
-    if (!storedDOB || storedDOB !== dob) {
-      showStatus('The details could not be verified. Check the admission number and date of birth, or contact the school office.'); return;
-    }
-    if (!resultSnap.exists()) {
-      showStatus('Student identity matched, but a result has not been uploaded yet.', 'ok'); return;
-    }
-    renderResult(result,master,adm);
-    showStatus('Result loaded. Please check the student details carefully.', 'ok');
-  } catch (error) {
+    if(!storedDOB||storedDOB!==dob){showStatus('The details could not be verified. Check the admission number and date of birth, or contact the school office.');return;}
+    if(!resultSnap.exists()){showStatus('Student identity matched, but a result has not been uploaded yet.','ok');return;}
+    renderResult(result,master,adm);showStatus('Result loaded. Please check the student details carefully.','ok');
+    resultCard.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(error){
     console.error('Result lookup failed:',error);
-    showStatus(error?.code==='permission-denied'
-      ? 'Access was denied by Firebase security rules. The school administrator must configure secure result lookup permissions.'
-      : 'Unable to load the result right now. Check your connection and try again.');
-  } finally {$('searchBtn').disabled=false;$('searchBtn').textContent='Search Result';}
+    showStatus(error?.code==='permission-denied'?'Access was denied by Firebase security rules. The school administrator must configure secure result lookup permissions.':'Unable to load the result right now. Check your connection and try again.');
+  }finally{$('searchBtn').disabled=false;$('searchBtn').textContent='🔍 Search Result';}
 });
-$('clearBtn').addEventListener('click',()=>{form.reset();resultCard.classList.add('hidden');statusBox.className='status';statusBox.textContent='';});
-$('newSearchBtn').addEventListener('click',()=>{$('clearBtn').click();$('admNo').focus();});
+$('clearBtn').addEventListener('click',()=>{form.reset();resultCard.hidden=true;statusBox.className='status';statusBox.textContent='';});
+$('newSearchBtn').addEventListener('click',()=>{$('clearBtn').click();$('admNo').focus();$('results').scrollIntoView({behavior:'smooth'});});
 $('printBtn').addEventListener('click',()=>window.print());
 </script>
 </body>
